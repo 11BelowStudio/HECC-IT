@@ -69,8 +69,6 @@
                         * has a field to enter the text that is clicked
                 * 'URL'
                 * 'Guard': the guard conditions for the link
-        
-            
 * Reading
     * https://www.youtube.com/watch?v=djIrHF8S6-Q
     * https://www.youtube.com/watch?v=KXFEqyXrbqU
@@ -96,6 +94,56 @@
     * 'paragraph and style formatting are not available.'[3]
         * might have been added in later versions
 * Need to download a runtime environment to run them
+* Very limited web export options [2] (refer to paragraph 71)
+
+##How it saves stuff
+* Looked at a sample .tbx from https://eclecticlight.co/2015/12/12/storyspace-3-using-guards-to-structure-reading/ (same site as the one [5] is hosted on)
+* xml files (.tbx)
+    * Within ```<tinderbox>``` tag
+    * Defines ```<attrib>``` first
+        * Names, parent attributes, whether or not they're editable, whether or not they're visible in editor, what type they are (probably refers to a constant int within the source code), what 'kind' they are, whether or not they 'canInherit', and default values.
+    * Then defines ```<color>``` tags
+        * Colours with names and hex codes, probably intended for user 'themes' or something in the editor (and also for formatting output?)
+    * Then defines a ```<menu>```, unsure what that does
+    * Defines ```<linkTypes>```
+        * Name, label (if different to name), whether or not it's visible, whether or not the label is shown, whether or not it's 'required', a colour hex code, a colorString (probably referring to the earlier <color> definitions, maybe to set the colour(?)), and a 'style' int (probably also referring to a const int in the program)
+    * Defines ```<item>```s
+        * Most likely the 'writing spaces'
+        * ```<item>``` tag itself defines an ID (unique integer), a string for the 'Creator' of it, and a 'proto' string (probably a prefab?)
+        * Multiple ```<attribute>``` tags within item
+            * ```<attribute name = "whateverItsCalled>value</attribute>```
+            * name refers to a defined ```<attrib>``` with the same Name from earlier on
+        * ```<text>``` tag containing a string (textual content of the writing space)
+        * ```<rtfd>``` tag containing a very long incomprehensible string, probably just raw data saved as a string
+    * Defines ```<adornment>```s
+        * Similar to ```<item>```, but instead of having ```<text>``` and ```<rtfd>```, it has ```<image>```
+            * ```<image>``` is a long incomphrensible string, probably just raw data as well
+    * Defines ```<links>```
+        * contain a name (referring to defined ```<linkType>```), sourceid (referring to source node), sourcecreator, 'sstart, slen, style, arrowtype' (probably used for formatting in the editor), 'destid' (referring to destination node), 'destcreator', 'color' (probably also for formatting purposes), and 'guard' conditions (if needed)
+    * Defines ```<macros>```
+        * Not sure what these are supposed to be used for
+    * Defines ```<preferences>```
+        * Looks like saved preferences for the project in the editor
+        * Each preference has its own tag, with a value for it in the middle
+    * Defines ```<windows>```
+        * Probably also editor preferences. Defines bounds of it, and 'ruler'
+        * Defines ```<tabs>``` within windows
+            * Whether or not it's selected, what it is, settings, etc
+            * Looks like more editor preferences
+    * Defines ```<utilityWindows>```
+        * Probably supposed to be like the windows but just for those opened by utilities.
+    * Defines ```<tabs>``` again
+        * Looks like the same stuff as the tabs defined in the ```<window>``` earlier on
+    * ```<searches>```
+        * Not entirely sure, probably used to record defined searches for paths through the hypertext
+    * Closing ```</tinderbox>``` tag at the end
+* Looks like it's done in this order so, when it's parsing stuff, it can ensure everything it uses (like attributes) have actually been declared before being referenced within nodes.
+    * Might need to use that sort of structure in my product
+* order of parsing
+    * definitions -> content -> links between content -> preferences
+        * raw attributes -> types of colours -> types of links -> content -> links between content -> editor preferences and such
+* **LINKS ARE SEPARATE OBJECTS FROM THE NODES THAT THEY LINK TOGETHER**
+
     
 
 ## Sources etc   
