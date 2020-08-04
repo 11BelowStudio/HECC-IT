@@ -4,7 +4,7 @@ placeholder text
     * https://twinery.org/
         * https://en.wikipedia.org/wiki/Twine_(software)
         * open source (which is nice): https://github.com/klembot/twinejs
-* Tool 2 - TADS (by Michael J. Roberts)  
+* Tool 2 - TADS (Text Adventure Development System) (by Michael J. Roberts)  
     * https://www.tads.org/
         * https://en.wikipedia.org/wiki/TADS
         * Freeware, should be able to try it out a bit to see how it works
