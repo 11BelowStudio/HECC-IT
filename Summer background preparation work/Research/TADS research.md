@@ -9,6 +9,7 @@ Text Adventure Development System
     * User only really needs to worry about the single .t file that all the objects and such for the game are supposed to be declared in.
     * Advanced users can tinker around with the source code (of the premade adv3 library) that supports the main .t file if they want to
 * Output game is compiled and run on a virtual machine
+* Code and such opened as windows within the TADS editing window (similar to how Hammer works with the views of the map being made with it)
 
 ##how to use it
 * Creating a project [1]
