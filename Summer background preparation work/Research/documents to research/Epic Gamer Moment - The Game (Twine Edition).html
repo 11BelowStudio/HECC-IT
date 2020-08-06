@@ -11,7 +11,10 @@
 
 <tw-story></tw-story>
 
-<tw-storydata name="Epic Gamer Moment - The Game (Twine Edition)" startnode="12" creator="Twine" creator-version="2.3.9" ifid="60ACD487-4C05-4E78-8245-546C8B7DB8C0" zoom="1" format="Harlowe" format-version="3.1.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="title" tags="" position="368,97" size="100,100">&#39;&#39;EPIC GAMER MOMENT - THE GAME&#39;&#39;
+<tw-storydata name="Epic Gamer Moment - The Game (Twine Edition)" startnode="12" creator="Twine" creator-version="2.3.9" ifid="60ACD487-4C05-4E78-8245-546C8B7DB8C0" zoom="1" format="Harlowe" format-version="3.1.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">img {
+	max-width: 100%;
+	max-height: 100%;
+}</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="title" tags="" position="368,97" size="100,100">&#39;&#39;EPIC GAMER MOMENT - THE GAME&#39;&#39;
 *Twine Edition!*
 
 &lt;img src = &quot;https://raw.githubusercontent.com/11BelowStudio/EpicGamerMoment-TheGame/master/src/images/titleImage.png&quot; alt = &quot;title image goes here&quot;&gt;
@@ -38,11 +41,11 @@ Your urge to say The Gamer Word is at $urge%
 
 (if: $gamerFuel &gt; 0)[[[Consume GamerFuel to get GamerEnergy-&gt;eat]]](else:)[You don&#39;t have any GamerFuel to consume!]
 
-(if: $gamerCoins &gt; 0)[[[Buy GamerFuel with GamerCoins-&gt;buy]]](else:)[You don&#39;t have any GamerCoins to buy GamerFuel with!]
+(if: $gamerCoins &gt; 0)[(if: $gamerEnergy &gt; 0)[[[Buy GamerFuel with GamerCoins-&gt;buy]]](else:)[You don&#39;t have enough GamerEnergy to go out and buy GamerFuel!]](else:)[You don&#39;t have any GamerCoins to buy GamerFuel with!]
 
 (if: $gamerEnergy &gt; 0)[[[Work for GamerCoins-&gt;work]]](else:)[You don&#39;t have enough GamerEnergy left for you to work for GamerCoins!]
 
-(if: $gamerEnergy &gt; 0)[(if: $urge &gt; 0)[[[P L A Y V I D Y A G A E M-&gt;play]]](else:)[You cannot resist the urge any further.]](else:)[You don&#39;t have enough energy to play vidyagaems]</tw-passagedata><tw-passagedata pid="3" name="eat" tags="" position="0,603" size="100,100">(set: $gamerFuel = $gamerFuel - 1)
+(if: $gamerEnergy &gt; 0)[(if: $urge &gt; 0)[[[P L A Y V I D Y A G A E M-&gt;play]]](else:)[You cannot resist the urge any further.]](else:)[You don&#39;t have enough GamerEnergy to play vidyagaems!]</tw-passagedata><tw-passagedata pid="3" name="eat" tags="" position="0,603" size="100,100">(set: $gamerFuel = $gamerFuel - 1)
 (set: _energyChange = (random: 1,5) * (random: 1,5))
 (set: $gamerEnergy = $gamerEnergy + _energyChange)
 (go-to: &quot;Time passes&quot;)</tw-passagedata><tw-passagedata pid="4" name="work" tags="" position="256,621" size="100,100">(set: _moneyChange = (random: 1,5) * (random: 1,2))
