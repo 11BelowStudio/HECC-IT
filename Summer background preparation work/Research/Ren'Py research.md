@@ -3,6 +3,8 @@
     * .rpy scripts used to define the actual game stuff
         * Written in the 'Ren'Py language' (somewhat similar to Python, some parts actually take Python expressions)
 * Object-Oriented
+* Engine written on Python (with some components in assembly/C/C++)
+    * Higher-level code within Ren'Py games written in the 'Ren'Py' language
 
 
 ##how to use it
@@ -62,7 +64,10 @@
         * ```define characterVariable = Character("name", *kind = parentCharacterToInhert*, *other arguements*)```
             * name string displayed at the top of the textbox when this character is 'speaking'
             * the 'kind' variable allows this character to inherit attributes from a pre-defined character
-            * A lot of other attributes can be used here, such as defining the colour of the character's name, 
+            * A lot of other attributes can be used here, such as defining the colour of the character's name, side images, etc.
+        * basic usage (making them say stuff)
+            * Suppose that a Character is defined as ```define b = Character("bob") ```
+                * Can make bob 'say' strings via ```b "hi im bob and im saying this string (very epic)"```
             
 ##what options it gives the user
 * Some options at the start
@@ -163,12 +168,40 @@
         * Scroll back down to get back to the node you scrolled up from
 * Image support
     * Can just put images into the /images folder, and they'll work
+* Audio support
+    * Audio is an option
+* Choices for building it
+    * Configurations for Windows, Linux, Mac, Windows+Linux, (and a configuration to get it to run via itch.io/steam/etc) included by default
+* 'lint' option to check the Ren'Py code for any major syntax errors etc
+* Allows Python statements to be integrated within the Ren'Py code
+    * Can do single-line statements or multiple-line statements
+        * ```
+          python:
+            #lines of python code
+            #go here (de-indent at the end)
+          ```
+        * ```$ #single line of python code```
+    * ```init python:``` statements declare python code which is to be run on initialisation
+        * option to use an integer to define priority (between 'init' and 'python') to prioritize different initialisations
+            * 0 is default priority, values between -999 and 999 are valid, ```init python``` statements with same priority are run in alphabetical order according to the name of the .rpy file they're held in
+    * Conditional statements can be used for guard conditions (sending player to different labels (maybe with different options in those menus) according to the states of variables and such)
 
 ##what features it's missing
-*
+* There's no method of getting an overview of the branching narratives and such
+    * No visual aids, only code.
+* All text displayed to the user must be displayed via a 'Character'
+* No explicitly-defined 'options'/'branching narrative' things basically
+* At the end of the day, it's a visual novel engine, not a hypertext game engine
 
 ##how the interior logic and such works in the outputs it produces 
-*
+* Reading the Ren'Py script [2]
+    * renpy/parser.py parses the Ren'Py script into an Abstract Syntax Tree (as defined in renpy/ast.py)
+    * renpy/execution.py handles the execution of Ren'Py objects
+        * Ren'Py objects appear to be based off renpy/Object.py
+    * renpy/game.py is used to encapsulate global data and such for the currently running game
+    
+    
 
 ##sources etc
 * [1] *Ren'Py* (7.3.5), T. Rothamel. Accessed: Aug. 6, 2020. Available: https://www.renpy.org/
+* [2]  T. Rothamel (2020) The Ren'Py Visual Novel Engine [Source Code] https://github.com/renpy/renpy
