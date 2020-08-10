@@ -77,6 +77,7 @@
     * Contributing to Babel (Section 2.3.2)
         * Must contribute a file containing portable, rights-free C routine to provide babel with support for rule-time format.
             * assume that int32 is 32-bit or large signed integer
+    * Babel tool outputs an .iFiction file for the input story file
 
 ## Contributing the C routine with support for the runtime format
 
@@ -176,6 +177,7 @@
             * If it's unclaimed by the 'likely' ones, it then polls the 'unlikely' list
                 * If it remains unclaimed by the 'unlikely' list, it's format is "unknown"
             * Formats polled in 'popularity' order (formats with most works first)
+* Eventually outputs an .iFiction file for the input story.
 
 ## Guidelines for 'interpreters' (programs used to run the game) and 'browsers' (programs offering a choice of story files) (section 3)
 * Use bibliographic data if available, even if it's just to give windows/saved games sensible titles, or for an 'about this game' option
@@ -184,11 +186,62 @@
     * (other guidelines seem very much targeted towards browsers)
 * If fetching cover art from IF archive, **the fetched image must be cached**.
 
-## Metadata used within iFiction (section 5)
+## Some of the important metadata used within .iFiction formats  (section 5)
 
+* If stored in a file, it must have the '.iFiction' format
+    * Filename should be ```IFID.iFiction``` (replace 'IFID' with the IFID of the work)
 * UTF-8 unicode
+* ```<?xml version="1.0" encoding="UTF-8"?>
+	 <ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+        <!-- Bibliographic data recorded by Inform 7 build 3F47 -->
+		 [seqyebce of <story> records]
+	 </ifindex>
+     ```
 * Data on individual stories are within ```<story>...</story>``` tags
+    * Mandatory metadata
+        * ```<identification>...</identification>``` tags (Defined from design system)
+            * ```<ifid>...</ifid>``` The IFID of the work
+            * ```<format>...</format>``` The format of the work (one of the following: zcode, glulx, tads2, tads3, hugo, alan, adrift, level9, agt, magscrolls, advsys, html, executable)
+        * ```<bibliographic>...</bibliographic>``` tags (defined by author)
+            * Mandatory tags
+                * ```<title>...</title>``` The title of the work
+                * ```<author>...</author>``` Who the author is
+            * Optional tags
+                * ```<language>...</language>``` what (human) language the work is in
+                * ```<headline>...</headline>``` quasi-subtitle for the game
+                * ```<firstpublished>...</firstpublished>``` date of first publication: YYYY or YYYY-MM-DD
+                * ```<genre>...</genre>``` what genre the author thinks their work is
+                * ```<group>...</group>``` Places the work of IF as belonging to that group of works
+                * ```<forgiveness>...</forgiveness>``` basically how forgiving it is on the Zarfian scale
+                * ```<description>...</description>```Author's outline of the work. Plaintext, but may contain ```<br/>``` tags (no other tags)
+                * ```<series>...</series>``` and ```<seriesnumber>...</seriesnumber>```
+                    * series shows what 'series' of works this work is from.
+                    * seriesnumber shows its position in the series (non-negative integer)
+                        * seriesnumber must be accompanied by series
+                            * series doesn't need a seriesnumber
+    * Optional metadata
+        * ```<resources>...</resources>``` used for other files intended to accompany the story/available to any player. made up on 'auxiliary' blocks
+                * ```<auxiliary><leafname>```filename```</leafname><description>```description of the resource```</description></auxiliary>```
+        * ```<contacts>...</contacts>``` can give a home page and author's contact email. should only be given if they will be indefinitely valid.
+            * ```<url>```homepage link```</url>```
+            * ```<authoremail>```author's email```</authoremail>```
+        * ```<cover>...</cover>``` is mandatory only for stories with a cover picture
+            *```<format>...</format>``` format for cover. 'jpg' or 'png'
+            * ```<width>...</width>``` and ```<height>...</height>```: width/height in px (positive integer)
+            * ```<description>```description of image```</description>```
+
+## What I'd need to do
+* If I'm outputting files in a .html format, I could theoretically get away with just entering an IFID tag
+    * Call Java.UUID.randomUUID() to obtain it when creating a new project
+        * https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html
+* Only ensure that the metadata supported by the .iFiction format is supported by my system
+* It appears that .html is already supported by the Babel stuff (somewhat), so I probably don't need to create a c subroutine for my stuff (as long as it outputs in .html)
+    * Simply need to include the IFID as a comment in the HTML file [3]
+        * ```<!-- UUID://IFID goes here// -->```
+
+
 
 ## Sources etc
 * [1] Interactive Fiction Technological Foundation. "The Treaty of Babel". ifarchive.org https://babel.ifarchive.org/ (Accessed Aug. 10, 2020)
 * [2] *A Universally Unique IDentifier (UUID) URN Namespace*, RFC 4122, Network Working Group, July 2005 [Online]. Available: https://tools.ietf.org/html/rfc4122
+* [3] "IFID - IFWiki". ifwiki.org. http://ifwiki.org/index.php/IFID (Accessed Aug. 10, 2020).
