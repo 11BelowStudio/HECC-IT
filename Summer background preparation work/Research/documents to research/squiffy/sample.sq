@@ -1,0 +1,78 @@
+Squiffy is a tool for creating interactive stories.
+
+You write your story in a text file. Each choice is represented by a [[new section]]. You can create links to new sections by surrounding them in double square brackets.
+
+[[new section]]:
+
+In addition to sections, Squiffy has the concept of passages. These are sections of text that don't advance the story. For example, you can click this [passage link], and this [other passage link], but the story won't advance until you click this [[section link]].
+
+[passage link]:
+
+This is the text for the first passage link.
+
+[other passage link]:
+
+This is the text for the second passage link.
+
+[[section link]]:
+
+When a new section appears, any unclicked passage links from the previous section are disabled.
+
+Are you a [[gamer]](next, gender=gamer), a [[normie]](next, gender = normie), or are yuo a [[political]](next, gender=political)?
+
+[[next]]:
+
+ok {gender}.
+
+you are {if gender=gamer:gamer}{else:{if gender=normie:normie}{else:political}}.
+
+Clicking this [link] will show an alert.
+
+[link]:
+    var deezNuts = squiffy.get("gender");
+    alert ("Hello, " + deezNuts + "!");
+    
+bottom text
+
+[[oof]]
+
+[weird]
+
+[weird]:
+
+ikr
+
+[[oof]]:
+
+<img src="https://raw.githubusercontent.com/11BelowStudio/EpicGamerMoment-TheGame/master/src/images/oof.png">
+
+[[oof]]
+
+{sequence:Click me:Click me again:[wacky]}
+
+[wacky]:
+Done!
+
+Please choose: {rotate size:small:medium:large}
+
+You chose {size}.
+
+[[ok then]]
+[[ok then]]:
+
+You chose {size}.
+
+**now aint that just wacky?**
+
+[[continue start]]
+[[continue start]]:
+
+this is the first section
+
++++click this to continue
+
+wow you're in a new section
+
++++k
+
+waoh
