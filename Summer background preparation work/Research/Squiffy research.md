@@ -4,7 +4,8 @@
 * Write stuff in a .squiffy file, exported  as a folder with HTML, CSS and JavaScript files.
 
 ##how to use it
-*
+* Write squiffy script, press 'run' to test it, or press 'build' to output it in an easily redistributable format
+    * 'run' intended for testing stuff as you write it
 
 ##what options it gives the user
 * Can declare 'sections' and 'passages'
@@ -58,6 +59,18 @@
                 * The text from the 'passage within this section' passage appears on the following line
             * **Recursive embeds are not allowed**
                 * Passages/sections with any sort of recursive embedding are displayed as being completely empty.
+    * 'Master' sections/passages
+        * Section/passage with empty name is treated as the 'master' section/passage
+        * Purpose of it existing
+            * Stuff in the master section fires whenever every other section is fired
+            * Stuff in the master passage for a section fires whenever every other passage in that section fires.
+        * Example usage
+            * ```
+              [[]]:
+              @clear
+              @inc turns
+              ```
+                * Whenever it goes to a new section, everything else that was visible to the player is removed, and a 'turns' variable is incremented.
 * 'continue' links
     * Effectively allow a new section (and a link to it) to be implicitly declared at the end of a section
         * ```
@@ -88,6 +101,7 @@
 ##what features it has
 * Can use custom JavaScript
     * But this can only fire at the start of a section/passage
+    * Needs to be indented by 4 spaces/1 tab
 * Variables (attributes)
     * Setting them
         * Setting them within section/passage
@@ -213,10 +227,91 @@
 * Some debugging features
     * Cannot detect loops within the story
     * Cannot detect instances of passages/sections sharing the same identifier
+* No custom CSS
+    * Unless you edit the output style.css yourself
+    * Or write style.css and use the command line squiffy tool to build your game
 
 ##how the interior logic and such works in the outputs it produces
-*
-
+* Squiffy exports game as a set of files within the same directory as the .squiffy file which the game was written in
+    * What each file is
+        * ```index.html``` a simple .html page which includes the necessary .js files, style.css, a ```<script>``` to get everything up and running, and contains a few ```<div>``` containers for the game to be displayed in
+        * ```jQuery.min.js``` Literally just the jQuery framework
+        * ```story.js``` contains the all the Squiffy handling stuff (basically just holds the story stuff as an object called 'squiffy')
+        * ```style.css``` Stylesheet for the game
+    * ```squiffy.js``` defines a 'squiffy' object
+        * 'squiffy' object
+            * Attributes
+                * squiffy.story
+                    * Attributes
+                        * squiffy.story.start
+                            * ID of the squiffy.story.section that the story starts at
+                        * squiffy.story.id
+                            * Random number, identifier for the story (appears to be used when uploading a Squiffy game to textadventures.co.uk, unrelated to Treaty of Babel)
+                        * squiffy.story.sections
+                            * Basically holds all the 'section' objects for the story
+                    * Methods
+                        * squiffy.story.seen(sectionName)
+                            * returns whether or not the specified section is in the '_seen_sections' array
+                        * squiffy.story.go(section)
+                            * Looks at the section that the player has been sent to, stores it as squiffy.story.section
+                            * If the 'master' section exists
+                                * Calls .run() with the master section
+                                * Calls .ui.write() with the master section
+                            * Calls .run() with this section
+                            * Calls ui.write() with this section
+                            * Calls .save() (finishes up any changes to the HTML that needed to be made for this section)
+                        * squiffy.story.run(section)
+                            * Clears the screen if the section has a '@clear' command in it
+                            * Processes the attributes of the section (if they exist)
+                            * Runs the custom JavaScript for the section (if defined)
+                        * squiffy.story.restart()
+                            * Basically restarts the story to the starting state, and reloads everything as appropriate
+                        * squiffy.story.save()
+                            * Stores the current state of the game via 'squiffy.set(_output,squiffy.ui.output.html())'
+                        * squiffy.story.load()
+                            * Obtains the state of the game via 'squiffy.get('output')' and displays it to the user
+                * squiffy.ui
+                    * Attributes
+                    * Methods
+                        * processText(text)
+                            * Basically processes any squiffy commands within section/passage text (such as conditionals, labels, variables, etc.)
+                        * clearScreen()
+                            * Clears existing data from the screen
+                        * write(text)
+                            * Basically outputs passage text
+                        * scrollToEnd()
+                            * Scrolls down to the end of the current content on the screen, so the user will see the new stuff being displayed
+                        * 
+            * Methods
+                * replaceLabel(expr)
+                    * The label replace expression is parsed, to find the ID of the label being used, and what it should now say
+                    * uses jQuery to find the label
+                    * then edits the label text appropriately
+                * get(attribute)
+                    * Obtains the value of the specified attribute
+                * set(attribute, value)
+                    * Sets the specified attribute to a specified value
+                * handleLink(link)
+                    * Handles links (section/passage/rotate/sequence/change text/etc) defined within the story
+                * newSection()
+                    * Called when a new section needs to be displayed
+                        * deactivates previously active section
+                        * sets things up for displaying the new section
+        * 'section' object
+            * identifier: the string used to identify the section
+            * attributes
+                * js:
+                    * Any custom JavaScript belonging to the section (that is fired when this section is opened)
+                    * Stored within a ```function(){ /*defined javacscript goes here*/``` declaration
+                * text:
+                    * The textual content of the passage, formatted as html
+                    * Any section/passage links basically call a method to load the appropriate section/passage when clicked
+                        * Similar thing for other sorts of attribute handling stuff
+                * passages:
+                    * Contains 'passage' objects
+                        * Same as 'section' objects, but they don't contain further 'passage' objects
+                    * If there are no passages, this is empty.
+                    
 ##sources etc
 * https://textadventures.co.uk/squiffy
 * http://docs.textadventures.co.uk/squiffy/
