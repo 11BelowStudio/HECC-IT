@@ -164,13 +164,28 @@
                         * The passage content (within the ```tw-passagedata``` tags) is the stuff the user actually sees
                             * Content stored as a single text node (no child nodes allowed)
                             * All &, <, >, ", and ' must be escaped into HTML entities 
-* 
+* How it changes which passage is being displayed to the user whilst staying in the same HTML page
+    * Links [8]
+        * Are treated as an ```<tw-link>``` in the HTML DOM stuff
+        * When clicked, it appears to refer back to the ```<tw-passagedata>``` for the current passage
+            * Finds the link that was clicked, and finds the passage that it sends the player to
+        * Then updates the passage being displayed appropriately
+    * The HTML for the passages appear to be generated dynamically when displaying them to the user
+        * Story format code converts the twine passagedata into displayable HTML when the passage in question is to be displayed
+            * Does mean that there's no wasted space from holding the raw twine passagedata and the formatted passagedata in the same .html file
+                * Or from holding formatted .html stuff that may never be used in memory
+            * But it does mean that a bit more work has to be done at runtime
+    * Uses jQuery[9]
+        * This is included within the story format code, and appears to be used to actually respond to user input events, and to replace stuff on the HTML page.
+    
 
 ##sources etc
 * [1] "Twine wiki". twinery.org https://twinery.org/wiki/start (Accessed Aug. 5, 2020)
 * [2] *Harlowe 3.1.0 Manual* (2019) Accessed: Aug. 5, 2020. [Online] Available: https://twine2.neocities.org/
 * [3] T. M. Edwards. "Sugarcube". motoslave.net https://www.motoslave.net/sugarcube/2/ (Accessed Aug. 5, 2020)
-* [4] *Snowman 2.0 Documentation* v. 1.7 (2019) Accessed: Aug 5, 2020. [Online] Available: https://videlais.github.io/snowman/2/
+* [4] *Snowman 2.0 Documentation* v.1.7 (2019) Accessed: Aug 5, 2020. [Online] Available: https://videlais.github.io/snowman/2/
 * [5] C. Klimas. "Chapbook, a story format for Twine 2" klembot.github.io https://klembot.github.io/chapbook/ (Accessed Aug. 5, 2020)
 * [6] T. M. Edwards, D. Cox. "Twine Specifications" github.com/iftechfoundation https://github.com/iftechfoundation/twine-specs (Accessed Aug. 5, 2020)
 * [7] Interactive Fiction Technological Foundation. "The Treaty of Babel". ifarchive.org https://babel.ifarchive.org/ (Accessed Aug. 5, 2020)
+* [8] *Harlowe 3.1.0* (2019) Accessed: Aug. 17, 2020. [Online] https://foss.heptapod.net/games/harlowe
+* [9] *jQuery* (2020) The jQueryFoundation Accessed: Aug. 17, 2020. [Online] https://jquery.com/
