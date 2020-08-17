@@ -164,53 +164,78 @@
                         * The passage content (within the ```tw-passagedata``` tags) is the stuff the user actually sees
                             * Content stored as a single text node (no child nodes allowed)
                             * All &, <, >, ", and ' must be escaped into HTML entities 
-* How it changes which passage is being displayed to the user whilst staying in the same HTML page
-    * Links [8]
-        * Are treated as an ```<tw-link>``` in the HTML DOM stuff
-        * When clicked, it appears to refer back to the ```<tw-passagedata>``` for the current passage
-            * Finds the link that was clicked, and finds the passage that it sends the player to
-        * Then updates the passage being displayed appropriately
-    * The HTML for the passages appear to be generated dynamically when displaying them to the user
-        * Story format code converts the twine passagedata into displayable HTML when the passage in question is to be displayed
-            * Does mean that there's no wasted space from holding the raw twine passagedata and the formatted passagedata in the same .html file
-                * Or from holding formatted .html stuff that may never be used in memory
-            * But it does mean that a bit more work has to be done at runtime
-    * Uses jQuery[9]
-        * This is included within the story format code, and appears to be used to actually respond to user input events, and to replace stuff on the HTML page.
-* How it records variables and such when playing
-    * Session Storage
-        * https://www.w3schools.com/jsref/prop_win_sessionstorage.asp
-        * Key: 'Saved Session'. Value: stack of gamestate objects
-    * Holds them all in 'session' storage, within a stack of gamestate objects
-        * ```{"passage":"passage name goes here","variables":{/*variable object*/}}```
-            * Variable object
-                * Holds ```"variableName":value``` pairs, holding the variable name and value for every single variable that's been updated at that point in time
-    * Using a variable
-        * Variables are searched for/used if the dynamically parsed passage currently being displayed uses that particular variable.
-        * Searches for a variable with the specified name in the gamestate stack
-            * Starts from current gamestate, then searches back from there
-                * If found
-                    * That value for the variable is used
-                * If not found
-                    * A definition for that variable is put into the current gamestate's variables
-                        * If the value was explicitly defined, that variable is set to that value
-                        * If the value wasn't explicitly defined, that variable is set to 0
-        * Updating an existing variable
-            * If an existing variable has its value changed in the current gamestate
-                * a ```"variableName":newValue``` pair is added to the 'variables' object of this gamestate
-                * The raw new value of the variable is used here.
-                    * Effectively re-declaring the variable with the new value.
-    * This stack of gamestates is updated whenever the player navigates to a new passage
-        * New passage's gamestate is pushed to the top of it
-        * If a player goes back a gamestate, the topmost gamestate object is popped off the stack
-* How does it save games
-    * As a stack of the aforementioned gameState objects
-        * Key: ```(Saved Game IFID-GOES-HERE) save file name```
-        * Value: The stack of gameState objects
-    * Uses web browser localstorage
-        * https://www.w3schools.com/jsref/prop_win_localstorage.asp
-    * Passed into browser sessionstorage when loading a game (so the gamestate resumes from when it was saved)
-    * The stack contains every single gamestate from when the game started.
+* Specifics about the Harlowe format[8]
+    * How it parses the tw-passagedata stuff
+        * read and loaded into Passage objects (as defined in harlowe/js/passages.js) once the HTML page has loaded
+            * Passage objects stored in 'Passages'
+                * Passage objects are maps, holding string content, tags, and name
+            * Methods exist to
+                * get passages with a given tag
+                * get passage by name
+                * get passages matching a given lambda
+                * execute 'metadata' macros on passages
+        * Passage contents are converted to 'Section' objects when they are needed (defined in harlowe/js/section.js)
+            * Sections tend to be discarded shortly after rendering
+                * Some exceptions, generally involving the section containing certain macros.
+                    * but ultimately discarded once the section is no longer needed.
+            * Basically runs the code needed to make the macros do the thing they're supposed to do, then renders the result.     
+                * Using macros in passages (the fancy stuff that allows variables/conditions/redirects/etc) defined in harlowe/js/macros.js
+                    * macros.js holds a private collection of registered macros.
+                        * If an invalid macro is passed to this, it's returned to Section as a 'TwineError' object
+                        * If the macro is valid, it'll run it, and return the output to render (if appropriate).
+                * The HTML DOM content that's displayed is rendered via a Renderer object (harlowe/js/renderer.js)
+                    * Calls the macro stuff, renders everything after it's done processing all the relevant macros
+                        * Twine links are converted to (link-goto:) macros (and are processed accordingly)
+                    * Renders the resulting HTML DOM stuff for the Section object to the user
+                        * If there are any TwineError objects, they'll be rendered too (so it's obvious that they're present, and need to be fixed).
+    * How it changes which passage is being displayed to the user whilst staying in the same HTML page
+        * Links
+            * Are treated as an ```<tw-link>``` in the HTML DOM stuff
+            * When clicked, it searches for the Passage object that is named by the link
+                * Finds the link that was clicked, and finds the passage that it sends the player to
+            * Then updates the passage being displayed appropriately
+        * The HTML for the passages appear to be generated dynamically when displaying them to the user
+            * Story format code converts the twine passagedata into displayable HTML when the passage in question is to be displayed
+                * Does mean that there's no wasted space from holding the raw twine passagedata and the formatted passagedata in the same .html file
+                    * Or from holding formatted .html stuff that may never be used in memory
+                * But it does mean that a bit more work has to be done at runtime
+        * Uses jQuery[9]
+            * This is included within the story format code, and appears to be used to actually respond to user input events, and to replace stuff on the HTML page.
+    * How it records variables and such when playing
+        * Session Storage
+            * https://www.w3schools.com/jsref/prop_win_sessionstorage.asp
+            * Key: 'Saved Session'. Value: stack of gamestate objects
+        * Holds them all in 'session' storage, within a stack of gamestate objects
+            * ```{"passage":"passage name goes here","variables":{/*variable object*/}}```
+                * Variable object
+                    * Holds ```"variableName":value``` pairs, holding the variable name and value for every single variable that's been updated at that point in time
+        * Using a variable
+            * Variables are searched for/used if the dynamically parsed passage currently being displayed uses that particular variable.
+            * Searches for a variable with the specified name in the gamestate stack
+                * Starts from current gamestate, then searches back from there
+                    * If found
+                        * That value for the variable is used
+                    * If not found
+                        * A definition for that variable is put into the current gamestate's variables
+                            * If the value was explicitly defined, that variable is set to that value
+                            * If the value wasn't explicitly defined, that variable is set to 0
+            * Updating an existing variable
+                * If an existing variable has its value changed in the current gamestate
+                    * a ```"variableName":newValue``` pair is added to the 'variables' object of this gamestate
+                    * The raw new value of the variable is used here.
+                        * Effectively re-declaring the variable with the new value.
+        * This stack of gamestates is updated whenever the player navigates to a new passage
+            * New passage's gamestate is pushed to the top of it
+            * If a player goes back a gamestate, the topmost gamestate object is popped off the stack
+    * How does it save games
+        * As a stack of the aforementioned gameState objects
+            * Key: ```(Saved Game IFID-GOES-HERE) save file name```
+            * Value: The stack of gameState objects
+        * Uses web browser localstorage
+            * https://www.w3schools.com/jsref/prop_win_localstorage.asp
+        * Passed into browser sessionstorage when loading a game (so the gamestate resumes from when it was saved)
+        * The stack contains every single gamestate from when the game started.
+
 
 ##sources etc
 * [1] "Twine wiki". twinery.org https://twinery.org/wiki/start (Accessed Aug. 5, 2020)
