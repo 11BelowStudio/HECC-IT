@@ -41,7 +41,9 @@
 ##what features it's missing
 * Any sort of non-command line interface
     * no GUI/IDE
-* 
+* You still need to manually define an IFID within your Twee2 code
+    * But the compiler instructs you how to do this (with a uniquely-generated one) if it doesn't detect an IFID declaration in your twee2 code
+    * Also means that it won't overrwrite the IFID when compiling a new version of an existing game
 
 ##how the interior logic and such works in the outputs it produces
 * twee2 syntax
