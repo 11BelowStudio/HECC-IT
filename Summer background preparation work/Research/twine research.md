@@ -177,7 +177,30 @@
             * But it does mean that a bit more work has to be done at runtime
     * Uses jQuery[9]
         * This is included within the story format code, and appears to be used to actually respond to user input events, and to replace stuff on the HTML page.
-    
+* How it records variables and such when playing
+    * Holds them all in 'session' storage, within a stack of gamestate objects
+        * ```{"passage":"passage name goes here","variables":{/*variable object*/}}```
+            * Variable object
+                * Holds ```"variableName":value``` pairs, holding the variable name and value for every single variable that's been updated at that point in time
+    * Using a variable
+        * Variables are searched for/used if the dynamically parsed passage currently being displayed uses that particular variable.
+        * Searches for a variable with the specified name in the gamestate stack
+            * Starts from current gamestate, then searches back from there
+                * If found
+                    * That value for the variable is used
+                * If not found
+                    * A definition for that variable is put into the current gamestate's variables
+                        * If the value was explicitly defined, that variable is set to that value
+                        * If the value wasn't explicitly defined, that variable is set to 0
+        * Updating an existing variable
+            * If an existing variable has its value changed in the current gamestate
+                * a ```"variableName":newValue``` pair is added to the 'variables' object of this gamestate
+                * The raw new value of the variable is used here.
+                    * Effectively re-declaring the variable with the new value.
+    * This stack of gamestates is updated whenever the player navigates to a new passage
+        * New passage's gamestate is pushed to the top of it
+        * If a player goes back a gamestate, the topmost gamestate object is popped off the stack
+    * 
 
 ##sources etc
 * [1] "Twine wiki". twinery.org https://twinery.org/wiki/start (Accessed Aug. 5, 2020)
