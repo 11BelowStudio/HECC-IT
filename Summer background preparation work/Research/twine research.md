@@ -188,6 +188,7 @@
                         * Twine links are converted to (link-goto:) macros (and are processed accordingly)
                     * Renders the resulting HTML DOM stuff for the Section object to the user
                         * If there are any TwineError objects, they'll be rendered too (so it's obvious that they're present, and need to be fixed).
+                    * Also renders the debugging tools (if appropriate)
     * How it changes which passage is being displayed to the user whilst staying in the same HTML page
         * Links
             * Are treated as an ```<tw-link>``` in the HTML DOM stuff
