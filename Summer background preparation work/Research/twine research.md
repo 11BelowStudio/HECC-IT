@@ -178,6 +178,9 @@
     * Uses jQuery[9]
         * This is included within the story format code, and appears to be used to actually respond to user input events, and to replace stuff on the HTML page.
 * How it records variables and such when playing
+    * Session Storage
+        * https://www.w3schools.com/jsref/prop_win_sessionstorage.asp
+        * Key: 'Saved Session'. Value: stack of gamestate objects
     * Holds them all in 'session' storage, within a stack of gamestate objects
         * ```{"passage":"passage name goes here","variables":{/*variable object*/}}```
             * Variable object
@@ -200,7 +203,14 @@
     * This stack of gamestates is updated whenever the player navigates to a new passage
         * New passage's gamestate is pushed to the top of it
         * If a player goes back a gamestate, the topmost gamestate object is popped off the stack
-    * 
+* How does it save games
+    * As a stack of the aforementioned gameState objects
+        * Key: ```(Saved Game IFID-GOES-HERE) save file name```
+        * Value: The stack of gameState objects
+    * Uses web browser localstorage
+        * https://www.w3schools.com/jsref/prop_win_localstorage.asp
+    * Passed into browser sessionstorage when loading a game (so the gamestate resumes from when it was saved)
+    * The stack contains every single gamestate from when the game started.
 
 ##sources etc
 * [1] "Twine wiki". twinery.org https://twinery.org/wiki/start (Accessed Aug. 5, 2020)
