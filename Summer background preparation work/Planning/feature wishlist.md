@@ -1,12 +1,76 @@
-# 'wishlist' of features fpr the hypertext game tool
+# 'wishlist' of features for the hypertext game tool
 
+Names and such for components
+* Entirely text-based format for making games
+    * HECC
+        * Hypertext Editing and Compilation Code
+* The parser for HECC to HTML
+    * HECC-UP
+        * HECC Uncomplicated Parser (for MVP)
+        * HECC Ultra Parser (for finished project)
+* JavaScript runtime engine stuff
+    * HECCER
+        * HECC Environment for Runtime
+* GUI program (can read and produce HECC, and includes HECC-UP to parse produced HECC)
+    * OH-HECC
+        * Optional Help with HECC
+
+##The bare minimum for the MVP
+###Tool (HECC-UP)
+* You write it in HECC (v0.1)
+    * Hypertext Editing and Compilation Code (v0.1)
+    * Parsed via HECC-UP (v0.1)
+        * HECC Uncomplicated Parser (v0.1)
+    * Output is 
+* Entirely written, parsed from a .txt file to a .html file (similar to .ink, Squiffy, Twee2)
+* Might use similar passage declaration syntax to Twee2
+    * ::PassageName
+* Similar linking syntax to Twee2/Squiffy
+    * [[Link to passage]]
+    * [[Link text->Link to passage]]
+* Everything underneath a passage declaration: content for that passage
+    * Probably going to be put into a `<p></p>` tag (with `<br/>` tags at newlines)
+* Might just opt to refrain from variables, saving in-progress games, and such for the time being
+    * Just focusing on the parsing and such
+* Tool will ask user for a folder to output the exported game into
+    * index.html (main html page)
+    * HECCER.js (HECC engine)
+        * HECC Environment for Runtime
+    * style.css (CSS)
+
+###The output
+* .html format (playable via browser)
+* Probably going to try to keep all gameplay within the same .html page
+    * Use JavaScript to update the inner HTML of the page body in response to users clicking the passage links
+* Will need to create a JavaScript engine (HECCER.js)
+    * Load passages
+        * Need to decide how the output passages will be saved
+            * Maybe have them in custom HTML tags in the HTML page (like Twine/Undum)
+        * Probably could pre-process the contents into HTML content when parsing the code into the output
+    * Display passages
+        * Passages displayed within some innerHTML stuff
+            * Contents of innerHTML replaced when a new passage has to be displayed
+        * Display a defined start passage when user loads the game
+        * Display a passage when the user navigates to the passage (by clicking a passage link)
+    * Could potentially start including a user history stack within the MVP
+        * Going to new passage: record of being in that passage pushed onto the stack
+        * Allowing users to go back by popping stuff off the top of the stack
+        * Should make it easier to actually implement saving games, variables, and guard conditions later on
+* The HTML page
+    * Probably going to make this 'index.html'
+    * Define a div or something in the body which will be used to display the current passage
+        * `document.getElementByID("This element displays the passsages").innerHTML = document.getElementByID("passage that needs to be displayed").innerHTML;` or something to change which passage is currently being displayed.
+    * Might need to look into custom HTML elements (and making sure they dont get displayed to the user or anything, but remain accessible to any JavaScript code)
+* CSS
+    * make sure stuff looks presentable I guess
+        * Could get away with having it declared inline within the HTML page
 
 ##Necessary stuff
 ### The tool
 * Must be able to write 'passages' containing content for the story
 * Must have 'links' between the 'passages'
-* Must be able to export the game in a playable format
-* 
+* Must be able to parse and export the game in a playable format
+* Might stick to an entirely written (non-GUI) format for the MVP
 
 ### The outputs
 * Passages must be displayed to the user
@@ -17,6 +81,7 @@
 ##Desirable stuff
 ### The tool
 * A GUI of some description
+    * Saving/loading WIP stuff
     * Likely to take a similar form as Twine
     * Probably built off a similar MVC architecture as a bunch of the games I've made this year
         * Need to work out how to do viewport scrolling/support resizing
@@ -25,9 +90,13 @@
     * Can click on a node to edit it
         * Swing dialog box
     * Menu bar of some description
-* An option to use a purely code-based interface (for power users)
+    * Maybe also a 'string of pearls' node overview
 * Compliance with the Treaty of Babel
-* Saving/loading WIP stuff
+    * Generate a UUID as an IFID
+    * Metadata
+        * Author name
+        * Game title
+        * etc
 * Some form of automatic debugging (ensuring that there's no infinite loops or something like that)
 * 
 
@@ -78,4 +147,6 @@
                 * That image can then be easily referenced elsewhere
                 * Might need to also implement a method for easily previewing/removing these base64 encoded images
     * Customizing how stuff gets displayed to the user
-        * Defining special animations when transitioning between certain nodes
+        * Defining special animations when transitioning between certain nodes?
+        * Special per-node CSS options?
+            * Maybe consider implementing an option for some form of special per-passage CSS stuff?
