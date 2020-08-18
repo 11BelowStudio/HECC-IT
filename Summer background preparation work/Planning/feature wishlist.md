@@ -3,7 +3,9 @@
 Names and such for components
 * Entirely text-based format for making games
     * HECC
-        * Hypertext Editing and Compilation Code
+        * Hypertext Editing and Creation Code
+        * Defined in the HECC-SPECC
+            * HECC Super Precise Explanation for Creating Code
 * The parser for HECC to HTML
     * HECC-UP
         * HECC Uncomplicated Parser (for MVP)
@@ -11,9 +13,12 @@ Names and such for components
 * JavaScript runtime engine stuff
     * HECCER
         * HECC Environment for Runtime
-* GUI program (can read and produce HECC, and includes HECC-UP to parse produced HECC)
+* GUI program
     * OH-HECC
         * Optional Help with HECC
+        * can read and produce HECC
+            * Does it via a GUI so people don't need to write HECC themselves
+        * includes HECC-UP to parse produced HECC
 
 ##The bare minimum for the MVP
 ###Tool (HECC-UP)
@@ -27,7 +32,7 @@ Names and such for components
     * ::PassageName
 * Similar linking syntax to Twee2/Squiffy
     * [[Link to passage]]
-    * [[Link text->Link to passage]]
+    * [[Link text|Link to passage]]
 * Everything underneath a passage declaration: content for that passage
     * Probably going to be put into a `<p></p>` tag (with `<br/>` tags at newlines)
 * Might just opt to refrain from variables, saving in-progress games, and such for the time being
@@ -98,7 +103,7 @@ Names and such for components
         * Game title
         * etc
 * Some form of automatic debugging (ensuring that there's no infinite loops or something like that)
-* 
+* Tags for passages (for ease of organization)
 
 ### The outputs
 * Some method of tracking user history (sequence of visited passages)
