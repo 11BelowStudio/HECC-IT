@@ -106,6 +106,7 @@
         * Using values of other variables as guards
             * I ported 'Epic Gamer Moment: The Game' (a game I made for a game jam in November 2019) into Twine this afternoon, because I figured that making an example to look back at would be simpler than trying to re-explain it
                 * [the twine port is here](/documents to research/Epic Gamer Moment - The Game (Twine Edition).html)
+* Can include timers and such as well
 * Custom CSS/JavaScript stuff
     * User-defined CSS/JavaScript can be used
 * Saving/loading games

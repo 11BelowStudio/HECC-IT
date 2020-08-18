@@ -158,7 +158,6 @@
             * full functionality
     * Swapping between types
         * Swapping to different output: functionality unsupported by new output type simply hidden (not lost if the project swaps back to that original type)
-    * 
 
 ##what features it has
 * Guard conditions
@@ -231,6 +230,7 @@
                 * Each option is put here via a call to the ```option(n,s,t)``` function in ```body.js```
                     * The index (n), option text (s), and mouseover text (t) is defined inline like this
                     * ```body.js``` is responsible for actually converting those raw strings/raw integer into the functional options.
+                    
 ##sources etc
 * [1] R. Bartle, C. Beck, private communication (*eHyperTool Design Specification Version 1.02*), June 2020. (document from 2011)
 * [2] R. Bartle. "Demo 1" youhaventlived.com https://www.youhaventlived.com/cbdemo/ (accessed Aug 4. 2020)
