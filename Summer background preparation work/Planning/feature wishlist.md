@@ -11,8 +11,12 @@ Names and such for components
         * HECC Uncomplicated Parser (for MVP)
         * HECC Ultra Parser (for finished project)
 * JavaScript runtime engine stuff
-    * HECCER
+    * HECCER.js
         * HECC Environment for Runtime
+            * Runs the HECC-made game in browser
+    * HECCED.js
+        * HECC Exported Data
+            * The written HECC code is parsed into Passage objects, and the objects are held here.
 * GUI program
     * OH-HECC
         * Optional Help with HECC
@@ -26,7 +30,7 @@ Names and such for components
     * Hypertext Editing and Compilation Code (v0.1)
     * Parsed via HECC-UP (v0.1)
         * HECC Uncomplicated Parser (v0.1)
-    * Output is 
+    * Output is basically a folder containing the important files for the game.
 * Entirely written, parsed from a .txt file to a .html file (similar to .ink, Squiffy, Twee2)
 * Might use similar passage declaration syntax to Twee2
     * ::PassageName
