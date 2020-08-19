@@ -51,6 +51,7 @@ Names and such for components
     * Load passages
         * Need to decide how the output passages will be saved
             * Maybe have them in custom HTML tags in the HTML page (like Twine/Undum)
+            * Or I could have them in a game.js file, basically containing JavaScript objects for each passage (like Squiffy/Undum)
         * Probably could pre-process the contents into HTML content when parsing the code into the output
     * Display passages
         * Passages displayed within some innerHTML stuff
