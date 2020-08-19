@@ -1,4 +1,4 @@
-#Undum
+# Undum
 
 ## how it works
 * Basically provides a template for writing hypertext games.
@@ -62,7 +62,7 @@
         * ```media/css/undum.css``` used for desktop, ```media/css/undum-mobile.css``` used for mobile (by default)
 
 
-##how to use it
+## how to use it
 * Download the undum files from the Github repo
 * Open the 'games' folder
     * Make a copy of one of the 'tutorial' HTML files
@@ -71,11 +71,11 @@
 * In those copied files, edit the stuff that the comments say to edit, in order to write your own game.
 * Basically writing HTML/JavaScript/CSS stuff by hand (except it's basically editing a template).
 
-##what options it gives the user
+## what options it gives the user
 * Undum v.2 onwards allows situations to be defined in either the JavaScript 'Game definition' file, or in the HTML file.
 * May save/load content whenever
 
-##what features it has
+## what features it has
 * Can use all the functionality of HTML5, CSS, and JavaScript
     * But you need to use Undum's own RNG and time stuff instead of JavaScript Date/Math.random() (or saving/loading games won't work)
 * Doesn't require any form of dedicated server/runtime environment/anything like that to run
@@ -84,7 +84,7 @@
     * Uses jQuery to update the stuff displayed to the user during the game
 * Variables and such pretty much persistently displayed to the player within the 'character' panel to the side of the game stuff
 
-##what features it's missing
+## what features it's missing
 * No sort of IDE/editor/anything like that
     * Need to edit the code for the game directly
     * Casual users may be put off it as a result
@@ -97,7 +97,7 @@
         * Can't guarantee that it will be alphanumeric-with-hyphens, between 8-63 characters
 
 
-##how the interior logic and such works in the outputs it produces
+## how the interior logic and such works in the outputs it produces
 * Data to put in each file
     * HTML file
         * Game title
@@ -401,5 +401,5 @@
                 * Can prevent certain elements from being triggered whilst replaying a saved game
                     * ```undum.isInteractive()``` returns true if game is being played normally, false otherwise: only fire alerts etc if this is true.
 
-##sources etc
+## sources etc
 * https://idmillington.github.io/undum/

@@ -1,4 +1,4 @@
-#ChoiceScript
+# ChoiceScript
 
 ## how it works
 * Built on Node.js
@@ -8,7 +8,7 @@
     * choicescript folder/web/mygame
     * .txt files must be in UTF-8 encoding
 
-##how to use it
+## how to use it
 * Must first launch ChoiceScript server with run-server.bat
 * Writing stuff
     * Important files
@@ -73,7 +73,7 @@
                         * ```*goto labelname```
                             * jumps to the line of code where the 'labelname' label was defined, resumes from there
 
-##what options it gives the user
+## what options it gives the user
 * Variables
     * Choice of variable scopes
         * ```*create variableName value``` at start of startup.txt for global variables (usable by any scene)
@@ -128,7 +128,7 @@
 * 'bugs' (basically exceptions)
     * ```*bug Error message``` If this line is executed, it crashes the game, and leaves that specified error messsage
 
-##what features it has
+## what features it has
 * Variables
 * Some automatic testing stuff
     * 'Quicktest'
@@ -149,14 +149,14 @@
         * Running a 'randomtest' sets a special 'choice_randomtest' variable to true: can use this to force randomtest to jump to a certain label (if needed)
         * Also reports errors (syntax etc) encountered when playing
         
-##what features it's missing
+## what features it's missing
 * No GUI stuff (at all)
 * Requires a server to be running in order to play games
 * No styling options
     * Sure, there's some markup-style ```[b]bold[/b]``` and ```[i]italic[/i]``` formatting options, but that's it.
 * No officially endorsed IDE or anything like that
 
-##how the interior logic and such works in the outputs it produces
+## how the interior logic and such works in the outputs it produces
 * What each file appears to be used for
     * top level
         * 'startupgenerator.js' appears to be used to start generating a game
@@ -176,6 +176,6 @@
 * I honestly can't be arsed to deal with any sort of serverside stuff in my system (as that's an extra, unnecessary level of complexity for everyone involved), so I probably won't bother looking in any deeper into how the inner workings work.
 
 
-##sources etc
+## sources etc
 * https://www.choiceofgames.com/make-your-own-games/choicescript-intro/
 * https://nodejs.org/en/about/

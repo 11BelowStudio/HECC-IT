@@ -1,4 +1,4 @@
-#Quest
+# Quest
 
 ~~will only be looking at the 'gamebook' aspects of Quest, as the 'text adventure' bits aren't entirely relevant to the task at hand~~
 
@@ -7,14 +7,14 @@ Actively discouraged from using this to make 'gamebooks' (see http://docs.textad
 ## how it works
 *
 
-##how to use it
+## how to use it
 * You don't.
     * Actively discouraged from making 'gamebooks' with it.
         * Official documentation for the gamebook (http://docs.textadventures.co.uk/quest/tutorial/creating_a_gamebook.html) states:
             * *NOTE: Rather than using the Game Book feature of Quest, we would suggest you use either the full product (and turn off the game panes and command bar so the player just uses hyperlinks), or use Squiffy. Quest Text Adventures have a full world model, where objects and rooms relate to each other in a meaningful way, and have numerous features not supported by Game Books. Squiffy has no world model, but is great for creating multiple choice games that focus on text and story, and will produce a game that can be run in any browser, without the need for a dedicated server. Quest Game Books represent the worst of both worlds.*
             * **tl;dr** If you're making a gamebook, use Squiffy instead.
 
-##what options it gives the user
+## what options it gives the user
 * Can make 'gamebooks' and 'text adventures'
 * Creating a new game
     * 'Create new game' dialog
@@ -38,16 +38,16 @@ Actively discouraged from using this to make 'gamebooks' (see http://docs.textad
     * Game is basically an XML-style group of objects
     
 
-##what features it has
+## what features it has
 * Can export it as a .quest/.cas file to be played via quest 5
 * Options to create text adventure games and also gamebooks
 * Appears to have scripts and attributes (but those only seem to be properly supported by the 'text adventure' settings)
 
-##what features it's missing
+## what features it's missing
 * Any sort of export to web (needs a dedicated server to play on the web)
 * 
 
-##how the interior logic and such works in the outputs it produces
+## how the interior logic and such works in the outputs it produces
 * Uses ASLX format (based on XML)
     * Game schema
     * ```<asl version="550" templatetype="gamebook"> ... </asl>``` wraps game content
@@ -67,6 +67,6 @@ Actively discouraged from using this to make 'gamebooks' (see http://docs.textad
         * Starting page contains a player object
             * ```<object name = "player"><inhert name="defaultplayer"/></object>```
 
-##sources etc
+## sources etc
 * https://textadventures.co.uk/quest/
 * http://docs.textadventures.co.uk/quest/tutorial/

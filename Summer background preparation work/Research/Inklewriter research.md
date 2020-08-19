@@ -5,7 +5,7 @@
 * Must create an account on the website in order to save/load/share stories
 * Mostly JavaScript
 
-##how to use it
+## how to use it
 * Start with single paragraph with sample 'Once upon a time...' text
     * Can edit text within that paragraph
     * Can add options at the end of that paragraph
@@ -23,7 +23,7 @@
         * Used for conditional statements (can check if specific markers have/have not been passed)
         * Can also be used as counters
 
-##what options it gives the user
+## what options it gives the user
 * Conditional statements
     * Can be used for
         * Options
@@ -51,7 +51,7 @@
         * Click on the arrow next to the option, the paragraph it leads to appears underneath current paragraph
         * If you navigate to a node from the map/contents, the sequence of nodes leading to that node will be visible above it on the 'write' pane
             * If certain conditions must have been met to see that node, the sequence of nodes leading to it which allow the conditions to be met will be visible.
-* Formtting options
+* Formatting options
     * Bold text
     * Italic text
     * Images (if you can provide a link to them)
@@ -68,7 +68,7 @@
 * 'shuffling' between options
     * ```{~option 1|option 2|etc}``` randomly displays one of 'option 1', 'option 2', or 'etc'
 
-##what features it has
+## what features it has
 * Sharing stories
     * Sharing them via URL on the inklewriter website
     * Exporting them in .JSON format
@@ -94,11 +94,11 @@
     * can view story as a sequence of nodes leading to a certain node, a map of nodes, a dropdown list of nodes in 'sections', or in the format it gets output as for readers
         
 
-##what features it's missing
+## what features it's missing
 * Any sort of custom styling options (unless you use 'ink')
 * basically need to choose between having a GUI or a powerful editor
 
-##how the interior logic and such works in the outputs it produces
+## how the interior logic and such works in the outputs it produces
 * Stories pretty much stored as objects (and can be shared as JSON objects, or in '.ink' format)
 * JSON Schema
     * Main schema
@@ -197,7 +197,7 @@
         * Declaring that this is the end
             * ```-> END```
 
-##sources etc
+## sources etc
 * https://www.inklewriter.com/
 * https://www.inklestudios.com/inklewriter/ (old homepage)
 * https://www.inklestudios.com/ink/

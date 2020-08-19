@@ -1,5 +1,3 @@
-placeholder text
-
 * Tool 1 - Twine (by Chris Klimas)
     * https://twinery.org/
         * https://en.wikipedia.org/wiki/Twine_(software)

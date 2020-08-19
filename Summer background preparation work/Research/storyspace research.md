@@ -1,4 +1,5 @@
-##how it works
+# StorySpace 3
+## how it works
 * Documents saved in an XML format [1]
     * Appears to have some compatiability with 'Tinderbox' (also by Eastgate, and also unusable on Windows)
 * 'Topographic writing'[2]
@@ -51,7 +52,7 @@
                 
         
 
-##how to use it
+## how to use it
 * [5]
     * Writing spaces in a map
         * Can contain text, graphics, sounds, etc
@@ -81,12 +82,12 @@
         * Need 3 versions of images (standard, 512*512 small view, 128*128 thumbnail)
     
 
-##what features it has
+## what features it has
 * Guard fields
     * Allow readers to follow a link only if specified conditions are met
     * "Access to links may depend on whether a reader has previously visited a given writing space, or selected a specific anchor." [3]
 
-##what features it's missing 
+## what features it's missing 
 * Only usable on mac [1]
     * Cannot use it on non-mac systems
     * Allegedly can be translated into HTML
@@ -96,7 +97,7 @@
 * Need to download a runtime environment to run them
 * Very limited web export options [2] (refer to paragraph 71)
 
-##How it saves stuff
+## How it saves stuff
 * Looked at a sample .tbx from https://eclecticlight.co/2015/12/12/storyspace-3-using-guards-to-structure-reading/ (same site as the one [5] is hosted on)
 * xml files (.tbx)
     * Within ```<tinderbox>``` tag

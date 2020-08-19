@@ -1,10 +1,12 @@
-##how it works
+# Twine
+
+## how it works
 * Can use Twine online (at twinery.org) or can download the Twine executable so you don't need to use a web browser to make a twine game
 * single HTML file, javascript edits the HTML page in response to user actions when playing the game
     * ```<tw-storydata>``` within this HTML page used to declare the passages for the game
 * links not distinct objects (merely parts of passages)
 
-##how to use it
+## how to use it
 * Given a canvas-like area for 'passages'
     * An untitled passage is created by default (as a starting passage)
 * Menu bar on the bottom
@@ -80,7 +82,7 @@
             * Click+drag one of these selected passages moves all selected passages
             * Click something besides those selected passages: deselects them
 
-##what options it gives the user
+## what options it gives the user
 * Choice of story formats
     * 4 main story formats available
         * Harlowe (default) [2]
@@ -97,7 +99,7 @@
         * ```[[linked passage<-option text]]```
         * ```[[option text|linked passage]]```
 
-##what features it has
+## what features it has
 * Variables and such
     * Each of the 4 main formats have their own syntaxes and such for keeping track of variables/performing operations on variables/etc
     * Guard conditions can be implemented via conditionally showing/hiding options on passages (using these variables)
@@ -115,7 +117,7 @@
         * Also assuming that the reader of the game hasn't disabled cookies on their browser
         * Games also can't be loaded unless the creator explicitly added functionality for saved games to be loaded
 
-##what features it's missing
+## what features it's missing
 * Cannot detect any infinite loops in the game
 * Images are a bit tricky to use
     * Any raw images need to be accessed externally
@@ -125,7 +127,7 @@
         * Then you need to add the base-64'd image into the user CSS
         * And you'll then need to enter the HTML to display the base-64'd image in the passage it's needed in.
 
-##how the interior logic and such works in the outputs it produces 
+## how the interior logic and such works in the outputs it produces 
 * Twine stories are saved and output in a single .html file
     * All game logic handled by Javascript within that .html file
         * Page structure, logic, etc. differs depending on which 'story format' is being used for the project
@@ -239,7 +241,7 @@
         * The stack contains every single gamestate from when the game started.
 
 
-##sources etc
+## sources etc
 * [1] "Twine wiki". twinery.org https://twinery.org/wiki/start (Accessed Aug. 5, 2020)
 * [2] *Harlowe 3.1.0 Manual* (2019) Accessed: Aug. 5, 2020. [Online] Available: https://twine2.neocities.org/
 * [3] T. M. Edwards. "Sugarcube". motoslave.net https://www.motoslave.net/sugarcube/2/ (Accessed Aug. 5, 2020)

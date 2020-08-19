@@ -1,6 +1,6 @@
-#What the MVP will consist of
+# What the MVP will consist of
 
-##Components
+## Components
 * HECC (Hypertext Editing and Creation Code) language
     * Follows the HECC-SPECC v0.1
     * Parsed via HECC-UP into a playable hypertext game.
@@ -44,7 +44,7 @@
     * `style.css`
         * Styling for index.html to make the game look presentable
 
-###How each part of the MVP output is generated
+### How each part of the MVP output is generated
 * `HECC-UP` shall be a Java program (mainly because I'm most used to writing stuff in Java), probably in .jar form
     * Most of the output files shall be pre-written, baked inside the .jar, and copies of these shall be created and exported
         * The pre-written ones
@@ -68,7 +68,7 @@
             * The passage contents will also be pre-parsed into valid HTML as well, so they're easier to display
         * These parsed passage declarations are then used to fill in `HECCED.js` basically
         
-##Functionality
+## Functionality
 * Gameplay is contained within a single .html page
     * Page content is changed as the player goes between 'passages'
 * Game consists of 'passages'
@@ -113,7 +113,7 @@
                 * Instructs `HECCER` to query the topmost GameState on the `gameStateStack`.
                 * The Passage referred to by that GameState is now loaded, and displayed to the user (replacing the current passage).
 
-###I know you're about to ask 'why is the GameState stack stuff to allow a user to go back being included in the MVP when it isn't exactly necessary for an MVP?', so I'll answer that question now.
+### I know you're about to ask 'why is the GameState stack stuff to allow a user to go back being included in the MVP when it isn't exactly necessary for an MVP?', so I'll answer that question now.
 * Basically, it's being included in the MVP to make other things easier to implement, both now and later on
     * Stuff that it makes easier to implement now
         * Trying to load a passage
@@ -140,7 +140,7 @@
         * Users defining a start passage that isn't `Start`
             * Maybe change the constructor of the `HECCER` object to take an identifier string for a specified start passage as a parameter (defaulting to `Start`), so, if the user wanted to start at a passage that isn't called `Start`, the name of that other passage could be held by the starting GameState object.
 
-##The game I'll be creating for the MVP, to demonstrate the functionality of the HECC software
+## The game I'll be creating for the MVP, to demonstrate the functionality of the HECC software
 * Probably just going to be a stupidly simple game (similar to the one in the HECC-SPECC v0.1), to demonstrate the functionality of the MVP HECC software
     * Game will be written in HECC
     * Parsed by HECC-UP
@@ -148,7 +148,7 @@
 * You've heard of 'programmer art', now get ready for 'programmer literature'.
     * But it should still be a functional game, at very least.
 
-##What I'll need to produce
+## What I'll need to produce
 * A game script written in HECC
 * The `HECC-UP` parser
     * Converts HECC code into a `HECCED.js` file
@@ -159,12 +159,14 @@
     * The `HECCER.js` engine
     * A copy of jQuery (if used) would need to be baked into/output by the `HECC-UP` parser too
     
-###What I need to do before challenge week
+### What I need to do before challenge week
 * Plan out how `HECCER.js` will work
     * Will I need to use jQuery?
 * Plan out how `HECCED.js` will give the `HECCER` the parsed data
+    * Working out structure etc for `HECCED.js`
+* Working out how to parse the contents of the `HECC` file into `HECCED.js` structure
 
-###Basic plan of attack for challenge week
+### Basic plan of attack for challenge week
 * I need to make an index.html that `HECCER.js` can display content in
 * I need to make the `HECCER.js` engine, and ensure I can pass the data I need to give it via `HECCED.js`
 * I then need to work out how I'll put the data that `HECCER.js` needs within `HECCED.js`
@@ -174,3 +176,7 @@
 * Finally, produce the `HECC` game I'll feed into the parser
     * Might just use the sample `HECC` code present in the `HECC-SPEC v0.1.md` document
 * Feed that HECC code into the parser, get the HECC game, and then make sure the HECC game works
+
+# What the MVP will not include
+* The `OH-HECC` (Optional Help for HECC) GUI utility for writing HECC games
+* Support for any HECC functionality not defined within HECC-SPECC v0.1

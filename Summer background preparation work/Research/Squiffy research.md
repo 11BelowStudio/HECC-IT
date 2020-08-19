@@ -1,13 +1,13 @@
-#Squiffy
+# Squiffy
 
 ## how it works
 * Write stuff in a .squiffy file, exported  as a folder with HTML, CSS and JavaScript files.
 
-##how to use it
+## how to use it
 * Write squiffy script, press 'run' to test it, or press 'build' to output it in an easily redistributable format
     * 'run' intended for testing stuff as you write it
 
-##what options it gives the user
+## what options it gives the user
 * Can declare 'sections' and 'passages'
     * Differences
         * Sections
@@ -98,7 +98,7 @@
 * Setting story title
     * ```@title Title goes here```
 
-##what features it has
+## what features it has
 * Can use custom JavaScript
     * But this can only fire at the start of a section/passage
     * Needs to be indented by 4 spaces/1 tab
@@ -222,7 +222,7 @@
               ```
 
 
-##what features it's missing
+## what features it's missing
 * Any form of graphical overview of the story
 * Some debugging features
     * Cannot detect loops within the story
@@ -231,7 +231,7 @@
     * Unless you edit the output style.css yourself
     * Or write style.css and use the command line squiffy tool to build your game
 
-##how the interior logic and such works in the outputs it produces
+## how the interior logic and such works in the outputs it produces
 * Squiffy exports game as a set of files within the same directory as the .squiffy file which the game was written in
     * What each file is
         * ```index.html``` a simple .html page which includes the necessary .js files, style.css, a ```<script>``` to get everything up and running, and contains a few ```<div>``` containers for the game to be displayed in
@@ -312,7 +312,7 @@
                         * Same as 'section' objects, but they don't contain further 'passage' objects
                     * If there are no passages, this is empty.
                     
-##sources etc
+## sources etc
 * https://textadventures.co.uk/squiffy
 * http://docs.textadventures.co.uk/squiffy/
 * https://github.com/textadventures/squiffy

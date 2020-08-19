@@ -1,11 +1,11 @@
-#Twee2
+# Twee2
 
-##how it works
+## how it works
 * Like twine, but command-line instead (No GUI/IDE/etc)
 * Written in Ruby
     * Output is still .html (same as Twine)
 
-##how to use it
+## how to use it
 * Overview of using it
     * Installation
         * Install 'ruby'
@@ -19,12 +19,12 @@
         * The game written in the .tw2 file will be built, and exported into the .html file.
 
 
-##what options it gives the user
+## what options it gives the user
 * Basically has the same functionality as Twine2, minus GUI, plus a few things
 * May choose where your WIP game is saved
 
 
-##what features it has
+## what features it has
 * Compiling twee2 code via command line
     * Two methods of doing this
         * ```twee2 build input.tw2 output.html```
@@ -38,14 +38,14 @@
         * **Doesn't work on the Windows version**
 * Can split a game across multiple .tw2 files
 
-##what features it's missing
+## what features it's missing
 * Any sort of non-command line interface
     * no GUI/IDE
 * You still need to manually define an IFID within your Twee2 code
     * But the compiler instructs you how to do this (with a uniquely-generated one) if it doesn't detect an IFID declaration in your twee2 code
     * Also means that it won't overrwrite the IFID when compiling a new version of an existing game
 
-##how the interior logic and such works in the outputs it produces
+## how the interior logic and such works in the outputs it produces
 * twee2 syntax
     * Similar to Twine syntax
     * Differences
@@ -138,5 +138,5 @@
     * The Twine2 XML then has the rest of the Twine2 stuff added to it.
     * Outputs the built Twine2 .html game.
 
-##sources etc
+## sources etc
 * https://dan-q.github.io/twee2/

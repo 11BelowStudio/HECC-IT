@@ -1,4 +1,4 @@
-#Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v0.1: MVP Edition)
+# Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v0.1: MVP Edition)
 
 ## The specification
 * Defining passages

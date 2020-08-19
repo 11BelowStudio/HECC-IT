@@ -1,4 +1,6 @@
-##how it works
+# Ren'Py
+
+## how it works
 * Game consists of all the files within the directory of the game
     * .rpy scripts used to define the actual game stuff
         * Written in the 'Ren'Py language' (somewhat similar to Python, some parts actually take Python expressions)
@@ -7,7 +9,7 @@
     * Higher-level code within Ren'Py games written in the 'Ren'Py' language
 
 
-##how to use it
+## how to use it
 * Each 'node' is defined as a ```label```
     * Syntax for labels
         * Defining them
@@ -69,7 +71,7 @@
             * Suppose that a Character is defined as ```define b = Character("bob") ```
                 * Can make bob 'say' strings via ```b "hi im bob and im saying this string (very epic)"```
             
-##what options it gives the user
+## what options it gives the user
 * Some options at the start
     * Project name
     * Resolution for it (still allows scaling, but the chosen resolution will be used as default)
@@ -158,7 +160,7 @@
                 * simply plays that sound
                 * doesn't loop
 
-##what features it has
+## what features it has
 * Records player history (and plenty of options to save/restore progress)
     * Options to save/load at any point, no extra work from writer required to implement it
         * A quicksave/quickload system
@@ -186,14 +188,14 @@
             * 0 is default priority, values between -999 and 999 are valid, ```init python``` statements with same priority are run in alphabetical order according to the name of the .rpy file they're held in
     * Conditional statements can be used for guard conditions (sending player to different labels (maybe with different options in those menus) according to the states of variables and such)
 
-##what features it's missing
+## what features it's missing
 * There's no method of getting an overview of the branching narratives and such
     * No visual aids, only code.
 * All text displayed to the user must be displayed via a 'Character'
 * No explicitly-defined 'options'/'branching narrative' things basically
 * At the end of the day, it's a visual novel engine, not a hypertext game engine
 
-##how the interior logic and such works in the outputs it produces 
+## how the interior logic and such works in the outputs it produces 
 * Reading the Ren'Py script [2]
     * renpy/parser.py parses the Ren'Py script into an Abstract Syntax Tree (as defined in renpy/ast.py)
     * renpy/execution.py handles the execution of Ren'Py objects
@@ -202,6 +204,6 @@
     
     
 
-##sources etc
+## sources etc
 * [1] *Ren'Py* (7.3.5), T. Rothamel. Accessed: Aug. 6, 2020. Available: https://www.renpy.org/
 * [2]  T. Rothamel (2020) The Ren'Py Visual Novel Engine [Source Code] https://github.com/renpy/renpy

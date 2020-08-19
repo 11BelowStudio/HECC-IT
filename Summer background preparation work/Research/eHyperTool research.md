@@ -1,11 +1,13 @@
-##how it works
+# eHyperTool
+
+## how it works
 * Cloud application (run on a web server, not a native executable)
     * Accessed on web browser
     * Users need to log in to the eHyperTool website in order to use it
 * **LINKS ARE NOT DISTINCT OBJECTS (attributes of nodes)**
 
 
-##how to use it
+## how to use it
 * Two main types of users (authors/publishers)
 * What it does
     * Order of functionality
@@ -147,7 +149,7 @@
             * kindle
                 * read by proprietary kindle-reading software (also option to bundle the reading software with the exported story)
 
-##what options it gives the user
+## what options it gives the user
 * Options for project output
     * Output types
         * Book
@@ -159,7 +161,7 @@
     * Swapping between types
         * Swapping to different output: functionality unsupported by new output type simply hidden (not lost if the project swaps back to that original type)
 
-##what features it has
+## what features it has
 * Guard conditions
     * ```If the reader [has/has not] previously visited [node name] then [show/hide] this option.```
 * Displaying images to reader within nodes
@@ -167,7 +169,7 @@
 * Some scope for multiple users to collaborate on making a single story
 * Timers
 
-##what features it's missing
+## what features it's missing
 * ~~implementation~~
 * Styles/templates for the nodes
     * No options for how the output will be displayed to the reader
@@ -180,7 +182,7 @@
 * Guards only appear to allow a single node to be taken into account
     * Can't do anything like 'if((visited(A) and visited(B)) or unvisited(C))' in a guard condition
 
-##how the interior logic and such works in the outputs it produces 
+## how the interior logic and such works in the outputs it produces 
 * Looking at [2] for the outputs
 * HTML pages, with some inline javascript and some javascript that's shared by all the pages.
     * Each node is its own .html page
@@ -231,6 +233,6 @@
                     * The index (n), option text (s), and mouseover text (t) is defined inline like this
                     * ```body.js``` is responsible for actually converting those raw strings/raw integer into the functional options.
                     
-##sources etc
+## sources etc
 * [1] R. Bartle, C. Beck, private communication (*eHyperTool Design Specification Version 1.02*), June 2020. (document from 2011)
 * [2] R. Bartle. "Demo 1" youhaventlived.com https://www.youhaventlived.com/cbdemo/ (accessed Aug 4. 2020)

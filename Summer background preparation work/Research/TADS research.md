@@ -1,6 +1,6 @@
-Text Adventure Development System
+# TADS 3 (Text Adventure Development System)
 
-##how it works
+## how it works
 * Upon closer inspection, it looks like this is actually a text adventure game creation tool (zork etc), not a hypertext game tool
     * but I'll still try to find out what I can anyway
 * Object-oriented, code-based tool
@@ -11,7 +11,7 @@ Text Adventure Development System
 * Output game is compiled and run on a virtual machine
 * Code and such opened as windows within the TADS editing window (similar to how Hammer works with the views of the map being made with it)
 
-##how to use it
+## how to use it
 * Creating a project [1]
     * 1: give a name/folder location for project
         * dialog box before anything else happens prompting you for this
@@ -93,7 +93,7 @@ Text Adventure Development System
 
 
 
-##what features it has
+## what features it has
 * Can save/resume games
 * User input for commands when playing
     * User writes in command, parsed and executed by the T3 VM
@@ -101,7 +101,7 @@ Text Adventure Development System
     * Can write and use their own libraries for it instead
         * These libraries are included in the output they built, so it can still be played by someone else via the T3 VM, without needing a copy of that custom library.
 
-##what features it's missing
+## what features it's missing
 * Styling and such
     * Can use some inline HTML styling for the text
 * Not actually a hypertext game tool
@@ -109,7 +109,7 @@ Text Adventure Development System
 * You require the T3 Virtual Machine (in some form) in order to play things produced by this
     * There is an option to make a TADS game playable on the web, but it requires a server-side implementation of the T3 VM to be active in order to run.
 
-##how the interior logic and such works in the outputs it produces 
+## how the interior logic and such works in the outputs it produces 
 * I tried opening up the outputs (both the .t3 game and the .t3v save file) in notepad++ to see if I could find anything interesting, but it was all somewhat incomprehensible, so I'll just assume those are just raw binaries or something.
 * Runs on a 'T3 Virtual Machine'[4]
     * Somewhat similar to JVM, but has features that JVM lacks (undo, save/restore, runtime typing, etc)
@@ -120,7 +120,7 @@ Text Adventure Development System
     
 
 
-##sources etc
+## sources etc
 * [1] *TADS 3* (2012), M. J. Roberts. Accessed: Aug 4, 2020. [Online]. Available: https://www.tads.org/
 * [2] M. J. Roberts. "TADS - the Text Adventure Development System, an Interactive Fiction authoring tool" tads.org https://www.tads.org/ (accessed Aug 4, 2020)
 * [3] M. J. Roberts, *TADS 3 Library Reference Manual (version 3.1.3)* (2013) [Online] Accessed: Aug 4, 2020. Available: https://www.tads.org/t3doc/doc/libref/index.html

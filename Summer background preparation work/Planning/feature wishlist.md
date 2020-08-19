@@ -24,8 +24,8 @@ Names and such for components
             * Does it via a GUI so people don't need to write HECC themselves
         * includes HECC-UP to parse produced HECC
 
-##The bare minimum for the MVP
-###Tool (HECC-UP)
+## The bare minimum for the MVP
+### Tool (HECC-UP)
 * You write it in HECC (v0.1)
     * Hypertext Editing and Compilation Code (v0.1)
     * Parsed via HECC-UP (v0.1)
@@ -47,7 +47,7 @@ Names and such for components
         * HECC Environment for Runtime
     * style.css (CSS)
 
-###The output
+### The output
 * .html format (playable via browser)
 * Probably going to try to keep all gameplay within the same .html page
     * Use JavaScript to update the inner HTML of the page body in response to users clicking the passage links
@@ -75,7 +75,7 @@ Names and such for components
     * make sure stuff looks presentable I guess
         * Could get away with having it declared inline within the HTML page
 
-##Necessary stuff
+## Necessary stuff
 ### The tool
 * Must be able to write 'passages' containing content for the story
 * Must have 'links' between the 'passages'
@@ -88,7 +88,7 @@ Names and such for components
 * A user must be able to use a link to navigate between two distinct passages
 * Should be playable via web (least work required for running output, and for playing output)
 
-##Desirable stuff
+## Desirable stuff
 ### The tool
 * A GUI of some description
     * Saving/loading WIP stuff
@@ -117,7 +117,7 @@ Names and such for components
     * Could opt to keep all the JavaScript/CSS needed within that page (like twine), or 'include' it from external files within the same directory as that HTML page (like squiffy/undum)
 * 
 
-###Cool bits of additional functionality (for both ends)
+### Cool bits of additional functionality (for both ends)
 * Variables
     * Some way of declaring them
     * Some way of actually using them
