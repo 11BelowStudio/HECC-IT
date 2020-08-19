@@ -62,7 +62,7 @@
             * index.html may be partially dynamically-generated
                 * probably allowing user defined metadata in the `<head>` or something
             * style.css might also be partially dynamically-generated
-                * Allowing user-defined styling
+                * Allowing user-defined styling to replace/come underneath the premade CSS
     * `HECCED.js` shall be dynamically generated
         * `HECC-UP` will parse the HECC code into `HECCER` Passage declarations
             * The passage contents will also be pre-parsed into valid HTML as well, so they're easier to display
@@ -75,8 +75,11 @@
     * Player navigates to other passages by clicking 'links' to the other passages within the current passage
         * Link is within passage content, clicking it changes the page content to display a different passage
         * If a passage doesn't contain a link to another passage, that passage is implicitly an 'ending'
+    * Passages shall be held in key/value pairs
+        * Passage name string is the key, passage contents are the value
 * There shall be an option to allow a player to go 'back' a passage
     * A stack of 'GameState' objects (`gameStateStack`) will be held in browser sessionstorage to contain player history
+        * Stictly speaking, it would be a JavaScript Array object, but it would be used like a Stack.
         * The topmost GameState will be the current state of the game (the identifier of the current passage that the player's at)
         * Going 'back' will cause the topmost GameState to be popped off the `gameStateStack`
         * You may not go 'back' if there is nothing below the current GameState within the `gameStateStack`
@@ -109,3 +112,65 @@
                 * Pops the top GameState (the one with the current passage) from the `gameStateStack`
                 * Instructs `HECCER` to query the topmost GameState on the `gameStateStack`.
                 * The Passage referred to by that GameState is now loaded, and displayed to the user (replacing the current passage).
+
+###I know you're about to ask 'why is the GameState stack stuff to allow a user to go back being included in the MVP when it isn't exactly necessary for an MVP?', so I'll answer that question now.
+* Basically, it's being included in the MVP to make other things easier to implement, both now and later on
+    * Stuff that it makes easier to implement now
+        * Trying to load a passage
+            * `HECCER` just needs to refer to the top GameState on the stack, and load the Passage which that GameState refers to
+                * The Passages would basically be kept in Key/Value pairs, so the Passage objects may be easily obtained via their String identifiers
+            * Also, it means that only a single 'load passage' method would be needed for `HECCER`, as all the passages would be loaded by reading the top GameState
+                * Just change the stack, then tell `HECCER` to look at the stack
+                    * Loading a link involves passing the passage identifier held by the link to a GameState constructor, putting that on the stack, then telling `HECCER` to look at the stack.
+                    * Going back involves popping the top item from the stack, then telling `HECCER` to look at the stack.
+        * Starting the game
+            * I just initialise the stack to have a GameState with the `Start` passage on it, and then tell `HECCER` to look at the stack.
+        * **tl;dr** In all cases, `HECCER` will load passages by looking at the GameState stack, all I need to do is modify the stack then tell `HECCER` to look at it.
+    * Stuff that will be easier to implement later
+        * Saving/loading
+            * I'd basically just need to copy the gamestate stack from sessionstorage to localstorage in order to save the game.
+            * Loading the game would simply involve copying the saved stack from localstorage (if it exists in localstorage) to sessionstorage
+        * Variables
+            * I could get away with the same thing that Twine does (variables are key/value declarations held in gamestates, setting a new value for a variable basically involves re-declaring it in the current gamestate, and referring to the topmost declaration for a variable when working out what value to use for it)
+                * Would also mean that the values of variables would be reset appropriately when a user goes back a gamestate
+                * Also means that no extra effort would be needed in terms of saving the variables along with the gamestates
+        * I'd find myself having to record user history eventually anyway (so guard conditions requiring a user to have previously visited a certain passage would be possible)
+            * So I may as well neatly implement it sooner, rather than reverse-engineering it in later.
+            * Same thing with the back button
+        * Users defining a start passage that isn't `Start`
+            * Maybe change the constructor of the `HECCER` object to take an identifier string for a specified start passage as a parameter (defaulting to `Start`), so, if the user wanted to start at a passage that isn't called `Start`, the name of that other passage could be held by the starting GameState object.
+
+##The game I'll be creating for the MVP, to demonstrate the functionality of the HECC software
+* Probably just going to be a stupidly simple game (similar to the one in the HECC-SPECC v0.1), to demonstrate the functionality of the MVP HECC software
+    * Game will be written in HECC
+    * Parsed by HECC-UP
+    * Output game will be playable
+* You've heard of 'programmer art', now get ready for 'programmer literature'.
+    * But it should still be a functional game, at very least.
+
+##What I'll need to produce
+* A game script written in HECC
+* The `HECC-UP` parser
+    * Converts HECC code into a `HECCED.js` file
+    * outputs the `HECCED.js` file and the other pre-baked components into a specified directory.
+* The HECC game components (to be baked into the `HECC-UP` parser)
+    * index.html
+    * style.css
+    * The `HECCER.js` engine
+    * A copy of jQuery (if used) would need to be baked into/output by the `HECC-UP` parser too
+    
+###What I need to do before challenge week
+* Plan out how `HECCER.js` will work
+    * Will I need to use jQuery?
+* Plan out how `HECCED.js` will give the `HECCER` the parsed data
+
+###Basic plan of attack for challenge week
+* I need to make an index.html that `HECCER.js` can display content in
+* I need to make the `HECCER.js` engine, and ensure I can pass the data I need to give it via `HECCED.js`
+* I then need to work out how I'll put the data that `HECCER.js` needs within `HECCED.js`
+    * Might make a hand-coded `HECCED.js` file, holding what the parser would output, to ensure that the engine works
+* Then, I need to make the `HECC-UP` parser
+    * Ensuring I bake copies of the index.html, HECCER.js, and (if used) jQuery files into the parser's src/
+* Finally, produce the `HECC` game I'll feed into the parser
+    * Might just use the sample `HECC` code present in the `HECC-SPEC v0.1.md` document
+* Feed that HECC code into the parser, get the HECC game, and then make sure the HECC game works

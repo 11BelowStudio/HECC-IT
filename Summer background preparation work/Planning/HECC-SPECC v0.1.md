@@ -30,23 +30,43 @@
         * [[Link text|Name of passage being linked to]]
             * Displayed as a link saying 'Link text'
             * When clicked, the passage called 'Name of passage being linked to' will be displayed.
+* **Everything before the first passage declaration will be ignored**
+    * In later versions, I may opt to allow metadata declarations and such to be made before the first passage.
+    * But, as far as the MVP version of HECC-UP is concerned, everything before the first passage declaration doesn't exist.
 
 
 ## Example HECC code
 ```
+this line is before the first passage declaration, so, officially, this line doesn't exist! 
+
 ::Start
 
-passage content goes here
-
+starting passage content goes here.
+The following line contains a link to Another passage.
 [[Another passage]]
 
 ::Another passage
 
-congrats you clicked that link to get here
-
-[[click this|Yet Another Passage]]
+congrats you clicked that link to get here, Another passage.
+why not [[click this|Yet Another Passage]] as well?
 
 ::Yet Another Passage
 
-woah you're at yet another passage
+woah you clicked that so you're now at Yet Another Passage.
+
+Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|Dave]]?
+
+::Left
+
+You go to the left, but the path leads you back to [[Dave]].
+
+::Right
+
+You went to the right, but the path leads you back to [[Dave]].
+
+::Dave
+
+This passage is called Dave.
+Dave's content doesn't include any links to any other passages.
+So I guess this counts as the end.
 ```
