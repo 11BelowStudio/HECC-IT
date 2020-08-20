@@ -16,6 +16,7 @@
     * Must ensure the content of the currently active passage is displayed in index.html.
     *
     
+
 ## Classes it will need
 
 * HECCER class
@@ -23,11 +24,14 @@
 * GameState class
 * GameStateStack class
 * Passage class
-* LinkHandler method
-* BackHandler method
+* goToPassage method
+* backButton method
 
 https://www.w3schools.com/Js/js_object_definition.asp
 https://www.w3schools.com/Js/js_object_methods.asp
+
+### Index.html overview
+* Will contain a `<div id = "div what holds passage content"></div>` div element, to hold the passage content.
 
 ### Passage class
 
@@ -76,64 +80,68 @@ class GameState{
         this.passageName = pName;
     }
     getPassageName(){
-        return pName;
+        return passageName;
     }
 }
 ```
 
-### GameStateStack class
+### The gamestate stack
 
 * This is the object that holds the game state stack
+* How it will be used
+    * `sessionStorage.setItem("gamestates",new GameStateStack());` to make it
+    * `sessionStorage.getItem("gamestates");` to access it
+        * `sessionStorage.setItem("gamestates",(sessionStorage.getItem(gamestates)).pushState("passageName"));` for pushing states
+        * `sessionStorage.setItem("gamestates",(sessionStorage.getItem(gamestates)).popState());` for popping states
 
 * Attributes
-    * identifier
-        * String that will be used to identify the stack in SessionStorage
-        * Will initially just be `HECC`, however, if I can add IFID stuff, it will be `HECC - #[IFID GOES HERE]`
     * states
-        * Array of gamestates (this is the stack)
-    * length
-        * Current length of the stack
+        * Array of GameState objects (this is the stack)
 * methods
     * constructor
         * Creates the identifier and the states stack
         * No arguments
-            * Later versions will be extended with arguments for the IFID (used for identifier), and specifying a particular 'start' passage.
-    * getIdentifier()
-        * returns the sessionStorage string identifier
+            * Later version will be extended with argument for specifying a particular 'start' passage.
     * canGoBack()
         * Returns true if there's more than 1 item in the stack, false otherwise
         * Will be called by `heccer` upon investigating a state change.
     * topState()
         * Returns current GameState object
-    * pushState(GameState)
-        * adds the new GameState to the top of the stack
-        * updates the copy of this stack within SessionStorage
+    * pushState(passage)
+        * Makes a new GameState referring to the specified passage
+            * Pushes this new GameState to the top of the stack
+        * returns this newly updated object (so the sessionstorage copy can be updated)
     * popState()
         * pops the topmost GameState from the stack (unless there is only one item in the stack)
-        * also updates the copy of this stack within SessionStorage
+        * returns this newly updated object (allowing sessionstorage copy to be updated)
         
 ```
 class GameStateStack{
-    constructor(ifid, firstState){
-        this.id = "HECC";
-        if (ifid != null){
-            //appending IFID to id if it's not null
-            this.id = this.id.concat(" - #",ifid);
-        }
+    constructor(firstState){
         var firstID = "Start"; //starting state is 'Start' by default
         if (firstState != null){
             //setting id for firstState to the specified starting state
             firstID = firstState;
         }
-        var states = [new GameState(firstID)];
-        this.length = states.length;
-        sessionStorage.setItem(this.id, this);
-    }
-    getIdentifier(){
-        
+        this.states = [new GameState(firstID)];
     }
     canGoBack(){
-        return(length>1);
+        return(this.states.length>1);
+    }
+    topState(){
+        return(this.states[this.states.length -1]);
+    }
+    pushState(passage){
+        this.states.push(new GameState(passageName));
+        return this;
+    }
+    popState(){
+        if (this.states.length > 1){
+            this.states.pop();
+        } else{
+            window.alert("why are you trying to go back? theres no prior states to go back to! >:(");
+        }
+        return this;
     }
 }
 ```
@@ -146,7 +154,6 @@ class GameStateStack{
         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
     * `canGoBack = false`;
         * variable to keep track of whether or not the player shall be allowed to go back or not
-    * `states = new GameStateStack`
 * Methods
     * `addPassageToMap(passage){ /* method body goes here */ }`
         * The `HECCED` file will call this method for each passage defined within it, and then the passages will be added to `heccer.passageMap`
@@ -156,17 +163,80 @@ class GameStateStack{
             * `passageMap.set(passage.getName(), passage.getContent());`
                 * name used as the key
                 * content used as the value
-    * `loadPassage()`
-        * Obtains the 
-            
+    * `loadCurrentPassage()`
+        * Obtains the topmost item from the gamestates stack in sessionstorage
+        * Will then have to load it
+            * This is the tricky bit.
 ```
 class Heccer{
     constructor(){
+        passageMap = new map();
+        canGoBack = false;
+    }
+    addPassageToMap(passage){
+        passageMap.set(passage.getName(), passage.getContent());
+    }
+    getCanGoBack(){
+        return canGoBack;
+    }
+    loadCurrentPassage(){
+        canGoBack = (sessionStorage.getItem("gameStates")).canGoBack();
+        var currentState = (sessionStorage.getItem("gameStates")).topState();
+        var currentPassage = passageMap.get(currentState.getPassageName());
+
+        //and now, the bit where I have to replace the HTML passage content that's already on the page.
+
+        document.getElementByID("div what holds passage content").innerHTML = currentPassage.getContent();
+
+        //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
     }
 }
 ```
 
-### LinkHandler
+### Links to passages
 
-* All links within the page content shall have an 
+* All links within the page content shall be formatted as `<a class="passageLink" onclick="goToPassage('passageName')">link text</a>` by `HECC-UP`
+* The `goToPassage(passageName)` function
+    * Must push a new state with the passageName onto the gamestates stack
+    * Then must call `heccer.loadCurrentPassage();`
+    
+```
+function goToPassage(passageName){
+    sessionStorage.setItem("gamestates",(sessionStorage.getItem(gamestates)).pushState(passageName));
+    theHeccer.loadCurrentPassage();
+}
+```
 
+### The back button
+
+* Will be a `<button id="BackButton" onclick="backButtonFunction()">back</button>` or something like that
+* `backButtonFunction()` will basically attempt to go back
+    * Will obtain the current gamestates
+    * Checks if it can go back
+        * If it can go back, it pops the top item off the current gamestates, and puts taht back into sessionStorage
+        * Then tells heccer to load the current passage.
+    * Does nothing if it can't go back
+
+```
+function backButtonFunction(){
+    var states = sessionStorage.getItem("gameStates");
+    if (states.canGoBack()){
+        sessionStorage.setItem("gamestates",states.popState());
+        //document.getElementByID("BackButton").disabled = !(states.canGoBack()); //maybe disable button if it can't go back any further?
+        theHeccer.loadCurrentPassage();
+    }
+}
+```
+
+
+## How this stuff will be set up
+* A `Heccer` object, called `theHeccer`, will be declared outside methods (so it has global scope)
+    * `var theHeccer = new Heccer();`
+* index.html will call a method in `HECCED.js` once it has loaded
+    * This method will
+        * Set up the gamestate stack
+            * `sessionStorage.setItem("gamestates",new GameStateStack());`
+        * Feed the passages into `theHeccer`
+            * `theHeccer.addPassageToMap(new Passage("dave","<p>hi you're reading the contents of the passage called dave</p>"));`
+        * Get `theHeccer` to actually load the first passage
+            * `theHeccer.loadCurrentPassage();`
