@@ -31,7 +31,7 @@ https://www.w3schools.com/Js/js_object_definition.asp
 https://www.w3schools.com/Js/js_object_methods.asp
 
 ### Index.html overview
-* Will contain a `<div id = "div what holds passage content"></div>` div element, to hold the passage content.
+* Will contain a `<div id = "divWhatHoldsPassageContent"></div>` div element, to hold the passage content.
 
 ### Passage class
 
@@ -87,21 +87,20 @@ class GameState{
 
 ### The gamestate stack
 
-* This is the object that holds the game state stack
-* How it will be used
-    * `sessionStorage.setItem("gamestates",new GameStateStack());` to make it
-    * `sessionStorage.getItem("gamestates");` to access it
-        * `sessionStorage.setItem("gamestates",(sessionStorage.getItem(gamestates)).pushState("passageName"));` for pushing states
-        * `sessionStorage.setItem("gamestates",(sessionStorage.getItem(gamestates)).popState());` for popping states
+* This is the object that holds the game state stack        
+* ok so basically it looks like sessionStorage only allows strings, meaning that I'd need to save the stack as a JSON string in sessionStorage, so I'll have to re-evaluate how I do this.
+    * And it looks like trying to parse JSON objects back into a form that supports strings 
+
 
 * Attributes
     * states
         * Array of GameState objects (this is the stack)
 * methods
     * constructor
-        * Creates the identifier and the states stack
-        * No arguments
-            * Later version will be extended with argument for specifying a particular 'start' passage.
+        * Creates the initial stack
+        * Parameters
+            * startState
+                * String that will hold a starting state stack
     * canGoBack()
         * Returns true if there's more than 1 item in the stack, false otherwise
         * Will be called by `heccer` upon investigating a state change.
@@ -110,20 +109,21 @@ class GameState{
     * pushState(passage)
         * Makes a new GameState referring to the specified passage
             * Pushes this new GameState to the top of the stack
-        * returns this newly updated object (so the sessionstorage copy can be updated)
     * popState()
         * pops the topmost GameState from the stack (unless there is only one item in the stack)
-        * returns this newly updated object (allowing sessionstorage copy to be updated)
-        
+    * getStackAsJSONString()
+        * Returns a JSON string version of the SessionStorage stack
+            * Will be used for saving games
+    * parseStackFromStringJSON(stackAsString)
+        * Will be used for loading games
+            * Parses the JSON string it has been given
+            * Converts it back to an array of GameState objects
+            * Then replaces `states` with that parsed stack
+                
 ```
 class GameStateStack{
-    constructor(firstState){
-        var firstID = "Start"; //starting state is 'Start' by default
-        if (firstState != null){
-            //setting id for firstState to the specified starting state
-            firstID = firstState;
-        }
-        this.states = [new GameState(firstID)];
+    constructor(startState){
+        this.states = [new GameState(startState)];
     }
     canGoBack(){
         return(this.states.length>1);
@@ -133,7 +133,6 @@ class GameStateStack{
     }
     pushState(passage){
         this.states.push(new GameState(passageName));
-        return this;
     }
     popState(){
         if (this.states.length > 1){
@@ -141,7 +140,13 @@ class GameStateStack{
         } else{
             window.alert("why are you trying to go back? theres no prior states to go back to! >:(");
         }
-        return this;
+    }
+    getStackAsJSONString(){
+        return JSON.stringify(this.states);
+    }
+    parseStackFromStringJSON(stackAsString){
+        //need to use JSON.parse() to get an array of JSON objects
+        //Then for each 
     }
 }
 ```
@@ -154,6 +159,7 @@ class GameStateStack{
         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
     * `canGoBack = false`;
         * variable to keep track of whether or not the player shall be allowed to go back or not
+    * `stateStack = new GameStateStack(startState, false)`
 * Methods
     * `addPassageToMap(passage){ /* method body goes here */ }`
         * The `HECCED` file will call this method for each passage defined within it, and then the passages will be added to `heccer.passageMap`
@@ -186,7 +192,7 @@ class Heccer{
 
         //and now, the bit where I have to replace the HTML passage content that's already on the page.
 
-        document.getElementByID("div what holds passage content").innerHTML = currentPassage.getContent();
+        document.getElementByID("divWhatHoldsPassageContent").innerHTML = currentPassage.getContent();
 
         //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
     }
@@ -209,7 +215,7 @@ function goToPassage(passageName){
 
 ### The back button
 
-* Will be a `<button id="BackButton" onclick="backButtonFunction()">back</button>` or something like that
+* Will be a `<a id="backButton" onclick="backButtonFunction()">back</a>` or something like that
 * `backButtonFunction()` will basically attempt to go back
     * Will obtain the current gamestates
     * Checks if it can go back
@@ -222,7 +228,7 @@ function backButtonFunction(){
     var states = sessionStorage.getItem("gameStates");
     if (states.canGoBack()){
         sessionStorage.setItem("gamestates",states.popState());
-        //document.getElementByID("BackButton").disabled = !(states.canGoBack()); //maybe disable button if it can't go back any further?
+        //document.getElementByID("backButton").disabled = !(states.canGoBack()); //maybe disable button if it can't go back any further?
         theHeccer.loadCurrentPassage();
     }
 }

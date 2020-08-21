@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>HECCER test</title>
+    <style>
+        .outerDiv {
+	        margin: auto;
+	        top: 50%;
+ 	        padding: 20px;
+            width: 90%;
+            border: 5px black;
+            background-color: lightblue;
+            text-align: center;
+            display: flex;
+	        justify-content: center;
+	        align-items: center;
+        }
+        .innerDiv {
+	        width: 100%;
+	        background-color: red;
+        }
+        #divWhatHoldsPassageContent{
+	        margin: auto;
+	        top: 50%;
+            width: 80%;
+            border: 3px solid black;
+            text-align: center;
+            background-color: white;
+        }
+        .backDiv{
+	        margin: auto;
+            width: 80%;
+            border: 3px solid black;
+            text-align: center;
+            background-color: yellow;
+        }
+        .passageLink{
+            text-decoration: underline;
+            color: blue;
+        }
+        .backDiv{
+            text-align: center;
+        }
+        #backButton{
+            text-decoration: underline;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>HECCER test</h1>
+
+<div class = "outerDiv">
+    <div class="innerDiv">
+        <div class= "passageDiv" id = "divWhatHoldsPassageContent">
+            <p>if you're reading this, that means that there's been a big oopsie with the passage loading lol</p>
+        </div>
+        <div class = "backDiv">
+            <p><a id="backButton" onclick="backButtonFunction()">this is the back button</a></p></div>
+        </div>
+    </div>
+</div>
+<p>bottom text.</p>
+
+<script src="HECCER.js"></script>
+<script src="HECCED.js"></script>
+<script>
+    window.onload = getHecced;
+    var theHeccer = new Heccer(startState);
+</script>
+</body>
+</html>
