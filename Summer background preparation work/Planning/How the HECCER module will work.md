@@ -53,9 +53,11 @@ class Passage{
         this.content = passageContent;
     }
     getName(){
+        //returns passage name
         return this.name;
     }
     getContent(){
+        //returns passage content
         return this.content;
     }
 }
@@ -80,7 +82,8 @@ class GameState{
         this.passageName = pName;
     }
     getPassageName(){
-        return passageName;
+        //just returns the passageName
+        return this.passageName;
     }
 }
 ```
@@ -122,31 +125,45 @@ class GameState{
                 
 ```
 class GameStateStack{
-    constructor(startState){
-        this.states = [new GameState(startState)];
+    constructor(startPassageName){
+        //sets up the 'states' array, initially only holding a gamestate referencing the start passage
+        this.states = [new GameState(startPassageName)];
     }
     canGoBack(){
+        //called when working out if the player is to be allowed to go back or not.
+        //true if the length of 'states' is greater than 1, false otherwise
+            //if there's only 1 state in the stack, there aren't any earlier stacks to go back to
         return(this.states.length>1);
     }
     topState(){
+        //returns whichever state is the topmost one in the 'states' array-which-is-being-treated-like-a-stack
         return(this.states[this.states.length -1]);
     }
-    pushState(passage){
+    pushState(passageName){
+        //pushes a new gamestate, referring to a passage with the specified name, to the top of the stack
         this.states.push(new GameState(passageName));
     }
     popState(){
-        if (this.states.length > 1){
+        //called when trying to go back
+        //first makes very sure that there's a state after this one that the user can go back to
+        if (this.canGoBack){
+            //if there is a state which it can go back to, it just pops the top state off the stack
             this.states.pop();
         } else{
+            //complains (very loudly!) if the player attempts to go back when they aren't allowed to go back
             window.alert("why are you trying to go back? theres no prior states to go back to! >:(");
         }
     }
     getStackAsJSONString(){
+        //returns a json stringified version of the states array
         return JSON.stringify(this.states);
     }
     parseStackFromStringJSON(stackAsString){
-        //need to use JSON.parse() to get an array of JSON objects
-        //Then for each 
+        //need to make a new empty array for new states (newStates)
+        //then need to use JSON.parse() on the stackAsString to get an array of JSON objects (jsonArray)
+        //Then for each entry in jsonArray, I'd need to JSON.parse() it again, re-construct it as a GameState object, and then shove it into newStates
+        //Finally, replace this.states with newStates.
+        //just leaving the method signature here for the time being along with logic for how to get stuff from it
     }
 }
 ```
@@ -157,9 +174,8 @@ class GameStateStack{
     * `passageMap = new map();`
         * map object to hold passage objects
         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-    * `canGoBack = false`;
-        * variable to keep track of whether or not the player shall be allowed to go back or not
-    * `stateStack = new GameStateStack(startState, false)`
+    * `stateStack = new GameStateStack(startState);`
+        * GameStateStack object
 * Methods
     * `addPassageToMap(passage){ /* method body goes here */ }`
         * The `HECCED` file will call this method for each passage defined within it, and then the passages will be added to `heccer.passageMap`
@@ -174,71 +190,78 @@ class GameStateStack{
         * Will then have to load it
             * This is the tricky bit.
 ```
-class Heccer{
-    constructor(){
-        passageMap = new map();
-        canGoBack = false;
+class HECCER{
+    constructor(startState){
+        this.passageMap = new Map(); //empty map that will hold passages
+        this.stateStack = new GameStateStack(startState); //a GameStateStack object, starting from the specified startState
     }
     addPassageToMap(passage){
-        passageMap.set(passage.getName(), passage.getContent());
+        //called by HECCED.js, to add passage objects to the passageMap, identified by passage name
+        //console.log(passage);
+        this.passageMap.set(passage.getName(), passage);
     }
-    getCanGoBack(){
-        return canGoBack;
+    goBack(){
+        //The 'back' button will call this method in an attempt to go back
+        if(this.stateStack.canGoBack()){
+            //will only go back if the stateStack permits it
+            this.stateStack.popState(); //pops the top state from stateStack
+            this.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
+        }
+    }
+    goToPassage(passageName){
+        //called whenever a passage link is clicked
+        //console.log(passageName);
+        this.stateStack.pushState(passageName); //pushes a new state, referencing the current passage, to top of the stateStack
+        this.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
     }
     loadCurrentPassage(){
-        canGoBack = (sessionStorage.getItem("gameStates")).canGoBack();
-        var currentState = (sessionStorage.getItem("gameStates")).topState();
-        var currentPassage = passageMap.get(currentState.getPassageName());
-
         //and now, the bit where I have to replace the HTML passage content that's already on the page.
 
-        document.getElementByID("divWhatHoldsPassageContent").innerHTML = currentPassage.getContent();
+        var currentState = this.stateStack.topState(); //obtains top GameState from stateStack
+        //console.log(currentState);
+
+        var pName = currentState.getPassageName(); //obtains the passage name from the currentState
+        //console.log(pName);
+
+        var currentPassage = this.passageMap.get(pName); //obtains the passage object from the passageMap which the top GameState refers to
+        //console.log(currentPassage);
+
+        var passageContent = currentPassage.getContent(); //obtains passage content from the currentPassage
+        //console.log(passageContent);
+
+        document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content
 
         //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
+            //update: yep, it does.
+
+        //VERSION OF THIS ENTIRE METHOD BUT IT'S ENTIRELY ON A SINGLE LINE:
+        //document.getElementById("divWhatHoldsPassageContent").innerHTML = (this.passageMap.get((this.stateStack.topState()).getPassageName())).getContent();
     }
 }
 ```
 
 ### Links to passages
 
-* All links within the page content shall be formatted as `<a class="passageLink" onclick="goToPassage('passageName')">link text</a>` by `HECC-UP`
-* The `goToPassage(passageName)` function
-    * Must push a new state with the passageName onto the gamestates stack
-    * Then must call `heccer.loadCurrentPassage();`
-    
-```
-function goToPassage(passageName){
-    sessionStorage.setItem("gamestates",(sessionStorage.getItem(gamestates)).pushState(passageName));
-    theHeccer.loadCurrentPassage();
-}
-```
+* All links within the page content shall be formatted as `<a class="passageLink" onclick="theHeccer.goToPassage('passageName')">link text</a>` by `HECC-UP`
+    * Well, given that passage content will be within JavaScript strings, it'll be more like
+        * `<a class=\"passageLink\" onclick=\"theHeccer.goToPassage('passageName')\">link text</a>`
+* Just calls `theHeccer.goToPassage(passageName)` function when clicked
+
 
 ### The back button
 
-* Will be a `<a id="backButton" onclick="backButtonFunction()">back</a>` or something like that
-* `backButtonFunction()` will basically attempt to go back
-    * Will obtain the current gamestates
-    * Checks if it can go back
-        * If it can go back, it pops the top item off the current gamestates, and puts taht back into sessionStorage
-        * Then tells heccer to load the current passage.
-    * Does nothing if it can't go back
+* Will be a `<a id="backButton" onclick="theHeccer.goBack()">back</a>` or something like that
+* Attempts to call `theHeccer.goBack()` when clicked
+    * Goes back if possible
+    * If going back isn't possible, it does nothing.
 
-```
-function backButtonFunction(){
-    var states = sessionStorage.getItem("gameStates");
-    if (states.canGoBack()){
-        sessionStorage.setItem("gamestates",states.popState());
-        //document.getElementByID("backButton").disabled = !(states.canGoBack()); //maybe disable button if it can't go back any further?
-        theHeccer.loadCurrentPassage();
-    }
-}
-```
 
 
 ## How this stuff will be set up
 * A `Heccer` object, called `theHeccer`, will be declared outside methods (so it has global scope)
-    * `var theHeccer = new Heccer();`
-* index.html will call a method in `HECCED.js` once it has loaded
+    * `var theHeccer = new HECCER(startingPassageName);`
+        * the 'startingPassageName' variable will be declared in `HECCED.js`
+* index.html will call a `getHecced` method in `HECCED.js` once it has loaded
     * This method will
         * Set up the gamestate stack
             * `sessionStorage.setItem("gamestates",new GameStateStack());`

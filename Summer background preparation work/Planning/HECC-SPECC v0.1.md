@@ -54,19 +54,19 @@ why not [[click this|Yet Another Passage]] as well?
 
 woah you clicked that so you're now at Yet Another Passage.
 
-Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|Dave]]?
+Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
 
 ::Left
 
-You go to the left, but the path leads you back to [[Dave]].
+You go to the left, but the path leads you back to [[dave]].
 
 ::Right
 
-You went to the right, but the path leads you back to [[Dave]].
+You went to the right, but the path leads you back to [[dave]].
 
-::Dave
+::dave
 
-This passage is called Dave.
-Dave's content doesn't include any links to any other passages.
+This passage is called dave.
+dave's content doesn't include any links to any other passages.
 So I guess this counts as the end.
 ```
