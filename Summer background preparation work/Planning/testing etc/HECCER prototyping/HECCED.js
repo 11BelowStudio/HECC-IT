@@ -101,19 +101,83 @@ function getHECCED(){
         )
     );
 
+
     theHeccer.addPassageToMap(
         new Passage(
             "dave",
             "<p>"+
             "This passage is called dave."+
             "<br/>"+
-            "dave's content doesn't include any links to any other passages."+
+            "dave's content doesn't contain links to any other passages"+
             "<br/>"+
-            "So I guess this counts as the end."+
+            "So I guess this counts as the end"+
+            "<br/>"+
+            "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu is a very long name for a hill, y'know? Just like how Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch is a long name for a town."+
             "</p>"
         )
     );
 
+    theHeccer.printPassages();
 
     theHeccer.loadCurrentPassage();
 }
+
+/*
+
+    //SOME TESTING FOR PASSAGES CONTAINING SPEECHMARKS AND QUOTATION MARKS IN THEIR NAMES
+
+    theHeccer.addPassageToMap(
+        new Passage(
+            "dave",
+            "<p>"+
+            "This passage is called dave."+
+            "<br/>"+
+            "dave's content links to \"bob\""+
+            "<br/>"+
+            "As you can see here: "+
+            "<a class=\"passageLink\" onclick=\"theHeccer.goToPassage('&quot;bob&quot;')\">\"bob\"</a>"+
+            "</p>"
+        )
+    );
+
+    theHeccer.addPassageToMap(
+        new Passage(
+            "\"bob\"",
+            "<p>"+
+            "This passage is called \"bob\"."+
+            "<br/>"+
+            "\"bob\"'s content links to 'ross'"+
+            "<br/>"+
+            "As you can see here: "+
+            "<a class=\"passageLink\" onclick=\'theHeccer.goToPassage(\"&apos;ross&apos;\")\'>'ross'</a>"+
+            "</p>"
+        )
+    );
+
+    theHeccer.addPassageToMap(
+        new Passage(
+            "'ross'",
+            "<p>"+
+            "This passage is called 'ross'."+
+            "<br/>"+
+            "'ross' doesn't include any links to any other passages."+
+            "<br/>"+
+            "Except from my "+
+            "<a class=\"passageLink\" onclick=\'theHeccer.goToPassage(\"wit&apos;s end\")\'>\"wit's end\"</a>"+
+            "</p>"
+        )
+    );
+
+    theHeccer.addPassageToMap(
+        new Passage(
+            "wit's end",
+            "<p>"+
+            "This passage is called wit's end."+
+            "<br/>"+
+            "Wit's end doesn't include any links to any other passages."+
+            "<br/>"+
+            "So I guess that it isn't just my wit that's been exhausted."+
+            "</p>"
+        )
+    );
+*/

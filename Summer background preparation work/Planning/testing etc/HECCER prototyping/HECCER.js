@@ -119,16 +119,26 @@ class HECCER{
         var currentPassage = this.passageMap.get(pName); //obtains the passage object from the passageMap which the top GameState refers to
         //console.log(currentPassage);
 
-        var passageContent = currentPassage.getContent(); //obtains passage content from the currentPassage
-        //console.log(passageContent);
+        if (currentPassage == undefined){
 
-        document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content
+            window.alert("uh oh, there's no passage called " + pName + "!");
 
-        //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
-            //update: yep, it does.
+        } else{
+
+            var passageContent = currentPassage.getContent(); //obtains passage content from the currentPassage
+            //console.log(passageContent);
+
+            document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content
+
+            //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
+                //update: yep, it does.
+        }
 
         //VERSION OF THIS ENTIRE METHOD BUT IT'S ENTIRELY ON A SINGLE LINE:
         //document.getElementById("divWhatHoldsPassageContent").innerHTML = (this.passageMap.get((this.stateStack.topState()).getPassageName())).getContent();
+    }
+    printPassages(){
+        console.log(this.passageMap);
     }
 }
 
