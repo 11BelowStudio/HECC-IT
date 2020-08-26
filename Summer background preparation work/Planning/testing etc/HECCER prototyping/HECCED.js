@@ -111,8 +111,6 @@ function getHECCED(){
             "dave's content doesn't contain links to any other passages"+
             "<br/>"+
             "So I guess this counts as the end"+
-            "<br/>"+
-            "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu is a very long name for a hill, y'know? Just like how Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch is a long name for a town."+
             "</p>"
         )
     );
