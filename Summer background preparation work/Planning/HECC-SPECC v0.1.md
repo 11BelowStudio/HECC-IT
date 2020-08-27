@@ -42,10 +42,10 @@ this line is before the first passage declaration, so, officially, this line doe
 ::Start
 
 starting passage content goes here.
-The following line contains a link to Another passage.
+The following line contains a link to "Another passage".
 [[Another passage]]
 
-::Another passage
+::Another passage [yes] <34,35>
 
 congrats you clicked that link to get here, Another passage.
 why not [[click this|Yet Another Passage]] as well?

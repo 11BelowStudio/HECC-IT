@@ -30,11 +30,11 @@
         * Flags to include at the start
             * `(?m)`
                 * Allows multiline stuff
-        * `(^::.+)`
+        * `^::.+`
             * Matches if
                 * starts with `::`
                 * Then contains 1 or more of anything that isn't a line break
-        * `(^::)([\w- ]*[\w]+)` or `(^:{2})([\w- ]*[\w]+)`
+        * `^::[\w- ]*[\w]+` or `^:{2}[\w- ]*[\w]+`
             * Matches if
                 * Starts with `::`
                 * Then contains 0 or more
@@ -52,9 +52,9 @@
         * This is passage content.
     * Finding passage links
         * Raw links
-            * `(\[\[)([\w- ]*[\w]+)(\]\])`
+            * `\[\[[\w- ]*[\w]+\]\]`
                 * Opens with `[[`, contains valid passage name, ends with `]]`.
-            * `(\[\[)([^\[\]\|]+)(\|)([\w- ]*[\w]+)(\]\])`
+            * `\[\[[^\[\]\|]+\|[\w- ]*[\w]+\]\]`
                 * Opens with `[[`
                 * Then contains the text displayed for the link (which must be at least 1 character long, and may not contain `[`, `]`, or `|`)
                 * Then contains a single `|`
@@ -168,8 +168,8 @@
             * ```
                 Matcher speechMarkMatcher = Pattern.compile("\"").matcher("");
                 Matcher contentMatcher = Pattern.compile("^\s*$").matcher("");
-                Matcher linkDeclarationMatcher = Pattern.compile("(\[\[)([\w- ]*[\w]+)(\]\])").matcher("");
-                Matcher indirectLinkDeclarationMatcher = Pattern.compile("(\[\[)([^\[\]\|]+)(\|)([\w- ]*[\w]+)(\]\])").matcher("");
+                Matcher linkDeclarationMatcher = Pattern.compile("\[\[[\w- ]*[\w]+\]\]").matcher("");
+                Matcher indirectLinkDeclarationMatcher = Pattern.compile("\[\[[^\[\]\|]+\|[\w- ]*[\w]+\]\]").matcher("");
                 ArrayList<String> currentPassageContent = new ArrayList<>();
                 ParsedPassage thisPassage;
                 boolean noContent;
@@ -229,7 +229,7 @@
 * Then, for every line between passage declarations
     * Add it to the unparsed content for the passage declared above it
 
-* Whilst going through         
+    
 
 ### ParsedPassage
 
