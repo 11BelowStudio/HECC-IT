@@ -33,7 +33,9 @@ public class MyClass {
         
         Set<String> passageNames = new TreeSet<String>();
         
-        Map<String, String> passageNamesAndContent = new TreeMap<String, String>();
+        Map<String, String> parsedPassages = new TreeMap<String, String>();
+        
+        ArrayList<String> heccedPassages = new ArrayList<>();
         
         String metadata = "no metadata";
         boolean hasMetadata = false;
@@ -147,38 +149,97 @@ public class MyClass {
         
         
         Matcher declarationMatcher = Pattern.compile("(?<declarations>^::[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(input);
+        //"(?<declarations>^::[\\w- ]*[\\w]+)"
+        //passageNameMatcher.reset(input);
         
         //will give this the everythingAfterDeclaration
         Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
         
+        //will use this to crop leading whitespace lines
+        Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\s*$", Pattern.MULTILINE).matcher("");
+        
+        Matcher lineEndWhitespaceMatcher = Pattern.compile("\\s*?$(\\n|\\r|\\n\\r)", Pattern.MULTILINE).matcher("");
+        
         notDone = true;
         
-        String currentPassage;
-        String everythingAfterDeclaration;
-        String currentContent;
+        String currentPassageName = "";
+        String nextPassageName = "";
+        String everythingAfterDeclaration = "";
+        String currentContent = "";
         
         int nextDeclarationStart = 0;
         int thisDeclarationStart = 0;
-        int thisContentStart = 0;
+        //int thisContentStart = 0;
         
         boolean foundFirst = false;
         boolean contentFound = false;
         
         do{
             notDone = declarationMatcher.find();
+            //notDone = passageNameMatcher.find();
             thisDeclarationStart = nextDeclarationStart;
+            currentPassageName = nextPassageName;
             if (notDone){
+                String tempDeclaration = declarationMatcher.group(0);
+                //String tempDeclaration = passageNameMatcher.group(0);
+                nextPassageName = tempDeclaration.substring(2,tempDeclaration.length());
+                nextDeclarationStart = declarationMatcher.start();
+                //nextDeclarationStart = passageNameMatcher.start();
                 if (!foundFirst){
-                    
+                    foundFirst = true;
+                    continue;
                 }
-                
             } else{
-                //everything to the end of the file will be considered
-                nextDeclarationStart = input.length()-1;
+                //everything to the end of input will be considered if there's no next declaration
+                nextDeclarationStart = input.length();
                 
             }
             everythingAfterDeclaration = input.substring(thisDeclarationStart, nextDeclarationStart);
+            passageContentMatcher.reset(everythingAfterDeclaration);
+            contentFound = false;
+            currentContent = "\"<p>";
+            while(passageContentMatcher.find()){
+                String temp = passageContentMatcher.group(0);
+                if (!contentFound){ //if no content has been found
+                    //check if this current line is entirely whitespace
+                    if (entirelyWhitespaceMatcher.reset(temp).matches()){
+                        continue;
+                        //skip this line if it's entirely whitespace
+                    } else{
+                        contentFound = true;
+                        //content has been found once first not-entirely-whitespace line has been reached
+                    }
+                }
+                lineEndWhitespaceMatcher.reset(temp);
+                temp = lineEndWhitespaceMatcher.replaceAll("<br/>");
+                currentContent = currentContent.concat(temp);
+            }
+            if (!contentFound){
+                //throw exception here
+                System.out.println("No content found for passage " + currentPassageName);
+            }
+            currentContent = currentContent.concat("</p>\"");
+            //System.out.println(currentContent);
+            parsedPassages.put(currentPassageName, currentContent);
+            
         } while(notDone);
+        
+        for (Map.Entry<String, String> e: parsedPassages.entrySet()){
+            String heccedFunction = "theHeccer.addPassageToMap(\n\tnew Passage(\n\t\t\"";
+            //System.out.println("Passage name: " + e.getKey());
+            //System.out.println("Passage content: " + e.getValue());
+            
+            heccedFunction = heccedFunction.concat(e.getKey());
+            heccedFunction = heccedFunction.concat("\",\n\t\t");
+            heccedFunction = heccedFunction.concat(e.getValue());
+            heccedFunction = heccedFunction.concat("\n\t)\n);\n");
+            
+            heccedPassages.add(heccedFunction);
+        }
+        
+        for(String h: heccedPassages){
+            System.out.println(h);
+        }
         
         
         //System.out.println("Full matcher results: ");
@@ -187,14 +248,14 @@ public class MyClass {
         //System.out.println("\n\nSpeechmark matcher results: ");
         //matcherOutput(speechMatcher);
         
-        System.out.println("\n\nDeclaration matcher results: ");
-        matcherOutput(declarationMatcher);
+        //System.out.println("\n\nDeclaration matcher results: ");
+        //matcherOutput(declarationMatcher);
         
         //System.out.println("\n\nPassage name matcher results: ");
         //matcherOutput(passageNameMatcher);
         
-        System.out.println("\n\nPassage content matcher results: ");
-        matcherOutput(passageContentMatcher);
+        //System.out.println("\n\nPassage content matcher results: ");
+        //matcherOutput(passageContentMatcher);
         
         //System.out.println("\n\nDirect link matcher results: ");
         //matcherOutput(directLinkMatcher);

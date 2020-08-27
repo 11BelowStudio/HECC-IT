@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- this is the index.html page for the HECCER prototype (R. Lowe, 21/8/2020)-->
+<head>
+    <meta charset="utf-8" />
+    <title>HECCER prototype test</title>
+    <style>
+        /*
+            yeah I know the CSS here sucks.
+            the colours and such for the divs are mainly for testing purposes, so I can work out div sizes/areas/etc
+            might move this to an external style.css later on
+        */
+        .outerDiv {
+	        margin: auto;
+	        top: 50%;
+ 	        padding: 20px;
+            width: 90%;
+            border: 5px black;
+            background-color: lightblue;
+            text-align: center;
+            display: flex;
+	        justify-content: center;
+	        align-items: center;
+        }
+        .innerDiv {
+	        width: 100%;
+	        background-color: red;
+        }
+        #divWhatHoldsPassageContent{
+	        margin: auto;
+	        top: 50%;
+            width: 90%;
+            border: 3px solid black;
+            text-align: center;
+            background-color: white;
+        }
+        .backDiv{
+            /*
+            tbh imma probably attempt to get this div to stay where it is, even if the div holding passage content changes size, to make it easier to go back.
+            might just make it go above/to the side of the passage content div or something idk
+            but I guess it's still perfecly functional where it is, y'know?
+            */
+	        margin: auto;
+            width: 90%;
+            border: 3px solid black;
+            text-align: center;
+            background-color: yellow;
+        }
+        .passageLink{
+            text-decoration: underline;
+            color: blue;
+        }
+        #backButton{
+            text-decoration: underline;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>HECCER prototype test</h1>
+
+<div class = "outerDiv">
+    <div class="innerDiv">
+        <div class= "passageDiv" id = "divWhatHoldsPassageContent">
+            <p>if you're reading this, that means that there's been a big oopsie with the passage loading lol.<br/>Or it means you're on internet explorer.<br/>Or you've disabled JavaScript.<br/>But yeah something's very clearly gone very wrong.</p>
+        </div>
+        <div class = "backDiv">
+            <p><a id="backButton" onclick="theHeccer.goBack()">this text is the back button</a></p></div>
+            <!-- tbh I might opt to make the entire div into the back button or something in the future, instead of just the back button text -->
+        </div>
+    </div>
+</div>
+<p>bottom text.</p>
+
+<p>yes I know it looks terrible. but prototyping just do be like that, y'know? they don't think it be like that, but it do!</p>
+
+<p>tbh this text underneath the game will probably be gone in the proper HECCER MVP thing. And the overall layout will hopefully be less Bad™. No promises about the writing quality though.</p>
+
+<p>but yeah enjoy the hypertext vidyagaem!</p>
+
+<script src="HECCER.js"></script>
+<script src="HECCED.js"></script>
+<script>
+//this stuff has to be inline here otherwise it doesn't work for some reason
+    var theHeccer = new HECCER(startingPassageName); //constructs a 'Heccer' object, called 'TheHeccer', starting from the named starting passage (as defined in HECCED.js)
+    window.onload = getHECCED; //when the window loads, it will call the getHECCED() method defined in HECCED.js (setting up theHeccer and making it start working)
+</script>
+</body>
+</html>

@@ -73,13 +73,13 @@
 
 ### Parser
 
+#### Just look at 'src/misc_testing_and_such/hecc_up_testing/HeccUpParserTest.java' instead.
+
 * Attributes
     * `string unparsedContent`
         * A string that literally just contains the unparsed content
     * `ArrayList<String> unparsedLines`
         * ArrayList containing all the lines in the currently unparsed HECC file
-    * `TreeMap<String, ArrayList<String>> unparsedPassages = new TreeMap<String, ArrayList<String>>`
-        * Holds passage names, along with the unparsed passage content
     * `Map<String, ParsedPassage> parsedPassages = new TreeMap<String, ParsedPassage>()`
         * Holds passage names, along with their associated ParsedPassage object
     * `Set<String> passageNames = new TreeSet<String>();`
@@ -90,144 +90,9 @@
         * Throw exception if fileToParse could not be opened/read
 * Methods
     * `parseContent()`
-        * Step 1: find passages
-            * Declare
-                * ```
-                  boolean firstDeclarationFound = false;
-                  string currentPassageName;
-                  ArrayList<String> currentPassageContent = new ArrayList<>();
-                  Pattern passageDeclarationPattern = Pattern.compile("^::.+"); //attempts to find things that start with ::, followed by 1 or more non-endline characters
-                  Matcher passageDeclarationMatcher = passageDeclarationPattern.matcher("");
-                  Pattern validPassageNamePattern = Pattern.compile("[\w- ]*[\w]+"); //attempts to find things that contain 0 or more alphanumeric/_/-/spaces followed by 1 or more alphanumeric/_/-
-                  Matcher validPassageNameMatcher = validPassageNamePattern.matcher("");
-                  
-                  ```
-            * Read through contents of `unparsedLines` (probably using a fori loop, not foreach)
-            * If the line is a passage declaration (starts with '::') (`if (passageDeclarationMatcher.reset(unparsedLines.get(i)).matches()){}`)
-                * if `firstDeclarationFound` is still false
-                    * set it to true
-                * else
-                    * add a new entry to `unparsedPassages`, with `currentPassageName` and `currentPassageContent`
-                * Clear `currentPassageContent`
-                * Set `currentPassageName` to the name of this newly-declared passage
-            * ```
-                boolean firstDeclarationFound = false;
-                string thisLine;
-                string currentPassageName;
-                ArrayList<String> currentPassageContent = new ArrayList<>();
-                Pattern passageDeclarationPattern = Pattern.compile("^::.+"); //attempts to find things that start with ::, followed by 1 or more non-endline characters
-                Matcher passageDeclarationMatcher = passageDeclarationPattern.matcher("");
-                Pattern validPassageNamePattern = Pattern.compile("[\w- ]*[\w]+"); //attempts to find things that contain 0 or more alphanumeric/_/-/spaces followed by 1 or more alphanumeric/_/-
-                Matcher validPassageNameMatcher = validPassageNamePattern.matcher("");
-                
-              
-                for(i = 0; i<unparsedLines.size(); i++){ //for every line in unparsedLines
-                    thisLine = unparsedLines.get(i);
-                    if(passageDeclarationMatcher.reset(thisLine).matches()){ //if this line is a passage declaration
-                        if(firstDeclarationFound){
-                            //if the first declaration has been found, finish up the last declaration
-                            unparsedPassages.put(currentPassageName,currentPassageContent);
-                            //everything from the last passage is put into the map, and it's now ready to start with this newly declared passage
-                            currentPassageContent.clear(); //clear the list of currentPassageContent
-                        } else{
-                            firstDeclarationFound = true;
-                            //set firstDeclarationFound to true if this is the first declaration
-                        }
-                        //set up the validPassageNameMatcher to check thisLine
-                        validPassageNameMatcher.reset(thisLine);
-                        if(validPassageNameMatcher.find()){ //if a valid pasage name was found
-                            currentPassageName = validPassageNameMatcher.group(1); //set that as currentPassageName
-                            if(!passageNames.add(currentPassageName)){ //attempt to add an entry for currentPassageName to the passageNames Set
-                                throw new DuplicatePassageNameException(i,currentPassageName);
-                                //complain loudly if it fails due to another passage having that name
-                            }
-                        } else{
-                            throw new InvalidPassageNameException(i, thisLine);
-                            //complain loudly if this line doesn't contain a valid passage name
-                        }
-                        
-                    } else{ //if this line isn't a passage declaration
-                        if(firstDeclarationFound){ //if the first passage has been declared
-                            currentPassageContent.append(thisLine); //append this to currentPassageContent
-                        //} else{
-                            //this is where metadata recording will go in future versions  
-                        }
-                    }
-                }
-                //now it's done with the loop
-                if(firstDeclarationFound){
-                    //if the first declaration has been found, finish up the last declaration
-                    unparsedPassages.put(currentPassageName,currentPassageContent);
-                    //everything from the last passage is put into the map
-                } else{
-                    throw new NoPassageDeclarationException();
-                    //complain loudly if no passages were declared
-                }
-              ```
-        * Step 2 (assuming an exception hasn't been thrown yet): analyse passages
-            * ```
-                Matcher speechMarkMatcher = Pattern.compile("\"").matcher("");
-                Matcher contentMatcher = Pattern.compile("^\s*$").matcher("");
-                Matcher linkDeclarationMatcher = Pattern.compile("\[\[[\w- ]*[\w]+\]\]").matcher("");
-                Matcher indirectLinkDeclarationMatcher = Pattern.compile("\[\[[^\[\]\|]+\|[\w- ]*[\w]+\]\]").matcher("");
-                ArrayList<String> currentPassageContent = new ArrayList<>();
-                ParsedPassage thisPassage;
-                boolean noContent;
-                String thisLine;
-                String passageNameArray[] = passageNames.toArray(new String[passageNames.size()]);
-                for(String p: passageNameArray){
-                    currentPassageContent = unparsedPassages.get(p);
-                    thisPassage = new ParsedPassage(p);
-                    noContent = true;
-                    for(String c: currentPassageContent){
-                        if (noContent){
-                            if(contentMatcher.reset(c).matches()){
-                                continue; //skip this line if it's just whitespace
-                            } else{
-                                noContent = false; //otherwise, there's content
-                                thisPassage.giveParsedContent("\"<p>\""); //add an opening <p> tag to the passage content
-                            }
-                        }
-                        thisLine = thisLine.replaceAll("\"","\\\\\""); //making sure all "s are escaped in the exported version of this string
-                        //TODO:
-                            //Check for link declaration/indirect link declaration matches
-                            //Process those into passageLinks
-                                //"<a class=\\\\\"passageLink\\\\\" onclick=\'theHeccer.goToPassage(\\\\\"passageName\\\\\")\'>link text</a>"
-                            //Throw UndeclaredPassageException(passageName) if passage wasnt declared
-                    }
-                    if (noContent){
-                        throw new EmptyPassageException(c);
-                    } else{
-                        thisPassage.append("\"</p>\"");
-                    }
-                }
-              ```
+        * Basically look at `regex planning.md`
 
-* open entire file as arraylist of strings
 
-* declaration rules
-    * ::Passage name may only contain alphanumeric characters spaces - and _
-
-* find passage declaration lines
-    * start with ::
-
-* record indexes of passage declaration lines
-    * perhaps arraylist of integers
-    * map<index, string>
-
-* extract passage name substrings
-    * Must be at least 1 character long
-        * InvalidPassageNameException
-    * Must not start with space
-        * InvalidPassageNameException
-    * Any sequence of spaces within passage name must be followed by a hyphen/underscore/alphanumeric character
-        * any trailing spaces will be omitted from passage name
-    * Set up map of ParsedPassage objects
-        * parsedPassageMap.add(parsedName, new ParsedPassage(parsedName);
-            * DuplicatePassageNameException thrown if passages share name
-
-* Then, for every line between passage declarations
-    * Add it to the unparsed content for the passage declared above it
 
     
 
