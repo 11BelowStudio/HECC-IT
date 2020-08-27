@@ -469,3 +469,16 @@ class TextAssetReader {
     static ArrayList<String> getHECCER() {return HECCER;}
     static ArrayList<String> getIndex() {return INDEX;}
 }
+//TODO stuff for the MVP
+
+//TODO: a version that doesn't have everything in the same Java file
+
+//TODO: replace the map of parsed passages (passage name, passage content) with a map of ParsedPassage objects (passage name, ParsedPassage object)
+
+//TODO: allow user to specify what .hecc file they want to read
+
+//TODO: allow user to specify where they want to save their hecc game
+
+//TODO: general improvements to index.html to make it look less crap
+
+//TODO: GUI
