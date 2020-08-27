@@ -50,8 +50,6 @@ public class HeccUpParserTest {
 
         heccedData.add("//HECC UP parser test output (as of 27/08/2020) (R. Lowe, 2020)\n\n");
 
-        String regex = "(?<speechmarks>\\\")|(?<declarations>^::[\\w- ]*[\\w]+)|(?<names>(?<=^::)[\\w- ]*[\\w]+)|(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)|(?<directLinks>\\[\\[[\\w- ]*[\\w]+\\]\\])|(?<indirectLinks>\\[\\[[^\\[\\]\\|]+\\|[\\w- ]*[\\w]+\\]\\])";
-
         boolean notDone = true;
 
         Set<String> passageNames = new TreeSet<String>();
@@ -61,8 +59,6 @@ public class HeccUpParserTest {
         String metadata = "no metadata";
         boolean hasMetadata = false;
 
-        //Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-        //Matcher matcher = pattern.matcher(dataToParse);
 
 
         // STUFF THAT OMITS ANY METADATA STUFF THAT'S BEFORE THE FIRST PASSAGE DECLARATION
@@ -78,6 +74,7 @@ public class HeccUpParserTest {
             }
         }
 
+        //TODO (after MVP): the metadata stuff
         //System.out.println(dataToParse);
         //System.out.println(metadata);
 
@@ -481,4 +478,10 @@ class TextAssetReader {
 
 //TODO: general improvements to index.html to make it look less crap
 
-//TODO: GUI
+//TODO: GUI for HECC-UP (not talking about OH-HECC)
+
+//TODO stuff for after MVP
+
+//TODO (after MVP): Metadata
+
+//TODO (after MVP): OH-HECC (Optional Help for HECC)
