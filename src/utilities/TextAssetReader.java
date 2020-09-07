@@ -8,25 +8,26 @@ import java.util.ArrayList;
 
 public class TextAssetReader {
 
-    final static String path = "/ThingsThatAreNotCode/text/";
-    final static String extension = ".txt";
+    private final static String path = "/assets/textAssets/";
 
-    //private final static ArrayList<String> OPENING_TEXT = fileToStringArrayList("IntroCrawlText");
-    //private final static ArrayList<String> CREDITS_TEXT = fileToStringArrayList("credits");
+    private final static ArrayList<String> HECCER = fileToStringArrayList("HECCER.js");
+    private final static ArrayList<String> INDEX = fileToStringArrayList("index.html");
+
+    private final static ArrayList<String> HECC_ARRAYLIST = fileToStringArrayList("HeccSample.hecc");
 
     private static ArrayList<String> fileToStringArrayList(String filename){
 
         //if it wasn't obvious, yes, this was unceremoniously borrowed from my CE218 stuff
         ArrayList<String> output = new ArrayList<>();
         try{
-            InputStream in = TextAssetReader.class.getResourceAsStream(path + filename + extension);
+            InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
             //This allows the specified text asset file to be packaged within the .jar ;)
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String currentString;
             //pretty much setting up the stuff for reading the file
             //until the end of the file is reached, it will add the current string to the file (even the empty ones)
             while ((currentString = br.readLine())!=null) {
-                output.add(currentString);
+                output.add(currentString.concat("\n"));
             }
             br.close(); //closes the bufferedReader
         } catch (IOException e) {
@@ -35,6 +36,14 @@ public class TextAssetReader {
         return output;
     }
 
-    //public static ArrayList<String> getOpeningText() {return OPENING_TEXT;}
-    //public static ArrayList<String> getCreditsText() {return CREDITS_TEXT;}
+    public static String getHeccString(){
+        String heccString = "";
+        for(String s: HECC_ARRAYLIST){
+            heccString = heccString.concat(s);
+        }
+        return heccString;
+    }
+
+    public static ArrayList<String> getHECCER() {return HECCER;}
+    public static ArrayList<String> getIndex() {return INDEX;}
 }

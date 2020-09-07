@@ -20,6 +20,7 @@
         * https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
     * regex tester
         * https://regexr.com/
+        * https://regex101.com/
 * Loading the HECC file
     * Open it as an ArrayList of strings (delimited at newlines)
 * Iterate through that ArrayList of strings
@@ -34,9 +35,11 @@
             * Matches if
                 * starts with `::`
                 * Then contains 1 or more of anything that isn't a line break
-        * `^::[\w- ]*[\w]+` or `^:{2}[\w- ]*[\w]+`
+        * `^::[\w]+[\w- ]*[\w]+` or `^:{2}[\w]+[\w- ]*[\w]+`
             * Matches if
                 * Starts with `::`
+                * Then contains 1 or more
+                    * 'word' characters
                 * Then contains 0 or more
                     * 'word' characters, hyphens, or spaces
                 * Followed by 1 or more

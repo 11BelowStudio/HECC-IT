@@ -123,7 +123,7 @@ public class HeccUpParserTest {
 
         // CONVERTING ALL DIRECT LINKS TO passageLinks
 
-        Matcher directLinkMatcher = Pattern.compile("(?<directLinks>\\[\\[[\\w- ]*[\\w]+\\]\\])", Pattern.MULTILINE).matcher(dataToParse);
+        Matcher directLinkMatcher = Pattern.compile("(?<directLinks>\\[\\[[\\w]+[\\w- ]*[\\w]+\\]\\])", Pattern.MULTILINE).matcher(dataToParse);
 
         notDone = true;
 
@@ -147,7 +147,7 @@ public class HeccUpParserTest {
 
         // CONVERTING ALL INDIRECT LINKS TO PassageLinks
 
-        Matcher indirectLinkMatcher = Pattern.compile("(?<indirectLinks>\\[\\[[^\\[\\]\\|]+\\|[\\w- ]*[\\w]+\\]\\])", Pattern.MULTILINE).matcher(dataToParse);
+        Matcher indirectLinkMatcher = Pattern.compile("(?<indirectLinks>\\[\\[[^\\[\\]\\|]+\\|[\\w]+[\\w- ]*[\\w]+\\]\\])", Pattern.MULTILINE).matcher(dataToParse);
 
         notDone = true;
 
@@ -190,17 +190,17 @@ public class HeccUpParserTest {
 
         notDone = true;
 
-        String currentPassageName = "";
+        String currentPassageName;
         String nextPassageName = "";
-        String everythingAfterDeclaration = "";
-        String currentContent = "";
+        String everythingAfterDeclaration;
+        String currentContent;
 
         int nextDeclarationStart = 0;
-        int thisDeclarationStart = 0;
+        int thisDeclarationStart;
         //int thisContentStart = 0;
 
         boolean foundFirst = false;
-        boolean contentFound = false;
+        boolean contentFound;
 
         do{
             notDone = declarationMatcher.find();
@@ -427,7 +427,7 @@ class UndefinedPassageException extends ParserException{
 
 class TextAssetReader {
 
-    final static String path = "/misc_testing_and_such/hecc_up_testing/resources/";
+    private final static String path = "/misc_testing_and_such/hecc_up_testing/resources/";
 
     private final static ArrayList<String> HECCER = fileToStringArrayList("HECCER.js");
     private final static ArrayList<String> INDEX = fileToStringArrayList("index.html");
