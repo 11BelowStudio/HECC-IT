@@ -7,17 +7,19 @@ This is basically a prototype of HECCER, which I mainly made right now because I
 The game data stuff is in HECCED.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in HECCED.js
 
-by R. Lowe, 21/8/2020
+by R. Lowe, 07/09/2020
 
-(this version has been fed into the HeccUpParserTest!)
+(this version has been fed into the Hecc Up Parser!)
 */
 
 class Passage{
-    constructor(passageName, passageContent){
+    constructor(passageName, passageContent, passageTags){
         //passageName: the string identifier for the passage
         //passageContent: the string content of the passage (it's already in HTML)
+        //tags: an array of declared 'tags' for the passage
         this.name = passageName;
         this.content = passageContent;
+        this.tags = passageTags;
     }
     getName(){
         //returns passage name
@@ -26,6 +28,16 @@ class Passage{
     getContent(){
         //returns passage content
         return this.content;
+    }
+    getTags(){
+        //returns passage tags
+        return this.tags;
+    }
+    containsSpecifiedTag(specifiedTag){
+        //returns whether or not this.tags contains the specifiedTag
+            //does this by returning whether or not the result of find(specifiedTag) is undefined or not
+            //if undefined, it's not present, else, it is present.
+        return (this.tags.find(specifiedTag) != undefined);
     }
 }
 

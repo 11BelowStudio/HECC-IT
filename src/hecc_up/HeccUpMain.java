@@ -11,7 +11,6 @@ public class HeccUpMain {
     private FolderOutputter outputter;
 
 
-
     public HeccUpMain(){
 
         passageParser = new PassageParser(TextAssetReader.getHeccString());
@@ -33,9 +32,15 @@ public class HeccUpMain {
                     //then, attempt to prepare the hecced data
                     if (passageParser.prepareHeccedData()) {
                         //finally, if everything worked, output the game
-                        outputter.outputTheGame(passageParser.getHeccedData());
+
+
+                        //uses heccedData and indexMetadata to from passageParser to print the stuff
+                        outputter.outputTheGameWithMetadata(passageParser.getHeccedData(), passageParser.getIndexMetadata());
+
 
                         System.out.println("It is done.");
+
+                        //passageParser.printPassageObjects();
                     }
                 }
             } catch (ParserException e) {
@@ -57,13 +62,9 @@ public class HeccUpMain {
 
 //TODO stuff for the MVP
 
-//TODO: a version that doesn't have everything in the same Java file
+//TODO: allow user to choose what .hecc file they want to parse
 
-//TODO: replace the map of parsed passages (passage name, passage content) with a map of ParsedPassage objects (passage name, ParsedPassage object)
-
-//TODO: allow user to specify what .hecc file they want to read
-
-//TODO: allow user to specify where they want to save their hecc game
+//TODO: allow user to choose where they want their HECCIN' Game (HECC Infused Nice Game)
 
 //TODO: general improvements to index.html to make it look less crap
 
@@ -71,6 +72,6 @@ public class HeccUpMain {
 
 //TODO stuff for after MVP
 
-//TODO (after MVP): Metadata
+//TODO (after MVP): further Metadata
 
 //TODO (after MVP): OH-HECC (Optional Help for HECC)

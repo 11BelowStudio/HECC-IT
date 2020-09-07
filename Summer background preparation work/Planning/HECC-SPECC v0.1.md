@@ -8,7 +8,8 @@
     * `::Start`
         * This defines the 'Start' passage
         * The game will start at the 'Start' passage (by default)
-            * There currently isn't any method to re-define which passage the game will start at in v0.1
+            * ~~There currently isn't any method to re-define which passage the game will start at in v0.1~~
+            * unless a user manually defines a different starting passage in the metadata
     * Rules for passage names
         * Must be strings contained in a single line, after the '::'
             * Nothing else is allowed in the same line as a passage declaration.
@@ -30,14 +31,19 @@
         * [[Link text|Name of passage being linked to]]
             * Displayed as a link saying 'Link text'
             * When clicked, the passage called 'Name of passage being linked to' will be displayed.
-* **Everything before the first passage declaration will be ignored**
-    * In later versions, I may opt to allow metadata declarations and such to be made before the first passage.
-    * But, as far as the MVP version of HECC-UP is concerned, everything before the first passage declaration doesn't exist.
+* **Everything before the first passage declaration is checked to see if it's metadata ~~will be ignored~~**
+    * Any non-metadata lines before the first passage declaration officially don't exist
+    * Metadata
+        * `!StartPassageName: name of start passage` allows a different starting passage to be defined
+        * `!IFID: (UUID goes here)` Allows an IFID (Interactive Fiction ID) to be declared for the game. This will be written to index.html
 
 
 ## Example HECC code
 ```
 this line is before the first passage declaration, so, officially, this line doesn't exist! 
+
+!StartPassageName: Start
+!IFID: de7b3d02-81bb-4c2a-82ba-7ca9398b2262
 
 ::Start
 

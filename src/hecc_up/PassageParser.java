@@ -1,6 +1,7 @@
 package hecc_up;
 
 import hecc_up.heccCeptions.*;
+import utilities.IFIDgenerator;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -22,7 +23,13 @@ public class PassageParser {
 
 
     private String metadata;
-    private String UUID;
+
+    private boolean declaredIFID;
+    private String stringIFID;
+
+    private ArrayList<String> indexMetadata;
+
+    private boolean hasMetadataForIndex;
 
 
 
@@ -43,14 +50,16 @@ public class PassageParser {
 
         hasMetadata = false;
 
+        declaredIFID = false;
+
+        indexMetadata = new ArrayList<>();
+
     }
 
     //this is responsible for setting up the passage objects and such
     public boolean constructThePassageObjects() throws ParserException{
 
-        heccedData.clear();
-
-        heccedData.add("//HECC UP parser test output (as of 07/09/2020) (R. Lowe, 2020)\n\n");
+        indexMetadata.clear();
 
         boolean notDone = true;
 
@@ -75,7 +84,7 @@ public class PassageParser {
             }
         }
 
-        //TODO (after MVP): the metadata stuff
+        //TODO: the metadata stuff
         //System.out.println(dataToParse);
         //System.out.println(metadata);
 
@@ -83,11 +92,47 @@ public class PassageParser {
 
         if(hasMetadata){
 
-            //TODO (after MVP): check if a starting passage was declared in the metadata, update 'startingPassageName' appropriately
+            System.out.println(metadata);
 
-            //TODO (after MVP): check for IFID
+            //TODO: check if a starting passage was declared in the metadata, update 'startingPassageName' appropriately (done)
+
+            //TODO: check for IFID (done)
 
             //TODO (after MVP): maybe have a 'metadata' object or something to handle this stuff?
+
+            //finds the declaration for the starting passage, in a string defined as starting with '!StartPassageName:', allowing some whitespace, then the starting passage name, then allowing trailing whitespace.
+                //This first matcher will find the passage name, along with any leading whitespace
+                    //line must be of the form '!StartPassageName: starting passage name'
+            Matcher startPassageDeclarationMatcher = Pattern.compile("(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)",Pattern.MULTILINE).matcher(metadata);
+            if(startPassageDeclarationMatcher.find()){
+                //if it found it, it'll then attempt to omit any leading whitespace, via another Matcher
+                String leadingWhitespaceStartPassageName = startPassageDeclarationMatcher.group(0);
+                //System.out.println(leadingWhitespaceStartPassageName);
+                Matcher startPassageWithoutLeadingWhitespaceMatcher = Pattern.compile("[\\w]+[\\w- ]*[\\w]+").matcher(leadingWhitespaceStartPassageName);
+                if(startPassageWithoutLeadingWhitespaceMatcher.find()){
+                    //the version of the start passage name with the leading whitespace is then set as the starting passage name
+                    startingPassageName = startPassageWithoutLeadingWhitespaceMatcher.group(0);
+                    System.out.println(startingPassageName);
+                }
+            }
+
+
+            //y'know what, may as well throw in an IFID declaration thing whilst I'm at it
+                //attempts to find an IFID declaration, in the form '!IFID: UUID goes here'
+                    //sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
+                //first matcher permits leading whitespace, so ofc it'll need to yeet that stuff later
+            Matcher ifidDeclarationMatcher = Pattern.compile("(?<=^!IFID:)\\s*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\s*$)",Pattern.MULTILINE).matcher(metadata);
+            if(ifidDeclarationMatcher.find()){
+                //if found, it then needs to yeet the leading whitespace
+                String leadingWhitespaceIFID = ifidDeclarationMatcher.group(0);
+                Matcher ifidMatcher = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}").matcher(leadingWhitespaceIFID);
+                if (ifidMatcher.find()){
+                    stringIFID = "<!-- UUID://"+ifidMatcher.group(0).toUpperCase()+"// -->";
+                    //here's the string that needs to be included in index.html for the IFID stuff to work (converted to uppercase because pretty much every other html story format uses uppercase so I may as well do that)
+                    declaredIFID = true;
+                    indexMetadata.add(stringIFID);
+                }
+            }
 
         }
 
@@ -114,9 +159,11 @@ public class PassageParser {
             System.out.println("no passages found!");
             //THROW EXCEPTION HERE
             throw new NoPassagesException();
-        } else{
-            System.out.println(passageNames.size());
-        }
+                //complains if there are no passages
+        } //else{
+            //System.out.println(passageNames.size());
+
+        //}
 
 
         Matcher declarationMatcher = Pattern.compile("(?<declarations>^::[\\w]+[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
@@ -225,7 +272,33 @@ public class PassageParser {
 
     }
 
+    public boolean validatePassages(){
+
+        try {
+            //check that there is a passage with the same name as the starting passage name
+            if (!(passageNames.contains(startingPassageName))) {
+                throw new MissingStartingPassageException(startingPassageName);
+                //throw exception if no such passage exists
+            }
+
+            //ensure that the passages they link to are all valid
+            for (Map.Entry<String, Passage> e: passageMap.entrySet()){
+                Passage current = e.getValue();
+                current.validateLinkedPassagesThrowingException(passageNames);
+                //exception is thrown if an undefined passage is being linked
+                e.setValue(current);
+            }
+
+            return true;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean prepareHeccedData(){
+
 
         //this prepares the heccedData
 
@@ -243,7 +316,10 @@ public class PassageParser {
         //parses each passage, and ensure that the links are all valid and such
         for (Map.Entry<String, Passage> e: passageMap.entrySet()){
             Passage current = e.getValue();
+
             current.parseContent();
+
+            //ensure that the passages they link to are valid
             if (current.validateLinkedPassages(passageNames)){
                 heccedData.add(current.getHeccedRepresentation());
                 e.setValue(current);
@@ -265,8 +341,24 @@ public class PassageParser {
             System.out.println(h);
         }
 
+        if (!declaredIFID){
+            System.out.println(suggestIFID());
+        }
+
         return true;
 
+    }
+
+    public boolean doesIFIDExist(){
+        return declaredIFID;
+    }
+
+    public String getStringIFID(){
+        return stringIFID;
+    }
+
+    public ArrayList<String> getIndexMetadata(){
+        return indexMetadata;
     }
 
     public ArrayList<String> getHeccedData(){
@@ -274,7 +366,23 @@ public class PassageParser {
     }
 
     public void printPassageObjects(){
+        //prints the passage objects for debugging reasons
+        for (Map.Entry<String, Passage> e: passageMap.entrySet()){
+            e.getValue().printPassageInfoForDebuggingReasons();
+            System.out.println("\n");
+        }
 
+    }
+
+    private String suggestIFID(){
+        //returns a string suggesting that you add an IFID
+        String suggestion = "Oh no! It looks like you forgot to declare an IFID in your hecc game!\n"
+                + "Declaring an IFID can be rather helpful in case you decide to post your game somewhere, so it can be archived.\n"
+                + "If you want a better explanation, here's a better explanation: https://ifdb.tads.org/help-ifid\n"
+                + "Anywho, here's a line of code with a newly generated IFID that you can put in your hecc file, before the first passage declaration,\n"
+                + "in case you actually want to declare an IFID for your work:\n\n";
+        String ifidString = "!IFID: " + IFIDgenerator.generateIFIDString();
+        return (suggestion.concat(ifidString));
     }
 
 

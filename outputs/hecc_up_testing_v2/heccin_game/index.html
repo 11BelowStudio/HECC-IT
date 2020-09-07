@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- this is the index.html page for the HECCER prototype (R. Lowe, 21/8/2020)-->
+<!-- this is the index.html page for the HECCER prototype (R. Lowe, 07/09/2020)-->
 <head>
     <meta charset="utf-8" />
     <title>HECCER prototype test</title>
@@ -57,6 +57,9 @@
     </style>
 </head>
 <body>
+
+<!-- UUID://DE7B3D02-81BB-4C2A-82BA-7CA9398B2262// -->
+
 <h1>HECCER prototype test</h1>
 
 <div class = "outerDiv">
@@ -65,7 +68,7 @@
             <p>if you're reading this, that means that there's been a big oopsie with the passage loading lol.<br/>Or it means you're on internet explorer.<br/>Or you've disabled JavaScript.<br/>But yeah something's very clearly gone very wrong.</p>
         </div>
         <div class = "backDiv">
-            <p><a id="backButton" onclick="theHeccer.goBack()">this text is the back button</a></p></div>
+            <p><a id="backButton" onclick="theHeccer.goBack()">this text is the back button</a></p>
             <!-- tbh I might opt to make the entire div into the back button or something in the future, instead of just the back button text -->
         </div>
     </div>
@@ -82,8 +85,13 @@
 <script src="HECCED.js"></script>
 <script>
 //this stuff has to be inline here otherwise it doesn't work for some reason
-    var theHeccer = new HECCER(startingPassageName); //constructs a 'Heccer' object, called 'TheHeccer', starting from the named starting passage (as defined in HECCED.js)
-    window.onload = getHECCED; //when the window loads, it will call the getHECCED() method defined in HECCED.js (setting up theHeccer and making it start working)
+
+    var theHeccer = new HECCER(startingPassageName);
+    //constructs a 'Heccer' object, called 'TheHeccer', starting from the named starting passage (as defined in HECCED.js)
+
+    window.onload = getHECCED;
+    //when the window loads, it will call the getHECCED() method defined in HECCED.js (setting up theHeccer and making it start working)
+
 </script>
 </body>
 </html>

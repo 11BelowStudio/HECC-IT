@@ -18,12 +18,14 @@ public class Passage {
 
     private String parsedContent;
 
+    private String parsedTags;
+
     private Set<String> linkedPassages;
 
     private ArrayList<String> tags;
         //will be used later on, with OH-HECC
 
-    //private Vector2D position;
+    private Vector2D position;
         //will be used later on, with OH-HECC
 
     //private final Matcher speechMatcher = Pattern.compile("(?<speechmarks>\\\")",Pattern.MULTILINE).matcher("");
@@ -43,8 +45,8 @@ public class Passage {
         System.out.println(unparsedContent);
 
         //TODO: initialise metadata as blank values
-        //position = new Vector2D();
-        tags = new ArrayList();
+        position = new Vector2D();
+        tags = new ArrayList<>();
     }
 
     public Passage(String passageName, String unparsedContent, String lineEndMetadata){
@@ -52,13 +54,52 @@ public class Passage {
         System.out.println(lineEndMetadata);
         //TODO: process metadata
 
-        Matcher tagListMatcher = Pattern.compile("\\[.*\\]").matcher(lineEndMetadata);
+        //this processes the list of tags (if they exist)
+            //tags may be alphanumeric with underscores, divided by spaces
+            //must be within []
+                //like '[List of tags divided by spaces and allows d1gits plus under_scores]'
+        Matcher tagListMatcher = Pattern.compile("\\[([a-zA-Z0-9_]+\\ +)*[a-zA-Z0-9_]+\\]").matcher(lineEndMetadata);
         if (tagListMatcher.find()){
             String tagListString = tagListMatcher.group(0);
             tagListString = tagListString.substring(1,tagListString.length()-1);
             String[] tagListArray = tagListString.split(" ");
-            tags.addAll(Arrays.asList(tagListArray));
-            //System.out.println(tags);
+            for (String s: tagListArray){
+                if (!s.isEmpty()){
+                    tags.add(s);
+                }
+            }
+        }
+
+        //this initialises the position vector (if it's declared)
+
+        //Searches for it in the form
+            //<x,y>
+                //x and y are double numbers, may have decimals, and can have leading/trailing whitespace
+        Matcher vectorCoordsMatcher = Pattern.compile("<\\s*\\d*\\.?\\d+\\s*,\\s*\\d*\\.?\\d+\\s*>").matcher(lineEndMetadata);
+        if (vectorCoordsMatcher.find()){
+            //if it's found, it extracts that string
+            String vectorCoordsString = vectorCoordsMatcher.group(0);
+            //trims the trailing/leading '<''>' characters
+            vectorCoordsString = vectorCoordsString.substring(1,vectorCoordsString.length()-1);
+            //converts it into an array, splitting at the comma
+            String[] vectorCoordsArray = vectorCoordsString.split(",");
+            if(vectorCoordsArray.length > 1){ //if there's 2 (or more) indexes in the array
+                int i = 0; //counter thing
+                double[] coords = {0,0}; //2d array of doubles to store the coordinate doubles
+                while (i < 2){
+                    try{
+                        //puts the double value of the string in the current index of the array into coords[i]
+                        coords[i] = Double.parseDouble(vectorCoordsArray[i]);
+                    } catch (Exception e){
+                        //sets coords[i] to 0 if no double could be found
+                        coords[i] = 0;
+                    }
+                    i++;
+                }
+                //sets 'position' accordingly
+                this.position.set(coords[0],coords[1]);
+                // System.out.println(position);
+            }
         }
 
 
@@ -139,6 +180,30 @@ public class Passage {
         //concatenating a closing '</p>' tag (and closing speechmark) to the parsed content
         parsedContent = parsedContent.concat("</p>\"");
 
+
+        //and now, the parsed tags for the passage
+
+        //opening the array declaration
+        parsedTags = "[";
+        //if it's not empty, start filling up parsedTags
+        if(!tags.isEmpty()){
+            int i = 0; //cursor
+            do{
+                //get the string representation of the parsed tag, put it in parsedTags
+                parsedTags = parsedTags.concat("\""+tags.get(i)+"\"");
+                //increment i
+                i++;
+                //notDone is true if i is still smaller than the size of tags
+                if(notDone = (i < tags.size())){
+                    //concatenate a comma onto the parsedTags if there's more parsed tags to come
+                    parsedTags = parsedTags.concat(",");
+                }
+                //keep on doing it until it's finally done
+            } while (notDone);
+        }
+
+        parsedTags = parsedTags.concat("]"); //finally close the array declaration
+
     }
 
     public void updateLinkedPassages(){
@@ -171,19 +236,24 @@ public class Passage {
             }
         } while(notDone);
 
+
     }
 
     public boolean validateLinkedPassages(Set<String> allPassages){
         try {
-            for (String s : linkedPassages) {
-                if (!allPassages.contains(s)) {
-                    throw new UndefinedPassageException(s);
-                }
-            }
+            validateLinkedPassagesThrowingException(allPassages);
             return true;
         } catch (ParserException e){
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void validateLinkedPassagesThrowingException(Set <String> allPassages) throws UndefinedPassageException{
+        for (String s : linkedPassages) {
+            if (!allPassages.contains(s)) {
+                throw new UndefinedPassageException(s);
+            }
         }
     }
 
@@ -193,17 +263,37 @@ public class Passage {
 
         //passage name
         heccedRepresentation = heccedRepresentation.concat(passageName);
+
         //end of passage name, moving to content
         heccedRepresentation = heccedRepresentation.concat("\",\n\t\t\t");
+
         //parsed content concatenated
         heccedRepresentation = heccedRepresentation.concat(parsedContent);
-        //end of parsed content, finishing the line of code
+
+        //and y'know what, may as well shove the tags for the passage in as well, why the hecc not, might come in useful later on
+        heccedRepresentation = heccedRepresentation.concat(",\n\t\t\t");
+
+        //parsed tags concatenated
+        heccedRepresentation = heccedRepresentation.concat(parsedTags);
+
+        //end of the declaration, finishing up the line of code
         heccedRepresentation = heccedRepresentation.concat("\n\t\t)\n\t);\n\n\n");
+
         //returning the heccedRepresentation
         return heccedRepresentation;
     }
 
 
+    public void printPassageInfoForDebuggingReasons(){
+
+        System.out.println("Passage name: " + passageName);
+        System.out.println("Unparsed passage content:\n" + unparsedContent);
+        System.out.println("Parsed passage content:\n"+ parsedContent);
+        System.out.println("Position: " + position);
+        System.out.println("Parsed tags: " + tags);
+        System.out.println("Linked passages: " + linkedPassages);
+
+    }
 
 
 

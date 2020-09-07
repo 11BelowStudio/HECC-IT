@@ -63,6 +63,19 @@ public class FolderOutputter {
 
     }
 
+    public void outputTheGameWithMetadata(ArrayList<String> heccedData, ArrayList<String> indexMetadata){
+
+        if (outputFolderExists){
+            File heccedFile = new File(outputFolderPath.concat("HECCED.js"));
+            writeTheFile(heccedFile, heccedData);
+
+            File heccerFile = new File(outputFolderPath.concat("HECCER.js"));
+            writeTheFile(heccerFile, TextAssetReader.getHECCER());
+
+            writeIndexButWithMetadata(indexMetadata);
+        }
+    }
+
     private void writeTheFile(File f, ArrayList<String> dataToWrite){
         try{
             f.createNewFile();
@@ -78,6 +91,35 @@ public class FolderOutputter {
             System.out.println("IOException!");
             e.printStackTrace();
         }
+    }
+
+    private void writeIndexButWithMetadata(ArrayList<String> indexMetadata){
+
+        ArrayList<String> indexData = TextAssetReader.getIndex();
+        File f = new File(outputFolderPath.concat("index.html"));
+
+        try{
+            f.createNewFile();
+            FileWriter heccedFileWriter = new FileWriter(f);
+            for(String s: indexData){
+                if (s.equals("<!-- METADATA GOES HERE -->\n")){
+                    for(String m: indexMetadata){
+                        heccedFileWriter.write(m);
+                        heccedFileWriter.write("\n");
+                    }
+                } else {
+                    heccedFileWriter.write(s);
+                }
+            }
+            heccedFileWriter.close();
+        } catch(FileNotFoundException e){
+            System.out.println("FileNotFoundException!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("IOException!");
+            e.printStackTrace();
+        }
+
     }
 
 }
