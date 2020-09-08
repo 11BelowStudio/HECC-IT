@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript passing a method into a class via constructor</h2>
+
+<p>The 'present' methods of these objects have all been defined by passing them as functions to the constructor</p>
+
+<p>built from https://www.w3schools.com/js/tryit.asp?filename=tryjs_classes_method2</p>
+
+<p id="demo"></p>
+
+<script>
+class Car {
+  constructor(brand, present) {
+    this.carname = brand;
+    this.present = present;
+  }
+  /*
+  present(x) {
+    return x + ", I have a " + this.carname;
+  }
+  */
+}
+
+var mycar = new Car(
+	"Ford",
+    function(x){
+    	return x + ", I have a " + this.carname;
+    }
+);
+
+var myOtherCar = new Car(
+	"Volvo",
+    function(x){
+    	return this.carname + " pls nerf " + x;
+    }
+);
+
+var myFinalCar = new Car(
+	"lemon",
+    function(){
+    	this.carname = prompt("pls rename "+this.carname, this.carname);
+    	return this.carname;
+    }
+);
+
+document.getElementById("demo").innerHTML = mycar.present("Hello") + " </br> " + myOtherCar.present("this") + "</br>" + myFinalCar.present();
+
+
+</script>
+
+</body>
+</html>
