@@ -13,6 +13,8 @@
     * Rules for passage names
         * Must be strings contained in a single line, after the '::'
             * Nothing else is allowed in the same line as a passage declaration.
+                * However, a list of tags `[like this space delimited]` will be permitted (even though they currently don't have any functionality)
+                * A position vector, in the format `<x,y>` (where x and y are integers or doubles) may also be declared for the passage on the same line as the passage declaration (however, they also don't have any functionality, and this functionality is only going to be used for OH-HECC) 
         * Letters, numbers, spaces, underscores, and hyphens are allowed.
             * Nothing else
         * Must start with a letter
