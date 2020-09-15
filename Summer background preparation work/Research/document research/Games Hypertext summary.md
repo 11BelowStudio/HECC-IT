@@ -1,4 +1,16 @@
 
+# Games/Hypertext
+
+* Abstract
+    * Relationship between literary hypertexts and narrative games
+    
+* **tl;dr**
+    * 'Literary hypertexts appear to be a sub-type of narrative games', but 'narrative games are fundamentally hypertextual'
+    * It's worth 'linking the worlds of hypertext and game design... apply known hypertext theory to new and modern contexts, and build a better theoretical understanding of electronic literature and games'
+    
+* What does this mean for my project?
+    * Not much tbh
+    * Apply some of the theory behind narrative games to my hypertext game?
 
 
 # Source
