@@ -229,3 +229,5 @@ Names and such for components
 * Some stretchtext-style method of having text that, when clicked, will show/hide some extra content.
     * On click, it calls a method to put some text in a specified container area (or hide aforementioned text)
         * **Defining the area for the expanded text to go in might be problematic, however, it's certainly theoretically possible**.
+* Some form of navigation overlay (tree view of the overarching game structure) for the HECCIN Game (similar to that used in the Henry Stickmin games)
+    * **Unlikely to happen, and could easily break a lot of potential games**
