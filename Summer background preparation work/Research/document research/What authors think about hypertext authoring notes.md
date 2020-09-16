@@ -71,30 +71,130 @@
         * Documentation
             * 'The known unknowns'
                 * 'authors knew what they wanted to do, were aware that the tool could do it, but could not figure out how to make it happen'
-                    *        
+                    * Ensure that I clearly document all the functionality that my tool does have, and how to do it.
             * 'The unknown unknowns'
                 * 'they did not know, and found it hard to discover, whether the tool had a particular capability or not'
-                    *
+                    * Ensure that it's clear what the tool is/isn't able to do
     * Production
         * Complexity
             * 'Content tracking'
                 * 'internal consistency of the text'
-                    * 
+                    * Add some method for users to take notes?
             * 'Variable tracking'
+                * 'external consistency of the state machine around the text', 'hard to track variables across nodes'
+                    * Could potentially alleviate this by requiring variables to be declared in advance, so it's harder to lose track of them?
             * 'Scalability'
+                * 'where the sheer size of the text (and any behaviour specifications) simply become overwhelming', 'actually testing them and getting them to work was a bit difficult'
+                    * Not sure how to address complaints regarding the size of the text
+                    * Testing scalability could be addressed by allowing the user to change the start node to whichever node they want to use instead
             * 'Versioning'
+                * 'maintain working versions of a story as it develops, and guard against any potential loss of work'
+                    * Not sure how to achieve this
+                        * Maybe allow git integration within OH-HECC?
         * Programming Environment
             * 'Lack of programmable environment'
+                * 'tools that we have now are a little bit more fragmented... you have to step out of the tool to do scripting... you have to have several tools'
+                    * Maybe should try to integrate HECC-UP directly into OH-HECC, so users don't need to use 'several tools'
+                    * Also ensure that all the options supported by HECC can be done via OH-HECC instead.
             * 'Separation of content and behaviour'
+                * 'complicates editing and testing when things such as spelling errors and machine language errors are not differentiated'
+                    * Could try to work out a way of clearly differentiating between code and outputs within the syntax of the nodes
+                        * Maybe OH-HECC would need to use regexes to style the node content appropriately to distinguish between code and not code?
             * 'Lack of debugging tools (testing)'
+                * Nothing to 'clearly state what a programmable error may be when a story doesn't compile', lack of 'good tools to check if there are problems with your code'
+                    * HECC-UP currently throws exceptions when there's an error or something in the HECC code whilst it's compiling the HECC code, but that's about it so far.
+                        * Some form of validation for the links, passages, passage content and such is present in the HECC-UP prototype, however.
     * Post-production
         * Lifecycle
             * 'Profitability'
+                * Distribution issues mean 'a resulting problem with profitability from their work', 'challenge seems to be getting any money out of it'
+                    * Unsure how I can address these issues, as I don't have the power nor the money to address this problem head-on
+                        * However, seeing as the output HECCIN Game is a compiled version of the input HECC code, I guess that, if someone doesn't wish to publish the source HECC code for their HECCIN Game, they can keep it, so it'll be more annoying for someone to reverse-engineer their HECCIN Game
             * 'Platform support'
+                * 'publishing platforms not being able to fully support the functionality of a story'
+                    * Need to work out what exactly the minimum requirements for a browser are to run a HECCIN Game (what javascript version is needed etc)
             * 'Maintenance'
+                * 'the difficulty of making updates to a story after publication'
+                    * It isn't possible to change the existing HECCIN Game after it's been compiled, however, you can use (and edit) the HECC code to produce an updated version of the HECCIN Game.
             * 'Curation'
+                * 'lack of spaces that could provide curation for all these works for longevity and accessibility'
+                    * I know I don't have the resources to set up a curation playform myself
+                    * However, by ensuring that a HECCIN Game is compliant with the Treaty of Babel, it could be archived on the Interactive Fiction Database (IFDB)
             * 'Distribution'
-            
+                * 'lack of venues for distribution', 'it's a bit difficult for the end user... people are becoming totally adverse to doing other work other than clicking on a link and getting the game to play'
+                    * Unsure how I can solve the distribution problem with my tool, as I don't think I have the resources or the sanity to set up a distribution platform myself.
+                    * However, a HECCIN Game is playable via browser, entirely clientside, so there isn't any sort of work needed from the player to get the game to play
+                        * So it should be easily uploadable to and playable on itch.io, at the very least
+
+* What this means for my tool
+    * My tool should have
+        * Very clear documentation (pre-production issues)
+            * What HECC can do
+                * What HECC is designed to do
+                * If HECC can do it
+                    * Make it clear that HECC can do it
+                    * Explain how to do it
+            * What HECC cannot do
+                * What HECC is not designed to do
+                * If there is something that HECC cannot do, which a user may expect to be able to do
+                    * Point out that HECC cannot do it
+                    * Maybe explain a workaround, **but explain that it's not going to end well**
+            * Vocabulary for HECC-IT should make sense
+                * Users shouldn't have to make sense of unclear syntax
+                * Stick to a particular glossary of terms
+        * Functionality for the tools
+            * Content Tracking
+                * Allow users to make notes of some description within their HECC code
+                    * Potentially allowing a string of 'notes' metadata for a passage to be declared after the end of a passage's content?
+                        * Would pretty much give an explicit start/end for the passage text contents
+                        * This metadata would be preserved and usable by OH-HECC, but ignored by HECC-UP.
+            * Variable Tracking
+                * Potentially require variables and such to be explicitly declared at the start of the HECC file, and these definitions would be used by HECC-UP to validate the HECC code, and would be passed (along with other metadata) to the HECCER by HECCED.js
+                    * 'Metadata' object definitely could clean up some relatively untidy bits of HECC-UP/HECCER
+                    * Also, gamestates could keep track of the state of all declared variables at each state of the game, so it's easier to keep track of all of them
+                        * No digging through the gamestatestack to obtain the value of a variable, as it'll be right there on the current gamestate
+            * Testing (scalability/workflow misalignment)
+                * I guess having the option to change the given starting node (even by editing HECCED.js in a compiled HECCIN Game) would help with testing somewhat
+                * However, I guess that having to compile the HECC code to produce a new version of HECCED.js every time might get uncomfortable fast
+                    * But there's probably nothing to stop OH-HECC from letting a user view the HECCED contents of a particular passage (especially if HECC-UP and OH-HECC share the Passage object), to copy and paste into getHecced() in HECCED.js to test something quickly.
+            * Version control
+                * I theoretically could include git integration within OH-HECC (version control for the .hecc file)
+                    * but that would definitely have to be a stretch goal
+                    * users could back it up on git themselves in the meantime I guess
+            * Programmable environment (integration)
+                * Bundle OH-HECC and HECC-UP into the same tool, so users don't need to use multiple programs (as the two components will be part of the same program)
+                    * Users who just want to use HECC-UP still can do that
+                    * Ensure that OH-HECC can be used to do anything that the HECC language is capable of doing
+                    * I guess that the parsing process of OH-HECC and HECC-UP could be shared
+                        * Constructing passage objects from the .hecc file
+                            * HECC-UP then parses the passage objects into HECCED data, and exports the HECCIN Game
+                            * OH-HECC then allows the users to edit the passage objects via a GUI, saving the new state of the passage objects in .hecc format
+                        * The Passage object already has some functionality that could be useful for OH-HECC already.
+            * Separation of content and behaviour
+                * Not sure about this one
+                    * If I have no special scripting stuff, there won't be any content and behaviour to seperate, y'know?
+                    * Should aim to make it explicitly clear what stuff is 'written content' and what stuff is 'code stuff'
+                        * Maybe OH-HECC could have regexes to identify code stuff/not code stuff, and format the two differently?
+            * Debugging tools
+                * HECC-UP currently complains about big problems with the .hecc code it's given
+                * Perhaps OH-HECC should have safeguards to prevent users from entering any invalid .hecc code?
+                    * Replace certain special characters in the user input with escaped versions?
+                * I guess that an option to export/run a HECCIN Game in 'debug' mode (with a visual, interactive, representation of the gamestatestack might be useful)
+        * Post-production functionality
+            * Curation
+                * Make it somewhat 'curatable' by ensuring compliance with the Treaty of Babel
+            * Maintenance
+                * Authors can use HECC-UP to produce updated versions of their game.
+            * Platform support
+                * Work out what exactly the minimum system requirements that are needed for the HECCER/HECCED to run are, and then update the 'game broke' message for index.html to explicitly state these minimum requirements.
+            * Distribution
+                * Making the HECCIN Game .html/.js (on browser, 100% clientside): easy to host (no serverside processing), easy to play (just need to click on the link to start playing and you're playing it)
+                    * But I don't have the resources to set up a distribution platform for people's HECCIN Games (assuming anyone's going to use HECC-IT, ofc)
+            * Profitability
+                * Not sure how I can inherently address this problem authors have.
+                    * Sure, it'll be a pain in the arse to reverse-engineer a HECCIN Game into raw .hecc code
+                    * But, ofc, that doesn't guarantee profitability or anything like that.
+   
 
 # Source
 

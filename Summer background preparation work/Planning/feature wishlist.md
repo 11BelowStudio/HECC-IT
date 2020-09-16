@@ -154,7 +154,13 @@ Names and such for components
     * Type validation (maybe)
     * **Might need to do something like what Squiffy has with it's `squiffy.ui.processText: function(text){}` stuff, where, when a section/passage is loaded, it looks for any tokens ('{}' or '@' text), then processes them on-the-fly into what they're supposed to be** 
         * **I can also pass a function definition into a constructor as an argument (see testing etc/PassingFunctionDefinitionAsConstructorArgument.html), so I can pass a user-defined Javascript function into a Passage object that way.**
-        * **However, I guess that the parsing-conditions-when-loading-a-passage stuff might be more effective, seeing as that means that the variables and such will have to be accessed on demand for the conditional statement, so I may as well do that whole thing processed on demand**
+            * **However, I guess that the parsing-conditions-when-loading-a-passage stuff might be more effective, seeing as that means that the variables and such will have to be accessed on demand for the conditional statement, so I may as well do that whole thing processed on demand**
+    * **Maybe require them all to be declared at the very start, with the other metadata**
+        * **Some scope for automatic error detection by HECC-UP in regards to variables; complaining as soon as an undeclared variable is used**
+            * **Author will also be able to tell how many/what variables their game has/uses, might help to keep track of them all**
+        * **HECC-UP could construct a Metadata object, containing variable declarations as well, which would be passed to the HECCER by HECCED (along with the passages) at runtime**
+            * **gamestate objects would also hold the values of all the variables at the current point in time (so it's easier to keep track of them)**
+        * **less runtime weirdness**
 * Having 'passages' and 'sub-passages'
     * 'sub-passage' as sub-sections of a main 'passage'
         * clicking on a 'sub-passage' link adds additional content to the main 'passage' stuff currently being displayed
@@ -213,3 +219,10 @@ Names and such for components
         * Special per-node CSS options?
             * Maybe consider implementing an option for some form of special per-passage CSS stuff?
                 * **Might be better off just doing this in the 'user-defined CSS' stuff, by allowing passages to have CSS classes.**
+* Some scope for note-taking
+    * Sure, everything that isn't an instance of metadata which appears before the first passage declaration is technically a note (according to HECC-UP), but I'm not sure if these unofficial notes would survive OH-HECC.
+    * **Allow 'notes' to be defined for a passage (probably appearing below the end of the content of that passage), ignored by HECC-UP, but allows author to take notes regarding a certain passage**
+        * **Rather feasible.**
+* Git integration with OH-HECC
+    * Could theoretically integrate git into OH-HECC (similar to IntelliJ's git plugin), to allow version control of some description for the .hecc file
+        * **Rather unfeasible, would need to work out how to get command line git working, work out how to make java automatically do git stuff, then include functionality within OH-HECC to do the command line git stuff for the .hecc file**
