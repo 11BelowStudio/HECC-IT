@@ -226,3 +226,6 @@ Names and such for components
 * Git integration with OH-HECC
     * Could theoretically integrate git into OH-HECC (similar to IntelliJ's git plugin), to allow version control of some description for the .hecc file
         * **Rather unfeasible, would need to work out how to get command line git working, work out how to make java automatically do git stuff, then include functionality within OH-HECC to do the command line git stuff for the .hecc file**
+* Some stretchtext-style method of having text that, when clicked, will show/hide some extra content.
+    * On click, it calls a method to put some text in a specified container area (or hide aforementioned text)
+        * **Defining the area for the expanded text to go in might be problematic, however, it's certainly theoretically possible**.
