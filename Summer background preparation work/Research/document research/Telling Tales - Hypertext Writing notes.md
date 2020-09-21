@@ -180,7 +180,48 @@
         * Members of audience selected to be in jury
         * Verdict of jury (from audience members) determined ending
             * Ergodic.
-     * 
+    * *Kinoautomat*, R. Činčera, J. Roháč, and V. Svitáček, (1967)
+        * Experimental interactive film
+        * Film stopped at intervals, audience asked how they think the story can continue
+            * Given a red/green button, corresponding to choice, vote for the next segment they want to see
+        * Actually a satire of democracy
+            * No matter how the audience vote, the film always ends the same way
+            * Got banned in 1972
+    * *Tamara: A play*, J. Krizanc, (1981)
+        * Play takes place in a large house
+        * Actors perform simultaneously, in up to 9 different rooms
+        * Spectators must choose which actor(s) they want to follow (physically)
+        * Multiple narratives
+            * Depending on which characters the spectators decide to follow around (or not)
+    * *Intimate Exchanges*, A. Ayckbourn, (1982)
+        * Eight stories, originating from an opening scene
+            * Two actors play all the roles
+            * Story repeatedly splits in two
+            * Sixteen endings
+            * Non-linear story
+        * Actors choose which path to take at each split, not audience
+            * Non-linear
+            * But not conventionally ergodic
+                * Extra work done by the actors instead of the audience
+    * *Mr. A's Amazing Maze Plays*, A. Ayckbourn, (1988)
+        * Children's play, main characters explore deserted house
+            * Characters take directions from audience
+                * Ergodic
+            * 30 locations in the house, but not all are visited
+            * Non-linear
+    * *Timecode*, M. Figgis, (2000)
+        * Film consists of 4 overlapping narratives
+            * 4 continuous 90-minute takes
+        * Screen divided into quarters
+            * All 4 films playing at the same time
+        * Audience members 'choose' which sub-film to watch/pay attention to
+    * *Puss in Book: Trapped in an Epic Tale*, R. Burdine and J. Castuciano, (2017)
+        * Interactive children's film from Shrek franchise
+        * Film broken up into 'episodes'
+            * Binary choice presented at the end of each episode
+    * *Black Mirror: Bandersnatch*, D. Slade and C. Brooker, (2018)
+        * Interactive film
+        * Repeated binary choices throughout the film
 
 # Source
 
