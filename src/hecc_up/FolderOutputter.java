@@ -51,10 +51,10 @@ public class FolderOutputter {
     public void outputTheGame(ArrayList<String> heccedData){
 
         if (outputFolderExists) {
-            File heccedFile = new File(outputFolderPath.concat("HECCED.js"));
+            File heccedFile = new File(outputFolderPath.concat("hecced.js"));
             writeTheFile(heccedFile, heccedData);
 
-            File heccerFile = new File(outputFolderPath.concat("HECCER.js"));
+            File heccerFile = new File(outputFolderPath.concat("heccer.js"));
             writeTheFile(heccerFile, TextAssetReader.getHECCER());
 
             File indexFile = new File(outputFolderPath.concat("index.html"));
@@ -66,10 +66,10 @@ public class FolderOutputter {
     public void outputTheGameWithMetadata(ArrayList<String> heccedData, ArrayList<String> indexMetadata){
 
         if (outputFolderExists){
-            File heccedFile = new File(outputFolderPath.concat("HECCED.js"));
+            File heccedFile = new File(outputFolderPath.concat("hecced.js"));
             writeTheFile(heccedFile, heccedData);
 
-            File heccerFile = new File(outputFolderPath.concat("HECCER.js"));
+            File heccerFile = new File(outputFolderPath.concat("heccer.js"));
             writeTheFile(heccerFile, TextAssetReader.getHECCER());
 
             writeIndexButWithMetadata(indexMetadata);

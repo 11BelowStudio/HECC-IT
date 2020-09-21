@@ -1,14 +1,21 @@
 
 # HECC-IT (Hypertext Editing and Creation Code - Integrated Toolkit)
 
-* A toolkit which can be used to create Hypertext games
+* A toolkit which can be used to create Hypertext Games
 
 ## Why am I doing this project?
 
-* 
+* I like the idea of making things that other people can just screw around with basically.
+* It also appears that most of the jobs I have any chance of getting in the games industry are as tools programmers
+    * so I guess that making a tool (such as this) might help my employment prospects a bit.
+* Also doesn't require any sort of overly fancy software/hardware to run
+    * Should be able to fully implement this on my laptop if the worst happens and I'm stuck in self-isolation or something, with minimal fuss.
+        * In theory, at least.
 
 ## Why am I doing this project now?
 
+* The world's going to shit, and I guess this has been a decent distraction from that so far.
+* ~~Because it was one of the capstone project proposals and I have to do a capstone project in my 3rd year~~
 * 
 
 ## What can I bring to the table that nobody else has brought to it?
@@ -68,6 +75,10 @@
                     * eHyperTool
                     * storyspace
             * HECC-IT gives you a choice of GUI (OH-HECC) or code (raw .hecc code)
+* An overall really stupid but somewhat consistent branding, that might get the attention of people who may otherwise have not noticed it
+    * The names of the other ones kinda err on the sensible/slightly memorable, but they do kinda err in the territory of 'generic'/'slightly boring sounding'
+    * HECC-IT will probably be a bit more immediately attention-grabbing (because it's a really stupid name), and might sound a bit more appealing than most of the common alternatives.
+        * Not trying to be pretentious/serious/etc with the name, sounds less imposing/threatening.
 * 
 
 ## What are the project objectives?
@@ -83,17 +94,17 @@
         * HECC Infused Nice Game
         * Components
             * index.html
-            * HECCER.js
-            * HECCED.js
+            * heccer.js
+            * hecced.js
         * Components that need to be premade
             * index.html
                 * Essentially the interface for the game (allows player to, y'know, play it)
-            * HECCER.js
+            * heccer.js
                 * HECC Environment for Runtime
                 * This is basically the engine
                 * Content of index.html is manipulated by the HECCER.
         * Components produced by HECC-UP
-            * HECCED.js
+            * hecced.js
                 * HECC Exported Data
                 * Essentially holds the contents of the game
                 * Constructed by HECC-UP, consider it as the 'HECCED' version of the raw .hecc file.
@@ -106,8 +117,34 @@
 
 ## What technical achievements will I aim to achieve during Challenge Week?
 
-* 
+* A finalized definition for the HECC-SPECC v0.1
+    * State everything that HECC-UP is capable of parsing at this point in time basically.
+* A functional version of HECC-UP
+    * HECC Uncomplicated Parser (MVP version of HECC-UP)
+    * Capable of converting a .hecc file, specified by the user, into a HECCIN Game.
+    * Should have it exported as a .jar file.
+* A playable HECCIN Game
+    * In .hecc form
+    * And also in HECCIN Game form
+        * the output from the .hecc file
+* A template .hecc file
+    * That users can basically use as a template for their own HECCIN Games
 
 ## What is the management plan for this project?
 
-* 
+* Get challenge week done
+    * Basically ensure that there's a functional hypertext game creation tool somewhere.
+* Make any improvements to the HECC-SPECC, HECCIN Game, and HECC-UP that are needed to facilitate the GUI
+    * Stuff like adding support for a dedicated 'notes' section for each passage, ensuring that there's stuff to facilitate displaying passages on the GUI, etc.
+    * Defining all metadata (so OH-HECC can support that)
+    * Probably should also add support for variable declarations as well (so that can be done in OH-HECC without many problems)
+* Create OH-HECC
+    * GUI for making HECC games, presenting them as linked nodes in a network, allowing users to create new nodes/edit nodes/delete nodes/etc.
+    * End result of OH-HECC should always be valid .hecc code
+        * Should be parsable by HECC-UP without any problems
+    * Should also fill in some metadata automatically, fill in other metadata based on user input.
+* Further refinements to the HECC-SPECC, HECC-UP, and the HECCIN Game
+    * More functionality etc
+    * Ideally shouldn't require too much refactoring in OH-HECC in order to get that working
+* Actually make the game
+    * Probably need to draw the line at some point (say, February), and then write the game to utilize the functionality of HECC at that point in time.
