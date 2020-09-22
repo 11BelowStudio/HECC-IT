@@ -124,4 +124,4 @@
 * [1] *TADS 3* (2012), M. J. Roberts. Accessed: Aug 4, 2020. [Online]. Available: https://www.tads.org/
 * [2] M. J. Roberts. "TADS - the Text Adventure Development System, an Interactive Fiction authoring tool" tads.org https://www.tads.org/ (accessed Aug 4, 2020)
 * [3] M. J. Roberts, *TADS 3 Library Reference Manual (version 3.1.3)* (2013) [Online] Accessed: Aug 4, 2020. Available: https://www.tads.org/t3doc/doc/libref/index.html
-* [4] S. Breslin, E. Eve, M. Nizette, M. Roberts, A. Sewe, M. J. Roberts. *TADS 3 Technical Manual* (2006) [Online] Accessed: Aug 4, 2020. Available: https://www.tads.org/t3doc/doc/techman/toc.htm
+* [4] S. Breslin, E. Eve, M. Nizette, A. Sewe, M. J. Roberts. *TADS 3 Technical Manual* (2006) [Online] Accessed: Aug 4, 2020. Available: https://www.tads.org/t3doc/doc/techman/toc.htm

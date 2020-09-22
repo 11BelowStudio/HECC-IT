@@ -70,6 +70,8 @@ public class HeccUpMain {
 
 //TODO: GUI for HECC-UP (not talking about OH-HECC)
 
+//TODO: Metadata object
+
 //TODO stuff for after MVP
 
 //TODO (after MVP): further Metadata

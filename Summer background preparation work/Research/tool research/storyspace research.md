@@ -1,7 +1,7 @@
 # StorySpace 3
 ## how it works
 * Documents saved in an XML format [1]
-    * Appears to have some compatiability with 'Tinderbox' (also by Eastgate, and also unusable on Windows)
+    * Appears to have some compatibility with 'Tinderbox' (also by Eastgate, and also unusable on Windows)
 * 'Topographic writing'[2]
     * Nodes called 'writing spaces'
     * Several views of the nodes [3]
@@ -46,9 +46,9 @@
                 * Can be used to implement 'shark links':
                     * if these have fulfilled requirements, user is automatically sent to them
             * $Visits
-                * Counter of how many times a certain note has been visited
+                * Counter of how many times a certain node has been visited
             * $OnVisit
-                * Action that may be performed once a note is visited
+                * Action that may be performed once a node is visited
                 
         
 
