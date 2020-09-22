@@ -8,15 +8,25 @@
 * I like the idea of making things that other people can just screw around with basically.
 * It also appears that most of the jobs I have any chance of getting in the games industry are as tools programmers
     * so I guess that making a tool (such as this) might help my employment prospects a bit.
+    * additionally, the game aspect of this project kinda errs more on the design side of the game creation process (due to the implementation of the game being relatively trivial, in theory, so the design aspect is the more important bit)
+        * and tbh I like designing games
 * Also doesn't require any sort of overly fancy software/hardware to run
     * Should be able to fully implement this on my laptop if the worst happens and I'm stuck in self-isolation or something, with minimal fuss.
         * In theory, at least.
+* When it's done, I could probably publish the tool and the game I made with the tool
+    * I could put the tool/game both on my own github and on my itch.io page
+    * Who knows, maybe someone might notice it and try playing around with it?
+* I also have no real experience with JavaScript, so I guess that making the output of this will give me some experience with it.
 
 ## Why am I doing this project now?
 
 * The world's going to shit, and I guess this has been a decent distraction from that so far.
 * ~~Because it was one of the capstone project proposals and I have to do a capstone project in my 3rd year~~
-* 
+    * ~~I also fucked up big time with sorting out a placement year~~
+* I've had a lot of things on my mind recently (questions about my identity, the future, mental health, future prospects, etc), and I guess this might give me an opportunity to explore those things.
+    * hypertext fiction probably facilitates exploration of these things a bit more than normal fiction, considering the ergodic/non-linear nature of it.
+        * Opens the door for some more self-reflective writing from multiple angles (or whatever the correct word would be)
+        * might be somewhat therapeutic? idk how to get a therapist or anything so yeah this is probably my best bet lol
 
 ## What can I bring to the table that nobody else has brought to it?
 
@@ -79,7 +89,9 @@
     * The names of the other ones kinda err on the sensible/slightly memorable, but they do kinda err in the territory of 'generic'/'slightly boring sounding'
     * HECC-IT will probably be a bit more immediately attention-grabbing (because it's a really stupid name), and might sound a bit more appealing than most of the common alternatives.
         * Not trying to be pretentious/serious/etc with the name, sounds less imposing/threatening.
-* 
+* Somewhat human-readable source code
+    * When poking around the source code for the other tools (and their outputs), it's kinda hard to work out what does what, because of all the obfuscation and such.
+    * However, I'm aiming to make the HECCIN Game relatively easy to understand what does what in it.
 
 ## What are the project objectives?
 
@@ -94,6 +106,7 @@
         * HECC Infused Nice Game
         * Components
             * index.html
+                * style.css
             * heccer.js
             * hecced.js
         * Components that need to be premade
@@ -103,12 +116,16 @@
                 * HECC Environment for Runtime
                 * This is basically the engine
                 * Content of index.html is manipulated by the HECCER.
+            * style.css
+                * default styling
         * Components produced by HECC-UP
             * hecced.js
                 * HECC Exported Data
                 * Essentially holds the contents of the game
                 * Constructed by HECC-UP, consider it as the 'HECCED' version of the raw .hecc file.
                 * Feeds the game contents into the HECCER
+            * style.css
+                * scope for user-defined styling
     * Create the 'OH-HECC' utility
         * Optional Help for HECC
         * GUI utility which can be used to produce .hecc code, without needing to touch any raw .hecc code.

@@ -10,7 +10,7 @@ public class TextAssetReader {
 
     private final static String path = "/assets/textAssets/";
 
-    private final static ArrayList<String> HECCER = fileToStringArrayList("HECCER.js");
+    private final static ArrayList<String> HECCER = fileToStringArrayList("heccer.js");
     private final static ArrayList<String> INDEX = fileToStringArrayList("index.html");
 
     private final static ArrayList<String> HECC_ARRAYLIST = fileToStringArrayList("HeccSample.hecc");
