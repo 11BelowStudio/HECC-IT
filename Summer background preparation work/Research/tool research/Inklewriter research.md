@@ -79,7 +79,7 @@
             * ```#theme: dark``` for darkmode
         * Setting CSS classes
             * putting ```#CLASS: classname``` at the end of a line allows you to style that line via ```.class{/*styling*/}``` within style.css
-    * Clearing the visted stiches from the 'reading' view
+    * Clearing the visited stitches from the 'reading' view
         * Putting ```#CLEAR``` within a stitch will hide all previously visited stitches when this one is visited
     * Restarting the game
         * ```#RESTART``` restarts the game

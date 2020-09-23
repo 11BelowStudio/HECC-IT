@@ -38,7 +38,7 @@
             * These take the form ```*keyword```
                 * Simple ones
                     * ```*comment comment text``` used for comments
-                    * ```*link URL goes here``` used for links
+                    * ```*link (URL goes here)``` used for links
                     * ```*page_break``` used to insert a page break (user must click 'next' to see following content)
                 * Less simple ones
                     * Choices
