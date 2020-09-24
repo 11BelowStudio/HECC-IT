@@ -114,7 +114,7 @@
         * 'writers need to 'help' readers to travel the 'book' space and the narrative, by offering interface tools that can guide and position the reader in his or her journey'
             * Desired interface elements
                 * ''Page' marking devices'
-                * 'navigation tools must allow  as much control as possible... particularly being able to go to any page at will'
+                * 'navigation tools must allow as much control as possible... particularly being able to go to any page at will'
                 * 'navigation tools must not be obscure... or hidden'
                 * 'visual material must be part of the story being told, not simply decoration'
     * 'Disorientation'
