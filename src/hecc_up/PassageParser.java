@@ -31,6 +31,8 @@ public class PassageParser {
 
     private boolean hasMetadataForIndex;
 
+    private Metadata metadataObject;
+
 
 
     public PassageParser(String rawHeccData){
@@ -90,7 +92,12 @@ public class PassageParser {
 
         startingPassageName = "Start";
 
+        //TODO: CONSTRUCT METADATA OBJECT WITH THE METADATA
+
+        //TODO: parse the Metadata object stuff
+
         if(hasMetadata){
+
 
             System.out.println(metadata);
 
@@ -135,7 +142,6 @@ public class PassageParser {
             }
 
         }
-
 
         // KEEPING TRACK OF ALL THE PASSAGE NAMES
 
@@ -275,6 +281,7 @@ public class PassageParser {
     public boolean validatePassages(){
 
         try {
+            //TODO: replace this first bit with calls to the Metadata object
             //check that there is a passage with the same name as the starting passage name
             if (!(passageNames.contains(startingPassageName))) {
                 throw new MissingStartingPassageException(startingPassageName);
@@ -307,6 +314,7 @@ public class PassageParser {
         heccedData.add("//HECC UP test output (as of 07/09/2020) (R. Lowe, 2020)\n\n");
 
         //declaration of starting passage name is added to heccedData
+        //TODO: use a metadataObject.getStartPassage() call
         heccedData.add("var startingPassageName = \""+startingPassageName+"\";\n\r\n\r");
 
         //starts the declaration of the getHECCED function in heccedData
@@ -341,6 +349,7 @@ public class PassageParser {
             System.out.println(h);
         }
 
+        //TODO: check in metadata object for a declared IFID
         if (!declaredIFID){
             System.out.println(suggestIFID());
         }
@@ -357,6 +366,7 @@ public class PassageParser {
         return stringIFID;
     }
 
+    //TODO: metadata object
     public ArrayList<String> getIndexMetadata(){
         return indexMetadata;
     }

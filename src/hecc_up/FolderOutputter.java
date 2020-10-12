@@ -63,6 +63,7 @@ public class FolderOutputter {
 
     }
 
+    //TODO: metadata object
     public void outputTheGameWithMetadata(ArrayList<String> heccedData, ArrayList<String> indexMetadata){
 
         if (outputFolderExists){
@@ -93,6 +94,8 @@ public class FolderOutputter {
         }
     }
 
+
+    //TODO: metadata object
     private void writeIndexButWithMetadata(ArrayList<String> indexMetadata){
 
         ArrayList<String> indexData = TextAssetReader.getIndex();
