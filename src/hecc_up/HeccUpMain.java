@@ -34,8 +34,8 @@ public class HeccUpMain {
                         //finally, if everything worked, output the game
 
 
-                        //uses heccedData and indexMetadata to from passageParser to print the stuff
-                        outputter.outputTheGameWithMetadata(passageParser.getHeccedData(), passageParser.getIndexMetadata());
+                        //uses heccedData and metadata to from passageParser to output the HECCIN Game
+                        outputter.outputTheGameWithMetadata(passageParser.getHeccedData(), passageParser.getMetadata());
 
 
                         System.out.println("It is done.");

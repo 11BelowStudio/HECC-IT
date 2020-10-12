@@ -63,9 +63,8 @@ public class FolderOutputter {
 
     }
 
-    //TODO: metadata object
-    public void outputTheGameWithMetadata(ArrayList<String> heccedData, ArrayList<String> indexMetadata){
 
+    public void outputTheGameWithMetadata(ArrayList<String> heccedData, Metadata metadata){
         if (outputFolderExists){
             File heccedFile = new File(outputFolderPath.concat("hecced.js"));
             writeTheFile(heccedFile, heccedData);
@@ -73,7 +72,7 @@ public class FolderOutputter {
             File heccerFile = new File(outputFolderPath.concat("heccer.js"));
             writeTheFile(heccerFile, TextAssetReader.getHECCER());
 
-            writeIndexButWithMetadata(indexMetadata);
+            writeIndexButWithMetadata(metadata);
         }
     }
 
@@ -95,8 +94,9 @@ public class FolderOutputter {
     }
 
 
-    //TODO: metadata object
-    private void writeIndexButWithMetadata(ArrayList<String> indexMetadata){
+
+
+    private void writeIndexButWithMetadata(Metadata metadata){
 
         ArrayList<String> indexData = TextAssetReader.getIndex();
         File f = new File(outputFolderPath.concat("index.html"));
@@ -106,10 +106,7 @@ public class FolderOutputter {
             FileWriter heccedFileWriter = new FileWriter(f);
             for(String s: indexData){
                 if (s.equals("<!-- METADATA GOES HERE -->\n")){
-                    for(String m: indexMetadata){
-                        heccedFileWriter.write(m);
-                        heccedFileWriter.write("\n");
-                    }
+                    heccedFileWriter.write(metadata.getIfidButHtmlFormatted());
                 } else {
                     heccedFileWriter.write(s);
                 }

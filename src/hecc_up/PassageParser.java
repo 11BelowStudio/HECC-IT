@@ -17,21 +17,7 @@ public class PassageParser {
 
     private String dataToParse;
 
-    private boolean hasMetadata;
-
-    private String startingPassageName;
-
-
-    private String metadata;
-
-    private boolean declaredIFID;
-    private String stringIFID;
-
-    private ArrayList<String> indexMetadata;
-
-    private boolean hasMetadataForIndex;
-
-    private Metadata metadataObject;
+    private Metadata metadata;
 
 
 
@@ -50,26 +36,20 @@ public class PassageParser {
         so I may as well make sure that it does get looked at, y'know?
          */
 
-        hasMetadata = false;
 
-        declaredIFID = false;
-
-        indexMetadata = new ArrayList<>();
 
     }
 
     //this is responsible for setting up the passage objects and such
     public boolean constructThePassageObjects() throws ParserException{
 
-        indexMetadata.clear();
 
         boolean notDone = true;
 
 
 
-        String metadata = "no metadata";
-        hasMetadata = false;
-
+        String metadataString = "no metadata";
+        boolean hasMetadata = false;
 
         // STUFF THAT OMITS ANY METADATA STUFF THAT'S BEFORE THE FIRST PASSAGE DECLARATION
 
@@ -79,72 +59,31 @@ public class PassageParser {
             int startIndex = firstDeclarationMatcher.start();
             if (startIndex > 1){
                 //metadata is everything before first declaration
-                metadata = dataToParse.substring(0,startIndex-1);
+                metadataString = dataToParse.substring(0,startIndex-1);
                 hasMetadata = true;
                 //dataToParse takes up everything after first declaration
                 dataToParse = dataToParse.substring(startIndex);
             }
         }
 
+
         //TODO: the metadata stuff
         //System.out.println(dataToParse);
         //System.out.println(metadata);
 
-        startingPassageName = "Start";
+        //startingPassageName = "Start";
 
         //TODO: CONSTRUCT METADATA OBJECT WITH THE METADATA
 
+        //constructs a new Metadata object to do the metadata parsing stuff
+        metadata = new Metadata(metadataString, hasMetadata);
+
         //TODO: parse the Metadata object stuff
 
-        if(hasMetadata){
+        metadata.parseMetadata();
 
-
-            System.out.println(metadata);
-
-            //TODO: check if a starting passage was declared in the metadata, update 'startingPassageName' appropriately (done)
-
-            //TODO: check for IFID (done)
-
-            //TODO (after MVP): maybe have a 'metadata' object or something to handle this stuff?
-
-            //finds the declaration for the starting passage, in a string defined as starting with '!StartPassageName:', allowing some whitespace, then the starting passage name, then allowing trailing whitespace.
-                //This first matcher will find the passage name, along with any leading whitespace
-                    //line must be of the form '!StartPassageName: starting passage name'
-            Matcher startPassageDeclarationMatcher = Pattern.compile("(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)",Pattern.MULTILINE).matcher(metadata);
-            if(startPassageDeclarationMatcher.find()){
-                //if it found it, it'll then attempt to omit any leading whitespace, via another Matcher
-                String leadingWhitespaceStartPassageName = startPassageDeclarationMatcher.group(0);
-                //System.out.println(leadingWhitespaceStartPassageName);
-                Matcher startPassageWithoutLeadingWhitespaceMatcher = Pattern.compile("[\\w]+[\\w- ]*[\\w]+").matcher(leadingWhitespaceStartPassageName);
-                if(startPassageWithoutLeadingWhitespaceMatcher.find()){
-                    //the version of the start passage name with the leading whitespace is then set as the starting passage name
-                    startingPassageName = startPassageWithoutLeadingWhitespaceMatcher.group(0);
-                    System.out.println(startingPassageName);
-                }
-            }
-
-
-            //y'know what, may as well throw in an IFID declaration thing whilst I'm at it
-                //attempts to find an IFID declaration, in the form '!IFID: UUID goes here'
-                    //sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
-                //first matcher permits leading whitespace, so ofc it'll need to yeet that stuff later
-            Matcher ifidDeclarationMatcher = Pattern.compile("(?<=^!IFID:)\\s*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\s*$)",Pattern.MULTILINE).matcher(metadata);
-            if(ifidDeclarationMatcher.find()){
-                //if found, it then needs to yeet the leading whitespace
-                String leadingWhitespaceIFID = ifidDeclarationMatcher.group(0);
-                Matcher ifidMatcher = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}").matcher(leadingWhitespaceIFID);
-                if (ifidMatcher.find()){
-                    stringIFID = "<!-- UUID://"+ifidMatcher.group(0).toUpperCase()+"// -->";
-                    //here's the string that needs to be included in index.html for the IFID stuff to work (converted to uppercase because pretty much every other html story format uses uppercase so I may as well do that)
-                    declaredIFID = true;
-                    indexMetadata.add(stringIFID);
-                }
-            }
-
-        }
 
         // KEEPING TRACK OF ALL THE PASSAGE NAMES
-
 
         Matcher passageNameMatcher = Pattern.compile("(?<names>(?<=^::)[\\w]+[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
 
@@ -283,20 +222,19 @@ public class PassageParser {
         try {
             //TODO: replace this first bit with calls to the Metadata object
             //check that there is a passage with the same name as the starting passage name
-            if (!(passageNames.contains(startingPassageName))) {
-                throw new MissingStartingPassageException(startingPassageName);
-                //throw exception if no such passage exists
+            if ((metadata.doesStartPassageExist(passageNames))){
+                //ensure that every single linked passage is valid
+                for (Map.Entry<String, Passage> e: passageMap.entrySet()){
+                    Passage current = e.getValue();
+                    current.validateLinkedPassagesThrowingException(passageNames);
+                    //exception is thrown if an undefined passage is being linked
+                    e.setValue(current);
+                }
+                return true;
+            } else{
+                throw new MissingStartingPassageException(metadata.getStartPassage());
+                //throw exception if no such starting passage exists
             }
-
-            //ensure that the passages they link to are all valid
-            for (Map.Entry<String, Passage> e: passageMap.entrySet()){
-                Passage current = e.getValue();
-                current.validateLinkedPassagesThrowingException(passageNames);
-                //exception is thrown if an undefined passage is being linked
-                e.setValue(current);
-            }
-
-            return true;
 
         } catch (Exception e){
             e.printStackTrace();
@@ -306,16 +244,20 @@ public class PassageParser {
 
     public boolean prepareHeccedData(){
 
+        if (!validatePassages()){
+            return false;
+        }
+
 
         //this prepares the heccedData
 
         heccedData.clear();
 
-        heccedData.add("//HECC UP test output (as of 07/09/2020) (R. Lowe, 2020)\n\n");
+        heccedData.add("//HECC UP test output (as of 12/10/2020) (R. Lowe, 2020)\n\n");
 
         //declaration of starting passage name is added to heccedData
         //TODO: use a metadataObject.getStartPassage() call
-        heccedData.add("var startingPassageName = \""+startingPassageName+"\";\n\r\n\r");
+        heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\r\n\r");
 
         //starts the declaration of the getHECCED function in heccedData
         heccedData.add("function getHECCED(){\n\r");
@@ -350,25 +292,19 @@ public class PassageParser {
         }
 
         //TODO: check in metadata object for a declared IFID
-        if (!declaredIFID){
+        if (!metadata.doesIFIDExist()){
             System.out.println(suggestIFID());
         }
+
+        metadata.printDebugData();
 
         return true;
 
     }
 
-    public boolean doesIFIDExist(){
-        return declaredIFID;
-    }
 
-    public String getStringIFID(){
-        return stringIFID;
-    }
-
-    //TODO: metadata object
-    public ArrayList<String> getIndexMetadata(){
-        return indexMetadata;
+    public Metadata getMetadata(){
+        return metadata;
     }
 
     public ArrayList<String> getHeccedData(){

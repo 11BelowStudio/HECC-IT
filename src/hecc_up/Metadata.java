@@ -30,6 +30,8 @@ public class Metadata {
         if (hasMetadata){ //only bothers doing this if there actually is any metadata to parse
             findStartPassage();
             findIFID();
+            //TODO: find title
+            //TODO: find author
         }
     }
 
@@ -103,6 +105,7 @@ public class Metadata {
     //returns the IFID string
     public String getIFID(){ return ifid; }
 
+
     //returns the IFID string but formatted in such a way that it works with the current IFID html declaration stuff (will be removed later)
     public String getIfidButHtmlFormatted(){
         if (isIFIDDeclared) {
@@ -120,6 +123,15 @@ public class Metadata {
 
     //TODO: iFiction metadata export stuff
     //public String getiFictionMetadata(){}
+
+    public void printDebugData(){
+        System.out.println("METADATA OBJECT DEBUG DATA:");
+        System.out.println("START PASSAGE: " + startPassage);
+        System.out.println("IFID: "+ ifid);
+        System.out.println("TITLE: " + title);
+        System.out.println("AUTHOR: " + author);
+        System.out.println("RAW METADATA:\n" + rawMetadata);
+    }
 
 
 }

@@ -1,4 +1,4 @@
-//HECC UP test output (as of 07/09/2020) (R. Lowe, 2020)
+//HECC UP test output (as of 12/10/2020) (R. Lowe, 2020)
 
 var startingPassageName = "Start";
 
