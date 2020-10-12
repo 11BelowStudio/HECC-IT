@@ -18,6 +18,8 @@ public class FolderOutputter {
 
     private boolean outputFolderExists;
 
+    //constructor
+    //bottom text
     public FolderOutputter(){
 
         outputFolderExists = false;
@@ -25,6 +27,7 @@ public class FolderOutputter {
 
     }
 
+    //this function creates a folder with the given folderName
     public boolean setupOutputFolder(String folderName){
 
         outputFolderPath = path.concat(folderName).concat("/");
@@ -63,7 +66,7 @@ public class FolderOutputter {
 
     }
 
-
+    //this outputs the HECCIN Game, using the passed heccedData and the passed metadata.
     public void outputTheGameWithMetadata(ArrayList<String> heccedData, Metadata metadata){
         if (outputFolderExists){
             File heccedFile = new File(outputFolderPath.concat("hecced.js"));
@@ -73,9 +76,12 @@ public class FolderOutputter {
             writeTheFile(heccerFile, TextAssetReader.getHECCER());
 
             writeIndexButWithMetadata(metadata);
+
+            writeIFictionFile(metadata);
         }
     }
 
+    //this is a generic method for writing a File (f), containing the contents of the dataToWrite ArrayList<String>
     private void writeTheFile(File f, ArrayList<String> dataToWrite){
         try{
             f.createNewFile();
@@ -94,8 +100,7 @@ public class FolderOutputter {
     }
 
 
-
-
+    //this writes the Index.html file, using the given Metadata object
     private void writeIndexButWithMetadata(Metadata metadata){
 
         ArrayList<String> indexData = TextAssetReader.getIndex();
@@ -103,15 +108,15 @@ public class FolderOutputter {
 
         try{
             f.createNewFile();
-            FileWriter heccedFileWriter = new FileWriter(f);
+            FileWriter indexFileWriter = new FileWriter(f);
             for(String s: indexData){
                 if (s.equals("<!-- METADATA GOES HERE -->\n")){
-                    heccedFileWriter.write(metadata.getIfidButHtmlFormatted());
+                    indexFileWriter.write(metadata.getIfidButHtmlFormatted());
                 } else {
-                    heccedFileWriter.write(s);
+                    indexFileWriter.write(s);
                 }
             }
-            heccedFileWriter.close();
+            indexFileWriter.close();
         } catch(FileNotFoundException e){
             System.out.println("FileNotFoundException!");
             e.printStackTrace();
@@ -120,6 +125,35 @@ public class FolderOutputter {
             e.printStackTrace();
         }
 
+    }
+
+    //this outputs the iFictionFile, based on iFictionTemplate.iFiction and the given Metadata object
+    private void writeIFictionFile(Metadata metadata){
+        ArrayList<String> iFictionData = TextAssetReader.getIFictionTemplate();
+        File f = new File(outputFolderPath.concat(metadata.getFilenameTitle()));
+
+        try{
+            f.createNewFile();
+            FileWriter iFictionFileWriter = new FileWriter(f);
+            for(String s: iFictionData){
+                if (s.equals("\t\t\t<ifid></ifid>\n")){
+                    iFictionFileWriter.write("\t\t\t<ifid>" + metadata.getIFID() +"</ifid>\n");
+                } else if(s.equals("\t\t\t<title></title>\n")) {
+                    iFictionFileWriter.write("\t\t\t<title>" + metadata.getTitle() +"</title>\n");
+                } else if (s.equals("\t\t\t<author></author>\n")){
+                    iFictionFileWriter.write("\t\t\t<author>" + metadata.getAuthor() +"</author>\n");
+                } else {
+                    iFictionFileWriter.write(s);
+                }
+            }
+            iFictionFileWriter.close();
+        } catch(FileNotFoundException e){
+            System.out.println("FileNotFoundException!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("IOException!");
+            e.printStackTrace();
+        }
     }
 
 }

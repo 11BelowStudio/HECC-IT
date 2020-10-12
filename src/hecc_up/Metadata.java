@@ -11,6 +11,7 @@ public class Metadata {
 
     //These are going to be used to store the metadata about the game title and the author name
     private String title = "An Interactive Fiction";
+    private String filenameTitle = "An Interactive Fiction.iFiction";
     private String author = "Anonymous";
     
     //This stuff is going to be used by the PassageParser
@@ -95,6 +96,8 @@ public class Metadata {
                 //the version of the title without the leading whitespace is then set as the title
                 title = trimmedTitleMatcher.group(0);
                 System.out.println(title);
+                //removes any characters which are not valid for filenames from title to produce filenameTitle
+                filenameTitle = title.replaceAll("[/\\\\:?*\"<>|.]","").concat(".iFiction");
             }
         }
     }
@@ -148,6 +151,9 @@ public class Metadata {
     //returns the 'title' field of this object
     public String getTitle(){ return title; }
 
+    //returns the filenameTitle attribute
+    public String getFilenameTitle(){return filenameTitle; }
+
     //returns the 'author' field of this object
     public String getAuthor(){ return author; }
 
@@ -160,6 +166,7 @@ public class Metadata {
         System.out.println("START PASSAGE: " + startPassage);
         System.out.println("IFID: "+ ifid);
         System.out.println("TITLE: " + title);
+        System.out.println("FILENAME TITLE: " + filenameTitle);
         System.out.println("AUTHOR: " + author);
         System.out.println("RAW METADATA:\n" + rawMetadata);
     }

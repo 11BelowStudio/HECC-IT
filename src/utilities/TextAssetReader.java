@@ -13,7 +13,10 @@ public class TextAssetReader {
     private final static ArrayList<String> HECCER = fileToStringArrayList("heccer.js");
     private final static ArrayList<String> INDEX = fileToStringArrayList("index.html");
 
-    private final static ArrayList<String> HECC_ARRAYLIST = fileToStringArrayList("HeccSample.hecc");
+    //private final static ArrayList<String> HECC_ARRAYLIST = fileToStringArrayList("HeccSample.hecc");
+    private final static String STATIC_HECC_STRING = fileToString("HeccSample.hecc");
+
+    private final static ArrayList<String> IFICTION_TEMPLATE = fileToStringArrayList("iFictionTemplate.iFiction");
 
     private static ArrayList<String> fileToStringArrayList(String filename){
 
@@ -36,14 +39,26 @@ public class TextAssetReader {
         return output;
     }
 
-    public static String getHeccString(){
-        String heccString = "";
-        for(String s: HECC_ARRAYLIST){
-            heccString = heccString.concat(s);
+    private static String fileToString(String filename){
+        StringBuilder output = new StringBuilder();
+        try{
+            InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String currentString;
+            while ((currentString = br.readLine())!=null) {
+                output.append(currentString.concat("\n"));
+            }
+            br.close();
+        } catch (IOException e){
+            e.printStackTrace();
         }
-        return heccString;
+        return output.toString();
     }
+
+    public static String getHeccString(){ return STATIC_HECC_STRING; }
 
     public static ArrayList<String> getHECCER() {return HECCER;}
     public static ArrayList<String> getIndex() {return INDEX;}
+
+    public static ArrayList<String> getIFictionTemplate(){ return IFICTION_TEMPLATE; }
 }
