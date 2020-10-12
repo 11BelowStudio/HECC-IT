@@ -30,8 +30,8 @@ public class Metadata {
         if (hasMetadata){ //only bothers doing this if there actually is any metadata to parse
             findStartPassage();
             findIFID();
-            //TODO: find title
-            //TODO: find author
+            findTitle();
+            findAuthor();
         }
     }
 
@@ -44,15 +44,15 @@ public class Metadata {
         This first matcher will find the passage name, along with any leading whitespace
         line must be of the form '!StartPassageName: starting passage name'
          */
-        Matcher startPassageDeclarationMatcher = Pattern.compile("(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
-        if (startPassageDeclarationMatcher.find()) {
+        Matcher startMatcher = Pattern.compile("(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
+        if (startMatcher.find()) {
             //if it found it, it'll then attempt to omit any leading whitespace, via another Matcher
-            String leadingWhitespaceStartPassageName = startPassageDeclarationMatcher.group(0);
+            String untrimmedStart = startMatcher.group(0);
             //System.out.println(leadingWhitespaceStartPassageName);
-            Matcher startPassageWithoutLeadingWhitespaceMatcher = Pattern.compile("[\\w]+[\\w- ]*[\\w]+").matcher(leadingWhitespaceStartPassageName);
-            if (startPassageWithoutLeadingWhitespaceMatcher.find()) {
+            Matcher trimmedStartMatcher = Pattern.compile("[\\w]+[\\w- ]*[\\w]+").matcher(untrimmedStart);
+            if (trimmedStartMatcher.find()) {
                 //the version of the start passage name with the leading whitespace is then set as the starting passage name
-                startPassage = startPassageWithoutLeadingWhitespaceMatcher.group(0);
+                startPassage = trimmedStartMatcher.group(0);
                 System.out.println(startPassage);
             }
         }
@@ -65,15 +65,15 @@ public class Metadata {
         sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
         first matcher permits leading whitespace, so ofc it'll need to yeet that stuff later
          */
-        Matcher ifidDeclarationMatcher = Pattern.compile("(?<=^!IFID:)\\s*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
-        if (ifidDeclarationMatcher.find()) {
+        Matcher ifidMatcher = Pattern.compile("(?<=^!IFID:)\\s*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
+        if (ifidMatcher.find()) {
             //if found, it then needs to yeet the leading whitespace
-            String leadingWhitespaceIFID = ifidDeclarationMatcher.group(0);
-            Matcher ifidMatcher = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}").matcher(leadingWhitespaceIFID);
-            if (ifidMatcher.find()) {
-                ifid = ifidMatcher.group(0).toUpperCase();
-                //stringIFID = "<!-- UUID://"+ifidMatcher.group(0).toUpperCase()+"// -->";
-                //here's the string that needs to be included in index.html for the IFID stuff to work (converted to uppercase because pretty much every other html story format uses uppercase so I may as well do that)
+            String untrimmedIFID = ifidMatcher.group(0);
+            Matcher trimmedIfidMatcher = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}").matcher(untrimmedIFID);
+            if (trimmedIfidMatcher.find()) {
+                //no whitespace left, so found IFID is converted to uppercase and saved as ifid
+                ifid = trimmedIfidMatcher.group(0).toUpperCase();
+                //IFID has been declared, so this is true.
                 isIFIDDeclared = true;
             }
         }
@@ -81,12 +81,42 @@ public class Metadata {
 
     //TODO: method to find Title declaration
     private void findTitle(){
-
+        /*
+        Attempts to find the title of the game.
+        Valid titles must start with 1 non-whitespace character, and end with 1 non-whitespace character.
+            Any amount of non-whitespace characters and/or spaces are allowed between the start/end non-whitespace characters.
+         */
+        Matcher titleMatcher = Pattern.compile("(?<=^!StoryTitle:)\\s*[\\S]+[\\S ]*[\\S]+(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
+        if (titleMatcher.find()) {
+            //if it found it, it'll then attempt to omit any leading whitespace, via another Matcher
+            String untrimmedTitle = titleMatcher.group(0);
+            Matcher trimmedTitleMatcher = Pattern.compile("[\\S]+[\\S ]*[\\S]+").matcher(untrimmedTitle);
+            if (trimmedTitleMatcher.find()) {
+                //the version of the title without the leading whitespace is then set as the title
+                title = trimmedTitleMatcher.group(0);
+                System.out.println(title);
+            }
+        }
     }
 
     //TODO: method to find Author declaration
     private void findAuthor(){
-
+        /*
+        Attempts to find the name of the author
+            Must start with a capital letter, and must end in a letter (uppercase or lowercase)
+            May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
+         */
+        Matcher authorMatcher = Pattern.compile("(?<=^!Author:)\\s*[A-Z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
+        if (authorMatcher.find()) {
+            //if it found a declaration, it'll then attempt to omit any leading whitespace, via another Matcher
+            String untrimmedAuthor = authorMatcher.group(0);
+            Matcher trimmedAuthorMatcher = Pattern.compile("[A-Z]+[a-zA-Z., ]*[a-zA-Z]+").matcher(untrimmedAuthor);
+            if (trimmedAuthorMatcher.find()) {
+                //the version of the author string without the leading whitespace is then set as the author
+                author = trimmedAuthorMatcher.group(0);
+                System.out.println(author);
+            }
+        }
     }
 
     //checks whether or not the IFID string exists
@@ -124,6 +154,7 @@ public class Metadata {
     //TODO: iFiction metadata export stuff
     //public String getiFictionMetadata(){}
 
+    //this is only here for debugging reasons, pls to ignore
     public void printDebugData(){
         System.out.println("METADATA OBJECT DEBUG DATA:");
         System.out.println("START PASSAGE: " + startPassage);
