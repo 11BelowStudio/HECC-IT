@@ -17,7 +17,7 @@ public class HeccUpMain {
 
         outputter = new FolderOutputter();
 
-        outputter.setupOutputFolder("heccin_game");
+        outputter.setupOutputFolder("outputs/hecc_up_testing_v2/heccin_game");
 
     }
 
@@ -35,7 +35,7 @@ public class HeccUpMain {
 
 
                         //uses heccedData and metadata to from passageParser to output the HECCIN Game
-                        outputter.outputTheGameWithMetadata(passageParser.getHeccedData(), passageParser.getMetadata());
+                        outputter.outputTheGameWithMetadataOldVersion(passageParser.getHeccedData(), passageParser.getMetadata());
 
 
                         System.out.println("It is done.");

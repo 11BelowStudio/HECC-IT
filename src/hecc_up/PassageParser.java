@@ -217,9 +217,9 @@ public class PassageParser {
 
     }
 
-    public boolean validatePassages(){
+    public boolean validatePassages() throws ParserException {
 
-        try {
+        //try {
             //TODO: replace this first bit with calls to the Metadata object
             //check that there is a passage with the same name as the starting passage name
             if ((metadata.doesStartPassageExist(passageNames))){
@@ -235,14 +235,15 @@ public class PassageParser {
                 throw new MissingStartingPassageException(metadata.getStartPassage());
                 //throw exception if no such starting passage exists
             }
-
+        /*
         } catch (Exception e){
             e.printStackTrace();
             return false;
         }
+         */
     }
 
-    public boolean prepareHeccedData(){
+    public boolean prepareHeccedData() throws ParserException {
 
         if (!validatePassages()){
             return false;

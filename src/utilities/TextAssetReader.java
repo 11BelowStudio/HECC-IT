@@ -1,25 +1,27 @@
 package utilities;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class TextAssetReader {
 
     private final static String path = "/assets/textAssets/";
 
-    private final static ArrayList<String> HECCER = fileToStringArrayList("heccer.js");
-    private final static ArrayList<String> INDEX = fileToStringArrayList("index.html");
+    //heccer.js as an Arraylist of strings
+    private final static ArrayList<String> HECCER = fileToStaticStringArrayList("heccer.js");
+    //index.html as an ArrayList of strings
+    private final static ArrayList<String> INDEX = fileToStaticStringArrayList("index.html");
 
-    //private final static ArrayList<String> HECC_ARRAYLIST = fileToStringArrayList("HeccSample.hecc");
-    private final static String STATIC_HECC_STRING = fileToString("HeccSample.hecc");
 
-    private final static ArrayList<String> IFICTION_TEMPLATE = fileToStringArrayList("iFictionTemplate.iFiction");
+    //iFictionTemplate.iFiction as an ArrayList of strings
+    private final static ArrayList<String> IFICTION_TEMPLATE = fileToStaticStringArrayList("iFictionTemplate.iFiction");
 
-    private static ArrayList<String> fileToStringArrayList(String filename){
 
+    //HeccSample.hecc as a string
+    private final static String STATIC_HECC_STRING = fileToStaticString("HeccSample.hecc");
+
+    //This reads the files held in src/assets/textAssets, in a way which allows them to be included in a .jar file
+    private static ArrayList<String> fileToStaticStringArrayList(String filename){
         //if it wasn't obvious, yes, this was unceremoniously borrowed from my CE218 stuff
         ArrayList<String> output = new ArrayList<>();
         try{
@@ -39,7 +41,8 @@ public class TextAssetReader {
         return output;
     }
 
-    private static String fileToString(String filename){
+    //this is/was used to read 'HeccSample.hecc' in src/assets/textAssets.
+    private static String fileToStaticString(String filename){
         StringBuilder output = new StringBuilder();
         try{
             InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
@@ -54,6 +57,24 @@ public class TextAssetReader {
         }
         return output.toString();
     }
+
+    //this is used by the GUI to read the HECC file that the user is trying to HECC-UP (or trying to OH-HECC)
+    public static String fileToString(String fileLocation) throws IOException{
+        StringBuilder output = new StringBuilder();
+        //try{
+            FileReader fr = new FileReader(fileLocation);
+            BufferedReader br = new BufferedReader(fr);
+            String currentString;
+            while ((currentString = br.readLine())!=null) {
+                output.append(currentString.concat("\n"));
+            }
+            br.close();
+        //} catch (IOException e){
+            //e.printStackTrace();
+        //}
+        return output.toString();
+    }
+
 
     public static String getHeccString(){ return STATIC_HECC_STRING; }
 

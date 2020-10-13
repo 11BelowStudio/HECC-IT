@@ -1,0 +1,37 @@
+this line is before the first passage declaration, so, officially, this line doesn't exist!
+
+!StartPassageName: Start
+!IFID: de7b3d02-81bb-4c2a-82ba-7ca9398b2262
+!StoryTitle: HECCSample
+!Author: R. Lowe
+
+::Start
+
+starting passage content goes here.
+The following line contains a link to "Another passage".
+[[Another passage]]
+
+::Another passage [yes theres tags] < 34.5 ,35>
+
+congrats you clicked that link to get here, Another passage.
+why not [[click this|Yet Another Passage]] as well?
+
+::Yet Another Passage
+
+woah you clicked that so you're now at Yet Another Passage.
+
+Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
+
+::Left
+
+You go to the left, but the path leads you back to [[dave]].
+
+::Right
+
+You went to the right, but the path leads you back to [[dave]].
+
+::dave
+
+This passage is called dave.
+dave's content doesn't include any links to any other passages.
+So I guess this counts as the end.

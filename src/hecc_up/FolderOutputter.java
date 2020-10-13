@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class FolderOutputter {
 
-    private final String path = "outputs/hecc_up_testing_v2/";
+    //private final String path = "outputs/hecc_up_testing_v2/";
 
     private String outputFolderPath;
 
@@ -24,15 +24,16 @@ public class FolderOutputter {
 
         outputFolderExists = false;
 
-
     }
+
+
 
     //this function creates a folder with the given folderName
     public boolean setupOutputFolder(String folderName){
 
-        outputFolderPath = path.concat(folderName).concat("/");
+        outputFolderPath = folderName.concat("/");
 
-        outputFolder = new File(path + folderName);
+        outputFolder = new File(folderName);
 
         outputFolderExists = false;
 
@@ -52,23 +53,44 @@ public class FolderOutputter {
     }
 
     public void outputTheGame(ArrayList<String> heccedData){
+        try {
+            if (outputFolderExists) {
+                File heccedFile = new File(outputFolderPath.concat("hecced.js"));
+                writeTheFile(heccedFile, heccedData);
 
-        if (outputFolderExists) {
-            File heccedFile = new File(outputFolderPath.concat("hecced.js"));
-            writeTheFile(heccedFile, heccedData);
+                File heccerFile = new File(outputFolderPath.concat("heccer.js"));
+                writeTheFile(heccerFile, TextAssetReader.getHECCER());
 
-            File heccerFile = new File(outputFolderPath.concat("heccer.js"));
-            writeTheFile(heccerFile, TextAssetReader.getHECCER());
-
-            File indexFile = new File(outputFolderPath.concat("index.html"));
-            writeTheFile(indexFile, TextAssetReader.getIndex());
+                File indexFile = new File(outputFolderPath.concat("index.html"));
+                writeTheFile(indexFile, TextAssetReader.getIndex());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     //this outputs the HECCIN Game, using the passed heccedData and the passed metadata.
-    public void outputTheGameWithMetadata(ArrayList<String> heccedData, Metadata metadata){
-        if (outputFolderExists){
+    public void outputTheGameWithMetadataOldVersion(ArrayList<String> heccedData, Metadata metadata){
+        try {
+            if (outputFolderExists) {
+                File heccedFile = new File(outputFolderPath.concat("hecced.js"));
+                writeTheFile(heccedFile, heccedData);
+
+                File heccerFile = new File(outputFolderPath.concat("heccer.js"));
+                writeTheFile(heccerFile, TextAssetReader.getHECCER());
+
+                writeIndexButWithMetadata(metadata);
+
+                writeIFictionFile(metadata);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //this outputs the HECCIN Game, using the passed heccedData and the passed metadata.
+    public boolean outputTheGameWithMetadata(ArrayList<String> heccedData, Metadata metadata) throws FileNotFoundException, IOException {
+        if (outputFolderExists) {
             File heccedFile = new File(outputFolderPath.concat("hecced.js"));
             writeTheFile(heccedFile, heccedData);
 
@@ -78,35 +100,41 @@ public class FolderOutputter {
             writeIndexButWithMetadata(metadata);
 
             writeIFictionFile(metadata);
+
+            return true;
+        } else {
+            return false;
         }
+
     }
 
     //this is a generic method for writing a File (f), containing the contents of the dataToWrite ArrayList<String>
-    private void writeTheFile(File f, ArrayList<String> dataToWrite){
-        try{
+    private void writeTheFile(File f, ArrayList<String> dataToWrite) throws FileNotFoundException, IOException{
+        //try{
             f.createNewFile();
             FileWriter heccedFileWriter = new FileWriter(f);
             for(String s: dataToWrite){
                 heccedFileWriter.write(s);
             }
             heccedFileWriter.close();
+            /*
         } catch(FileNotFoundException e){
             System.out.println("FileNotFoundException!");
             e.printStackTrace();
         } catch (IOException e) {
             System.out.println("IOException!");
             e.printStackTrace();
-        }
+        }*/
     }
 
 
     //this writes the Index.html file, using the given Metadata object
-    private void writeIndexButWithMetadata(Metadata metadata){
+    private void writeIndexButWithMetadata(Metadata metadata) throws FileNotFoundException, IOException{
 
         ArrayList<String> indexData = TextAssetReader.getIndex();
         File f = new File(outputFolderPath.concat("index.html"));
 
-        try{
+        //try{
             f.createNewFile();
             FileWriter indexFileWriter = new FileWriter(f);
             for(String s: indexData){
@@ -117,22 +145,23 @@ public class FolderOutputter {
                 }
             }
             indexFileWriter.close();
+            /*
         } catch(FileNotFoundException e){
             System.out.println("FileNotFoundException!");
             e.printStackTrace();
         } catch (IOException e) {
             System.out.println("IOException!");
             e.printStackTrace();
-        }
+        }*/
 
     }
 
     //this outputs the iFictionFile, based on iFictionTemplate.iFiction and the given Metadata object
-    private void writeIFictionFile(Metadata metadata){
+    private void writeIFictionFile(Metadata metadata) throws FileNotFoundException, IOException {
         ArrayList<String> iFictionData = TextAssetReader.getIFictionTemplate();
         File f = new File(outputFolderPath.concat(metadata.getFilenameTitle()));
 
-        try{
+        //try{
             f.createNewFile();
             FileWriter iFictionFileWriter = new FileWriter(f);
             for(String s: iFictionData){
@@ -147,6 +176,7 @@ public class FolderOutputter {
                 }
             }
             iFictionFileWriter.close();
+            /*
         } catch(FileNotFoundException e){
             System.out.println("FileNotFoundException!");
             e.printStackTrace();
@@ -154,6 +184,7 @@ public class FolderOutputter {
             System.out.println("IOException!");
             e.printStackTrace();
         }
+             */
     }
 
 }
