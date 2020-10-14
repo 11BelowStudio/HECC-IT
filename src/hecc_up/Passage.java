@@ -109,10 +109,20 @@ public class Passage {
 
         String parsedContentWIP; //string for the WIP parsed content
 
+        //escaping all &, <, >, ", and '
+        parsedContentWIP = unparsedContent.replaceAll("&","&amp");
+        parsedContentWIP = parsedContentWIP.replaceAll("<","&lt");
+        parsedContentWIP = parsedContentWIP.replaceAll(">","&rt");
+        parsedContentWIP = parsedContentWIP.replaceAll("\"","&quot");
+        parsedContentWIP = parsedContentWIP.replaceAll("'","&#39");
+
+        /*
         //escaping all speechmakrs within the parsed content
         Matcher speechMatcher = Pattern.compile("(?<speechmarks>\\\")",Pattern.MULTILINE).matcher(unparsedContent);
         //speechMatcher.reset(unparsedContent);
         parsedContentWIP = speechMatcher.replaceAll("\\\\\"");
+        */
+
 
         boolean notDone;
 
@@ -128,7 +138,7 @@ public class Passage {
                 String temp = directLinkMatcher.group(0);
                 temp = temp.substring(2, temp.length()-2);
                 linkedPassages.add(temp);
-                String link = "<a class=\\\\\"passageLink\\\\\" onclick=\'theHeccer.goToPassage(\\\\\""+temp+"\\\\\")\'>"+temp+"</a>";
+                String link = "<a class='passageLink' onclick='theHeccer.goToPassage(\\\\\""+temp+"\\\\\")'>"+temp+"</a>";
                 parsedContentWIP = directLinkMatcher.replaceFirst(link);
                 directLinkMatcher.reset(parsedContentWIP);
             }
@@ -147,7 +157,7 @@ public class Passage {
                 //System.out.println(temp);
                 String[] linkParts = temp.split("\\|");
                 linkedPassages.add(linkParts[1]);
-                String link = "<a class=\\\\\"passageLink\\\\\" onclick=\'theHeccer.goToPassage(\\\\\""+linkParts[1]+"\\\\\")\'>"+linkParts[0]+"</a>";
+                String link = "<a class='passageLink' onclick='theHeccer.goToPassage(\\\\\""+linkParts[1]+"\\\\\")'>"+linkParts[0]+"</a>";
                 //System.out.println(link);
                 parsedContentWIP = indirectLinkMatcher.replaceFirst(link);
                 indirectLinkMatcher.reset(parsedContentWIP);
@@ -155,31 +165,43 @@ public class Passage {
         } while(notDone);
 
 
-        //replacing newlines with '</br>' tags
-        parsedContentWIP = parsedContentWIP.replaceAll("\\s*\\R","</br>");
-
-        System.out.println(parsedContentWIP);
-
-        //removing trailing </br> from the WIP parsed content
-        boolean stillHasTrailingLinebreaks;
-        do{
-            int lengthMinus5 = parsedContentWIP.length()-5;
-            String temp = (parsedContentWIP.substring(lengthMinus5));
-            stillHasTrailingLinebreaks = temp.equals("</br>");
-            if (stillHasTrailingLinebreaks){
-                parsedContentWIP = parsedContentWIP.substring(0,lengthMinus5);
-            }
-        } while (stillHasTrailingLinebreaks);
-
         //putting an opening speechmark and opening '<p>' tag in the parsed content
-        parsedContent = "\"<p>";
+        parsedContentWIP = "\"<p>".concat(parsedContentWIP);
 
         //concatenating the WIP parsed content to the parsed content
-        parsedContent = parsedContent.concat(parsedContentWIP);
+        //parsedContent = parsedContent.concat(parsedContentWIP);
 
-        //concatenating a closing '</p>' tag (and closing speechmark) to the parsed content
-        parsedContent = parsedContent.concat("</p>\"");
+        //replacing two newlines with a paragraph end/start of new paragraph
+        parsedContentWIP = parsedContentWIP.replaceAll("\n\n","</p><p>");
 
+        //and now, removing trailing empty <p></p>s from the parsed content
+        do{
+            int lengthMinus7 = parsedContentWIP.length()-7;
+            String temp = (parsedContentWIP.substring(lengthMinus7));
+            notDone = temp.equals("<p></p>");
+            if (notDone){
+                parsedContentWIP = parsedContentWIP.substring(0,lengthMinus7);
+            }
+        } while (notDone);
+
+        //replacing single newlines with '<br>' tags
+        parsedContentWIP = parsedContentWIP.replaceAll("\n","<br>");
+
+        //removing trailing <br>s from the WIP parsed content
+        do{
+            int lengthMinus4 = parsedContentWIP.length()-4;
+            String temp = (parsedContentWIP.substring(lengthMinus4));
+            notDone = temp.equals("<br>");
+            if (notDone){
+                parsedContentWIP = parsedContentWIP.substring(0,lengthMinus4);
+            }
+        } while (notDone);
+
+
+        //concatenating a closing '</p>' tag (and closing speechmark) to the WIP parsed content, and making that the final parsed content
+        parsedContent = parsedContentWIP.concat("</p>\"");
+
+        System.out.println(parsedContent);
 
         //and now, the parsed tags for the passage
 
