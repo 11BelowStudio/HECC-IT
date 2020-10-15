@@ -9,19 +9,23 @@ import java.util.regex.Pattern;
 
 public class PassageParser {
 
-    private final ArrayList<String> heccedData;
+    private final LoggerInterface logger; //the thing what called the passageParser (which this might need to log info to)
 
-    private final Map<String, Passage> passageMap;
+    private final ArrayList<String> heccedData; //the hecced data which this will construct and output
 
-    private final Set<String> passageNames;
+    private final Map<String, Passage> passageMap; //a map of all the passages
 
-    private String dataToParse;
+    private final Set<String> passageNames; //a set of all the passage names
 
-    private Metadata metadata;
+    private String dataToParse; //the raw .hecc data
+
+    private Metadata metadata; //the metadata object
 
 
 
-    public PassageParser(String rawHeccData){
+    public PassageParser(String rawHeccData, LoggerInterface boundary){
+
+        logger = boundary;
 
         heccedData = new ArrayList<>();
 
@@ -208,7 +212,8 @@ public class PassageParser {
                     passageMap.put(currentPassageName,new Passage(currentPassageName,currentContent));
                 }
             } else{
-                System.out.println("No content found for passage " + currentPassageName);
+                //System.out.println("No content found for passage " + currentPassageName);
+                logger.logInfo("No content found for passage " + currentPassageName);
                 throw new EmptyPassageException(currentPassageName);
             }
         } while(notDone);
@@ -293,9 +298,11 @@ public class PassageParser {
         }
 
         //TODO: check in metadata object for a declared IFID
+        /*
         if (!metadata.doesIFIDExist()){
             System.out.println(suggestIFID());
-        }
+        }*/
+        logger.logInfo(metadata.outputMetadataDefinitionInstructions());
 
         metadata.printDebugData();
 

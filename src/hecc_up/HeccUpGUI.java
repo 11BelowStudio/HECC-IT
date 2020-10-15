@@ -1,6 +1,5 @@
 package hecc_up;
 
-import hecc_up.heccCeptions.ParserException;
 import utilities.AttributeString;
 import utilities.TextAssetReader;
 
@@ -9,9 +8,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
 
-public class HeccUpGUI {
+public class HeccUpGUI implements LoggerInterface {
 
     //the PassageParser object which will be used for parsing the passages and such
     private PassageParser passageParser;
@@ -260,7 +258,10 @@ public class HeccUpGUI {
         if(heccFileChosen && outputFolderChosen) {
             try {
                 //creates a passageParser object, parsing the specified hecc file
-                passageParser = new PassageParser(TextAssetReader.fileToString(heccFileLocation));
+                passageParser = new PassageParser(
+                        TextAssetReader.fileToString(heccFileLocation),
+                        this
+                );
 
                 //sets the output folder of the outputter to the specified folder
                 outputter.setupOutputFolder(outputFolderLocation);
@@ -308,7 +309,7 @@ public class HeccUpGUI {
     }
 
     //prints stuff to the info log thing at the bottom of the GUI
-    private void logInfo(String infoToLog){
+    public void logInfo(String infoToLog){
         logDisplay.append("\n");
         logDisplay.append(infoToLog);
         //revalidate();

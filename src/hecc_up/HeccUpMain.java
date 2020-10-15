@@ -3,7 +3,7 @@ package hecc_up;
 import hecc_up.heccCeptions.ParserException;
 import utilities.TextAssetReader;
 
-public class HeccUpMain {
+public class HeccUpMain implements LoggerInterface {
     //The main class for HeccUp
 
     private PassageParser passageParser;
@@ -13,7 +13,10 @@ public class HeccUpMain {
 
     public HeccUpMain(){
 
-        passageParser = new PassageParser(TextAssetReader.getHeccString());
+        passageParser = new PassageParser(
+                TextAssetReader.getHeccString(),
+                this
+        );
 
         outputter = new FolderOutputter();
 
@@ -53,10 +56,21 @@ public class HeccUpMain {
 
 
 
+
+
     public static void main(String[] args) {
         HeccUpMain heccUp = new HeccUpMain();
         heccUp.heccUpTheGame();
     }
+
+    /*
+    @Override
+    public void logInfo(String infoToLog) {
+        System.out.println(infoToLog);
+        //yeah this version just logs the info into the console
+    }
+
+     */
 }
 
 

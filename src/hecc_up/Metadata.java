@@ -1,5 +1,7 @@
 package hecc_up;
 
+import utilities.IFIDgenerator;
+
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,8 +13,10 @@ public class Metadata {
 
     //These are going to be used to store the metadata about the game title and the author name
     private String title = "An Interactive Fiction";
+    private boolean isTitleDeclared = false; //title undeclared by default
     private String filenameTitle = "An Interactive Fiction.iFiction";
     private String author = "Anonymous";
+    private boolean isAuthorDeclared = false; //author undeclared by default
     
     //This stuff is going to be used by the PassageParser
     private String startPassage = "Start"; //starting passage defaults to 'Start' if not declared otherwise
@@ -95,6 +99,7 @@ public class Metadata {
             if (trimmedTitleMatcher.find()) {
                 //the version of the title without the leading whitespace is then set as the title
                 title = trimmedTitleMatcher.group(0);
+                isTitleDeclared = true;
                 System.out.println(title);
                 //removes any characters which are not valid for filenames from title to produce filenameTitle
                 filenameTitle = title.replaceAll("[/\\\\:?*\"<>|.]","").concat(".iFiction");
@@ -106,17 +111,18 @@ public class Metadata {
     private void findAuthor(){
         /*
         Attempts to find the name of the author
-            Must start with a capital letter, and must end in a letter (uppercase or lowercase)
+            Must start with a ~~capital~~ letter, and must end in a letter (uppercase or lowercase)
             May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
          */
-        Matcher authorMatcher = Pattern.compile("(?<=^!Author:)\\s*[A-Z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
+        Matcher authorMatcher = Pattern.compile("(?<=^!Author:)\\s*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\s*$)", Pattern.MULTILINE).matcher(rawMetadata);
         if (authorMatcher.find()) {
             //if it found a declaration, it'll then attempt to omit any leading whitespace, via another Matcher
             String untrimmedAuthor = authorMatcher.group(0);
-            Matcher trimmedAuthorMatcher = Pattern.compile("[A-Z]+[a-zA-Z., ]*[a-zA-Z]+").matcher(untrimmedAuthor);
+            Matcher trimmedAuthorMatcher = Pattern.compile("[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+").matcher(untrimmedAuthor);
             if (trimmedAuthorMatcher.find()) {
                 //the version of the author string without the leading whitespace is then set as the author
                 author = trimmedAuthorMatcher.group(0);
+                isAuthorDeclared = true;
                 System.out.println(author);
             }
         }
@@ -137,6 +143,44 @@ public class Metadata {
 
     //returns the IFID string
     public String getIFID(){ return ifid; }
+
+    //returns true if all optional metadata was declared, false otherwise
+    public boolean isAllOptionalMetadataDeclared(){
+        return (isIFIDDeclared && isAuthorDeclared && isTitleDeclared);
+    }
+
+    //will output a string containing instructions for how to output all currently undeclared optional metadata
+    public String outputMetadataDefinitionInstructions(){
+        if (isAllOptionalMetadataDeclared()){
+            return "No metadata problems detected!";
+        } else {
+            StringBuilder instructionBuilder = new StringBuilder("\n");
+            instructionBuilder.append("Your .hecc file appears to be missing some optional metadata. Here's what's wrong, and what you need to insert before the first passage declaration to fix this issue:\n");
+            if (!isIFIDDeclared) {
+                instructionBuilder.append(
+                        "No Interactive Fiction Identifier declaration found! You can fix this with this line of code:\n"
+                        + "!IFID: " + IFIDgenerator.generateIFIDString()
+                        + "\n"
+                );
+            }
+            if (!isTitleDeclared) {
+                instructionBuilder.append(
+                        "No title declaration found! You can fix this with this line of code:\n"
+                        + "!StoryTitle: INSERT TITLE HERE"
+                        + "\n"
+                );
+            }
+            if (!isAuthorDeclared){
+                instructionBuilder.append(
+                        "No author declaration found! You can fix this with this line of code:\n"
+                        + "!Author: YOUR NAME HERE"
+                        + "\n"
+                );
+            }
+            //returns the string built by instructionBuilder with trailing whitespace removed
+            return (instructionBuilder.toString().trim());
+        }
+    }
 
 
     //returns the IFID string but formatted in such a way that it works with the current IFID html declaration stuff (will be removed later)
