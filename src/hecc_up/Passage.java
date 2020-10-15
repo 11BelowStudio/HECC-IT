@@ -12,6 +12,10 @@ import java.util.regex.Pattern;
 
 public class Passage {
 
+    //TODO: put the OH-HECC specific stuff into a seperate class to the HECC-UP specific stuff.
+    //TODO: make the HECC-UP Passage focus entirely on holding a representation of HECCED-formatted data
+    //TODO: maybe make the HECC-UP Passage into a Kotlin data class or something?
+
     private String passageName;
 
     private String unparsedContent;
@@ -112,7 +116,7 @@ public class Passage {
         //escaping all &, <, >, ", and '
         parsedContentWIP = unparsedContent.replaceAll("&","&amp");
         parsedContentWIP = parsedContentWIP.replaceAll("<","&lt");
-        parsedContentWIP = parsedContentWIP.replaceAll(">","&rt");
+        parsedContentWIP = parsedContentWIP.replaceAll(">","&gt");
         parsedContentWIP = parsedContentWIP.replaceAll("\"","&quot");
         parsedContentWIP = parsedContentWIP.replaceAll("'","&#39");
 

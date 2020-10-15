@@ -6,7 +6,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Start",
-			"<p>hi we have no metadata here</p><p>yes its sad, I know</p><p>insert additional funny words here</p><p></p>",
+			"<p>hi we have no metadata here</p><p>yes its sad, I know</p><p>insert additional funny words here</p><p>lets see if these characters break the output &lt&gt&quot&amp&#39&lt/p&gt eecks dee</p><p></p>",
 			[]
 		)
 	);

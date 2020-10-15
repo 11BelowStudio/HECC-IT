@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 public class PassageParser {
 
+    //TODO: Pipeline design pattern? https://java-design-patterns.com/patterns/pipeline/
+
     private final LoggerInterface logger; //the thing what called the passageParser (which this might need to log info to)
 
     private final ArrayList<String> heccedData; //the hecced data which this will construct and output
@@ -259,7 +261,7 @@ public class PassageParser {
 
         heccedData.clear();
 
-        heccedData.add("//HECC UP test output (as of 12/10/2020) (R. Lowe, 2020)\n\n");
+        heccedData.add("//HECC UP output (as of 15/10/2020) (R. Lowe, 2020)\n\n");
 
         //declaration of starting passage name is added to heccedData
         //TODO: use a metadataObject.getStartPassage() call
@@ -297,11 +299,7 @@ public class PassageParser {
             System.out.println(h);
         }
 
-        //TODO: check in metadata object for a declared IFID
-        /*
-        if (!metadata.doesIFIDExist()){
-            System.out.println(suggestIFID());
-        }*/
+
         logger.logInfo(metadata.outputMetadataDefinitionInstructions());
 
         metadata.printDebugData();

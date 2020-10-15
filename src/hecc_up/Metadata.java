@@ -7,15 +7,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Metadata {
+
+    //TODO: maybe encapsulate HECC-UP specific functions in a seperate object to OH-HECC specific functions?
     
     private String rawMetadata; //string with the raw metadata
     private boolean hasMetadata; //boolean value to keep track of whether or not it actually has metadata
 
     //These are going to be used to store the metadata about the game title and the author name
-    private String title = "An Interactive Fiction";
+    private String title = "An Interactive Fiction"; //default title used if undefined
     private boolean isTitleDeclared = false; //title undeclared by default
-    private String filenameTitle = "An Interactive Fiction.iFiction";
-    private String author = "Anonymous";
+
+    private String author = "Anonymous"; //default author name used if undefined
     private boolean isAuthorDeclared = false; //author undeclared by default
     
     //This stuff is going to be used by the PassageParser
@@ -101,8 +103,6 @@ public class Metadata {
                 title = trimmedTitleMatcher.group(0);
                 isTitleDeclared = true;
                 System.out.println(title);
-                //removes any characters which are not valid for filenames from title to produce filenameTitle
-                filenameTitle = title.replaceAll("[/\\\\:?*\"<>|.]","").concat(".iFiction");
             }
         }
     }
@@ -195,8 +195,6 @@ public class Metadata {
     //returns the 'title' field of this object
     public String getTitle(){ return title; }
 
-    //returns the filenameTitle attribute
-    public String getFilenameTitle(){return filenameTitle; }
 
     //returns the 'author' field of this object
     public String getAuthor(){ return author; }
@@ -210,7 +208,6 @@ public class Metadata {
         System.out.println("START PASSAGE: " + startPassage);
         System.out.println("IFID: "+ ifid);
         System.out.println("TITLE: " + title);
-        System.out.println("FILENAME TITLE: " + filenameTitle);
         System.out.println("AUTHOR: " + author);
         System.out.println("RAW METADATA:\n" + rawMetadata);
     }

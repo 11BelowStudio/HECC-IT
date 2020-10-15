@@ -159,7 +159,7 @@ public class FolderOutputter {
     //this outputs the iFictionFile, based on iFictionTemplate.iFiction and the given Metadata object
     private void writeIFictionFile(Metadata metadata) throws FileNotFoundException, IOException {
         ArrayList<String> iFictionData = TextAssetReader.getIFictionTemplate();
-        File f = new File(outputFolderPath.concat(metadata.getFilenameTitle()));
+        File f = new File(outputFolderPath.concat("metadata.iFiction"));
 
         //try{
             f.createNewFile();
