@@ -4,6 +4,8 @@ By R. Lowe
 
 Git repo for this project: https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m
 
+readme last updated 16/10/2020
+
 ## Welcome to HECC-IT!
 
 This is a toolkit that you can use to produce hypertext games.
