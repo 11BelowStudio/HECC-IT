@@ -22,8 +22,14 @@
             * `:: k ` will be treated as `::k` (the passage will be called 'k', not ' k ')
 * Defining passage content
     * Just type stuff on the lines after the passage declaration
+        * Passages may not be empty.
     * Everything after the passage declaration will be treated as the content of the most recently declared passage
-    * Passage content ends when the next passage declaration begins
+    * Passage content ends when the next passage declaration begins/the end of the file is reached.
+    * Line/paragaph breaks
+        * All whitespace before/after the passage content will be omitted in the output.
+        * Two consecutive newlines will be treated as a paragraph break.
+        * A single newline will be converted into a <br>
+    * All <, >, ', ", and & in the .hecc file will be escaped in the HTML output.
 * Links to passages
     * Within passage content
     * Two types of links
@@ -38,8 +44,8 @@
     * Metadata
         * `!StartPassageName: name of start passage` allows a different starting passage to be defined
         * `!IFID: (UUID goes here)` Allows an IFID (Interactive Fiction ID) to be declared for the game. This will be written to index.html
-        * `!StoryTitle: Name of Story` Allows the title of a story to be declared
-        * `!Author: Author name goes here` Allows the author to be named and such
+        * `!StoryTitle: Name of Story` Allows the title of a story to be declared.
+        * `!Author: Author name goes here` Allows the author (you) to be credited for your work.
 
 
 ## Example HECC code
