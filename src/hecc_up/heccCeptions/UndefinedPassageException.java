@@ -1,7 +1,12 @@
 package hecc_up.heccCeptions;
 
-//exception for when an undefined passage is linked
-
+/**
+ * exception used when an undefined passage is linked
+ */
 public class UndefinedPassageException extends ParserException{
+    /**
+     * YEET
+     * @param passageName the name of the passage what doesn't exist
+     */
     public UndefinedPassageException(String passageName){ super("There is a link to a passage called '" + passageName +"', which isn't defined!");}
 }

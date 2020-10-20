@@ -1,7 +1,6 @@
 package hecc_up;
 
 import utilities.AttributeString;
-import utilities.TextAssetReader;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -9,39 +8,79 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
+/**
+ * This class is basically a GUI for the HECC-UP stuff
+ * so a user can actually, y'know, hecc up their stuff.
+ */
 public class HeccUpGUI implements LoggerInterface {
 
-    //the PassageParser object which will be used for parsing the passages and such
-    private PassageParser passageParser;
-    //the FolderOutputter object which will be used for outputting the HECCIN Game and such
-    private FolderOutputter outputter;
+    /**
+     * the heccUpHandler object that handles the process of heccing things up
+     */
+    private final HeccUpHandler heccUpHandler;
 
     //some internal state stuff
+    /**
+     * whether or not the hecc file was chosen
+     */
     private boolean heccFileChosen;
+    /**
+     * whether or not the output folder was chosen
+     */
     private boolean outputFolderChosen;
 
-    //the location of the .hecc file
+    /**
+     * the location of the .hecc file
+     */
     private String heccFileLocation;
-    //where to save the HECCIN Game to
+    /**
+     * where to save the HECCIN Game to
+     */
     private String outputFolderLocation;
 
     //and now, the classes which are to be used for the GUI
+    /**
+     * the frame that has the gui
+     */
     public JFrame guiFrame;
 
+    /**
+     * JTextArea stating the location of the chosen hecc file
+     */
+    private JTextArea heccFileLocationDisplay;
+    /**
+     * AttributeString used to display the hecc file location
+     */
+    private final AttributeString<String> heccFileAttributeString;
+    /**
+     * JFileChooser for selecting the hecc file
+     */
+    private JFileChooser selectHeccFileChooser;
 
-    private JTextArea heccFileLocationDisplay; //Label stating the location of the chosen hecc file
-    private final AttributeString<String> heccFileAttributeString; //AttributeString used to display the hecc file location
-    private JFileChooser selectHeccFileChooser; //FileChooser for selecting the hecc file
+    /**
+     * JTextArea showing path of currently selected output directory
+     */
+    private JTextArea gameLocationDisplay;
+    /**
+     * AttributeString used to display the output file location
+     */
+    private final AttributeString<String> gameLocationAttributeString;
+    /**
+     * JFileChooser that can be used to choose the output directory for the game
+     */
+    private JFileChooser selectGameLocationChooser;
 
-    private JTextArea gameLocationDisplay; //currently selected output directory
-    private final AttributeString<String> gameLocationAttributeString; //AttributeString used to display the output file location
-    private JFileChooser selectGameLocationChooser; //choose where to save it
-
-
-    private JButton heccItUpButton; //the 'HECC-IT' button
-
+    /**
+     * JTextArea that important info gets logged to
+     */
     private JTextArea logDisplay;
 
+    /**
+     * Constructor
+     * Makes the GUI frame + shows it
+     * Initialises/constructs some other properties of this class
+     * including the HeccUpHandler
+     */
     public HeccUpGUI(){
         //first it will actually, y'know, make the GUI
         makeTheGui();
@@ -60,9 +99,14 @@ public class HeccUpGUI implements LoggerInterface {
         heccFileChosen = false;
         outputFolderChosen = false;
 
-        outputter = new FolderOutputter();
+        //outputter = new FolderOutputter();
+
+        heccUpHandler = new HeccUpHandler(this);
     }
 
+    /**
+     * ok so basically this just makes the GUI
+     */
     private void makeTheGui(){
 
         //makes the frame
@@ -114,7 +158,7 @@ public class HeccUpGUI implements LoggerInterface {
         //button to open hecc file chooser
         //Button to open the selectHeccFileChooser
         JButton selectHeccFileButton = new JButton("Choose .hecc file");
-        selectHeccFileButton.addActionListener(e -> {this.selectHeccFileHandler();});
+        selectHeccFileButton.addActionListener(e -> this.selectHeccFileHandler());
         selectHeccFilePanel.add(selectHeccFileButton);
         //jFileChooser for hecc file
         selectHeccFileChooser = setupTheFileChoosers(true);
@@ -147,7 +191,7 @@ public class HeccUpGUI implements LoggerInterface {
         //output directory button
         //will open selectGameLocationChooser
         JButton selectGameLocationButton = new JButton("Select output directory");
-        selectGameLocationButton.addActionListener(e -> {this.selectOutputFileHandler();});
+        selectGameLocationButton.addActionListener(e -> this.selectOutputFileHandler());
         selectGameLocationPanel.add(selectGameLocationButton);
         //jFileChooser for the game location stuff
         selectGameLocationChooser = setupTheFileChoosers(false);
@@ -164,8 +208,9 @@ public class HeccUpGUI implements LoggerInterface {
                         "Step 3"
                 )
         );
-        heccItUpButton = new JButton("HECC-IT!");
-        heccItUpButton.addActionListener( e -> {this.heccUpTheGame();});
+        //the 'HECC-IT' button
+        JButton heccItUpButton = new JButton("HECC-IT!");
+        heccItUpButton.addActionListener(e -> this.heccUpTheGame());
 
         heccItUpPanel.add(heccItUpButton);
         //and the heccItUpPanel is added to the gui Frame
@@ -192,8 +237,12 @@ public class HeccUpGUI implements LoggerInterface {
         guiFrame.add(outputPanel);
     }
 
-    //just going to set up the file choosers using this method. why? because I dont want it clogging up the already clogged method above.
-    // if true, it sets up the hecc file chooser. if false, it sets up the output folder chooser
+
+    /**
+     * This method sets up both of the JFileChoosers the GUI uses
+     * @param isHeccFileChooser if true, sets up the hecc file chooser. if false, sets up the output folder chooser
+     * @return A JFileChooser, which has been set up with the appropriate configuration
+     */
     private JFileChooser setupTheFileChoosers(boolean isHeccFileChooser){
         JFileChooser fc = new JFileChooser(); //creates the JFileChooser
         fc.setMultiSelectionEnabled(false); //both of them will only allow a single file to be selected
@@ -213,7 +262,11 @@ public class HeccUpGUI implements LoggerInterface {
         return fc;
     }
 
-    //this method is called when the 'selectHeccFileButton' is pressed
+
+    /**
+     * This method is called when someone attempts to select an input hecc file.
+     * It handles the process of choosing the hecc file.
+     */
     private void selectHeccFileHandler(){
         //opens the selectHeccFileChooser filechooser
         int fcReturnValue = selectHeccFileChooser.showOpenDialog(guiFrame);
@@ -229,7 +282,11 @@ public class HeccUpGUI implements LoggerInterface {
             logInfo("hecc file has been chosen!");
         }
     }
-    
+
+    /**
+     * This method is used when the button to select an output folder is pressed
+     * It handles the process of choosing an output folder
+     */
     private void selectOutputFileHandler(){
         //opens the selectGameLocationChooser fileChooser
         int fcReturnValue = selectGameLocationChooser.showDialog(guiFrame,"Select");
@@ -246,55 +303,26 @@ public class HeccUpGUI implements LoggerInterface {
         }
     }
 
+    /**
+     * Revalidates and re-packs the guiFrame
+     * bottom text
+     */
     private void revalidate(){
         guiFrame.revalidate();
         guiFrame.pack();
     }
-    
-    
 
+    /**
+     * Attempts to call the attemptToHeccUpTheGame method of the heccUpHandler object
+     * Complains via JOptionPane if user hasn't defined a hecc file and an output folder
+     */
     private void heccUpTheGame(){
         //only attempts to hecc it up if the hecc file was chosen and the output folder was chosen
         if(heccFileChosen && outputFolderChosen) {
-            try {
-                //creates a passageParser object, parsing the specified hecc file
-                passageParser = new PassageParser(
-                        TextAssetReader.fileToString(heccFileLocation),
-                        this
-                );
-
-                //sets the output folder of the outputter to the specified folder
-                outputter.setupOutputFolder(outputFolderLocation);
-
-                //first, check that the output folder actually exists
-                if (outputter.doesOutputFolderExist()) {
-                    //if the output folder exists, attempt to construct the passage objects
-                    System.out.println("output folder exists");
-
-                    //if the output folder exists, attempt to construct the passage objects
-                    if (passageParser.constructThePassageObjects()) {
-                        //then, attempt to prepare the hecced data
-                        if (passageParser.prepareHeccedData()) {
-                            //finally, if everything worked, output the game
-
-                            //uses heccedData and metadata to from passageParser to output the HECCIN Game
-                            outputter.outputTheGameWithMetadata(passageParser.getHeccedData(), passageParser.getMetadata());
-
-
-                            System.out.println("done.");
-                            logInfo("Done!");
-
-                        }
-                    }
-                } else {
-                    //log an error message if the output folder vanishes
-                    logInfo("The game cannot be parsed and output, as there is no output folder for it");
-                }
-            } catch (Exception e){
-                //report the exception if something bad happens
-                logInfo(e.getMessage());
-                e.printStackTrace();
-            }
+            heccUpHandler.attemptToHeccUpTheGame(
+                    heccFileLocation,
+                    outputFolderLocation
+            );
         } else{
             //complain if the user attempted to HECC-UP when there's no HECC to HECC-UP and/or no output folder was defined
             JOptionPane.showMessageDialog(
@@ -308,7 +336,11 @@ public class HeccUpGUI implements LoggerInterface {
         }
     }
 
-    //prints stuff to the info log thing at the bottom of the GUI
+
+    /**
+     * Logs info in the logDisplay JTextArea
+     * @param infoToLog the info what needs logging
+     */
     public void logInfo(String infoToLog){
         logDisplay.append("\n");
         logDisplay.append(infoToLog);
@@ -316,7 +348,12 @@ public class HeccUpGUI implements LoggerInterface {
 
     }
 
-    //le main has arrived
+
+    /**
+     * Main function
+     * bottom text
+     * @param args not used
+     */
     public static void main(String[] args){
         new HeccUpGUI();
     }

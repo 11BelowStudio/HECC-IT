@@ -7,26 +7,52 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This parses passages
+ * bottom text
+ */
 public class PassageParser {
 
     //TODO: Pipeline design pattern for parsing? https://java-design-patterns.com/patterns/pipeline/
     //TODO: layers with interface segregation principle?
     //TODO: maybe adapter pattern?
 
-    private final LoggerInterface logger; //the thing what called the passageParser (which this might need to log info to)
+    /**
+     * the thing what called the passageParser (which this might need to log info to)
+     */
+    private final LoggerInterface logger;
 
-    private final ArrayList<String> heccedData; //the hecced data which this will construct and output
+    /**
+     * the hecced data which this will construct and output
+     */
+    private final ArrayList<String> heccedData;
 
-    private final Map<String, Passage> passageMap; //a map of all the passages
+    /**
+     * a map of all the passages
+     */
+    private final Map<String, Passage> passageMap;
 
-    private final Set<String> passageNames; //a set of all the passage names
+    /**
+     * a set of all the passage names
+     */
+    private final Set<String> passageNames;
 
-    private String dataToParse; //the raw .hecc data
+    /**
+     * the raw .hecc data
+     */
+    private String dataToParse;
 
-    private Metadata metadata; //the metadata object
+    /**
+     * the metadata object
+     */
+    private Metadata metadata;
 
 
-
+    /**
+     * Creates the PassageParser object
+     * @param rawHeccData the raw hecc data that needs passing
+     * @param boundary the implementation of LoggerInterface that this logs important info to
+     */
     public PassageParser(String rawHeccData, LoggerInterface boundary){
 
         logger = boundary;
@@ -37,31 +63,58 @@ public class PassageParser {
 
         passageNames = new TreeSet<>();
 
-        dataToParse = rawHeccData.concat("\n");
+        dataToParse = rawHeccData.trim().concat("\n");
         /*
         you might be asking 'why am I concatting a "\n" to the end of the raw hecc data?'
         well, long story short, if there isn't an "\n" at the end of the last line of the input, that last line doesn't get looked at.
         so I may as well make sure that it does get looked at, y'know?
          */
 
-
-
     }
 
     //this is responsible for setting up the passage objects and such
-    public boolean constructThePassageObjects() throws ParserException{
+
+    /**
+     * This is responsible for setting up the metadata, passageNames, and passageMap objects
+     * @return true if this is executed successfully
+     * @throws NoPassagesException if there are no passages defined
+     * @throws DuplicatePassageNameException if two passages have the same name
+     * @throws EmptyPassageException if there's an empty passage
+     */
+    public boolean constructThePassageObjects() throws NoPassagesException, DuplicatePassageNameException, EmptyPassageException{
+
+        //trims metadata stuff from dataToParse, and creates the Metadata object
+        String dataToParse = makeMetadataObject(this.dataToParse);
+
+        metadata.parseMetadata();
+
+        // KEEPING TRACK OF ALL THE PASSAGE NAMES
+        passageNames.clear();
+        passageNames.addAll(findPassageNames(dataToParse));
 
 
-        boolean notDone = true;
+        //CONSTRUCTING THE PASSAGE MAP
+        passageMap.clear();
+        passageMap.putAll(constructPassageMap(dataToParse));
 
+        return true;
 
+    }
 
-        String metadataString = "no metadata";
+    /**
+     * This method basically constructs the Metadata object
+     * @param dataToParse the full hecc data being parsed
+     * @return all the hecc data from the first passage declaration.
+     * The metadata object is made as an attribute of this class.
+     */
+    private String makeMetadataObject(String dataToParse){
+        String metadataString = "";
         boolean hasMetadata = false;
 
-        // STUFF THAT OMITS ANY METADATA STUFF THAT'S BEFORE THE FIRST PASSAGE DECLARATION
-
-        Matcher firstDeclarationMatcher = Pattern.compile("(^::)", Pattern.MULTILINE).matcher(dataToParse);
+        Matcher firstDeclarationMatcher = Pattern.compile(
+                "(^::)",
+                Pattern.MULTILINE
+        ).matcher(dataToParse);
 
         if(firstDeclarationMatcher.find()){
             int startIndex = firstDeclarationMatcher.start();
@@ -74,61 +127,64 @@ public class PassageParser {
             }
         }
 
+        metadata = new Metadata(metadataString,hasMetadata);
 
-        //TODO: the metadata stuff
-        //System.out.println(dataToParse);
-        //System.out.println(metadata);
+        return dataToParse;
+    }
 
-        //startingPassageName = "Start";
+    /**
+     * Attempts to find the names of all the passages in the raw hecc data
+     * @param dataToParse the raw hecc data being parsed
+     * @return a Set of all the String passage names
+     * @throws DuplicatePassageNameException if multiple passages share the same name
+     * @throws NoPassagesException if no passages exist
+     */
+    private Set<String> findPassageNames(String dataToParse) throws DuplicatePassageNameException, NoPassagesException{
 
-        //TODO: CONSTRUCT METADATA OBJECT WITH THE METADATA
+        Set<String> pNames = new TreeSet<>();
 
-        //constructs a new Metadata object to do the metadata parsing stuff
-        metadata = new Metadata(metadataString, hasMetadata);
-
-        //TODO: parse the Metadata object stuff
-
-        metadata.parseMetadata();
-
-
-        // KEEPING TRACK OF ALL THE PASSAGE NAMES
-
-        Matcher passageNameMatcher = Pattern.compile("(?<names>(?<=^::)[\\w]+[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
+        //attempts to find passage declarations
+        Matcher passageNameMatcher = Pattern.compile(
+                "(?<names>(?<=^::)[\\w]+[\\w- ]*[\\w]+)"
+                , Pattern.MULTILINE
+        ).matcher(dataToParse);
 
 
         while (passageNameMatcher.find()){
             String currentName = passageNameMatcher.group(0);
-            //System.out.println(currentName);
-            if (!passageNames.add(currentName)){
-                //THROW EXCEPTION HERE
+            if (!pNames.add(currentName)){
                 throw new DuplicatePassageNameException(currentName);
-                // System.out.println("uh oh looks like we got a duplicate passage!");
-                //} else{
-                //System.out.println("passage added successfully");
+                //complains if there are multiple passages with the same name
             }
         }
 
-        if (passageNames.size() == 0){
+        if (pNames.size() == 0){
             System.out.println("no passages found!");
-            //THROW EXCEPTION HERE
             throw new NoPassagesException();
-                //complains if there are no passages
-        } //else{
-            //System.out.println(passageNames.size());
+            //complains if there are no passages
+        }
+        return pNames;
+    }
 
-        //}
+    /**
+     * This method constructs the passage map
+     * @param dataToParse the raw hecc data being parsed
+     * @return A map of the passage objects declared in the raw data
+     * @throws EmptyPassageException if a passage is empty
+     */
+    private Map<String, Passage> constructPassageMap(String dataToParse) throws EmptyPassageException{
+        //creating the map
+        Map<String, Passage> pMap = new HashMap<>();
 
+        boolean notDone;
 
+        //matches declarations
         Matcher declarationMatcher = Pattern.compile("(?<declarations>^::[\\w]+[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
-        //"(?<declarations>^::[\\w]+[\\w- ]*[\\w]+)"
-        //passageNameMatcher.reset(dataToParse);
-
         //will give this the everythingAfterDeclaration (the content)
         Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
-
         //will use this to crop leading whitespace lines
         Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\s*$", Pattern.MULTILINE).matcher("");
-
+        //matches whitespace at the end of the line
         Matcher lineEndWhitespaceMatcher = Pattern.compile("\\s*\\R$", Pattern.MULTILINE).matcher("");
 
         String currentPassageName;
@@ -171,14 +227,21 @@ public class PassageParser {
             }
             passageMetadataFound = false;
             //attempts to obtain the metadata for the passage
-            //metadata is between the end of this passage's name and theend of the line it's on
-            currentPassageMetadata = dataToParse.substring((thisDeclarationStart + (currentPassageName.length()+2)),nextDeclarationStart);
+            //metadata is between the end of this passage's name and the end of the line it's on
+            currentPassageMetadata = dataToParse.substring(
+                    (thisDeclarationStart + (currentPassageName.length()+2)),
+                    nextDeclarationStart
+            );
             //attempts to find everything between the end of the passage declaration and the end of that line
-                //(+2 to length because 2 was subtracted from the length because the :: at the start was omitted)
+            //(+2 to length because 2 was subtracted from the length because the :: at the start was omitted)
+
             lineEndWhitespaceMatcher.reset(currentPassageMetadata);
             if(lineEndWhitespaceMatcher.find()){
                 //currentPassageMetadata is set to whatever is on the end of the passage metadata line, before the line end whitespace starts
-                currentPassageMetadata = currentPassageMetadata.substring(0,lineEndWhitespaceMatcher.start());
+                currentPassageMetadata = currentPassageMetadata.substring(
+                        0,
+                        lineEndWhitespaceMatcher.start()
+                );
 
                 //metadata has been found if this passage's metadata isn't empty
                 passageMetadataFound = !(currentPassageMetadata.isEmpty());
@@ -211,54 +274,53 @@ public class PassageParser {
             if (contentFound) {
                 //if content was found, add it to the passage content map
                 if (passageMetadataFound){
-                    passageMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentPassageMetadata));
+                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentPassageMetadata));
                 } else{
-                    passageMap.put(currentPassageName,new Passage(currentPassageName,currentContent));
+                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent));
                 }
             } else{
                 //System.out.println("No content found for passage " + currentPassageName);
-                logger.logInfo("No content found for passage " + currentPassageName);
+                //logger.logInfo("No content found for passage " + currentPassageName);
                 throw new EmptyPassageException(currentPassageName);
             }
         } while(notDone);
 
-        return true;
-
+        return pMap;
     }
 
-    public boolean validatePassages() throws ParserException {
-
-        //try {
-            //TODO: replace this first bit with calls to the Metadata object
-            //check that there is a passage with the same name as the starting passage name
-            if ((metadata.doesStartPassageExist(passageNames))){
-                //ensure that every single linked passage is valid
-                for (Map.Entry<String, Passage> e: passageMap.entrySet()){
-                    Passage current = e.getValue();
-                    current.validateLinkedPassagesThrowingException(passageNames);
-                    //exception is thrown if an undefined passage is being linked
-                    e.setValue(current);
-                }
-                return true;
-            } else{
-                throw new MissingStartingPassageException(metadata.getStartPassage());
-                //throw exception if no such starting passage exists
+    /**
+     * A method that can be used to ensure that the passage names are all valid and such
+     * @return true if all passages are valid, false if there's a problem
+     * @throws UndefinedPassageException if a passage has a link to a passage which doesn't exist
+     * @throws MissingStartingPassageException if the defined starting passage doesn't exist
+     */
+    public boolean validatePassages() throws UndefinedPassageException, MissingStartingPassageException {
+        if ((metadata.doesStartPassageExist(passageNames))){
+            //ensure that every single linked passage is valid
+            for (Map.Entry<String, Passage> e: passageMap.entrySet()){
+                Passage current = e.getValue();
+                current.validateLinkedPassagesThrowingException(passageNames);
+                //exception is thrown if an undefined passage is being linked
+                e.setValue(current);
             }
-        /*
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
+            return true;
+        } else{
+            throw new MissingStartingPassageException(metadata.getStartPassage());
+            //throw exception if no such starting passage exists
         }
-         */
     }
 
-    public boolean prepareHeccedData() throws ParserException {
+    /**
+     * This prepares the heccedData ArrayList, using the Metadata object and the passageMap map
+     * @return true if this was performed successfully
+     * @throws UndefinedPassageException if there's an undefined passage somewhere
+     * @throws MissingStartingPassageException if the specified starting passage doesn't exist
+     */
+    public boolean prepareHeccedData() throws UndefinedPassageException, MissingStartingPassageException {
 
         if (!validatePassages()){
             return false;
         }
-
-
         //this prepares the heccedData
 
         heccedData.clear();
@@ -266,7 +328,6 @@ public class PassageParser {
         heccedData.add("//HECC UP output (as of 15/10/2020) (R. Lowe, 2020)\n\n");
 
         //declaration of starting passage name is added to heccedData
-        //TODO: use a metadataObject.getStartPassage() call
         heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\r\n\r");
 
         //starts the declaration of the getHECCED function in heccedData
@@ -301,24 +362,34 @@ public class PassageParser {
             System.out.println(h);
         }
 
-
+        //outputs any info the user might need regarding any missing metadata in the Metadata object
         logger.logInfo(metadata.outputMetadataDefinitionInstructions());
 
         metadata.printDebugData();
 
         return true;
-
     }
 
 
+    /**
+     * Obtains the Metadata object
+     * @return the Metadata object
+     */
     public Metadata getMetadata(){
         return metadata;
     }
 
+    /**
+     * Obtains the heccedData arrayList
+     * @return the heccedData arrayList
+     */
     public ArrayList<String> getHeccedData(){
         return heccedData;
     }
 
+    /**
+     * Prints the Passage objects in the passageMap for debugging reasons
+     */
     public void printPassageObjects(){
         //prints the passage objects for debugging reasons
         for (Map.Entry<String, Passage> e: passageMap.entrySet()){

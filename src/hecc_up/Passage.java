@@ -9,25 +9,49 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class represents a Passage within the HECCIN' Game
+ */
 public class Passage {
 
     //TODO: put the OH-HECC specific stuff into a seperate class to the HECC-UP specific stuff.
     //TODO: make the HECC-UP Passage focus entirely on holding a representation of HECCED-formatted data
     //TODO: maybe make the HECC-UP Passage into a Kotlin data class or something?
 
+    /**
+     * the name of this passage
+     */
     private String passageName;
 
+    /**
+     * raw unparsed content
+     */
     private String unparsedContent;
 
+    /**
+     * the parsed version of the string content
+     */
     private String parsedContent;
 
+    /**
+     * the tags for this passage, but as a string representation of an array
+     */
     private String parsedTags;
 
+    /**
+     * a set with the names of all the passages this passage is linked to
+     */
     private Set<String> linkedPassages;
 
+    /**
+     * an arrayList of string tag names (which this passage is tagged with).
+     */
     private ArrayList<String> tags;
         //will be used later on, with OH-HECC
 
+    /**
+     * a position Vector2D. will be used with OH-HECC.
+     */
     private Vector2D position;
         //will be used later on, with OH-HECC
 

@@ -7,33 +7,66 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This object basically represents the metadata for the HECCIN' Game
+ */
 public class Metadata {
 
     //TODO: maybe encapsulate HECC-UP specific functions in a seperate object to OH-HECC specific functions?
-    
-    private String rawMetadata; //string with the raw metadata
-    private boolean hasMetadata; //boolean value to keep track of whether or not it actually has metadata
+
+    /**
+     * string with the raw metadata
+     */
+    private String rawMetadata;
+
+    /**
+     * boolean value to keep track of whether or not this actually has metadata
+     */
+    private boolean hasMetadata;
 
     //These are going to be used to store the metadata about the game title and the author name
+    /**
+     * what the game title is. defaults to "An Interactive Fiction"
+     */
     private String title = "An Interactive Fiction"; //default title used if undefined
+    /**
+     * whether or not the game title was declared. false by default
+     */
     private boolean isTitleDeclared = false; //title undeclared by default
 
+    /**
+     * author name. "Anonymous" by default
+     */
     private String author = "Anonymous"; //default author name used if undefined
+    /**
+     * whether or not the author was declared. false by default
+     */
     private boolean isAuthorDeclared = false; //author undeclared by default
     
     //This stuff is going to be used by the PassageParser
+    /**
+     * The starting passage. defaults to "Start" if undefined
+     */
     private String startPassage = "Start"; //starting passage defaults to 'Start' if not declared otherwise
 
+    /**
+     * Whether or not the IFID was declared. False by default
+     */
     private boolean isIfidDeclared = false; //IFID not declared by default
+    /**
+     * The IFID. empty by default
+     */
     private String ifid; //holds the IFID if it is declared
 
-    //constructs this Metadata object with actual raw metadata to parse
+    /**
+     * This is a constructor for the metadata object
+     * @param givenMetadata the raw, unparsed, metadata as a string
+     * @param isThereActuallyMetadata true if there actually is any metadata, false otherwise
+     */
     public Metadata(String givenMetadata, boolean isThereActuallyMetadata){
         rawMetadata = givenMetadata;
         hasMetadata = isThereActuallyMetadata;
     }
-
-    //wrapper function for the metadata parsing stuff
 
     /**
      * Wrapper data for the metadata parsing stuff
@@ -244,17 +277,25 @@ public class Metadata {
         }
     }
 
-    //returns the 'title' field of this object
+    /**
+     * @return the 'title' field of this object
+     */
     public String getTitle(){ return title; }
 
-
-    //returns the 'author' field of this object
+    /**
+     *
+     * @return the 'author' field of this object
+     */
     public String getAuthor(){ return author; }
 
     //TODO: iFiction metadata export stuff
     //public String getiFictionMetadata(){}
 
-    //this is only here for debugging reasons, pls to ignore
+    /**
+     * This is here for debugging reasons
+     * Basically just prints all the fields of this object
+     * Nothing of much interest to see here tbh
+     */
     public void printDebugData(){
         System.out.println("METADATA OBJECT DEBUG DATA:");
         System.out.println("START PASSAGE: " + startPassage);
