@@ -1,4 +1,4 @@
-//HECC UP test output (as of 12/10/2020) (R. Lowe, 2020)
+//HECC UP output (as of 15/10/2020) (R. Lowe, 2020)
 
 var startingPassageName = "Start";
 
@@ -6,7 +6,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"dave",
-			"<p>This passage is called dave.</br>dave's content doesn't include any links to any other passages.</br>So I guess this counts as the end.</p>",
+			"<p>This passage is called dave.<br>dave&#39s content doesn&#39t include any links to any other passages.<br>So I guess this counts as the end.</p>",
 			[]
 		)
 	);
@@ -15,7 +15,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Left",
-			"<p>You go to the left, but the path leads you back to <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"dave\")'>dave</a>.</p>",
+			"<p>You go to the left, but the path leads you back to <a class='passageLink' onclick='theHeccer.goToPassage(\"dave\")'>dave</a>.</p>",
 			[]
 		)
 	);
@@ -24,7 +24,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Start",
-			"<p>starting passage content goes here.</br>The following line contains a link to \"Another passage\".</br><a class=\"passageLink\" onclick='theHeccer.goToPassage(\"Another passage\")'>Another passage</a></p>",
+			"<p>starting passage content goes here.</p><p>The following line contains a link to &quotAnother passage&quot.<br><a class='passageLink' onclick='theHeccer.goToPassage(\"Another passage\")'>Another passage</a></p>",
 			[]
 		)
 	);
@@ -33,7 +33,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Right",
-			"<p>You went to the right, but the path leads you back to <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"dave\")'>dave</a>.</p>",
+			"<p>You went to the right, but the path leads you back to <a class='passageLink' onclick='theHeccer.goToPassage(\"dave\")'>dave</a>.</p>",
 			[]
 		)
 	);
@@ -42,7 +42,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Another passage",
-			"<p>congrats you clicked that link to get here, Another passage.</br>why not <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"Yet Another Passage\")'>click this</a> as well?</p>",
+			"<p>congrats you clicked that link to get here, Another passage.<br>why not <a class='passageLink' onclick='theHeccer.goToPassage(\"Yet Another Passage\")'>click this</a> as well?</p>",
 			["yes","theres","tags"]
 		)
 	);
@@ -51,7 +51,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Yet Another Passage",
-			"<p>woah you clicked that so you're now at Yet Another Passage.</br>Do you want to go <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"Left\")'>Left</a>, <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"Right\")'>Right</a>, <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"Start\")'>Back to the start</a>, or <a class=\"passageLink\" onclick='theHeccer.goToPassage(\"dave\")'>Skip this nonsense</a>?</p>",
+			"<p>woah you clicked that so you&#39re now at Yet Another Passage.</p><p>Do you want to go <a class='passageLink' onclick='theHeccer.goToPassage(\"Left\")'>Left</a>, <a class='passageLink' onclick='theHeccer.goToPassage(\"Right\")'>Right</a>, <a class='passageLink' onclick='theHeccer.goToPassage(\"Start\")'>Back to the start</a>, or <a class='passageLink' onclick='theHeccer.goToPassage(\"dave\")'>Skip this nonsense</a>?</p>",
 			[]
 		)
 	);

@@ -8,6 +8,7 @@ this line is before the first passage declaration, so, officially, this line doe
 ::Start
 
 starting passage content goes here.
+
 The following line contains a link to "Another passage".
 [[Another passage]]
 
@@ -21,7 +22,6 @@ why not [[click this|Yet Another Passage]] as well?
 woah you clicked that so you're now at Yet Another Passage.
 
 Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
-
 ::Left
 
 You go to the left, but the path leads you back to [[dave]].

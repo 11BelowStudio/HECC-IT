@@ -9,7 +9,9 @@ import java.util.regex.Pattern;
 
 public class PassageParser {
 
-    //TODO: Pipeline design pattern? https://java-design-patterns.com/patterns/pipeline/
+    //TODO: Pipeline design pattern for parsing? https://java-design-patterns.com/patterns/pipeline/
+    //TODO: layers with interface segregation principle?
+    //TODO: maybe adapter pattern?
 
     private final LoggerInterface logger; //the thing what called the passageParser (which this might need to log info to)
 

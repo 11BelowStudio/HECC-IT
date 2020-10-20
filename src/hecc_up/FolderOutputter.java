@@ -166,7 +166,7 @@ public class FolderOutputter {
             FileWriter iFictionFileWriter = new FileWriter(f);
             for(String s: iFictionData){
                 if (s.equals("\t\t\t<ifid></ifid>\n")){
-                    iFictionFileWriter.write("\t\t\t<ifid>" + metadata.getIFID() +"</ifid>\n");
+                    iFictionFileWriter.write("\t\t\t<ifid>" + metadata.getIfid() +"</ifid>\n");
                 } else if(s.equals("\t\t\t<title></title>\n")) {
                     iFictionFileWriter.write("\t\t\t<title>" + metadata.getTitle() +"</title>\n");
                 } else if (s.equals("\t\t\t<author></author>\n")){
