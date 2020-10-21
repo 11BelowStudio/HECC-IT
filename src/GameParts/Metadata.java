@@ -1,6 +1,7 @@
-package hecc_up;
+package GameParts;
 
 import heccCeptions.NoMatchException;
+import hecc_up.FolderOutputterMetadataInterface;
 import utilities.IFIDgenerator;
 
 import java.util.Set;
@@ -305,6 +306,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
         }
     }
 
+    //TODO: actually I might need to get this handled by a completely different class
     /**
      * Returns the info from this metadata object, but in the form you'd expect to see in an iFiction file
      * @return a string containing all the iFiction data stuff

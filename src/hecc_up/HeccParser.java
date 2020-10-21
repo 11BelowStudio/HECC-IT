@@ -1,5 +1,7 @@
 package hecc_up;
 
+import GameParts.Metadata;
+import GameParts.Passage;
 import heccCeptions.*;
 import utilities.IFIDgenerator;
 

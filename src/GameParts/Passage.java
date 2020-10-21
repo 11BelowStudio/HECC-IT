@@ -1,4 +1,4 @@
-package hecc_up;
+package GameParts;
 
 import heccCeptions.*;
 import utilities.Vector2D;
