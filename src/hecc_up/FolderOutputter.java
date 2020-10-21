@@ -3,11 +3,9 @@ package hecc_up;
 import utilities.TextAssetReader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  * This class is responsible for outputting the HECCIN' Game into the folder it's supposed to be output into.
@@ -123,12 +121,12 @@ public class FolderOutputter {
     /**
      * This outputs the HECCIN Game, using the passed heccedData and the passed Metadata object
      * @param heccedData the hecced data to be put in hecced.js
-     * @param metadata the metadata object to be used in a few places
+     * @param metadata the metadata object to be used in a few places (via the outputterMetadata interface)
      * @return true if everything executes successfully
      * @throws SecurityException if there's a security problem preventing stuff from being output
      * @throws IOException if there's another input/output problem
      */
-    public boolean outputTheGameWithMetadata(ArrayList<String> heccedData, Metadata metadata) throws SecurityException, IOException {
+    public boolean outputTheGameWithMetadata(ArrayList<String> heccedData, FolderOutputterMetadataInterface metadata) throws SecurityException, IOException {
         if (outputFolderExists) {
             File heccedFile = makeTheFile("hecced.js");
             writeTheFile(heccedFile, heccedData);
@@ -168,7 +166,6 @@ public class FolderOutputter {
      * @throws IOException if there's another IO problem
      */
     private void writeTheFile(File f, ArrayList<String> dataToWrite) throws SecurityException, IOException{
-        //f.createNewFile();
         FileWriter heccedFileWriter = new FileWriter(f);
         for(String s: dataToWrite){
             heccedFileWriter.write(s);
@@ -183,7 +180,7 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing the file from being made
      * @throws IOException if there's another IO problem
      */
-    private void writeIndexButWithMetadata(Metadata metadata) throws SecurityException, IOException{
+    private void writeIndexButWithMetadata(FolderOutputterMetadataInterface metadata) throws SecurityException, IOException{
 
         ArrayList<String> indexData = TextAssetReader.getIndex();
         //File f = new File(outputFolderPath.concat("index.html"));
@@ -208,12 +205,14 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing the file from being made
      * @throws IOException if there's another IO problem
      */
-    private void writeIFictionFile(Metadata metadata) throws SecurityException, IOException {
-        ArrayList<String> iFictionData = TextAssetReader.getIFictionTemplate();
+    private void writeIFictionFile(FolderOutputterMetadataInterface metadata) throws SecurityException, IOException {
+        //ArrayList<String> iFictionData = TextAssetReader.getIFictionTemplate();
 
         //File f = new File(outputFolderPath.concat("metadata.iFiction"));
         //f.createNewFile();
         FileWriter iFictionFileWriter = new FileWriter(makeTheFile("metadata.iFiction"));
+        iFictionFileWriter.write(metadata.getIFictionMetadata());
+        /*
         for(String s: iFictionData){
             switch (s) {
                 case "\t\t\t<ifid></ifid>\n":
@@ -230,6 +229,7 @@ public class FolderOutputter {
                     break;
             }
         }
+        */
         iFictionFileWriter.close();
     }
 

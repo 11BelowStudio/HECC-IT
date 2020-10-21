@@ -1,4 +1,4 @@
-package hecc_up.heccCeptions;
+package heccCeptions;
 
 
 /**

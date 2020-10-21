@@ -1,6 +1,6 @@
 package hecc_up;
 
-import hecc_up.heccCeptions.*;
+import heccCeptions.*;
 import utilities.Vector2D;
 
 import java.util.ArrayList;

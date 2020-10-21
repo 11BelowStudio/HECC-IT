@@ -1,4 +1,4 @@
-# Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v0.1: MVP Edition)
+# Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v0.5: OH-HECC Prep)
 
 ## The specification
 * Defining passages
@@ -12,10 +12,12 @@
             * unless a user manually defines a different starting passage in the metadata
     * Rules for passage names
         * Must be strings contained in a single line, after the '::'
-            * Nothing else is allowed in the same line as a passage declaration.
-                * However, a list of tags `[like this space delimited]` will be permitted (even though they currently don't have any functionality)
+            * A limited amount of metadata is permitted in the passage declaration line
+                * A list of tags `[like this space delimited]` will be permitted (even though they currently don't have any functionality)
                 * A position vector, in the format `<x,y>` (where x and y are integers or doubles) may also be declared for the passage on the same line as the passage declaration (however, they also don't have any functionality, and this functionality is only going to be used for OH-HECC) 
-        * Letters, numbers, spaces, underscores, and hyphens are allowed.
+                * A comment, beginning with `//`, continuing to the end of the line, is permitted
+                    * This will not be visible in the HECCIN Game
+        * Letters, numbers, spaces, underscores, and hyphens are allowed in passage names.
             * Nothing else
         * Must start with a letter
         * Leading/Trailing whitespace will be omitted.
@@ -24,7 +26,13 @@
     * Just type stuff on the lines after the passage declaration
         * Passages may not be empty.
     * Everything after the passage declaration will be treated as the content of the most recently declared passage
-    * Passage content ends when the next passage declaration begins/the end of the file is reached.
+    * Passage content ends
+        * when the next passage declaration begins
+        * the end of the file is reached.
+        * A `;;` line is reached
+            * Everything after this line and before the next passage declaration/end of file
+             will be treated as a multiline comment, associated with the preceeding passage.
+             Any multiline comment such as this will not be present in the output. 
     * Line/paragaph breaks
         * All whitespace before/after the passage content will be omitted in the output.
         * Two consecutive newlines will be treated as a paragraph break.
@@ -46,6 +54,25 @@
         * `!IFID: (UUID goes here)` Allows an IFID (Interactive Fiction ID) to be declared for the game. This will be written to index.html
         * `!StoryTitle: Name of Story` Allows the title of a story to be declared
         * `!Author: Author name goes here` Allows the author (you) to be credited for your work.
+        * Variables
+            * `!Var: variableName = value //optional comment`
+                * Allows a variable with the specified name, with a default value of 'value',
+                optionally annotated with a comment, to be declared
+                * Rules for these
+                    * Variable name (mandatory)
+                        * Only alphanumeric characters/underscores allowed
+                        * Must have a unique name
+                            * If multiple variables share the same name, things will end badly
+                    * Initial value (optional)
+                        * Preceeded by an '=', ends at end of line/start of comment
+                        * If numeric, treated as a number
+                            * May define it as a string by putting speechmarks around it
+                        * If not numeric, treated as a String
+                        * If not declared
+                            * defaults to 0
+                    * Comment (optional)
+                        * Preceeded by an '//', ends at end of line
+                        * May write whatever you want here to remind you about what the variable does
 
 
 ## Example HECC code

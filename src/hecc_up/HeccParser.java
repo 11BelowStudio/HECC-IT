@@ -1,6 +1,6 @@
 package hecc_up;
 
-import hecc_up.heccCeptions.*;
+import heccCeptions.*;
 import utilities.IFIDgenerator;
 
 import java.util.*;
@@ -8,10 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This parses passages
+ * This parses the full HECC code
  * bottom text
  */
-public class PassageParser {
+public class HeccParser {
 
     //TODO: Pipeline design pattern for parsing? https://java-design-patterns.com/patterns/pipeline/
     //TODO: layers with interface segregation principle?
@@ -49,11 +49,11 @@ public class PassageParser {
 
 
     /**
-     * Creates the PassageParser object
+     * Creates the HeccParser object
      * @param rawHeccData the raw hecc data that needs passing
      * @param boundary the implementation of LoggerInterface that this logs important info to
      */
-    public PassageParser(String rawHeccData, LoggerInterface boundary){
+    public HeccParser(String rawHeccData, LoggerInterface boundary){
 
         logger = boundary;
 

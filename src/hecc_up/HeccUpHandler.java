@@ -1,6 +1,6 @@
 package hecc_up;
 
-import hecc_up.heccCeptions.ParserException;
+import heccCeptions.ParserException;
 import utilities.TextAssetReader;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class HeccUpHandler {
      * @throws IOException thrown if there's a problem opening/reading the file
      */
     private boolean heccUpTheGame(String heccFileLocation, String outputFolderLocation) throws ParserException, IOException {
-        PassageParser parser = new PassageParser(
+        HeccParser parser = new HeccParser(
                 TextAssetReader.fileToString(heccFileLocation),
                 logger
         );

@@ -1,4 +1,4 @@
-package hecc_up.heccCeptions;
+package heccCeptions;
 
 /**
  * exception for when there are no passages in the .hecc file

@@ -1,4 +1,4 @@
-package hecc_up.heccCeptions;
+package heccCeptions;
 
 /**
  * Exception used by the Metadata regex stuff, thrown if the matcher doesn't match anything

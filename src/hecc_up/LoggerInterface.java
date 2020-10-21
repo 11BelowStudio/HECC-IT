@@ -13,7 +13,7 @@ public interface LoggerInterface {
      * Default implementation just prints it to console.
      * @param infoToLog the info what needs logging
      */
-    public default void logInfo(String infoToLog){
+    default void logInfo(String infoToLog){
         System.out.println(infoToLog);
     }
 }

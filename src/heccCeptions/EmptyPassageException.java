@@ -1,4 +1,4 @@
-package hecc_up.heccCeptions;
+package heccCeptions;
 
 /**
  * exception for when a passage has no content

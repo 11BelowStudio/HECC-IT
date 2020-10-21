@@ -1,6 +1,6 @@
 package hecc_up;
 
-import hecc_up.heccCeptions.NoMatchException;
+import heccCeptions.NoMatchException;
 import utilities.IFIDgenerator;
 
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * This object basically represents the metadata for the HECCIN' Game
  */
-public class Metadata {
+public class Metadata implements FolderOutputterMetadataInterface {
 
     //TODO: maybe encapsulate HECC-UP specific functions in a seperate object to OH-HECC specific functions?
 
@@ -263,20 +263,6 @@ public class Metadata {
         }
     }
 
-
-
-    /**
-     * Returns the IFID string, but formatted such that it's usable in the HTML page
-     * @return the appropriate string for declaring the IFID in the HTML page
-     */
-    public String getIfidButHtmlFormatted(){
-        if (isIfidDeclared) {
-            return "<!-- UUID://" + ifid + "// -->\n";
-        } else{
-            return "<!-- no IFID declared! -->\n";
-        }
-    }
-
     /**
      * @return the 'title' field of this object
      */
@@ -306,4 +292,56 @@ public class Metadata {
     }
 
 
+    /**
+     * Returns the IFID string, but formatted such that it's usable in the HTML page
+     * @return the appropriate string for declaring the IFID in the HTML page
+     */
+    @Override
+    public String getIfidButHtmlFormatted(){
+        if (isIfidDeclared) {
+            return "<!-- UUID://" + ifid + "// -->\n";
+        } else{
+            return "<!-- no IFID declared! -->\n";
+        }
+    }
+
+    /**
+     * Returns the info from this metadata object, but in the form you'd expect to see in an iFiction file
+     * @return a string containing all the iFiction data stuff
+     */
+    @Override
+    public String getIFictionMetadata() {
+        StringBuilder iFictionBuilder = new StringBuilder();
+        iFictionBuilder.append(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ifindex version=\"1.0\" xmlns=\"http://babel.ifarchive.org/protocol/iFiction/\">\n" +
+                "\t<!-- Bibliographic data generated via HECC-UP -->\n" +
+                "\t<story>\n" +
+                "\t\t<identification>\n"
+        );
+        if (isIfidDeclared){
+            iFictionBuilder.append("\t\t\t<ifid>");
+            iFictionBuilder.append(ifid);
+            iFictionBuilder.append("</ifid>\n");
+        }
+        iFictionBuilder.append(
+                "\t\t\t<format>html</format>\n" +
+                "\t\t</identification>\n" +
+                "\t\t<bibliographic>\n" +
+                "\t\t\t<title>"
+        );
+        iFictionBuilder.append(title);
+        iFictionBuilder.append(
+                "</title>\n" +
+                "\t\t\t<author>"
+        );
+        iFictionBuilder.append(author);
+        iFictionBuilder.append(
+                "</author>\n" +
+                "\t\t</bibliographic>\n" +
+                "\t</story>\n" +
+                "</ifindex>"
+        );
+        return iFictionBuilder.toString();
+    }
 }
