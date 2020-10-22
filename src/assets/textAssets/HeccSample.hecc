@@ -5,6 +5,11 @@ this line is before the first passage declaration, so, officially, this line doe
 !StoryTitle: HECCSample
 !Author: R. Lowe
 
+!Var: variableA = defaultValue //comment
+!Var: variableB = defaultValue
+!Var: variableC //comment
+!Var: variableD
+
 ::Start
 
 starting passage content goes here.

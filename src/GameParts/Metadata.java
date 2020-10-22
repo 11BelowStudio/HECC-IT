@@ -4,6 +4,7 @@ import heccCeptions.NoMatchException;
 import hecc_up.FolderOutputterMetadataInterface;
 import utilities.IFIDgenerator;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,6 +61,11 @@ public class Metadata implements FolderOutputterMetadataInterface {
     private String ifid; //holds the IFID if it is declared
 
     /**
+     * All the variable definitions
+     */
+    private ArrayList<Variable> variables;
+
+    /**
      * This is a constructor for the metadata object
      * @param givenMetadata the raw, unparsed, metadata as a string
      * @param isThereActuallyMetadata true if there actually is any metadata, false otherwise
@@ -67,6 +73,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
     public Metadata(String givenMetadata, boolean isThereActuallyMetadata){
         rawMetadata = givenMetadata;
         hasMetadata = isThereActuallyMetadata;
+        variables = new ArrayList<>();
     }
 
     /**
@@ -79,6 +86,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
             findIFID();
             findTitle();
             findAuthor();
+            findVariables();
         }
     }
 
@@ -184,6 +192,35 @@ public class Metadata implements FolderOutputterMetadataInterface {
             author = "Anonymous";
             isAuthorDeclared = false;
         }
+    }
+
+    /**
+     * Attempts to find the variable declarations within the metadata stuff, adding each of them to the variables arrayList
+     *
+     * Variables must be in the form
+     *  !Var:
+     *  variableName
+     *      1 or more word characters (alphanumeric+underscore)
+     *  = defaultValue
+     *      defaultValue must be 1 or more non-whitespace characters
+     *      optional
+     *  // comment
+     *      comment is anything between the // and the end of line
+     *      optional
+     */
+    private void findVariables(){
+        Matcher variableMatcher = Pattern.compile(
+                "(?<=^!Var:)\\s*\\w+\\s*(=\\s*.+?\\s*)?(//\\s*.+)?(?=\\s*$)",
+                Pattern.MULTILINE
+        ).matcher(rawMetadata);
+        while(variableMatcher.find()){
+            //System.out.println(variableMatcher.group(0));
+            variables.add(new Variable(variableMatcher.group(0).trim()));
+        }
+        /*
+        for (Variable v: variables) {
+            System.out.println(v.toString());
+        }*/
     }
 
     /**
