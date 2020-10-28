@@ -6,7 +6,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"dave",
-			"<p>This passage is called dave.<br>dave&#39s content doesn&#39t include any links to any other passages.<br>So I guess this counts as the end.</p>",
+			"<p>This passage is called dave.</p><p>dave&#39s content doesn&#39t include any links to any other passages.<br>So I guess this counts as the end.</p>",
 			[]
 		)
 	);

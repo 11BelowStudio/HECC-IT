@@ -99,6 +99,8 @@ public class HeccParser {
         passageMap.clear();
         passageMap.putAll(constructPassageMap(dataToParse));
 
+
+
         return true;
 
     }
@@ -184,15 +186,19 @@ public class HeccParser {
         Matcher declarationMatcher = Pattern.compile("(?<declarations>^::[\\w]+[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
         //will give this the everythingAfterDeclaration (the content)
         Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
+        //Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\R)(?!^::).*\\R(?!^::).+)", Pattern.MULTILINE).matcher("");
         //will use this to crop leading whitespace lines
         Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\s*$", Pattern.MULTILINE).matcher("");
         //matches whitespace at the end of the line
         Matcher lineEndWhitespaceMatcher = Pattern.compile("\\s*\\R$", Pattern.MULTILINE).matcher("");
+        //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
+        Matcher commentStartMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 
         String currentPassageName;
         String nextPassageName = "";
         String everythingAfterDeclaration;
         String currentContent;
+        String currentComment;
 
         String currentPassageMetadata;
         //int currentPassageMetadataStart;
@@ -237,6 +243,7 @@ public class HeccParser {
             //attempts to find everything between the end of the passage declaration and the end of that line
             //(+2 to length because 2 was subtracted from the length because the :: at the start was omitted)
 
+
             lineEndWhitespaceMatcher.reset(currentPassageMetadata);
             if(lineEndWhitespaceMatcher.find()){
                 //currentPassageMetadata is set to whatever is on the end of the passage metadata line, before the line end whitespace starts
@@ -254,31 +261,56 @@ public class HeccParser {
             passageContentMatcher.reset(everythingAfterDeclaration);
 
             currentContent = ""; //sets up the current content string
+            currentComment = ""; //sets up current comment string
 
             contentFound = false;
+            boolean commentStarted = false;
             String temp;
+            //attempts to add the actual content to the current passage content
             while(passageContentMatcher.find()){
                 temp = passageContentMatcher.group(0);
-                if (!contentFound){ //if no content has been found
-                    //check if this current line is entirely whitespace
-                    if (entirelyWhitespaceMatcher.reset(temp).matches()){
-                        continue;
-                        //skip this line if it's entirely whitespace
-                    } else{
-                        contentFound = true;
-                        //content has been found once first not-entirely-whitespace line has been reached
+
+                //System.out.println(temp);
+
+
+                if (commentStarted){
+                    currentComment = currentComment.concat(temp);
+                    continue;
+                } else {
+                    if (contentFound) { //if content has been found
+                        if (commentStartMatcher.reset(temp).matches()) { //if the current line matches the comment start line
+                            commentStarted = true; //the comment has started
+                            continue; //skip this line
+                        }
+                    } else { //if no content has been found yet
+                        //check if this current line is entirely whitespace
+                        if (entirelyWhitespaceMatcher.reset(temp).matches()) {
+                            continue;
+                            //skip this line if it's entirely whitespace
+                        } else {
+                            contentFound = true;
+                            //content has been found once first not-entirely-whitespace line has been reached
+                        }
                     }
                 }
                 //lineEndWhitespaceMatcher.reset(temp);
                 //temp = lineEndWhitespaceMatcher.replaceAll("</br>");
+                //adds the current line of content to the currentContent
                 currentContent = currentContent.concat(temp);
             }
+
+
             if (contentFound) {
+                //System.out.println("Everything after declaration:");
+                //System.out.println(currentContent);
+                currentContent = currentContent.trim();
+                //System.out.println("Trimmed everything after declaration:");
+                //System.out.println(currentContent);
                 //if content was found, add it to the passage content map
                 if (passageMetadataFound){
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentPassageMetadata));
+                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentComment,currentPassageMetadata));
                 } else{
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent));
+                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentComment));
                 }
             } else{
                 //System.out.println("No content found for passage " + currentPassageName);
@@ -368,6 +400,8 @@ public class HeccParser {
         logger.logInfo(metadata.outputMetadataDefinitionInstructions());
 
         metadata.printDebugData();
+
+        //printPassageObjects();
 
         return true;
     }

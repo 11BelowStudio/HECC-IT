@@ -29,6 +29,11 @@ public class Passage {
     private String unparsedContent;
 
     /**
+     * A trailing multiline comment behind this passage object
+     */
+    private String trailingComment;
+
+    /**
      * the parsed version of the string content
      */
     private String parsedContent;
@@ -67,10 +72,12 @@ public class Passage {
      * Constructs a passage object without any metadata
      * @param passageName the name of this passage
      * @param unparsedContent the raw content of it
+     * @param comment the multiline comment for the passage
      */
-    public Passage(String passageName, String unparsedContent){
+    public Passage(String passageName, String unparsedContent, String comment){
         this.passageName = passageName.trim();
         this.unparsedContent = unparsedContent.trim();
+        this.trailingComment = comment.trim();
         linkedPassages = new TreeSet<>();
 
         System.out.println(unparsedContent);
@@ -84,10 +91,11 @@ public class Passage {
      * Creates a Passage object with metadata
      * @param passageName the name of this passage
      * @param unparsedContent the raw content of it
+     * @param comment the multiline comment for the passage
      * @param lineEndMetadata the raw metadata of it
      */
-    public Passage(String passageName, String unparsedContent, String lineEndMetadata){
-        this(passageName,unparsedContent);
+    public Passage(String passageName, String unparsedContent, String comment, String lineEndMetadata){
+        this(passageName,unparsedContent, comment);
         //processes metadata
         readMetadata(lineEndMetadata);
 
@@ -446,6 +454,8 @@ public class Passage {
         System.out.println("Position: " + position);
         System.out.println("Parsed tags: " + tags);
         System.out.println("Linked passages: " + linkedPassages);
+        System.out.println("Trailing comment:\n" + trailingComment);
+        System.out.println("end passage data");
 
     }
 
