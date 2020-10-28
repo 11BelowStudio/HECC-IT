@@ -1,6 +1,9 @@
 package GameParts;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * This class is to be used to keep track of individual variables defined in the metadata
  */
@@ -26,7 +29,7 @@ public class Variable {
      */
     public Variable(String unparsedText){
         defaultValue = "0";
-        comment = "";
+        comment = getInlineComment(unparsedText);
         String[] splitString;
         if (unparsedText.contains("=")){
             splitString = unparsedText.split("=",2);
@@ -34,17 +37,36 @@ public class Variable {
             if (unparsedText.contains("//")){
                 splitString = splitString[1].split("//",2);
                 defaultValue = splitString[0].trim();
-                comment = splitString[1].trim();
+                //comment = splitString[1].trim();
             } else{
                 defaultValue = splitString[1].trim();
             }
         } else if (unparsedText.contains("//")){
             splitString = unparsedText.split("//",2);
             variableName = splitString[0].trim();
-            comment = splitString[1].trim();
+            //comment = splitString[1].trim();
         } else{
             variableName = unparsedText.trim();
         }
+    }
+
+    /**
+     * Extracts the comment from the raw data
+     * @param rawData the raw data
+     * @return The comment from the raw data (everything between a // and the end of the line).
+     * returns empty string if no comment is found.
+     */
+    private String getInlineComment(String rawData){
+        Matcher inlineCommentMatcher = Pattern.compile(
+                "((?<=\\/\\/).*)"
+        ).matcher(rawData); //matches everything between the first // and the end of the line
+        String theComment = ""; //blank comment by default
+        if (inlineCommentMatcher.find()){
+            theComment = inlineCommentMatcher.group(0).trim(); //obtains the comment (and also trims it) if it exists
+            //System.out.println(theComment);
+        }
+        return theComment; //returns the comment
+
     }
 
     /**

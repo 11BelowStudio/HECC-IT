@@ -34,6 +34,11 @@ public class Passage {
     private String trailingComment;
 
     /**
+     * the comment that's inline with the passage declaration
+     */
+    private String inlineComment;
+
+    /**
      * the parsed version of the string content
      */
     private String parsedContent;
@@ -85,6 +90,7 @@ public class Passage {
         //initialises metadata as blank values
         position = new Vector2D();
         tags = new ArrayList<>();
+        inlineComment = "";
     }
 
     /**
@@ -109,6 +115,7 @@ public class Passage {
         System.out.println(lineEndMetadata);
         tags = readTagMetadata(lineEndMetadata);
         position.set(readVectorMetadata(lineEndMetadata));
+        inlineComment = getInlineComment(lineEndMetadata);
     }
 
     /**
@@ -177,6 +184,27 @@ public class Passage {
         }
         return readVector;
     }
+
+    /**
+     * Obtains the inline comment from the end of the line end metadata
+     * @param lineEndMetadata the line end metadata
+     * @return The comment of it (everything between a // and the end of the line).
+     * returns empty string if no comment is found.
+     */
+    private String getInlineComment(String lineEndMetadata){
+        Matcher inlineCommentMatcher = Pattern.compile(
+                "((?<=\\/\\/).*)"
+        ).matcher(lineEndMetadata); //matches everything between the first // and the end of the line
+        String theComment = ""; //blank comment by default
+        if (inlineCommentMatcher.find()){
+            theComment = inlineCommentMatcher.group(0).trim(); //obtains the comment (and also trims it) if it exists
+            //System.out.println(theComment);
+        }
+        return theComment; //returns the comment
+
+    }
+
+
 
     /**
      * Parses the unparsedContent into parsedContent, and parses the tags into parsedTags
@@ -453,6 +481,7 @@ public class Passage {
         System.out.println("Parsed passage content:\n"+ parsedContent);
         System.out.println("Position: " + position);
         System.out.println("Parsed tags: " + tags);
+        System.out.println("Inline comment: " + inlineComment);
         System.out.println("Linked passages: " + linkedPassages);
         System.out.println("Trailing comment:\n" + trailingComment);
         System.out.println("end passage data");
