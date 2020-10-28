@@ -1,14 +1,23 @@
 this line is before the first passage declaration, so, officially, this line doesn't exist!
 
+//multiline comment line 1
+
 !StartPassageName: Start
 !IFID: de7b3d02-81bb-4c2a-82ba-7ca9398b2262
 !StoryTitle: HECCSample
 !Author: R. Lowe
 
+//line 2
+
 !Var: variableA = defaultValue //comment
 !Var: variableB = defaultValue
 !Var: variableC //comment
 !Var: variableD
+
+//deez
+//
+//nutz
+// lmao gottem!
 
 ::Start //this is a comment //ayy lmao eecks dee
 

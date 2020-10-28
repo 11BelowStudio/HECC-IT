@@ -66,6 +66,11 @@ public class Metadata implements FolderOutputterMetadataInterface {
     private ArrayList<Variable> variables;
 
     /**
+     * The multline comment held within the metadata
+     */
+    private String multilineComment = "";
+
+    /**
      * This is a constructor for the metadata object
      * @param givenMetadata the raw, unparsed, metadata as a string
      * @param isThereActuallyMetadata true if there actually is any metadata, false otherwise
@@ -82,11 +87,12 @@ public class Metadata implements FolderOutputterMetadataInterface {
      */
     public void parseMetadata(){
         if (hasMetadata){ //only bothers doing this if there actually is any metadata to parse
-            findStartPassage();
+            startPassage = findStartPassage(rawMetadata);
             findIFID();
             findTitle();
             findAuthor();
             findVariables();
+            multilineComment = findComment(rawMetadata);
         }
     }
 
@@ -112,8 +118,10 @@ public class Metadata implements FolderOutputterMetadataInterface {
 
     /**
      * A method that wraps the start passage finding stuff
+     * @param rawData the raw metadata
+     * @return the name of the defined starting passage ("Start" if it wasn't defined)
      */
-    private void findStartPassage(){
+    private String findStartPassage(String rawData){
         /*
         finds the declaration for the starting passage,
             in a string defined as starting with '!StartPassageName:',
@@ -122,14 +130,16 @@ public class Metadata implements FolderOutputterMetadataInterface {
         This first matcher will find the passage name, along with any leading whitespace
         line must be of the form '!StartPassageName: starting passage name'
          */
+        String start = "Start";
         try{
             startPassage = metadataRegexHandler(
                 "(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)",
-                rawMetadata
+                rawData
             );
         } catch (NoMatchException e){
-            startPassage = "Start";
+            //start = "Start";
         }
+        return start;
     }
 
     /**
@@ -221,6 +231,29 @@ public class Metadata implements FolderOutputterMetadataInterface {
         for (Variable v: variables) {
             System.out.println(v.toString());
         }*/
+    }
+
+    /**
+     * This reads the multiline comment within the metadata (all lines starting with //)
+     * @param rawData the full metadata being read
+     * @return the multiline comment held within the metadata (as a string)
+     */
+    private String findComment(String rawData){
+        //a StringBuilder that constructs the comment
+        StringBuilder commentBuilder = new StringBuilder();
+        Matcher commentMatcher = Pattern.compile(
+                "((?<=^\\/\\/).*$)",
+                Pattern.MULTILINE
+        ).matcher(rawData); //matches lines that start with a '//' (getting everything from the // to end of line)
+
+        while(commentMatcher.find()){
+            //adds the line of the comment to the commentBuilder
+            commentBuilder.append(commentMatcher.group(0));
+            //followed by a newline
+            commentBuilder.append("\n");
+        }
+        //returns the string built by the commentBuilder
+        return commentBuilder.toString();
     }
 
     /**
@@ -327,6 +360,8 @@ public class Metadata implements FolderOutputterMetadataInterface {
         System.out.println("TITLE: " + title);
         System.out.println("AUTHOR: " + author);
         System.out.println("RAW METADATA:\n" + rawMetadata);
+        System.out.println("THE COMMENT:\n" + multilineComment);
+        System.out.println("end of metadata debug info");
     }
 
 
