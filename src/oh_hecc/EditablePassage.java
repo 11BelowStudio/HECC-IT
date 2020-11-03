@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EditablePassage {
+public class EditablePassage implements Heccable {
 
     /**
      * This is basically here as a generator for a unique ID number for each passage
@@ -401,7 +401,8 @@ public class EditablePassage {
      * This obtains a version of this passage in .hecc format
      * @return this passage but in HECC format
      */
-    String toHecc(){
+    @Override
+    public String toHecc(){
         StringBuilder heccBuilder = new StringBuilder();
         //Creating passage declaration
         heccBuilder.append("::");

@@ -1,13 +1,15 @@
 package GameParts;
 
 
+import oh_hecc.Heccable;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * This class is to be used to keep track of individual variables defined in the metadata
  */
-public class Variable {
+public class Variable implements Heccable {
 
     /**
      * The name of the variable
@@ -94,4 +96,19 @@ public class Variable {
         );
     }
 
+    /**
+     * Obtains the .hecc representation of this variable
+     * @return this as .hecc code
+     */
+    @Override
+    public String toHecc() {
+        StringBuilder heccBuilder = new StringBuilder();
+        heccBuilder.append("!Var: ");
+        heccBuilder.append(variableName);
+        heccBuilder.append(" = ");
+        heccBuilder.append(defaultValue);
+        heccBuilder.append(" // ");
+        heccBuilder.append(comment);
+        return heccBuilder.toString();
+    }
 }
