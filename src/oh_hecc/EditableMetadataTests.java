@@ -70,6 +70,11 @@ public class EditableMetadataTests {
 
         System.out.println(md3.toHecc());
 
+        assertDoesNotThrow(
+            () -> MetadataEditingInterface.checkTitleValidity("x"),
+            "single letter title threw exception!"
+        );
+
     }
 
     @Test
@@ -120,7 +125,7 @@ public class EditableMetadataTests {
 
     @Test
     public void changeStartPassageTests(){
-        String[] valid = {"Start","Another passage","dave","28 Stab Wounds","deez-nutz","ayy_lmao_"};
+        String[] valid = {"Start","Another passage","dave","28 Stab Wounds","deez-nutz","ayy_lmao_","q"};
 
         EditableMetadata md1 = new EditableMetadata("no valid metadata here");
 

@@ -121,8 +121,7 @@ public class HeccUpGUI implements LoggerInterface {
         guiFrame.setLayout(new BoxLayout(guiFrame.getContentPane(), BoxLayout.Y_AXIS));
 
 
-        //Creating the title
-        //panel to hold the title label
+        //Creating the title panel to hold the title label
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(1,1));
         //and now the title label

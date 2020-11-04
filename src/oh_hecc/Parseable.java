@@ -14,9 +14,9 @@ public interface Parseable {
     /**
      * A regex pattern for the passage names.
      * Starts and ends with any word character (alphanumeric+underscores),
-     * may have spaces and/or - between first and last character (min length of 2)
+     * may have spaces and/or - between first and last character (min length of 1)
      */
-    final String PASSAGE_NAME_REGEX = "[\\w]+[\\w- ]*[\\w]+";
+    final String PASSAGE_NAME_REGEX = "([\\w]+[\\w- ]*)?[\\w]+";
     /**
      * Ditto, but allows leading/trailing whitespace
      */

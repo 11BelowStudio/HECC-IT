@@ -24,7 +24,7 @@ public interface SharedMetadata {
      * Any amount of non-whitespace characters and/or spaces are allowed between the start/end non-whitespace characters.
      * Some horizontal whitespace permitted at very start/end, will be trimmed out anyway
      */
-    final String VALID_TITLE_REGEX = "\\h*[\\S]+[\\S ]*[\\S]+(?=\\h*$)";
+    final String VALID_TITLE_REGEX = "\\h*([\\S]+[\\S ]*)?[\\S]+(?=\\h*$)";
 
 
     /**
@@ -60,6 +60,12 @@ public interface SharedMetadata {
     String getAuthor();
 
     /**
+     * Obtains the IFID
+     * @return the IFID
+     */
+    String getIfid();
+
+    /**
      * Obtains the start passage
      * @return the start passage
      */
@@ -70,5 +76,12 @@ public interface SharedMetadata {
      * @return the comment
      */
     String getComment();
+
+
+    /**
+     * string representation of the metadata (for debugging)
+     * @return string version of the metadata
+     */
+    String toString();
 
 }

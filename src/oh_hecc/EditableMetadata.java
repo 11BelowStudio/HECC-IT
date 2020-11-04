@@ -106,6 +106,14 @@ public class EditableMetadata implements Heccable, Parseable, SharedMetadata, Me
         comment = MetadataReadingInterface.findComment(rawMetadata);
     }
 
+    /**
+     * Creates an editing window for this object
+     * @return a MetadataEditorWindow which can edit this object
+     */
+    public MetadataEditorWindow openEditingWindow(){
+        return new MetadataEditorWindow(this);
+    }
+
 
     /**
      * Literally just generates an UUID (used as an IFID), returns its string version in uppercase
@@ -192,6 +200,15 @@ public class EditableMetadata implements Heccable, Parseable, SharedMetadata, Me
     }
 
     /**
+     * Obtains the IFID
+     * @return the IFID
+     */
+    @Override
+    public String getIfid(){
+        return ifid;
+    }
+
+    /**
      * obtains the comment
      * @return the comment
      */
@@ -265,5 +282,32 @@ public class EditableMetadata implements Heccable, Parseable, SharedMetadata, Me
             heccedMultilineCommentBuilder.append("\n");
         }
         return heccedMultilineCommentBuilder.toString();
+    }
+
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Title: ");
+        sb.append(title);
+        sb.append("\nAuthor: ");
+        sb.append(author);
+        sb.append("\nIFID: ");
+        sb.append(ifid);
+        sb.append("\nStart passage: ");
+        sb.append(startPassage);
+        sb.append("\nVariables:\n");
+        if (variables.isEmpty()){
+            sb.append("no variables present\n");
+        } else{
+            for (Variable v: variables) {
+                sb.append(v.toHecc());
+                sb.append("\n");
+            }
+        }
+        sb.append("Comment:\n");
+        sb.append(comment);
+        sb.append("\nEnd of metadata");
+        return sb.toString();
     }
 }

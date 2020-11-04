@@ -149,7 +149,7 @@ public class HeccParser {
 
         //attempts to find passage declarations
         Matcher passageNameMatcher = Pattern.compile(
-                "(?<names>(?<=^::)[\\w]+[\\w- ]*[\\w]+)"
+                "(?<names>(?<=^::)([\\w]+[\\w- ]*)?[\\w]+)"
                 , Pattern.MULTILINE
         ).matcher(dataToParse);
 
@@ -183,7 +183,7 @@ public class HeccParser {
         boolean notDone;
 
         //matches declarations
-        Matcher declarationMatcher = Pattern.compile("(?<declarations>^::[\\w]+[\\w- ]*[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
+        Matcher declarationMatcher = Pattern.compile("(?<declarations>^::([\\w]+[\\w- ]*)?[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
         //will give this the everythingAfterDeclaration (the content)
         Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
         //Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\R)(?!^::).*\\R(?!^::).+)", Pattern.MULTILINE).matcher("");
