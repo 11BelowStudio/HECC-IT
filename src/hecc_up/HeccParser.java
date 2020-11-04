@@ -188,9 +188,9 @@ public class HeccParser {
         Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
         //Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\R)(?!^::).*\\R(?!^::).+)", Pattern.MULTILINE).matcher("");
         //will use this to crop leading whitespace lines
-        Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\s*$", Pattern.MULTILINE).matcher("");
+        Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\h*$", Pattern.MULTILINE).matcher("");
         //matches whitespace at the end of the line
-        Matcher lineEndWhitespaceMatcher = Pattern.compile("\\s*\\R$", Pattern.MULTILINE).matcher("");
+        Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
         //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
         Matcher commentStartMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 

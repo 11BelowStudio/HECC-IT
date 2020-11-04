@@ -1,5 +1,7 @@
 package oh_hecc;
 
+import heccCeptions.DuplicatePassageNameException;
+import heccCeptions.InvalidPassageNameException;
 import org.junit.jupiter.api.Test;
 import utilities.Vector2D;
 
@@ -8,14 +10,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class EditablePassageTest {
 
     //testing to see if the setup stuff works
     @Test
-    public void testASamplePassage(){
+    void testASamplePassage(){
         String name = "Another passage";
         String content = "congrats you clicked that link to get here, Another passage.\nDo you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?";
         String comment = "this is an comment\nbottom text";
@@ -64,6 +66,71 @@ public class EditablePassageTest {
         Set<String> actualLinks = EditablePassage.findLinks(output);
 
         equalsTest(expectedLinks, actualLinks);
+
+    }
+
+    @Test
+    void validRenamePassageTest(){
+        Set<String> otherPassages = new TreeSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
+
+        String[] valid = {"p1","dave","Another Passage","Deez-Nutz","_ayy-lmao_"};
+
+        EditablePassage p1 = new EditablePassage();
+
+        for (String s: valid) {
+            assertDoesNotThrow(
+                    () -> Parseable.validatePassageNameRegex(s),
+                    s + " check threw exception!"
+            );
+            assertDoesNotThrow(
+                    () -> p1.renameThisPassage(s, otherPassages),
+                    s + " update threw exception!"
+            );
+            equalsTest(s,p1.getPassageName());
+        }
+
+    }
+
+    @Test
+    public void testInvalidNamesThrowException(){
+        Set<String> otherPassages = new TreeSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
+
+        String[] invalidPassages = {"","-xd-","nice meme!","p","0w0~"};
+
+        EditablePassage p1 = new EditablePassage();
+
+        for (String s: invalidPassages) {
+            assertThrows(
+                    InvalidPassageNameException.class,
+                    () -> Parseable.validatePassageNameRegex(s),
+                    s + " check didn't throw exception!"
+            );
+            assertThrows(
+                    InvalidPassageNameException.class,
+                    () -> p1.renameThisPassage(s, otherPassages),
+                    s + " update didn't throw exception!"
+            );
+        }
+
+    }
+
+    @Test
+    void testDuplicatePassageRename(){
+        String[] names = {"Start","oldPassage","eecks dee","sample","Another placeholder name"};
+        Set<String> otherPassages = new TreeSet<String>(Arrays.asList(names));
+
+        EditablePassage p1 = new EditablePassage();
+        for (String s: names) {
+            assertThrows(
+                    DuplicatePassageNameException.class,
+                    () -> p1.renameThisPassage(s, otherPassages),
+                    s + " update didn't throw exception!"
+            );
+        }
+    }
+    
+    @Test
+    void testPassageNameUpdate(){
 
     }
 

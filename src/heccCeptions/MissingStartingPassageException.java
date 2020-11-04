@@ -4,7 +4,7 @@ package heccCeptions;
 /**
  * exception for when the specified start passage doesn't actually exist
  */
-public class MissingStartingPassageException extends ParserException {
+public class MissingStartingPassageException extends HeccCeption {
     /**
      * YEET
      * @param startingPassageName the specified starting passage (that doesn't exist)

@@ -1,5 +1,8 @@
 package oh_hecc;
 
+import heccCeptions.DuplicatePassageNameException;
+import heccCeptions.InvalidMetadataDeclarationException;
+import heccCeptions.InvalidPassageNameException;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EditablePassage implements Heccable {
+public class EditablePassage implements Heccable, Parseable {
 
     /**
      * This is basically here as a generator for a unique ID number for each passage
@@ -68,13 +71,19 @@ public class EditablePassage implements Heccable {
      */
     private final Vector2D position;
 
+    /**
+     * The regular expression to be used for the tag string (opening and closing [] omitted)
+     * alphanumeric with underscores, divided by spaces
+     */
+    public static final String TAG_STRING_REGEX = "([\\w]+[ ])*[\\w]+";
+
 
     /**
      * A no-argument constructor for an editable passage. Will be called when the 'new passage' button is pressed.
      */
     public EditablePassage(){
         this.passageID = EditablePassage.GENERATE_PASSAGE_IDENTIFIER();
-        passageName = "Untitled Passage #"+passageID;
+        passageName = "Untitled Passage "+passageID;
         passageContent = "Sample Content";
         passageTags = new ArrayList<>();
         inlinePassageComment = "";
@@ -119,24 +128,63 @@ public class EditablePassage implements Heccable {
      */
     private static ArrayList<String> readTagMetadata(String lineEndMetadata){
         ArrayList<String> tagList = new ArrayList<>();
+        String validTagList = "";
         //this processes the list of tags (if they exist)
         //tags may be alphanumeric with underscores, divided by spaces
         //must be within []
         //like '[List of tags divided by spaces and allows d1gits plus under_scores]'
-        Matcher tagListMatcher = Pattern.compile(
-                "\\[([a-zA-Z0-9_]+ +)*[a-zA-Z0-9_]+]").matcher(lineEndMetadata);
+        //Matcher tagListMatcher = Pattern.compile("\\[([a-zA-Z0-9_]+ +)*[a-zA-Z0-9_]+]").matcher(lineEndMetadata);
+        //Matcher tagListMatcher = Pattern.compile("\\[([\\w]+[ ])*[\\w]+]").matcher(lineEndMetadata);
+        Matcher tagListMatcher = Pattern.compile("\\["+TAG_STRING_REGEX+"]").matcher(lineEndMetadata);
         //finds the tag list metadata
         if (tagListMatcher.find()){ //if found
             String tagListString = tagListMatcher.group(0); //gets it
             tagListString = tagListString.substring(1,tagListString.length()-1); //removes surrounding []
+            tagList = actuallyPutValidTagListStringIntoArrayList(tagListString);
+            /*
             String[] tagListArray = tagListString.split(" "); //splits it at spaces
             for (String s: tagListArray){ //for each of the tags
                 if (!s.isEmpty()){
                     tagList.add(s.trim()); //add it to the tagList
                 }
-            }
+            }*/
         }
         return tagList; //return the tagList
+    }
+
+    /**
+     * Called to update the tag list via the OH-HECC editor
+     * @param tagListString the string list of tags which are to be given to this (space delimited)
+     * @return a String ArrayList formed from the string tag list. Empty arrayList will be returned if empty string provided as input.
+     * @throws InvalidMetadataDeclarationException if the string tag list was invalid
+     */
+    static ArrayList<String> makePassageTagListFromString(String tagListString) throws InvalidMetadataDeclarationException {
+        if (tagListString.equals("")) { return new ArrayList<>(); } //returns empty tag list if input is empty
+
+        //String validListString = ""; //this will be overwritten with the valid tag list if it exists within the tagListString
+        Matcher validListMatcher = Pattern.compile(TAG_STRING_REGEX).matcher(tagListString); //attempts to find valid list
+        if (validListMatcher.find()){ //if valid list was found
+            String validListString = validListMatcher.group(0).trim(); //takes note of the valid list if it exists (and trims it)
+            return actuallyPutValidTagListStringIntoArrayList(validListString); //puts it into an ArrayList
+        } else {
+            throw new InvalidMetadataDeclarationException(tagListString, "passage tag list metadata");
+        }
+    }
+
+    /**
+     * Actually puts the valid tag list string into an ArrayList
+     * @param validTagListString the valid tag list string that's being put into the ArrayList (space delimited)
+     * @return an ArrayList holding the tag names that the given validTagListString held
+     */
+    static ArrayList<String> actuallyPutValidTagListStringIntoArrayList(String validTagListString){
+        ArrayList<String> foundTags = new ArrayList<>();
+        String[] tagListArray = validTagListString.split(" "); //splits list string at spaces
+        for (String s: tagListArray){ //for each of the tags
+            if (!s.isEmpty()){
+                foundTags.add(s.trim()); //add it to the tagList
+            }
+        }
+        return foundTags;
     }
 
     /**
@@ -150,7 +198,7 @@ public class EditablePassage implements Heccable {
         //<x,y>
         //x and y are double numbers, may have decimals, and can have leading/trailing whitespace
         Matcher vectorCoordsMatcher = Pattern.compile(
-                "<\\s*\\d*\\.?\\d+\\s*,\\s*\\d*\\.?\\d+\\s*>"
+                "<\\h*\\d*\\.?\\d+\\h*,\\h*\\d*\\.?\\d+\\h*>"
         ).matcher(lineEndMetadata);
         if (vectorCoordsMatcher.find()){
             //if it's found, it extracts that string
@@ -203,7 +251,7 @@ public class EditablePassage implements Heccable {
      * @param rawContent the raw passage content with the links that are being looked for
      * @return the set with all the names of the passage links
      */
-    static Set<String> findLinks(String rawContent){
+    public static Set<String> findLinks(String rawContent){
         //finds the direct links, puts them into the set of found links
         Set<String> foundLinks = actuallyParseThePassageLinks(rawContent, true);
         //adds the indirect links to the set of found links
@@ -218,15 +266,17 @@ public class EditablePassage implements Heccable {
      * @param direct whether or not it's looking for direct passage links
      * @return the input passage text with the links converted into hecc links
      */
-    private static Set<String> actuallyParseThePassageLinks(String input, boolean direct){
+    static Set<String> actuallyParseThePassageLinks(String input, boolean direct){
         Set<String> foundLinks = new TreeSet<String>();
         String regex; //local variable for the regex being used
         if (direct){
             //direct link regex [[Passage name]]
-            regex = "(\\[\\[[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
+            //regex = "(\\[\\[[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
+            regex = "(\\[\\["+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
         } else{
             //indirect link regex [[Link Text | Passage Name]]
-            regex = "(\\[\\[[^\\[\\]\\|]+\\|[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
+            //regex = "(\\[\\[[^\\[\\]\\|]+\\|[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
+            regex = "(\\[\\[[^\\[\\]\\|]+\\|"+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
         }
         //creates the matcher
         Matcher theMatcher = Pattern.compile(
@@ -256,21 +306,21 @@ public class EditablePassage implements Heccable {
      * @param renameTo the renamed passage that the links must be redirected to
      * @return the rawContent but with the appropriate passage links renamed
      */
-    static String getPassageContentWithRenamedLinks(String rawContent, String oldPassageName, String renameTo){
+    public static String getPassageContentWithRenamedLinks(String rawContent, String oldPassageName, String renameTo){
         //if (linkedPassages.contains(oldPassageName)) {
         rawContent = rawContent.replaceAll(
-                "(\\[\\[[\\s]*" + oldPassageName + "[\\s]*]])",
+                "(\\[\\[[\\h]*" + oldPassageName + "[\\h]*]])",
                 "[[" + renameTo + "]]"
         ); //direct links can be replaceall'd ez
         //indirect links are more tricky.
         Matcher indirectMatcher = Pattern.compile(
-                "(\\[\\[[^\\[\\]\\|]+\\|[\\s]*" + oldPassageName + "[\\s]*]])",
+                "(\\[\\[[^\\[\\]\\|]+\\|[\\h]*" + oldPassageName + "[\\h]*]])",
                 Pattern.MULTILINE
         ).matcher(rawContent); //first it needs to find the indirect links
         while (indirectMatcher.find()) { //whist it can find an indirect link
             String currentMatch = indirectMatcher.group(0); //finds the first one
             String currentRenamed = currentMatch.replaceAll(
-                    "(\\|[\\s]*" + oldPassageName + "[\\s]*]])",
+                    "(\\|[\\h]*" + oldPassageName + "[\\h]*]])",
                     "|" + renameTo + "]]"
             ); //makes a copy of that match with the old passage name replaced with the new passage name
             rawContent = rawContent.replace(currentMatch, currentRenamed); //replaces the match with the updated version of it
@@ -286,16 +336,36 @@ public class EditablePassage implements Heccable {
      * Replaces the passageContent, and updates the linkedPassages appropriately
      * @param newContent the new content that the passage now holds
      */
-    void updatePassageContent(String newContent){
+    public void updatePassageContent(String newContent){
         passageContent = newContent; //replaces the content
         linkedPassages = findLinks(newContent); //updates the linked passages appropriately
     }
 
     /**
+     * This method will be used when attempting to rename this passage.
+     * @param newName the new name that the user is trying to give this passage.
+     * @param allPassageNames the set of all passage names
+     * @return the previous name of this passage (before it got renamed)
+     * @throws InvalidPassageNameException if the passage name isn't a valid passage name
+     * @throws DuplicatePassageNameException if there's already a passage with this name which exists
+     */
+    public String renameThisPassage(String newName, Set<String> allPassageNames) throws InvalidPassageNameException, DuplicatePassageNameException {
+        String oldName = passageName; //backup of old name
+        String trimmedValidatedName = Parseable.validatePassageNameRegex(newName);
+        if (allPassageNames.contains(trimmedValidatedName)){
+            throw new DuplicatePassageNameException(trimmedValidatedName); //complain if passage with newName exists already
+        }
+        passageName = trimmedValidatedName; //updates the passage name
+        return oldName; //returns old name
+    }
+
+
+
+    /**
      * Obtains the passage ID (read-only)
      * @return the identifier for this passage
      */
-    int getPassageID(){
+    public int getPassageID(){
         return this.passageID;
     }
 
@@ -303,7 +373,7 @@ public class EditablePassage implements Heccable {
      * Obtains the passage content
      * @return passage content
      */
-    String getPassageContent(){
+    public String getPassageContent(){
         return this.passageContent;
     }
 
@@ -311,7 +381,7 @@ public class EditablePassage implements Heccable {
      * Obtains the passage name
      * @return passage name
      */
-    String getPassageName(){
+    public String getPassageName(){
         return this.passageName;
     }
 
@@ -319,8 +389,34 @@ public class EditablePassage implements Heccable {
      * Obtains the list of passage tags
      * @return passageTags
      */
-    List<String> getPassageTags(){
+    public List<String> getPassageTags(){
         return passageTags;
+    }
+
+    /**
+     * Obtains the list of passage tags as a string, seperated by spaces, but without the opening/closing []
+     * @return the string version of the passage tags (divided by spaces, no opening/closing [])
+     */
+    public String getPassageTagsAsString(){
+        StringBuilder tagBuilder = new StringBuilder();
+        for (String tag: passageTags) {
+            tagBuilder.append(tag);
+            if (passageTags.iterator().hasNext()){
+                tagBuilder.append(" ");
+            }
+        }
+        return tagBuilder.toString();
+    }
+
+    /**
+     * Updates the passage tag list, from a string passage tag list (word characters only, space delimited)
+     * @param newPassageTagListString the space-delimited new passage tag list string that will be used to update the passageTags of this passage
+     * @return true if this is carried out successfully
+     * @throws InvalidMetadataDeclarationException if the given passage tag list was invalid
+     */
+    public boolean updatePassageTags(String newPassageTagListString) throws InvalidMetadataDeclarationException{
+        this.passageTags = EditablePassage.makePassageTagListFromString(newPassageTagListString);
+        return true;
     }
 
     /**
@@ -353,7 +449,7 @@ public class EditablePassage implements Heccable {
      * Gets the position of this Passage
      * @return the position Vector2D
      */
-    Vector2D getPosition(){
+    public Vector2D getPosition(){
         return position;
     }
 
@@ -361,7 +457,7 @@ public class EditablePassage implements Heccable {
      * gets the set of linked passages
      * @return linkedPassages
      */
-    Set<String> getLinkedPassages(){
+    public Set<String> getLinkedPassages(){
         return linkedPassages;
     }
 
@@ -377,7 +473,7 @@ public class EditablePassage implements Heccable {
      * Updates the inline passage declaration comment
      * @param newComment the new comment that goes in there
      */
-    void setInlinePassageComment(String newComment){
+    public void setInlinePassageComment(String newComment){
         inlinePassageComment = newComment;
     }
 
@@ -385,7 +481,7 @@ public class EditablePassage implements Heccable {
      * obtains the trailing comment from the passage
      * @return the trailing comment
      */
-    String getTrailingComment(){
+    public String getTrailingComment(){
         return trailingComment;
     }
 
@@ -393,7 +489,7 @@ public class EditablePassage implements Heccable {
      * updates the trailing passage comment
      * @param newComment the new trailing comment for the passage
      */
-    void setTrailingComment(String newComment){
+    public void setTrailingComment(String newComment){
         trailingComment = newComment;
     }
 
@@ -444,7 +540,6 @@ public class EditablePassage implements Heccable {
         }
         passageTagBuilder.append("]");
         return passageTagBuilder.toString();
-
     }
 
     /**

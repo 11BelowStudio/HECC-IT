@@ -3,7 +3,7 @@ package heccCeptions;
 /**
  * exception for when passages share names
  */
-public class DuplicatePassageNameException extends ParserException{
+public class DuplicatePassageNameException extends HeccCeption {
     /**
      * YEET
      * @param passageName the shared passage name

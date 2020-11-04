@@ -3,7 +3,7 @@ package heccCeptions;
 /**
  * exception for when there are no passages in the .hecc file
  */
-public class NoPassagesException extends ParserException {
+public class NoPassagesException extends HeccCeption {
     /**
      * YEET
      */

@@ -4,7 +4,7 @@ package heccCeptions;
 /**
  * exception for when a passage has an invalid name
  */
-public class InvalidPassageNameException extends ParserException{
+public class InvalidPassageNameException extends HeccCeption {
     /**
      * YEET
      * @param passageName the invalid passage name

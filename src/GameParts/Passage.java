@@ -130,7 +130,7 @@ public class Passage {
             //must be within []
             //like '[List of tags divided by spaces and allows d1gits plus under_scores]'
         Matcher tagListMatcher = Pattern.compile(
-                "\\[([a-zA-Z0-9_]+ +)*[a-zA-Z0-9_]+]").matcher(lineEndMetadata);
+                "\\[([\\w]+[ ])*[\\w]+]").matcher(lineEndMetadata);
                 //finds the tag list metadata
         if (tagListMatcher.find()){ //if found
             String tagListString = tagListMatcher.group(0); //gets it
@@ -156,7 +156,7 @@ public class Passage {
             //<x,y>
                 //x and y are double numbers, may have decimals, and can have leading/trailing whitespace
         Matcher vectorCoordsMatcher = Pattern.compile(
-                "<\\s*\\d*\\.?\\d+\\s*,\\s*\\d*\\.?\\d+\\s*>"
+                "<\\h*\\d*\\.?\\d+\\h*,\\h*\\d*\\.?\\d+\\h*>"
         ).matcher(lineEndMetadata);
         if (vectorCoordsMatcher.find()){
             //if it's found, it extracts that string
@@ -299,10 +299,10 @@ public class Passage {
         String regex; //local variable for the regex being used
         if (direct){
             //direct link regex [[Passage name]]
-            regex = "(\\[\\[[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
+            regex = "(\\[\\[[\\h]*[\\w]+[\\w- ]*[\\w]+[\\h]*]])";
         } else{
             //indirect link regex [[Link Text | Passage Name]]
-            regex = "(\\[\\[[^\\[\\]\\|]+\\|[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
+            regex = "(\\[\\[[^\\[\\]\\|]+\\|[\\h]*[\\w]+[\\w- ]*[\\w]+[\\h]*]])";
         }
         //creates the matcher
         Matcher theMatcher = Pattern.compile(

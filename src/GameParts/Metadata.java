@@ -133,7 +133,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
         String start = "Start";
         try{
             startPassage = metadataRegexHandler(
-                "(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)",
+                "(?<=^!StartPassageName:)\\h*[\\w]+[\\w- ]*[\\w]+(?=\\h*$)",
                 rawData
             );
         } catch (NoMatchException e){
@@ -152,7 +152,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
          */
         try{
             ifid = metadataRegexHandler(
-                "(?<=^!IFID:)\\s*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\s*$)",
+                "(?<=^!IFID:)\\h*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\h*$)",
                 rawMetadata
             ).toUpperCase(); //converts the match to uppercase
             isIfidDeclared = true;
@@ -173,7 +173,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
          */
         try{
             title = metadataRegexHandler(
-                "(?<=^!StoryTitle:)\\s*[\\S]+[\\S ]*[\\S]+(?=\\s*$)",
+                "(?<=^!StoryTitle:)\\h*[\\S]+[\\S ]*[\\S]+(?=\\h*$)",
                 rawMetadata
             );
             isTitleDeclared = true;
@@ -194,7 +194,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
          */
         try{
             author = metadataRegexHandler(
-                "(?<=^!Author:)\\s*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\s*$)",
+                "(?<=^!Author:)\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)",
                 rawMetadata
             );
             isAuthorDeclared = true;
@@ -220,7 +220,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
      */
     private void findVariables(){
         Matcher variableMatcher = Pattern.compile(
-                "(?<=^!Var:)\\s*\\w+\\s*(=\\s*.+?\\s*)?(//\\s*.+)?(?=\\s*$)",
+                "(?<=^!Var:)\\h*\\w+\\h*(=\\h*.+?\\h*)?(//\\h*.+)?(?=\\h*$)",
                 Pattern.MULTILINE
         ).matcher(rawMetadata);
         while(variableMatcher.find()){

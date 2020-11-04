@@ -1,16 +1,17 @@
 package oh_hecc;
 
 import GameParts.Variable;
+import heccCeptions.InvalidMetadataDeclarationException;
+import heccCeptions.InvalidPassageNameException;
 import heccCeptions.NoMatchException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EditableMetadata implements Heccable {
+public class EditableMetadata implements Heccable, Parseable {
 
     //TODO: The 'editable' bit of this. Methods to edit title, author, variables, start passage, and multiline comment (ensuring new values are valid).
 
@@ -20,11 +21,12 @@ public class EditableMetadata implements Heccable {
     private String title = "An Interactive Fiction"; //default title used if undefined
     /**
      * The regex which titles must satisfy.
-     * Titles are declared as '!StoryTitle: Title Goes Here'
+     * Titles are declared as '!StoryTitle: Title Goes Here' (the !StoryTitle: prefix is not present here though)
      * Valid titles must start with 1 non-whitespace character, and end with 1 non-whitespace character.
      * Any amount of non-whitespace characters and/or spaces are allowed between the start/end non-whitespace characters.
+     * Some horizontal whitespace permitted at very start/end, will be trimmed out anyway
      */
-    static final String VALID_TITLE_REGEX = "(?<=^!StoryTitle:)\\s*[\\S]+[\\S ]*[\\S]+(?=\\s*$)";
+    static final String VALID_TITLE_REGEX = "\\h*[\\S]+[\\S ]*[\\S]+(?=\\h*$)";
 
     /**
      * author name. "Anonymous" by default
@@ -35,7 +37,7 @@ public class EditableMetadata implements Heccable {
      * Must start with a letter, and must end in a letter (uppercase or lowercase)
      * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
      */
-    static final String VALID_AUTHOR_REGEX = "(?<=^!Author:)\\s*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\s*$)";
+    static final String VALID_AUTHOR_REGEX = "\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)";
 
     /**
      * The starting passage. defaults to "Start" if undefined
@@ -56,7 +58,7 @@ public class EditableMetadata implements Heccable {
     /**
      * The multline comment held within the metadata. empty by default
      */
-    private String multilineComment;
+    private String comment;
 
 
     /**
@@ -68,7 +70,7 @@ public class EditableMetadata implements Heccable {
         author = "Anonymous";
         ifid = generateIFIDString();
         variables = new ArrayList<>();
-        multilineComment = "";
+        comment = "";
     }
 
     /**
@@ -99,7 +101,7 @@ public class EditableMetadata implements Heccable {
         variables.addAll(EditableMetadata.findVariables(rawMetadata));
 
         //finally, the multiline comment
-        multilineComment = EditableMetadata.findComment(rawMetadata);
+        comment = EditableMetadata.findComment(rawMetadata);
     }
 
 
@@ -148,8 +150,13 @@ public class EditableMetadata implements Heccable {
          */
         String start = "Start";
         try{
+            /*
             start = metadataRegexHandler(
                     "(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)",
+                    rawData
+            );*/
+            start = metadataRegexHandler(
+                    "(?<=^!StartPassageName:)" + Parseable.STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE,
                     rawData
             );
         } catch (NoMatchException ignored){}
@@ -168,7 +175,7 @@ public class EditableMetadata implements Heccable {
             sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
          */
         return metadataRegexHandler(
-                    "(?<=^!IFID:)\\s*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\s*$)",
+                    "(?<=^!IFID:)\\h*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\h*$)",
                     rawData
             ).toUpperCase(); //converts the match to uppercase
     }
@@ -187,7 +194,7 @@ public class EditableMetadata implements Heccable {
             between the start/end non-whitespace characters.
          */
         return metadataRegexHandler(
-                VALID_TITLE_REGEX,
+                "(?<=^!StoryTitle:)" + VALID_TITLE_REGEX,
                 rawData
         );
     }
@@ -205,7 +212,7 @@ public class EditableMetadata implements Heccable {
             May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
          */
         return metadataRegexHandler(
-                VALID_AUTHOR_REGEX,
+                "(?<=^!Author:)" + VALID_AUTHOR_REGEX,
                 rawData
         );
     }
@@ -229,10 +236,9 @@ public class EditableMetadata implements Heccable {
     static List<Variable> findVariables(String rawData){
         List<Variable> variables = new ArrayList<>();
         Matcher variableMatcher = Pattern.compile(
-                "(?<=^!Var:)\\s*\\w+\\s*(=\\s*.+?\\s*)?(//\\s*.+)?(?=\\s*?$)",
+                "(?<=^!Var:)\\h*\\w+\\h*(=\\h*.+?\\h*)?(\\/\\/\\h*?.+)?(?=$)",
                 Pattern.MULTILINE
         ).matcher(rawData);
-        //TODO: adjust regex so it doesn't accidentally mistake a comment on a following line for an inline variable comment
         while(variableMatcher.find()){
             //System.out.println(variableMatcher.group(0));
             variables.add(new Variable(variableMatcher.group(0).trim()));
@@ -261,6 +267,109 @@ public class EditableMetadata implements Heccable {
         }
         //returns the string built by the commentBuilder
         return commentBuilder.toString();
+    }
+
+    /**
+     * Checks whether or not a new title for the game would be valid or not
+     * @param newTitleToCheck the new title which needs checking
+     * @return a trimmed version of the new title being checked (if valid)
+     * @throws InvalidMetadataDeclarationException if the new title is invalid
+     */
+    static String checkTitleValidity(String newTitleToCheck) throws InvalidMetadataDeclarationException {
+        Matcher validTitleMatcher = Pattern.compile(VALID_TITLE_REGEX).matcher(newTitleToCheck);
+        if (validTitleMatcher.find()){
+            return validTitleMatcher.group(0).trim(); //returns the trimmed match if there is a match
+        } else {
+            throw new InvalidMetadataDeclarationException(newTitleToCheck, "title"); //exception thrown if no match found
+        }
+    }
+
+    /**
+     * Attempts to update the title of the game
+     * @param newTitle the new title being used
+     * @return true if the new title was valid (and the title could be changed)
+     * @throws InvalidMetadataDeclarationException if newTitle is invalid
+     */
+    boolean updateTitle(String newTitle) throws InvalidMetadataDeclarationException {
+        title = EditableMetadata.checkTitleValidity(newTitle);
+        return true;
+    }
+
+    /**
+     * Checks the validity of a given 'author' value
+     * @param newAuthorToCheck the 'author' string that needs to be checked
+     * @return a trimmed version of the newAuthorToCheck (matching the VALID_AUTHOR_REGEX)
+     * @throws InvalidMetadataDeclarationException if newAuthorToCheck is not a valid author name
+     */
+    static String checkAuthorValidity(String newAuthorToCheck) throws InvalidMetadataDeclarationException{
+        Matcher authorMatcher = Pattern.compile(VALID_AUTHOR_REGEX).matcher(newAuthorToCheck);
+        if (authorMatcher.find()){
+            return authorMatcher.group(0).trim();
+        } else{
+            throw new InvalidMetadataDeclarationException(newAuthorToCheck, "author name");
+        }
+    }
+
+    /**
+     * Attempts to update the 'author' field of this EditableMetadata object
+     * @param newAuthor the new value for the 'author' field
+     * @return true if the 'author' was updated successfully
+     * @throws InvalidMetadataDeclarationException if the given 'newAuthor' is not a valid 'author' input
+     */
+    boolean updateAuthor(String newAuthor) throws InvalidMetadataDeclarationException{
+        author = EditableMetadata.checkAuthorValidity(newAuthor);
+        return true;
+    }
+
+    /**
+     * Attempts to update the 'startPassage' field of this object
+     * @param newStartPassage the name of the new intended start passage
+     * @return true if the start passage was updated successfully
+     * @throws InvalidPassageNameException if the new start passage isn't valid
+     */
+    boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException {
+        startPassage = Parseable.validatePassageNameRegex(newStartPassage);
+        return true;
+    }
+
+    /**
+     * updates the comment
+     * @param newComment the new comment for the object
+     */
+    void updateComment(String newComment){
+        comment = newComment;
+    }
+
+    /**
+     * Obtains the 'title' of this object
+     * @return the 'title' string
+     */
+    public String getTitle(){
+        return title;
+    }
+
+    /**
+     * Obtains the 'author' belonging to this object
+     * @return the 'author' string
+     */
+    public String getAuthor(){
+        return author;
+    }
+
+    /**
+     * Obtains the start passage
+     * @return the start passage
+     */
+    public String getStartPassage(){
+        return startPassage;
+    }
+
+    /**
+     * obtains the comment
+     * @return the comment
+     */
+    public String getComment(){
+        return comment;
     }
 
     /**
@@ -305,7 +414,7 @@ public class EditableMetadata implements Heccable {
 
         //the multiline comment (after informing author that only the multiline comment comments will be preserved by OH-HECC)
         heccBuilder.append("Note to author: only comments saved in this multiline comment area (lines starting with //) will be preserved by OH-HECC!\n");
-        heccBuilder.append(multilineCommentHeccFormatted(multilineComment));
+        heccBuilder.append(multilineCommentHeccFormatted(comment));
         heccBuilder.append("\n\n");
 
         //annotation indicating that the metadata is over.
@@ -314,6 +423,11 @@ public class EditableMetadata implements Heccable {
         return heccBuilder.toString();
     }
 
+    /**
+     * Returns the hecc-formatted version of the multiline comment
+     * @param multilineComment the multiline comment attribute of this EditableMetadata
+     * @return the multiline comment, but formatted as .hecc
+     */
     static String multilineCommentHeccFormatted(String multilineComment){
         String[] segmentsOfTheComment = multilineComment.split("\n");
         StringBuilder heccedMultilineCommentBuilder = new StringBuilder();
