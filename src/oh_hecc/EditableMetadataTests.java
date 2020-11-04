@@ -1,12 +1,13 @@
 package oh_hecc;
 
 import heccCeptions.InvalidMetadataDeclarationException;
+import oh_hecc.metadata.MetadataEditingInterface;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class EditableMetadataTests<T> {
+public class EditableMetadataTests {
 
     @Test
     public void notAFullTestButSeeingIfTheConstructorAndToHeccWorksBeforeIGiveUpForTheNight(){
@@ -46,7 +47,7 @@ public class EditableMetadataTests<T> {
     @Test
     public void changeTitleTest(){
 
-        assertDoesNotThrow(() -> EditableMetadata.checkTitleValidity("new title"));
+        assertDoesNotThrow(() -> MetadataEditingInterface.checkTitleValidity("new title"));
 
         EditableMetadata md1 = new EditableMetadata("old title", "ecks dee");
 
@@ -80,7 +81,7 @@ public class EditableMetadataTests<T> {
 
         for (String s: valid) {
             assertDoesNotThrow(
-                    () -> EditableMetadata.checkAuthorValidity(s),
+                    () -> MetadataEditingInterface.checkAuthorValidity(s),
                     s + " check threw exception!"
             );
             assertDoesNotThrow(
@@ -104,7 +105,7 @@ public class EditableMetadataTests<T> {
         for (String s: invalid) {
             assertThrows(
                     InvalidMetadataDeclarationException.class,
-                    () -> EditableMetadata.checkAuthorValidity(s),
+                    () -> MetadataEditingInterface.checkAuthorValidity(s),
                     s + " check did not throw exception!"
             );
             assertThrows(
