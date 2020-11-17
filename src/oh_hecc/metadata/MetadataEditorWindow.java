@@ -1,15 +1,12 @@
-package oh_hecc;
+package oh_hecc.metadata;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.metadata.MetadataEditingInterface;
-import org.w3c.dom.Attr;
 import utilities.AttributeString;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
-import javax.swing.text.DefaultFormatterFactory;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

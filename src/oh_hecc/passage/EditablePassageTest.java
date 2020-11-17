@@ -1,15 +1,15 @@
-package oh_hecc;
+package oh_hecc.passage;
 
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.Parseable;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import utilities.Vector2D;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
+import static oh_hecc.passage.PassageEditingInterface.getPassageContentWithRenamedLinks;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -57,13 +57,13 @@ public class EditablePassageTest {
         String expected = "[[new]] [[bob]] [[deez|new]] [[nutz|bob]] [[old|new]] [[old|bob]] [[new]] [[ bruh |new]]";
 
 
-        String output = EditablePassage.getPassageContentWithRenamedLinks(inputContent,"old","new");
+        String output = getPassageContentWithRenamedLinks(inputContent,"old","new");
 
         equalsTest(expected, output);
         System.out.println(output);
 
         Set<String> expectedLinks = new TreeSet<>(Arrays.asList("new","bob"));
-        Set<String> actualLinks = EditablePassage.findLinks(output);
+        Set<String> actualLinks = SharedPassage.findLinks(output);
 
         equalsTest(expectedLinks, actualLinks);
 
@@ -78,7 +78,7 @@ public class EditablePassageTest {
         EditablePassage p1 = new EditablePassage();
 
         for (String s: valid) {
-            assertDoesNotThrow(
+            Assertions.assertDoesNotThrow(
                     () -> Parseable.validatePassageNameRegex(s),
                     s + " check threw exception!"
             );
@@ -95,7 +95,7 @@ public class EditablePassageTest {
     public void testInvalidNamesThrowException(){
         Set<String> otherPassages = new TreeSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
-        String[] invalidPassages = {"","-xd-","nice meme!","p","0w0~"};
+        String[] invalidPassages = {"","-xd-","nice meme!","0w0~"};
 
         EditablePassage p1 = new EditablePassage();
 
@@ -131,8 +131,77 @@ public class EditablePassageTest {
     
     @Test
     void testPassageNameUpdate(){
+        EditablePassage[] samples = {new EditablePassage("deez nutz", new Vector2D(0,0)), new EditablePassage("lmao gottem", "[[deez nutz]]","",""), new EditablePassage(), new EditablePassage()};
+
+        Map<UUID, EditablePassage> passages = new HashMap<>();
+
+        for (EditablePassage e: samples) {
+            passages.put(e.getPassageUUID(),e);
+        }
+        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+
+        EditablePassage editThis = passages.get(samples[0].getPassageUUID());
+
+        System.out.println("test 1");
+
+        assertDoesNotThrow( () -> editThis.renameThisPassage("nice name", passages));
+        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+
+        System.out.println("test 2");
+
+        assertDoesNotThrow( () -> editThis.renameThisPassage("deez nutz", passages));
+        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+
+        System.out.println("test 3");
+
+        /*
+        try {
+            editThis.renameThisPassage("lmao gottem", passages);
+        } catch (Exception e){ e.printStackTrace();}*/
+        assertThrows(DuplicatePassageNameException.class, () -> editThis.renameThisPassage("lmao gottem",passages) );
+        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
 
     }
+
+    @Test
+    void testPassageYeet() {
+        EditablePassage[] samples = {new EditablePassage("deez nutz", new Vector2D(0,0)), new EditablePassage("lmao gottem", "[[deez nutz]]","",""), new EditablePassage(), new EditablePassage()};
+
+        Map<UUID, EditablePassage> passages = new HashMap<>();
+
+        for (EditablePassage e: samples) {
+            passages.put(e.getPassageUUID(),e);
+        }
+
+        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+
+        System.out.println("\nyeet time\n");
+        EditablePassage yeetThis = passages.get(samples[0].getPassageUUID());
+
+        passages = yeetThis.deleteThisPassage(passages);
+
+        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+        EditablePassage testThis = passages.get(samples[1].getPassageUUID());
+        assertNotEquals(testThis.getPassageContent(),"[[deez nutz]]");
+
+
+    }
+
 
 
 }

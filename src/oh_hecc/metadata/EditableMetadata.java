@@ -1,12 +1,11 @@
-package oh_hecc;
+package oh_hecc.metadata;
 
 import GameParts.Variable;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import heccCeptions.NoMatchException;
-import oh_hecc.metadata.MetadataEditingInterface;
-import oh_hecc.metadata.MetadataReadingInterface;
-import oh_hecc.metadata.SharedMetadata;
+import oh_hecc.Heccable;
+import oh_hecc.Parseable;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -19,6 +18,7 @@ public class EditableMetadata implements Heccable, Parseable, SharedMetadata, Me
      * what the game title is. defaults to "An Interactive Fiction"
      */
     private String title = "An Interactive Fiction"; //default title used if undefined
+
     /**
      * The regex which titles must satisfy.
      * Titles are declared as '!StoryTitle: Title Goes Here' (the !StoryTitle: prefix is not present here though)

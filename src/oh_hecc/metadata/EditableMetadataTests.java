@@ -1,7 +1,8 @@
-package oh_hecc;
+package oh_hecc.metadata;
 
 import heccCeptions.InvalidMetadataDeclarationException;
-import oh_hecc.metadata.MetadataEditingInterface;
+import oh_hecc.Parseable;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -130,7 +131,7 @@ public class EditableMetadataTests {
         EditableMetadata md1 = new EditableMetadata("no valid metadata here");
 
         for (String s: valid) {
-            assertDoesNotThrow(
+            Assertions.assertDoesNotThrow(
                     () -> Parseable.validatePassageNameRegex(s),
                     s + " check threw exception!"
             );
