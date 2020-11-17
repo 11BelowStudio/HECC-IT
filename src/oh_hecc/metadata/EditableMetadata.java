@@ -6,6 +6,7 @@ import heccCeptions.InvalidPassageNameException;
 import heccCeptions.NoMatchException;
 import oh_hecc.Heccable;
 import oh_hecc.Parseable;
+import oh_hecc.component_editing_windows.MetadataEditorWindow;
 
 import java.util.ArrayList;
 import java.util.UUID;

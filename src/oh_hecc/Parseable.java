@@ -16,16 +16,16 @@ public interface Parseable {
      * Starts and ends with any word character (alphanumeric+underscores),
      * may have spaces and/or - between first and last character (min length of 1)
      */
-    final String PASSAGE_NAME_REGEX = "([\\w]+[\\w- ]*)?[\\w]+";
+    String PASSAGE_NAME_REGEX = "([\\w]+[\\w- ]*)?[\\w]+";
     /**
      * Ditto, but allows leading/trailing whitespace
      */
-    final String PASSAGE_NAME_REGEX_WITH_WHITESPACE = "[\\h]*" + PASSAGE_NAME_REGEX + "[\\h]*";
+    String PASSAGE_NAME_REGEX_WITH_WHITESPACE = "[\\h]*" + PASSAGE_NAME_REGEX + "[\\h]*";
 
     /**
      * regex for checking if a string that's just supposed to contain a passage name is valid or not (expects end of line)
      */
-    final String STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE = "[\\h]*" + PASSAGE_NAME_REGEX + "(?=\\h*$)";
+    String STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE = "[\\h]*" + PASSAGE_NAME_REGEX + "(?=\\h*$)";
 
     /**
      * A method to ensure a given passage name satisfies the passage name regex rules

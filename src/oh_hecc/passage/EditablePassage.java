@@ -163,12 +163,12 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
      */
     @Override
-    public Map<UUID, EditablePassage> renameThisPassage(String newName, Map<UUID, EditablePassage> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException{
+    public Map<UUID, ? extends PassageEditingInterface> renameThisPassage(String newName, Map<UUID, ? extends PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException{
         String oldName = passageName; //backup of old name
         String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
 
         //checks to see if this isn't a duplicate passage name
-        for (EditablePassage e: allPassages.values()) {
+        for (PassageEditingInterface e: allPassages.values()) {
             if (e.getPassageName().equals(trimmedValidatedName)){
                 throw new DuplicatePassageNameException(trimmedValidatedName);
             }
@@ -178,7 +178,7 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
         passageName = trimmedValidatedName;
 
         //updates all passages that link to this passage so they link to its new name
-        for (EditablePassage e: allPassages.values()) {
+        for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(oldName)){
                 e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
             }
@@ -195,17 +195,17 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
      * @return a version of the map of all passages with this passage completely removed
      */
     @Override
-    public Map<UUID, EditablePassage> deleteThisPassage(Map<UUID, EditablePassage> allPassages){
+    public Map<UUID, ? extends PassageEditingInterface> deleteThisPassage(Map<UUID, ? extends PassageEditingInterface> allPassages){
 
         //removes this passage from the map of all passages
         allPassages.remove(this.getPassageUUID());
 
         //deletes all traces of this passage from the existing passages
-        for (EditablePassage e: allPassages.values()){
-            if (e.linkedPassages.contains(this.passageName)){
+        for (PassageEditingInterface e: allPassages.values()){
+            if (e.getLinkedPassages().contains(this.passageName)){
                 String deletedName = this.passageName + " !WAS DELETED!";
                 e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));
-                e.linkedPassages.remove(deletedName);
+                e.removeLinkedPassage(deletedName);
             }
         }
 
@@ -362,6 +362,16 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
     }
 
     /**
+     * Method that can be used to remove a passage name from another passage's linked passages
+     * @param passageToRemove the passage to remove
+     * @return the passage that has been removed
+     */
+    @Override
+    public boolean removeLinkedPassage(String passageToRemove){
+        return linkedPassages.remove(passageToRemove);
+    }
+
+    /**
      * This obtains a version of this passage in .hecc format
      * @return this passage but in HECC format
      */
@@ -428,7 +438,7 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
 
     public boolean equals(Object obj){
         if (EditablePassage.class.equals(obj.getClass())) {
-            return (this.passageUUID.compareTo(((EditablePassage) obj).passageUUID) == 0);
+            return (this.passageUUID.compareTo(((SharedPassage) obj).getPassageUUID()) == 0);
         } else if (String.class.equals(obj.getClass())) {
             return (this.passageName.equals(obj));
         }
@@ -436,6 +446,7 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
     }
 
 
+    @Override
     public String outputAsStringForDebuggingReasons(){
         StringBuilder sb = new StringBuilder();
         sb.append("UUID: ");

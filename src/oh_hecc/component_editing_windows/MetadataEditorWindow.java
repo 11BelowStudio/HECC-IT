@@ -1,50 +1,51 @@
-package oh_hecc.metadata;
+package oh_hecc.component_editing_windows;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.metadata.EditableMetadata;
+import oh_hecc.metadata.MetadataEditingInterface;
 import utilities.AttributeString;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MetadataEditorWindow {
+public class MetadataEditorWindow extends GenericEditorWindow {
     
-    MetadataEditingInterface theMetadata;
+    private MetadataEditingInterface theMetadata;
 
-    JFrame theFrame;
+    //JFrame theFrame;
 
 
-    AttributeString<String> currentTitle;
-    AttributeString<String> currentAuthor;
-    AttributeString<String> currentStartPassage;
-    final AttributeString<String> currentIFID;
+    private AttributeString<String> currentTitle;
+    private AttributeString<String> currentAuthor;
+    private AttributeString<String> currentStartPassage;
+    private final AttributeString<String> currentIFID;
 
-    JTextArea titleText;
-    JTextArea authorText;
-    JTextArea startText;
+    private JTextArea titleText;
+    private JTextArea authorText;
+    private JTextArea startText;
 
-    JLabel titleLabel;
-    JLabel authorLabel;
-    JLabel startPassageLabel;
+    private JLabel titleLabel;
+    private JLabel authorLabel;
+    private JLabel startPassageLabel;
 
-    JTextField titleInput;
-    JTextField authorInput;
-    JTextField startInput;
+    private JTextField titleInput;
+    private JTextField authorInput;
+    private JTextField startInput;
 
-    JTextArea commentInput;
+    private JTextArea commentInput;
     
     
 
-    MetadataEditorWindow(EditableMetadata metadata){
+    public MetadataEditorWindow(EditableMetadata metadata){
         theMetadata = metadata;
         currentTitle = new AttributeString<>("Title:\n", metadata.getTitle());
         currentAuthor = new AttributeString<>("Author:\n", metadata.getAuthor());
         currentStartPassage = new AttributeString<>("Start passage:\n", metadata.getStartPassage());
         currentIFID = new AttributeString<>("IFID:\n",metadata.getIfid());
+
 
         makeTheFrame();
 
@@ -53,34 +54,15 @@ public class MetadataEditorWindow {
         refresh();
     }
 
-    private void refresh(){
-        theFrame.pack();
-        theFrame.revalidate();
-    }
+
+
+
     
-    private void makeTheFrame(){
-        theFrame = new JFrame("Metadata Editor Window");
+    void makeTheFrame(){
+        super.makeTheFrame();
 
-        theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        theFrame.setTitle("Metadata Editor Window");
 
-        //This basically allows a quit prompt to appear when the user tries to press the 'x' button on the window
-        //If the user confirms that they want to close this window, this window closes.
-        theFrame.addWindowListener(
-                new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e){
-                        confirmWindowClose();
-                    }
-                }
-        );
-        
-
-
-        //A lowered etched border
-        Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-
-        //theFrame will use a BoxLayout.
-        theFrame.setLayout(new BoxLayout(theFrame.getContentPane(), BoxLayout.Y_AXIS));
 
         //a panel to show the current data stuff
         JPanel currentDataPanel = new JPanel(new GridLayout(2,2));
@@ -98,9 +80,6 @@ public class MetadataEditorWindow {
         //JFormattedTextField.AbstractFormatterFactory formatterFactory = new DefaultFormatterFactory();
 
         //showing current data
-
-        Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
-        System.out.println("not bold: " + notBold);
 
         //title
         titleText = new JTextArea(theMetadata.getTitle(),0,0);
@@ -123,7 +102,7 @@ public class MetadataEditorWindow {
         JPanel showAuthorPanel = new JPanel(new GridLayout(2,1));
         showAuthorPanel.add(new JLabel("Author:"));
         authorLabel = new JLabel(theMetadata.getAuthor());
-        authorLabel.setFont(authorLabel.getFont().deriveFont(Font.PLAIN));
+        authorLabel.setFont(notBold);
         showAuthorPanel.add(authorLabel);
         currentDataPanel.add(showAuthorPanel);
 
@@ -238,13 +217,7 @@ public class MetadataEditorWindow {
         //no variable stuff because they are currently unimplemented
 
 
-        //button to say 'right thats it im done'
-        JPanel donePanel = new JPanel(new GridLayout(1,1));
-        JButton thatsItImDone = new JButton("Exit");
-        thatsItImDone.addActionListener( (e) -> confirmWindowClose());
-        donePanel.add(thatsItImDone);
-        theFrame.add(donePanel);
-
+        theFrame.add(donePanel());
 
 
     }
@@ -367,32 +340,7 @@ public class MetadataEditorWindow {
         System.out.println(newComment);
     }
 
-    /**
-     * Brings up a JOptionPane ConfirmDialog to ask the user if they're sure they want to quit
-     * Closes the window if the user confirms that they want to close the window.
-     */
-    void confirmWindowClose(){
-        if (JOptionPane.showConfirmDialog(
-                theFrame,
-                "<html><p>"
-                +"Do you want to close this window?<br>"
-                +"All unsaved changes will be lost!"
-                +"</p></html>",
-                "Are you sure?",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-            ) == JOptionPane.YES_OPTION){
-            closeTheWindow();
-        }
-    }
 
-    /**
-     * Literally just closes this window (frame is made invisible, and is disposed of)
-     */
-    private void closeTheWindow(){
-        theFrame.setVisible(false);
-        theFrame.dispose();
-    }
 
 
     public static void main(String[] args){

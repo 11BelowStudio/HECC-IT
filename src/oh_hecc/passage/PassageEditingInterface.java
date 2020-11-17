@@ -3,6 +3,7 @@ package oh_hecc.passage;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.component_editing_windows.PassageEditorWindow;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -97,14 +98,21 @@ public interface PassageEditingInterface extends SharedPassage {
      * @throws InvalidPassageNameException if the passage name isn't a valid passage name
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
      */
-    Map<UUID, EditablePassage> renameThisPassage(String newName, Map<UUID, EditablePassage> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException;
+    Map<UUID, ? extends PassageEditingInterface> renameThisPassage(String newName, Map<UUID, ? extends PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException;
 
     /**
      * This method is responsible for deleting this passage (and removing it from the map of all passages)
      * @param allPassages The map of all passages
      * @return a version of the map of all passages with this passage completely removed
      */
-    Map<UUID, EditablePassage> deleteThisPassage(Map<UUID, EditablePassage> allPassages);
+    Map<UUID, ? extends PassageEditingInterface> deleteThisPassage(Map<UUID, ? extends PassageEditingInterface> allPassages);
+
+    /**
+     * Method that can be used to remove a passage name from another passage's linked passages
+     * @param passageToRemove the passage to remove
+     * @return the passage that has been removed
+     */
+    boolean removeLinkedPassage(String passageToRemove);
 
     /**
      * Obtains the list of passage tags as a string, seperated by spaces, but without the opening/closing []
@@ -154,6 +162,11 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param newComment the new trailing comment for the passage
      */
     void setTrailingComment(String newComment);
+    
+    
+    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, ? extends PassageEditingInterface> allPassages){
+        return new PassageEditorWindow(passageToEdit,allPassages);
+    }
 
 
 }

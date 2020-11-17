@@ -137,4 +137,10 @@ public interface SharedPassage extends Parseable {
      * @return the trailing comment
      */
     String getTrailingComment();
+
+    /**
+     * Outputs the passage as a string for debugging reasons
+     * @return a string representing this passage for debugging reasons
+     */
+    String outputAsStringForDebuggingReasons();
 }
