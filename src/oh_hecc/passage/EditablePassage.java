@@ -5,31 +5,24 @@ import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import oh_hecc.Heccable;
 import oh_hecc.Parseable;
+import oh_hecc.component_editing_windows.PassageEditorWindow;
 import utilities.Vector2D;
 
 import java.util.*;
 
+/**
+ * Like Passage but this time it's actually Editable!
+ */
 public class EditablePassage implements Heccable, Parseable, SharedPassage, PassageEditingInterface, PassageReadingInterface {
 
     /**
-     * This is basically here as a generator for a unique ID number for each passage
-     */
-    private static int PASSAGE_ID_COUNTER = 0;
-
-    /**
-     * Called once in the constructor of a passage object to give it a unique ID number.
-     * Obtains the current value of the PASSAGE_ID_COUNTER, increments the static COUNTER,
-     * but returns the non-incremented value as the ID
-     * @return a unique int as an identifier for the given passage
-     */
-    private static synchronized int GENERATE_PASSAGE_IDENTIFIER(){
-        int obtainedIdentifier = PASSAGE_ID_COUNTER;
-        PASSAGE_ID_COUNTER++;
-        return obtainedIdentifier;
-    }
-
-    /**
-     * The passageUUID of this particular passage
+     * The passageUUID of this particular passage.
+     * Yes, it's a UUID.
+     * There's a stupidly low chance that multiple passages could have identical UUIDs.
+     * but, if you somehow have enough passages so that there's a collision with these,
+     * chances are that this would be the least of your concerns.
+     * Anywho, they're generated dynamically (never saved in .hecc format or in the final heccin game),
+     * so I'm not even going to give you the opportunity to set up a collision.
      */
     private final UUID passageUUID;
 
@@ -68,11 +61,6 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
      */
     private final Vector2D position;
 
-    /**
-     * The regular expression to be used for the tag string (opening and closing [] omitted)
-     * alphanumeric with underscores, divided by spaces
-     */
-    //public static final String TAG_STRING_REGEX = "([\\w]+[ ])*[\\w]+";
 
 
     /**
@@ -119,16 +107,42 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
     }
 
 
-
     /**
-     * This method will be used when the passage content needs to be updated.
+     * This method will be used when the passage content needs to be updated indirectly.
      * Replaces the passageContent, and updates the linkedPassages appropriately
      * @param newContent the new content that the passage now holds
      */
     @Override
-    public void updatePassageContent(String newContent){
+    public void setPassageContent(String newContent){
         passageContent = newContent; //replaces the content
         linkedPassages = SharedPassage.findLinks(newContent); //updates the linked passages appropriately
+    }
+
+
+    /**
+     * This method will be used when the passage content needs to be updated directly.
+     * Replaces the passageContent, and updates the linkedPassages appropriately
+     * @param newContent the new content that the passage now holds
+     * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
+     */
+    @Override
+    public Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){
+        this.setPassageContent(newContent);
+
+        for(String s: linkedPassages){
+            boolean doesntExist = true;
+            for (PassageEditingInterface e: allPassages.values()) {
+                if (e.getPassageName().equals(s)){
+                    doesntExist = false;
+                    break;
+                }
+            }
+            if (doesntExist){
+                PassageEditingInterface newChild = new EditablePassage(s,this.getPosition());
+                allPassages.put(newChild.getPassageUUID(),newChild);
+            }
+        }
+        return allPassages;
     }
 
     /**
@@ -180,7 +194,7 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
         //updates all passages that link to this passage so they link to its new name
         for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(oldName)){
-                e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
+                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
             }
         }
 
@@ -204,7 +218,7 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
         for (PassageEditingInterface e: allPassages.values()){
             if (e.getLinkedPassages().contains(this.passageName)){
                 String deletedName = this.passageName + " !WAS DELETED!";
-                e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));
+                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));//, allPassages);
                 e.removeLinkedPassage(deletedName);
             }
         }
@@ -372,6 +386,16 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
     }
 
     /**
+     * Basically, it's the static {openEditorWindow method but as an instance method instead.
+     * @param allPassages the map of all passages
+     * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
+     */
+    @Override
+    public PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages){
+        return PassageEditingInterface.openEditorWindow(this,allPassages);
+    }
+
+    /**
      * This obtains a version of this passage in .hecc format
      * @return this passage but in HECC format
      */
@@ -436,6 +460,14 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
     }
 
 
+    /**
+     * equals method. bottom text.
+     * @param obj the thing that this is being compared to.
+     *            If obj is an EditablePassage, this returns true if the passageUUID of this and obj are equal.
+     *            If obj is a String, this returns true if the passageName of this is the same as the string obj.
+     *            Otherwise, imma just ignore what obj is and return false anyway
+     * @return true if it's equal, false otherwise
+     */
     public boolean equals(Object obj){
         if (EditablePassage.class.equals(obj.getClass())) {
             return (this.passageUUID.compareTo(((SharedPassage) obj).getPassageUUID()) == 0);
@@ -446,6 +478,12 @@ public class EditablePassage implements Heccable, Parseable, SharedPassage, Pass
     }
 
 
+    /**
+     * Outputs this passage as a string. For debugging reasons.
+     * toHecc() isn't really applicable in this situation, as that's just
+     * an abstraction of the full details of this particular object.
+     * @return a string version of this passage.
+     */
     @Override
     public String outputAsStringForDebuggingReasons(){
         StringBuilder sb = new StringBuilder();

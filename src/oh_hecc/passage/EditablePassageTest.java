@@ -202,6 +202,36 @@ public class EditablePassageTest {
 
     }
 
+    @Test
+    void indirectlyAddNewPassage(){
+        EditablePassage samplePassage = new EditablePassage();
+
+        String newPassageName = "dave";
+
+        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
+
+        UUID referenceUUID = samplePassage.getPassageUUID();
+
+        passages.put(referenceUUID,samplePassage);
+
+        System.out.println("before adding the new passage:\n");
+        for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+
+        passages.get(referenceUUID).updatePassageContent("[[dave]]", passages);
+
+        System.out.println("after adding the new passage:\n");
+        for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+
+        assertEquals(2,passages.size());
+
+    }
+
 
 
 }

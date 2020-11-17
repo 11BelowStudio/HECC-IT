@@ -79,9 +79,9 @@ public abstract class GenericEditorWindow {
     }
 
     /**
-     * Literally just closes this window (frame is made invisible, and is disposed of)
+     * Literally just closes this window (frame is made invisible, and is promptly disposed of)
      */
-    private void closeTheWindow(){
+    void closeTheWindow(){
         theFrame.setVisible(false);
         theFrame.dispose();
     }

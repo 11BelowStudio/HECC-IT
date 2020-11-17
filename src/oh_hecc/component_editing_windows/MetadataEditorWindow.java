@@ -11,13 +11,20 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Basically this class is a dialog window to be used for editing EditableMetadata objects
+ * (or, well, MetadataEditingInterface instances. same thing though)
+ */
 public class MetadataEditorWindow extends GenericEditorWindow {
-    
-    private MetadataEditingInterface theMetadata;
 
-    //JFrame theFrame;
+    /**
+     * you see this thing? yeah. this is what we're gonna be editing.
+     */
+    private final MetadataEditingInterface theMetadata;
 
 
+
+    //some shit what hasn't been used
     private AttributeString<String> currentTitle;
     private AttributeString<String> currentAuthor;
     private AttributeString<String> currentStartPassage;
@@ -27,6 +34,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     private JTextArea authorText;
     private JTextArea startText;
 
+    //the good shit what has been used
     private JLabel titleLabel;
     private JLabel authorLabel;
     private JLabel startPassageLabel;
@@ -36,9 +44,12 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     private JTextField startInput;
 
     private JTextArea commentInput;
-    
-    
 
+
+    /**
+     * Creates the MetadataEditorWindow. This is where the magic happens.
+     * @param metadata you see this? yeah that. it's gonna get edited.
+     */
     public MetadataEditorWindow(EditableMetadata metadata){
         theMetadata = metadata;
         currentTitle = new AttributeString<>("Title:\n", metadata.getTitle());
@@ -55,9 +66,11 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     }
 
 
-
-
-    
+    /**
+     * This is where the magic happens.
+     * Or at least where the actual editor window itself is made.
+     * Same thing, basically.
+     */
     void makeTheFrame(){
         super.makeTheFrame();
 
@@ -203,7 +216,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
         JScrollPane commentScroll = new JScrollPane(
                 commentInput,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);

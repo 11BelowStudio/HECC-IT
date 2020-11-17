@@ -70,11 +70,23 @@ public interface PassageEditingInterface extends SharedPassage {
 
 
     /**
-     * This method will be used when the passage content needs to be updated.
+     * This method will be used when the passage content needs to be updated indirectly.
      * Replaces the passageContent, and updates the linkedPassages appropriately
      * @param newContent the new content that the passage now holds
      */
-    void updatePassageContent(String newContent);
+    void setPassageContent(String newContent);
+
+
+    /**
+     * This method will be used when the passage content needs to be updated directly.
+     * Replaces the passageContent, and updates the linkedPassages and map of all passages accordingly
+     * @param newContent the new content that the passage now holds
+     * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
+     * @return the updated version of allPassages, with any previously unknown linked passages added to that map
+     */
+    Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
+
+
 
 
     /**
@@ -162,11 +174,26 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param newComment the new trailing comment for the passage
      */
     void setTrailingComment(String newComment);
-    
-    
-    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, ? extends PassageEditingInterface> allPassages){
+
+
+
+    /**
+     * Creates a PassageEditorWindow for the given passage (and the map of all the passages)
+     * @param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
+     * @param allPassages the map of all passages
+     * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
+     */
+    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages){
         return new PassageEditorWindow(passageToEdit,allPassages);
     }
+
+    /**
+     * Basically, it's the static {openEditorWindow method but as an instance method instead.
+     * @param allPassages the map of all passages
+     * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
+     */
+    PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages);
+
 
 
 }

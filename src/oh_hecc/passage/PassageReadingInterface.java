@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This encapsulates all the passage functionality that's exclusively used for when passages are being read
+ * from .hecc format into actual usable objects.
+ */
 public interface PassageReadingInterface extends SharedPassage {
 
 
