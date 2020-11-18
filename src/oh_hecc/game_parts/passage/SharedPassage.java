@@ -1,5 +1,6 @@
-package oh_hecc.passage;
+package oh_hecc.game_parts.passage;
 
+import oh_hecc.Heccable;
 import oh_hecc.Parseable;
 import utilities.Vector2D;
 
@@ -7,7 +8,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface SharedPassage extends Parseable {
+public interface SharedPassage extends Parseable, Heccable {
 
     /**
      * The regular expression to be used for the tag string (opening and closing [] omitted)
@@ -88,6 +89,13 @@ public interface SharedPassage extends Parseable {
         return foundLinks; //returns the set of the found links
     }
 
+    /**
+     * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
+     * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
+     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
+     */
+    void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages);
+
 
     /**
      * Obtains the passage UUID (read-only)
@@ -121,10 +129,16 @@ public interface SharedPassage extends Parseable {
     Vector2D getPosition();
 
     /**
-     * gets the set of linked passages
+     * gets the set of the names of linked passages
      * @return linkedPassages
      */
     Set<String> getLinkedPassages();
+
+    /**
+     * gets the set of the UUIDs of linked passages
+     * @return the set of UUIDs of linked passages
+     */
+    Set<UUID> getLinkedPassageUUIDs();
 
     /**
      * returns the comment that's inline within the passage declaration

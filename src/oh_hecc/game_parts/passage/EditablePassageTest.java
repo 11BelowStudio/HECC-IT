@@ -1,4 +1,4 @@
-package oh_hecc.passage;
+package oh_hecc.game_parts.passage;
 
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidPassageNameException;
@@ -9,7 +9,7 @@ import utilities.Vector2D;
 
 import java.util.*;
 
-import static oh_hecc.passage.PassageEditingInterface.getPassageContentWithRenamedLinks;
+import static oh_hecc.game_parts.passage.PassageEditingInterface.getPassageContentWithRenamedLinks;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -138,6 +138,9 @@ public class EditablePassageTest {
         for (PassageEditingInterface e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
+        for (PassageEditingInterface e: passages.values()){
+            e.updateLinkedUUIDs(passages);
+        }
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
             System.out.println(e.getValue().outputAsStringForDebuggingReasons());
@@ -181,6 +184,9 @@ public class EditablePassageTest {
         for (EditablePassage e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
+        for (EditablePassage e: passages.values()){
+            e.updateLinkedUUIDs(passages);
+        }
 
         for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
             System.out.println(e.getKey());
@@ -213,6 +219,7 @@ public class EditablePassageTest {
         UUID referenceUUID = samplePassage.getPassageUUID();
 
         passages.put(referenceUUID,samplePassage);
+        passages.get(referenceUUID).updateLinkedUUIDs(passages);
 
         System.out.println("before adding the new passage:\n");
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
@@ -221,6 +228,8 @@ public class EditablePassageTest {
         }
 
         passages.get(referenceUUID).updatePassageContent("[[dave]]", passages);
+
+        //passages.get(referenceUUID).updateLinkedUUIDs(passages);
 
         System.out.println("after adding the new passage:\n");
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {

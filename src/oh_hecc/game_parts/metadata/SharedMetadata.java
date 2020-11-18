@@ -1,6 +1,7 @@
-package oh_hecc.metadata;
+package oh_hecc.game_parts.metadata;
 
 import heccCeptions.NoMatchException;
+import oh_hecc.Heccable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,14 +9,14 @@ import java.util.regex.Pattern;
 /**
  * A high-level interface for the Metadata class, holding things that are needed by its sub interfaces/high level functionality
  */
-public interface SharedMetadata {
+public interface SharedMetadata extends Heccable {
 
     /**
      * Author name declared as '!Author: Author name goes here'
      * Must start with a letter, and must end in a letter (uppercase or lowercase)
      * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
      */
-    final String VALID_AUTHOR_REGEX = "\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)";
+    String VALID_AUTHOR_REGEX = "\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)";
     //final String VALID_AUTHOR_REGEX = "\\h*([A-Za-z]+(\\.?) )?)?[A-Za-z]+";
 
     /**
@@ -25,7 +26,7 @@ public interface SharedMetadata {
      * Any amount of non-whitespace characters and/or spaces are allowed between the start/end non-whitespace characters.
      * Some horizontal whitespace permitted at very start/end, will be trimmed out anyway
      */
-    final String VALID_TITLE_REGEX = "\\h*([\\S]+[\\S ]*)?[\\S]+(?=\\h*$)";
+    String VALID_TITLE_REGEX = "\\h*([\\S]+[\\S ]*)?[\\S]+(?=\\h*$)";
 
 
     /**

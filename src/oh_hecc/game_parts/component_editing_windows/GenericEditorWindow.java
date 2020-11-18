@@ -1,4 +1,4 @@
-package oh_hecc.component_editing_windows;
+package oh_hecc.game_parts.component_editing_windows;
 
 import javax.swing.*;
 import javax.swing.border.Border;

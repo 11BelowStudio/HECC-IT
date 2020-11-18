@@ -1,4 +1,4 @@
-package oh_hecc.metadata;
+package oh_hecc.game_parts.metadata;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import oh_hecc.Parseable;

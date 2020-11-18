@@ -1,4 +1,4 @@
-package oh_hecc.passage;
+package oh_hecc.game_parts.passage;
 
 import utilities.Vector2D;
 

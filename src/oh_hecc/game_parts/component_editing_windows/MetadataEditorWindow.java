@@ -1,9 +1,9 @@
-package oh_hecc.component_editing_windows;
+package oh_hecc.game_parts.component_editing_windows;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.metadata.EditableMetadata;
-import oh_hecc.metadata.MetadataEditingInterface;
+import oh_hecc.game_parts.metadata.EditableMetadata;
+import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import utilities.AttributeString;
 
 import javax.swing.*;

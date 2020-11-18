@@ -1,4 +1,4 @@
-package oh_hecc.metadata;
+package oh_hecc.game_parts.metadata;
 
 import GameParts.Variable;
 import heccCeptions.InvalidMetadataDeclarationException;
@@ -6,7 +6,7 @@ import heccCeptions.InvalidPassageNameException;
 import heccCeptions.NoMatchException;
 import oh_hecc.Heccable;
 import oh_hecc.Parseable;
-import oh_hecc.component_editing_windows.MetadataEditorWindow;
+import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -56,7 +56,7 @@ public class EditableMetadata implements Heccable, Parseable, SharedMetadata, Me
     /**
      * All the variable definitions
      */
-    private ArrayList<Variable> variables;
+    private final ArrayList<Variable> variables;
 
     /**
      * The multline comment held within the metadata. empty by default

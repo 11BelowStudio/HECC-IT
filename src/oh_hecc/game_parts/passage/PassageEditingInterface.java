@@ -1,9 +1,10 @@
-package oh_hecc.passage;
+package oh_hecc.game_parts.passage;
 
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.component_editing_windows.PassageEditorWindow;
+import oh_hecc.Heccable;
+import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -69,6 +70,9 @@ public interface PassageEditingInterface extends SharedPassage {
     }
 
 
+
+
+
     /**
      * This method will be used when the passage content needs to be updated indirectly.
      * Replaces the passageContent, and updates the linkedPassages appropriately
@@ -82,9 +86,8 @@ public interface PassageEditingInterface extends SharedPassage {
      * Replaces the passageContent, and updates the linkedPassages and map of all passages accordingly
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
-     * @return the updated version of allPassages, with any previously unknown linked passages added to that map
      */
-    Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
+    <T extends PassageEditingInterface> void updatePassageContent(String newContent, Map<UUID, T> allPassages);
 
 
 
@@ -120,11 +123,12 @@ public interface PassageEditingInterface extends SharedPassage {
     Map<UUID, ? extends PassageEditingInterface> deleteThisPassage(Map<UUID, ? extends PassageEditingInterface> allPassages);
 
     /**
-     * Method that can be used to remove a passage name from another passage's linked passages
-     * @param passageToRemove the passage to remove
-     * @return the passage that has been removed
+     * Method that can be used to remove a passage from another passage's linked passages
+     * @param removeThisPassageName the passage to remove
+     * @param removeThisPassageUUID the UUID of the passage to remove
+     * @return true if it got yote
      */
-    boolean removeLinkedPassage(String passageToRemove);
+    boolean removeLinkedPassage(String removeThisPassageName, UUID removeThisPassageUUID);
 
     /**
      * Obtains the list of passage tags as a string, seperated by spaces, but without the opening/closing []
@@ -183,7 +187,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param allPassages the map of all passages
      * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
      */
-    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages){
+    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, ? extends PassageEditingInterface> allPassages){
         return new PassageEditorWindow(passageToEdit,allPassages);
     }
 
@@ -192,8 +196,10 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param allPassages the map of all passages
      * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
      */
-    PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages);
+    PassageEditorWindow openEditorWindow(Map<UUID, ? extends PassageEditingInterface> allPassages);
 
 
+    @Override
+    boolean equals(Object obj);
 
 }

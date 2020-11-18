@@ -1,9 +1,8 @@
-package oh_hecc.metadata;
+package oh_hecc.game_parts.metadata;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 
-import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
