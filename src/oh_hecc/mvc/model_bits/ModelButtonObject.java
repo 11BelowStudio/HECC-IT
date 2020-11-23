@@ -1,7 +1,7 @@
 package oh_hecc.mvc.model_bits;
 
 import oh_hecc.mvc.Model;
-import oh_hecc.mvc.PassageModel;
+import oh_hecc.mvc.*;
 import utilities.Vector2D;
 
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.awt.*;
  * <p>
  * Y'know, the boring bits.
  */
-public class ModelButtonObject extends PassageModelObject {
+public class ModelButtonObject extends EditModelObject {
 
     /**
      * The words that are on this button
@@ -34,7 +34,7 @@ public class ModelButtonObject extends PassageModelObject {
      * @param relativeRight 0-1. 0: the right side of this button will be at the far left of viewport. 1: right side of button at far right of viewport
      * @param text text for the button
      */
-    public ModelButtonObject(PassageModel model, float relativeLeft , float relativeRight, String text){
+    public ModelButtonObject(EditModelInterface model, float relativeLeft , float relativeRight, String text){
         super(new Vector2D(), model);
 
         scaledLeftSide = relativeLeft;

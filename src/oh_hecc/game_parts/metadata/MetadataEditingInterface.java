@@ -69,4 +69,5 @@ public interface MetadataEditingInterface extends SharedMetadata {
     boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException;
 
 
+    String toString();
 }

@@ -1,11 +1,8 @@
 package oh_hecc.mvc;
 
-import GameParts.Passage;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
-import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import oh_hecc.game_parts.passage.SharedPassage;
 import oh_hecc.mvc.model_bits.PassageObject;
 import utilities.Vector2D;
 
@@ -16,7 +13,7 @@ import java.util.*;
 /**
  * Okay so this is the Model of the actual network of passages and such
  */
-public class PassageModel extends Model {
+public class PassageModel extends Model implements EditModelInterface {
 
 
 
@@ -75,18 +72,22 @@ public class PassageModel extends Model {
 
 
 
+    @Override
     public PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet){
         return passageMap.get(uuidOfPassageToGet);
     }
 
+    @Override
     public PassageObject getPassageObjectFromUUID(UUID uuidOfPassageObjectToGet){
         return visibleNetwork.get(uuidOfPassageObjectToGet);
     }
 
+    @Override
     public Set<UUID> getUUIDsOfPassagesLinkedToParticularPassageFromUUID(UUID sourcePassageUUID){
         return passageMap.get(sourcePassageUUID).getLinkedPassageUUIDs();
     }
 
+    @Override
     public Set<PassageEditingInterface> getPassagesFromSetOfUUIDs(Set<UUID> getThesePassages){
         Set<PassageEditingInterface> thePassages = new HashSet<>();
         if (!getThesePassages.isEmpty()){
@@ -97,6 +98,7 @@ public class PassageModel extends Model {
         return thePassages;
     }
 
+    @Override
     public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject){
         Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
         Set<UUID> linkedUUIDs = passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs();
@@ -108,6 +110,7 @@ public class PassageModel extends Model {
         return theLinkedPassages;
     }
 
+    @Override
     public Map<UUID, ? extends PassageEditingInterface> getThePassageMap(){
         return passageMap;
     }

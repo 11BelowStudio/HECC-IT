@@ -24,4 +24,14 @@ public class OhHeccRunner {
     public OhHeccRunner(){
         //TODO: make this. Asks user for a hecc file to open/create a new hecc file. Then opens the hecc file via MVC stuff (and runs it)
     }
+
+
+    void openFileAtLocation(String heccFilePath){
+
+    }
+
+
+    void makeNewHeccFileAtLocation(String heccFilePath){
+
+    }
 }

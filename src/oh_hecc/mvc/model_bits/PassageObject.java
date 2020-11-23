@@ -1,7 +1,7 @@
 package oh_hecc.mvc.model_bits;
 
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import oh_hecc.mvc.PassageModel;
+import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
 
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.util.*;
  * but it's an GUI form instead.
  * bottom text
  */
-public class PassageObject extends PassageModelObject {
+public class PassageObject extends EditModelObject {
 
 
     /**
@@ -20,15 +20,13 @@ public class PassageObject extends PassageModelObject {
      */
     private final UUID theUUID;
 
-
-
     private final PassageEditingInterface thePassage;
 
     private final Map<UUID, PassageLinkObject> linkMap;
 
     StringObject passageNameObject;
 
-    public PassageObject(PassageModel model, PassageEditingInterface passage){
+    public PassageObject(EditModelInterface model, PassageEditingInterface passage){
         super(passage.getPosition(), model);
 
         //orang
@@ -52,7 +50,7 @@ public class PassageObject extends PassageModelObject {
 
         if (!linkedUUIDs.isEmpty()){
             for (UUID u: linkedUUIDs){
-                linkMap.put(u, new PassageLinkObject(theModel, this, u));
+                linkMap.put(u, new PassageLinkObject(model, this, u));
             }
         }
 

@@ -1,6 +1,6 @@
 package oh_hecc.mvc.model_bits;
 
-import oh_hecc.mvc.PassageModel;
+import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
 
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Okay so this is basically an object that represents a link from one PassageObject to another.
  */
-public class PassageLinkObject extends PassageModelObject {
+public class PassageLinkObject extends EditModelObject {
 
 
     private final UUID fromUUID;
@@ -27,7 +27,7 @@ public class PassageLinkObject extends PassageModelObject {
 
     private Polygon pointTriangle;
 
-    PassageLinkObject(PassageModel model, PassageObject sourceObject, UUID destinationUUID) {
+    PassageLinkObject(EditModelInterface model, PassageObject sourceObject, UUID destinationUUID) {
         super(sourceObject.position, model);
 
 
