@@ -1,13 +1,20 @@
 package oh_hecc.mvc;
 
+import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
+import oh_hecc.game_parts.component_editing_windows.GenericEditorWindow;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
+import oh_hecc.mvc.controller.ActionViewer;
+import oh_hecc.mvc.controller.Controller;
+import oh_hecc.mvc.controller.ControllerInterface;
+import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
 import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.util.*;
 
 /**
@@ -21,13 +28,25 @@ public class PassageModel extends Model implements EditModelInterface {
     final Map<UUID, PassageEditingInterface> passageMap;
     final Map<UUID, PassageObject> visibleNetwork;
 
+    final Set<ModelButtonObject> buttons;
+
     final MetadataEditingInterface theMetadata;
 
     final Vector2D topRightCorner;
 
     final Vector2D scrollMovementVector;
 
-    public PassageModel(Controller c, EditableMetadata metadata, Map<UUID, PassageEditingInterface> allPassages){
+    /**
+     * The current activity being performed by the model
+     */
+    private CurrentActivity activity;
+
+    /**
+     * The area currently being selected
+     */
+    private Area selectionArea;
+
+    public PassageModel(ControllerInterface c, EditableMetadata metadata, Map<UUID, PassageEditingInterface> allPassages){
         super(c);
 
         theMetadata = metadata;
@@ -40,15 +59,56 @@ public class PassageModel extends Model implements EditModelInterface {
             visibleNetwork.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
-        topRightCorner = new Vector2D(0,0);
+        buttons = new HashSet<>();
 
-        scrollMovementVector = new Vector2D(0,0);
+        //TODO: make the buttons
+
+        topRightCorner = new Vector2D();
+
+        scrollMovementVector = new Vector2D();
+
+        activity = CurrentActivity.DOING_NOTHING;
+
+        selectionArea = new Area();
 
     }
 
 
     public void update(){
-        //if (theController.action.)
+        ActionViewer currentAction = theController.getAction();
+        boolean inputRecieved = currentAction.checkForInput();
+        switch (activity){
+            case DOING_NOTHING:
+                if (inputRecieved){
+                    //TODO: wat do if input recieved?
+                }
+                break;
+            case LC_DRAGGING_SELECTION_BOX:
+                if (inputRecieved){
+                    //TODO: wat do if input recieved?
+                } else {
+                    //TODO: wat do if no input recieved?
+                }
+                AffineTransform at = new AffineTransform();
+                at.translate(topRightCorner.x, topRightCorner.y);
+                selectionArea = new Area(currentAction.getLeftDragRect()).createTransformedArea(at);
+                break;
+            case LC_OBJECTS_SELECTED:
+                //TODO: wat do?
+                break;
+            case LC_MOVING_OBJECTS:
+                //TODO: wat do?
+                break;
+            case LDC_EDITING_PASSAGE:
+                //TODO: wat do?
+                break;
+            case LC_PRESSED_BUTTON:
+                //TODO: wat do?
+                break;
+            case RC_MOVING_VIEW:
+                //TODO: wat do?
+                break;
+        }
     }
 
 
@@ -119,5 +179,44 @@ public class PassageModel extends Model implements EditModelInterface {
     public Map<UUID, PassageEditingInterface> getThePassageMap(){
         return passageMap;
     }
+
+
+
+
+    /**
+     * An enumeration to represent the current action being performed by the model
+     */
+    private enum CurrentActivity{
+        /**
+         * if nothing in particular is happening, waiting for user input
+         */
+        DOING_NOTHING,
+        /**
+         * if left click is held, dragging selection box to select multiple passages
+         */
+        LC_DRAGGING_SELECTION_BOX,
+        /**
+         * If objects are selected (either from single left clicking one object, or making a selection box that encloses several objects).
+         * Can deselect them by left-click or right click
+         */
+        LC_OBJECTS_SELECTED,
+        /**
+         * If moving objects (left click drag whilst objects are selected -> move those objects)
+         */
+        LC_MOVING_OBJECTS,
+        /**
+         * Double-click a PassageObject: start editing that passage object.
+         */
+        LDC_EDITING_PASSAGE,
+        /**
+         * Click on one of the buttons at the bottom of the screen: doing the operation that button is responsible for
+         */
+        LC_PRESSED_BUTTON,
+        /**
+         * Right click drag: start dragging the view.
+         */
+        RC_MOVING_VIEW
+    }
+
 
 }

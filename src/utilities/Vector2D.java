@@ -8,30 +8,52 @@ import java.awt.*;
 
 //will be implemented later on in OH-HECC (mainly for positions of the passages in the overlay)
 
-// mutable 2D vectors
+/**
+ * 2D vectors
+ */
 public final class Vector2D {
 
-    public double x, y;
+    /**
+     * x position
+     */
+    public double x;
 
-    // constructor for zero vector
+    /**
+     * y position
+     */
+    public double y;
+
+    /**
+     * constructor for zero vector
+     */
     public Vector2D() {
         this.x = 0;
         this.y = 0;
     }
 
-    // constructor for vector with given coordinates
+    /**
+     * constructor for vector with given coordinates
+     * @param x
+     * @param y
+     */
     public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    //constructor for a vector with same co-ords as a Point
+    /**
+     * constructor for a vector with same coords as a Point
+     * @param p
+     */
     public Vector2D(Point p){
         this.x = p.x;
         this.y = p.y;
     }
 
-    // constructor that copies the argument vector
+    /**
+     * constructor that copies the argument vector
+     * @param v
+     */
     public Vector2D(Vector2D v) {
         double tempX = v.x;
         double tempY = v.y;
@@ -39,21 +61,55 @@ public final class Vector2D {
         this.y = tempY;
     }
 
-    // set coordinates
+    /**
+     * set coordinates
+     * @param x
+     * @param y
+     * @return
+     */
     public Vector2D set(double x, double y) {
         this.x = x;
         this.y = y;
         return this;
     }
 
-    // set coordinates based on argument vector
+    /**
+     * set coordinates based on argument vector
+     * @param v
+     * @return
+     */
     public Vector2D set(Vector2D v) {
         this.x = v.x;
         this.y = v.y;
         return this;
     }
 
-    // compare for equality (note Object type argument)
+    /**
+     * set coordinates based on argument point
+     * @param p
+     * @return
+     */
+    public Vector2D set(Point p){
+        this.x = p.x;
+        this.y = p.y;
+        return this;
+    }
+
+    /**
+     * Resets x and y to 0
+     * @return
+     */
+    public Vector2D reset(){
+        this.x = 0;
+        this.y = 0;
+        return this;
+    }
+
+    /**
+     * compare for equality (note Object type argument)
+     * @param o
+     * @return
+     */
     public boolean equals(Object o) {
         if (o instanceof Vector2D){
             //if the other object is a Vector2D, compares x and y of this Vector2D and that Vector2D
@@ -64,25 +120,36 @@ public final class Vector2D {
 
     }
 
-    // String for displaying vector as text
+    /**
+     * String for displaying vector as text
+     */
     public String toString() {
         return "("+x + ", "  + y+")";
 
     }
 
-    //  magnitude (= "length") of this vector
+    /**
+     * magnitude (= "length") of this vector
+     * @return
+     */
     public double mag() {
         return (Math.hypot(x,y));
         //hypotenuse of triangle basically
     }
 
-    // angle between vector and horizontal axis in radians in range [-PI,PI]
-// can be calculated using Math.atan2
+    /**
+     * angle between vector and horizontal axis in radians in range [-PI,PI]
+     * @return
+     */
     public double angle() {
         return Math.atan2(y,x);
     }
 
-    // angle between this vector and another vector in range [-PI,PI]
+    /**
+     * angle between this vector and another vector in range [-PI,PI]
+     * @param other
+     * @return
+     */
     public double angle(Vector2D other) {
         //finding difference between the angles
         double result = other.angle() - this.angle();
@@ -97,79 +164,158 @@ public final class Vector2D {
         return result;
     }
 
-    // add argument vector
+    /**
+     * add argument vector
+     * @param v
+     * @return
+     */
     public Vector2D add(Vector2D v) {
         this.x += v.x;
         this.y += v.y;
         return this;
     }
+
+    /**
+     * add vectors to each other
+     * @param v1
+     * @param v2
+     * @return
+     */
     public static Vector2D add(Vector2D v1, Vector2D v2){
         Vector2D result = new Vector2D(v1);
         return result.add(v2);
     }
 
-    // add values to coordinates
+    /**
+     * add coordinate values to vector
+     * @param x
+     * @param y
+     * @return
+     */
     public Vector2D add(double x, double y) {
         this.x += x;
         this.y += y;
         return this;
     }
+
+    /**
+     * add coordinate values to vector
+     * @param v
+     * @param x
+     * @param y
+     * @return
+     */
     public static Vector2D add(Vector2D v, double x, double y){
         Vector2D result = new Vector2D(v);
         return result.add(x,y);
     }
 
-    // weighted add - surprisingly useful (adds v but multiplied by the factor)
+    /**
+     * weighted add (adds v but multiplied by the factor)
+     * @param v
+     * @param fac
+     * @return
+     */
     public Vector2D addScaled(Vector2D v, double fac) {
         this.x += (v.x*fac);
         this.y += (v.y*fac);
         return this;
     }
+    /**
+     * weighted add (v1 + (v2 multiplied by fac))
+     * @param v1
+     * @param v2
+     * @param fac
+     * @return
+     */
     public static Vector2D addScaled(Vector2D v1, Vector2D v2, double fac){
         Vector2D result = new Vector2D(v1);
         return result.addScaled(v2,fac);
     }
 
-    // subtract argument vector (subtracts that vector from this)
+    /**
+     * subtract argument vector (subtracts that vector from this)
+     * @param v
+     * @return
+     */
     public Vector2D subtract(Vector2D v) {
         this.x -= v.x;
         this.y -= v.y;
         return this;
     }
+
+    /**#
+     * subtract argument vector (subtracts v1 from v2)
+     * @param v1
+     * @param v2
+     * @return
+     */
     public static Vector2D subtract(Vector2D v1, Vector2D v2){
         Vector2D result = new Vector2D(v1);
         return result.subtract(v2);
     }
 
-    // subtract values from coordinates (subtracts stuff from the respective parameter)
+    /**
+     * subtract values from coordinates (this - new Vector2(x,y))
+     * @param x
+     * @param y
+     * @return
+     */
     public Vector2D subtract(double x, double y) {
         this.x -= x;
         this.y -= y;
         return this;
     }
+    /**
+     * subtract values from coordinates (v - new Vector2(x,y))
+     * @param v
+     * @param x
+     * @param y
+     * @return
+     */
     public static Vector2D subtract(Vector2D v, double x, double y){
         Vector2D result = new Vector2D(v);
         return result.subtract(x,y);
     }
 
-    // multiply with factor (everything divided by factor)
+    /**
+     * multiply x and y by factor
+     * @param fac
+     * @return
+     */
     public Vector2D mult(double fac) {
         this.x = x*fac;
         this.y = y*fac;
         return this;
     }
 
+    /**
+     * multiply x by factor
+     * @param xFac
+     * @return
+     */
     public Vector2D multX(double xFac){
         this.x *= xFac;
         return this;
     }
+
+    /**
+     * multiply v by factor
+     * @param v
+     * @param fac
+     * @return
+     */
     public static Vector2D mult(Vector2D v, double fac){
         Vector2D result = new Vector2D(v);
         return result.mult(fac);
     }
 
-    // rotate by angle given in radians
-    //basically scalar rotation
+    /**
+     * rotate by angle given in radians
+     * (basically scalar rotation)
+     * @param angle
+     * @return
+     */
     public Vector2D rotate(double angle) {
         double tempX = x;
         double tempY = y;
@@ -177,18 +323,39 @@ public final class Vector2D {
         y = (tempX * Math.sin(angle)) + (tempY * Math.cos(angle));
         return this;
     }
+
+    /**
+     * rotate v by angle given in radians
+     * (basically scalar rotation)
+     * @param v
+     * @param angle
+     * @return
+     */
     public static Vector2D rotate(Vector2D v, double angle){
         Vector2D result = new Vector2D(v);
         return result.rotate(angle);
     }
 
-    // "dot product" ("scalar product") with argument vector
+    /**
+     * "dot product" ("scalar product") with argument vector
+     * @param v
+     * @return
+     */
     public double dot(Vector2D v) { return ((this.x*v.x)+(this.y*v.y)); }
 
-    // distance to argument vector
-    //Euclidean distance formula (which, for 2d planes, is pretty much pythagoras' theorem)
+    /**
+     * distance to argument vector
+     *  Euclidean distance formula (which, for 2d planes, is pretty much pythagoras' theorem)
+     * @param v
+     * @return
+     */
     public double dist(Vector2D v) { return (Math.hypot((x-v.x),(y-v.y))); }
 
+    /**
+     * distance to argument vector in x axis
+     * @param v
+     * @return
+     */
     public double xDist(Vector2D v) {
         double result = x - v.x;
         if (result < 0){
@@ -197,10 +364,21 @@ public final class Vector2D {
         return result;
     }
 
+    /**
+     * distance to argument vector in x axis, but wrapping around the given wrapBound
+     * @param v
+     * @param wrapBound
+     * @return
+     */
     public double xDist(Vector2D v, double wrapBound){
         return (xDist(v) + wrapBound) % wrapBound;
     }
 
+    /**
+     * distance to argument vector in y axis
+     * @param v
+     * @return
+     */
     public double yDist(Vector2D v) {
         double result = y - v.y;
         if (result < 0){
@@ -208,14 +386,22 @@ public final class Vector2D {
         }
         return result;
     }
-
+    /**
+     * distance to argument vector in y axis, but wrapping around the given wrapBound
+     * @param v
+     * @param wrapBound
+     * @return
+     */
     public double yDist(Vector2D v, double wrapBound){
         return (yDist(v) + wrapBound) % wrapBound;
     }
 
-    // normalise vector so that magnitude becomes 1
-    //basically divides x and y by mag so mag effectively becomes 1
-    //unless the magnitude is 0 at which case it can't really do anything
+    /**
+     * normalise vector so that magnitude becomes 1
+     *  (basically divides x and y by mag so mag effectively becomes 1
+     *  unless the magnitude is 0 at which case it can't really do anything)
+     * @return
+     */
     public Vector2D normalise() {
         double currentMag = this.mag();
         if (currentMag != 0) {
@@ -224,41 +410,88 @@ public final class Vector2D {
         }
         return this;
     }
+
+    /**
+     * normalise vector so that magnitude becomes 1
+     *  (basically divides x and y by mag so mag effectively becomes 1
+     *   unless the magnitude is 0 at which case it can't really do anything)
+     * @param v
+     * @return
+     */
     public static Vector2D normalise(Vector2D v){
         Vector2D result = new Vector2D(v);
         return result.normalise();
     }
-    //setting magnitude of this vector
+
+    /**
+     * setting magnitude of this vector
+     * @param newMag
+     * @return
+     */
     public Vector2D setMag(double newMag) {
         this.set(polar(this.angle(),newMag));
         return this;
     }
-    //getting a vector thats the same as the  argument but with the new magnitude
+
+    /**
+     * getting a vector thats the same as the  argument but with the new magnitude
+     * @param v
+     * @param newMag
+     * @return
+     */
     public static Vector2D setMag(Vector2D v, double newMag){ return polar(v.angle(),newMag); }
 
-    // wrap-around operation, assumes w> 0 and h>0
+    /**
+     * wrap-around operation, assumes w> 0 and h>0
+     * @param w
+     * @param h
+     * @return
+     */
     public Vector2D wrap(double w, double h) {
         this.wrapX(w);
         this.wrapY(h);
         return this;
     }
+
+    /**
+     * wrap-around operation, assumes w> 0 and h>0
+     * @param v
+     * @param w
+     * @param h
+     * @return
+     */
     public static Vector2D wrap(Vector2D v, double w, double h){
         Vector2D result = new Vector2D(v);
         return result.wrap(w,h);
     }
 
+    /**
+     * wraparound in x axis only
+     * @param w
+     * @return
+     */
     public Vector2D wrapX(double w){
         this.x = (x+w) % w;
         //pretty much gets the remainder of x plus width over width (ensures x is under width)
         return  this;
     }
 
+    /**
+     * wraparound in y axis only
+     * @param h
+     * @return
+     */
     public Vector2D wrapY(double h){
         this.y = (y+h) % h;
         //ditto but for y and height instead
         return this;
     }
 
+    /**
+     * Limits the magnitude to the specified maxMag
+     * @param maxMag
+     * @return
+     */
     public Vector2D capMag(double maxMag){
         if (maxMag < 0){
             maxMag *= -1;
@@ -271,6 +504,12 @@ public final class Vector2D {
         return this;
     }
 
+    /**
+     * Capping the x and y values of this vector2D
+     * @param maxX
+     * @param maxY
+     * @return
+     */
     public Vector2D capXY(double maxX, double maxY){
         //capping the X and Y values of a Vector2D
         //arguments must be positive. if x and y are negative, they will be compared against the inverse maxX/maxY.
@@ -279,10 +518,20 @@ public final class Vector2D {
         return this;
     }
 
+    /**
+     * cap x and y values of this vector2D to same value
+     * @param maxXY caps x and y
+     * @return
+     */
     public Vector2D capXY(double maxXY){
         return capXY(maxXY,maxXY);
     }
 
+    /**
+     * Capping x axis of vector
+     * @param maxX
+     * @return
+     */
     public Vector2D capX(double maxX){
         //capping the X value of a Vector2D.
         //if x is negative, it's compared to the inverse of maxX.
@@ -298,6 +547,11 @@ public final class Vector2D {
         return this;
     }
 
+    /**
+     * Capping y axis of vector
+     * @param maxY
+     * @return
+     */
     public Vector2D capY(double maxY){
         //capping the Y value of a Vector2D.
         //if y is negative, it's compared to the inverse of maxY.
@@ -313,28 +567,74 @@ public final class Vector2D {
         return this;
     }
 
-    // construct vector with given polar coordinates
+    /**
+     * construct vector with given polar coordinates (magnitude + angle)
+     * @param angle
+     * @param mag
+     * @return
+     */
     public static Vector2D polar(double angle, double mag) {
         return new Vector2D(mag*Math.cos(angle),mag*Math.sin(angle));
     }
 
-    //like polar for situations where a random angle is needed instead of a given angle
+    /**
+     * like polar for situations where a random angle is needed instead of a given angle
+     * @param mag
+     * @return
+     */
     public static Vector2D polarWithRandomAngle(double mag){
         return Vector2D.polar(Math.random()*(2*Math.PI),mag);
     }
 
-    //rotation needed to get from this vector's angle to targetVector's angle
+    /**
+     * rotation needed to get from direction this vector is pointing to in order for it to point to targetVector instead
+     * @param targetVector
+     * @return
+     */
     public double getAngleTo(Vector2D targetVector){
         double xAngle = targetVector.x - x;
         double yAngle = targetVector.y - y;
         return Math.atan2(yAngle,xAngle);
     }
 
-    //vector between this vector's co-ordinates to the target vector's co-ordinates
+    /**
+     * get vector from this vector's coordinates to the target vector's coordinates
+     * @param targetVector
+     * @return
+     */
     public Vector2D getVectorTo(Vector2D targetVector){ return polar(getAngleTo(targetVector),dist(targetVector)); }
-    //ditto but static instead
+
+    /**
+     * gets vector from this vector to the targetPoint
+     * @param targetPoint
+     * @return
+     */
+    public Vector2D getVectorTo(Point targetPoint){ return this.getVectorTo(new Vector2D(targetPoint));}
+
+
+    /**
+     * vector between fromThis co-ordinates to toThis co-ordinates
+     * @param fromThis
+     * @param toThis
+     * @return
+     */
     public static Vector2D getVectorTo(Vector2D fromThis, Vector2D toThis){ return fromThis.getVectorTo(toThis); }
 
+    /**
+     * gets vector from origin vector to point p
+     * @param origin
+     * @param p
+     * @return
+     */
+    public static Vector2D getVectorTo(Vector2D origin, Point p){ return origin.getVectorTo(p); }
+
+    /**
+     * Angle from this vector to argument vector, but wrapping around given width/height
+     * @param v
+     * @param w
+     * @param h
+     * @return
+     */
     public double getAngleTo(Vector2D v, double w, double h){
         double xAngle = v.x - x;
         double yAngle = v.y - y;
@@ -355,26 +655,57 @@ public final class Vector2D {
 
     }
 
-    //get the vector from this to the other one, wrapping around by w and h
+    /**
+     * get the vector from this to toThis, wrapping around by w and h
+     * @param toThis
+     * @param w
+     * @param h
+     * @return
+     */
     public Vector2D getVectorTo(Vector2D toThis, double w, double h){ return polar(getAngleTo(toThis,w,h),toThis.dist(this)); }
-    //ditto but its a static method
+
+    /**
+     * get the vector from fromThis to toThis, wrapping around by w and
+     * @param fromThis
+     * @param toThis
+     * @param w
+     * @param h
+     * @return
+     */
     public static Vector2D getVectorTo(Vector2D fromThis, Vector2D toThis, double w, double h){ return fromThis.getVectorTo(toThis,w,h); }
 
-    //projection of this vector in some direction
+
+
+    /**
+     * projection of this vector in some direction
+     * @param d
+     * @return
+     */
     public Vector2D proj(Vector2D d){
         Vector2D result = new Vector2D(d);
         result.mult(this.dot(d));
         return result;
     }
 
-    //random vector going in some direction from the origin
+    /**
+     * random vector going in some random direction from the origin, with random magnitude in given range
+     * @param origin
+     * @param minDist
+     * @param rangeDist
+     * @return
+     */
     public static Vector2D randomVectorFromOrigin(Vector2D origin, double minDist, double rangeDist){
         Vector2D fromOrigin = polar(Math.toRadians(Math.random()*360),(Math.random()*rangeDist)+minDist);
         fromOrigin.add(origin);
         return fromOrigin;
     }
 
-    //random vector pointing to an origin
+    /**
+     * random vector pointing to pointToThis (at a random angle), with given magnitude
+     * @param pointToThis
+     * @param mag
+     * @return
+     */
     public static Vector2D randomVectorPointingTo(Vector2D pointToThis, double mag){
         Vector2D vectorFromOrigin = polar(Math.toRadians(Math.random()*360),mag);
         vectorFromOrigin.add(pointToThis);
@@ -383,39 +714,58 @@ public final class Vector2D {
         return polar(Math.atan2(yAngle,xAngle),mag);
     }
 
-    //just a random vector
+    /**
+     * makes a random vector with x between -maxX to maxX and y between -maxY to maxY
+     * @param maxX
+     * @param maxY
+     * @return
+     */
     public static Vector2D getRandomVector(double maxX, double maxY){
-        return new Vector2D(Math.random()*maxX,Math.random()*maxY);
+        return new Vector2D(((Math.random()*2)-1) * maxX,((Math.random()*2)-1) *maxY);
     }
 
-    //inverts this vector
+    /**
+     * inverts this vector
+     */
     public Vector2D inverse(){
         x *= -1;
         y *= -1;
         return this;
     }
 
-    //inverts X
+    /**
+     * inverts X of this vector
+     * @return
+     */
     public Vector2D invertX(){
         x *= -1;
         return this;
     }
 
-    //inverts Y
+    /**
+     * inverts Y of this vector
+     * @return
+     */
     public Vector2D invertY(){
         y *= -1;
         return this;
     }
 
-    //get the inverse of the specified vector
+    /**
+     * Gets inverse of Vector v
+     * @param v
+     * @return
+     */
     public static Vector2D inverse(Vector2D v){
         Vector2D result = new Vector2D(v);
         return result.inverse();
     }
 
+    /**
+     * gets this vector as a point
+     * @return
+     */
     public Point toPoint(){ return new Point((int)x,(int)y); }
-
-    public static Vector2D getVectorToPoint(Vector2D origin, Point p){ return origin.getVectorTo(new Vector2D(p)); }
 
 
 
@@ -437,11 +787,23 @@ public final class Vector2D {
         return this.set((this.proj(coll.getTangent())).add(otherV.proj(coll)));
     }
 
+    /**
+     * returns true if x and y are 0
+     * @return
+     */
     public boolean isNull(){
         return (x == 0 && y == 0);
     }
 
+    /**
+     * returns true if x is between minX and maxX (inclusive) and y is within minY and maxY (inclusive)
+     * @param minX
+     * @param maxX
+     * @param minY
+     * @param maxY
+     * @return
+     */
     public boolean isInBounds(double minX, double maxX, double minY, double maxY){
-        return ((x > minX) && (x < maxX) && (y > minY) && (y < maxY));
+        return ((x >= minX) && (x <= maxX) && (y >= minY) && (y <= maxY));
     }
 }

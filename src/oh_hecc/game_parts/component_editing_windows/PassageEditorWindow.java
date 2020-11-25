@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * A class that basically is a window that allows a user to edit an EditablePassage
@@ -381,6 +382,21 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         PassageEditorWindow w = editThis.openEditorWindow(passages);
 
+        w.addWindowClosedListener(
+                new Consumer<WindowEvent>() {
+                    @Override
+                    public void accept(WindowEvent e) {
+                        System.out.println("\nFinal state of the passages\n");
+                        for (Map.Entry<UUID, PassageEditingInterface> entry: passages.entrySet()) {
+                            System.out.println(entry.getKey());
+                            System.out.println(entry.getValue().outputAsStringForDebuggingReasons());
+                            System.out.println("");
+                        }
+                    }
+                }
+        );
+
+        /*
         //using this for testing and such, printing everything in passages once the user is done editing and such
         w.theFrame.addWindowListener(
                 new WindowAdapter() {
@@ -396,6 +412,8 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     }
                 }
         );
+
+         */
 
 
     }

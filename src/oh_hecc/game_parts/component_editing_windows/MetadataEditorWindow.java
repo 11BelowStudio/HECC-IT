@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.function.Consumer;
 
 /**
  * Basically this class is a dialog window to be used for editing EditableMetadata objects
@@ -364,6 +365,17 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         //MetadataEditorWindow w = new MetadataEditorWindow(theTestMetadata);
         MetadataEditorWindow w = theTestMetadata.openEditingWindow();
 
+        w.addWindowClosedListener(
+                new Consumer<WindowEvent>() {
+                    @Override
+                    public void accept(WindowEvent e) {
+                        //making sure that the window updated theTestMetadata, by seeing the printout of its internal state
+                        System.out.println(theTestMetadata.toString());
+                    }
+                }
+        );
+
+        /*
         w.theFrame.addWindowListener(
                 new WindowAdapter() {
                     @Override
@@ -373,6 +385,8 @@ public class MetadataEditorWindow extends GenericEditorWindow {
                     }
                 }
         );
+
+         */
 
 
         

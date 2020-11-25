@@ -1,6 +1,7 @@
 package oh_hecc.mvc;
 
-import utilities.Vector2D;
+import oh_hecc.mvc.controller.Controller;
+import oh_hecc.mvc.controller.ControllerInterface;
 
 import java.awt.*;
 
@@ -22,7 +23,7 @@ public abstract class Model {
     //w3schools BS 4800 (20-C-40) midnight: #29374b
     static Color W3_MIDNIGHT = new Color(41, 55, 75);
 
-    Controller theController;
+    final ControllerInterface theController;
 
     Color backgroundColour = W3_NIGHT;
 
@@ -40,7 +41,7 @@ public abstract class Model {
     public static int GET_MODEL_WIDTH(){return MODEL_WIDTH;}
     public static int GET_MODEL_HEIGHT(){return MODEL_HEIGHT;}
 
-    public Model(Controller c){
+    public Model(ControllerInterface c){
         theController = c;
     }
 

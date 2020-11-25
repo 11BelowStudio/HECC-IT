@@ -1,6 +1,6 @@
 package oh_hecc;
 
-import oh_hecc.mvc.Controller;
+import oh_hecc.mvc.controller.Controller;
 import oh_hecc.mvc.OhHeccNetworkFrame;
 import oh_hecc.mvc.PassageModel;
 import oh_hecc.mvc.View;

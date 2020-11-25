@@ -1,5 +1,6 @@
 package oh_hecc.mvc.model_bits;
 
+import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
@@ -104,9 +105,10 @@ public class PassageObject extends EditModelObject {
 
     /**
      * Opens the passage editing window for the passage which this object refers to
+     * @return that window, via EditorWindowInterface
      */
-    void openEditingWindow(){
-        thePassage.openEditorWindow(theModel.getThePassageMap());
+    EditorWindowInterface openEditingWindow(){
+        return thePassage.openEditorWindow(theModel.getThePassageMap());
     }
 
     /**

@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public abstract class GenericEditorWindow {
+public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     //the frame itself
     JFrame theFrame;
@@ -84,5 +84,22 @@ public abstract class GenericEditorWindow {
     void closeTheWindow(){
         theFrame.setVisible(false);
         theFrame.dispose();
+    }
+
+    /**
+     * Adding a WindowClosed event listener via a Consumer<\WindowEvent\> functional interface
+     * @param closeEvent the functional interface holding the function that needs to be called when this window is closed.
+     * @see java.util.function.Consumer
+     */
+    @Override
+    public void addWindowClosedListener(java.util.function.Consumer<WindowEvent> closeEvent){
+        theFrame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        closeEvent.accept(e);
+                    }
+                }
+        );
     }
 }
