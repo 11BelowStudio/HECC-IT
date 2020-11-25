@@ -1,20 +1,38 @@
 package oh_hecc.mvc;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class ControllerAction {
 
-    Point mouseClickLocation;
+    Point leftClickLocation;
+
+    Point rightClickLocation;
+
+    boolean clickedThisFrame;
+
+    boolean holdingMouseDown;
 
     ControllerAction(){
-
+        leftClickLocation = new Point();
+        rightClickLocation = new Point();
+        clickedThisFrame = false;
+        holdingMouseDown = false;
     }
 
-    public void setMouseClickLocation(Point mouseClickLocation) {
-        this.mouseClickLocation = mouseClickLocation;
+    public void setLeftClickLocation(Point mouseClickLocation) {
+        leftClickLocation.setLocation(mouseClickLocation);
     }
 
-    public Point getMouseClickLocation() {
-        return mouseClickLocation;
+    public void setRightClickLocation(Point mouseClickLocation){
+        rightClickLocation.setLocation(mouseClickLocation);
+    }
+
+    public Point getLeftClickLocation(){
+        return leftClickLocation.getLocation();
+    }
+
+    public Point getRightClickLocation(){
+        return rightClickLocation.getLocation();
     }
 }

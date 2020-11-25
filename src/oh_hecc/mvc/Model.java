@@ -1,5 +1,7 @@
 package oh_hecc.mvc;
 
+import utilities.Vector2D;
+
 import java.awt.*;
 
 public abstract class Model {

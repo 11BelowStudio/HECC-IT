@@ -50,9 +50,16 @@ public class OhHeccParser {
     private final Set<String> passageNames;
 
     /**
-     * the raw .hecc data
+     * The raw .hecc metadata code
      */
-    private String dataToParse;
+    private final String rawMetadata;
+
+    /**
+     * the raw .hecc passage code
+     */
+    private final String rawPassages;
+
+
 
 
     /**
@@ -69,15 +76,28 @@ public class OhHeccParser {
 
         passageNames = new TreeSet<>();
 
-        dataToParse = makeMetadataObject(rawHeccData.trim().concat("\n"));
+        String[] splitData = splitRawDataToMetadataAndPassageString(rawHeccData.trim().concat("\n"));
 
-        heccMap.putAll(constructPassageMap(dataToParse));
+        /*
+            you might be asking 'why am I concatting a "\n" to the end of the raw hecc data?'
+            well, long story short, if there isn't an "\n" at the end of the last line of the input, that last line doesn't get looked at.
+            so I may as well make sure that it does get looked at, y'know?
+        */
 
-    /*
-    you might be asking 'why am I concatting a "\n" to the end of the raw hecc data?'
-    well, long story short, if there isn't an "\n" at the end of the last line of the input, that last line doesn't get looked at.
-    so I may as well make sure that it does get looked at, y'know?
-     */
+
+        rawMetadata = splitData[0];
+
+        rawPassages = splitData[1];
+
+        theMetadata = new EditableMetadata(splitData[0]);
+
+        heccMap.putAll(constructPassageMap(splitData[1]));
+
+
+        //dataToParse = makeMetadataObject(rawHeccData.trim().concat("\n"));
+
+        //heccMap.putAll(constructPassageMap(dataToParse));
+
 
     }
 
@@ -90,7 +110,7 @@ public class OhHeccParser {
     public boolean constructThePassageObjects(){
 
         //trims metadata stuff from dataToParse, and creates the Metadata object
-        String dataToParse = makeMetadataObject(this.dataToParse);
+        //theMetadata = makeMetadataObject();
 
 
         // KEEPING TRACK OF ALL THE PASSAGE NAMES
@@ -100,7 +120,7 @@ public class OhHeccParser {
 
         //CONSTRUCTING THE PASSAGE MAP
         heccMap.clear();
-        heccMap.putAll(constructPassageMap(dataToParse));
+        heccMap.putAll(constructPassageMap(rawPassages));
 
         for (PassageEditingInterface p: heccMap.values()) {
             p.updateLinkedUUIDs(heccMap);
@@ -115,33 +135,42 @@ public class OhHeccParser {
 
     }
 
-    /**
-     * This method basically constructs the Metadata object
-     * @param dataToParse the full hecc data being parsed
-     * @return all the hecc data from the first passage declaration.
-     * The metadata object is made as an attribute of this class.
-     */
-    private String makeMetadataObject(String dataToParse){
+    private String[] splitRawDataToMetadataAndPassageString(String rawData){
         String metadataString = "";
+        String everythingAfterTheMetadata = "";
 
         Matcher firstDeclarationMatcher = Pattern.compile(
                 "(^::)",
                 Pattern.MULTILINE
-        ).matcher(dataToParse);
+        ).matcher(rawData);
 
         if(firstDeclarationMatcher.find()){
             int startIndex = firstDeclarationMatcher.start();
+            //if there is something before the first declaration
             if (startIndex > 1){
                 //metadata is everything before first declaration
-                metadataString = dataToParse.substring(0,startIndex-1);
+                metadataString = rawData.substring(0,startIndex-1);
                 //dataToParse takes up everything after first declaration
-                dataToParse = dataToParse.substring(startIndex);
+                everythingAfterTheMetadata = rawData.substring(startIndex);
+            } else {
+                //if there's nothing before the first declaration, it's all after the metadata
+                everythingAfterTheMetadata = rawData;
             }
+        } else {
+            //there's no first declaration, it's all metadata.
+            metadataString = rawData;
         }
+        return new String[]{metadataString,everythingAfterTheMetadata};
+    }
 
-        theMetadata = new EditableMetadata(metadataString);
 
-        return dataToParse;
+    /**
+     * This method basically constructs the Metadata object
+     * @return The constructed
+     * The metadata object is made as an attribute of this class.
+     */
+    private MetadataEditingInterface makeMetadataObject(){
+        return new EditableMetadata(rawMetadata);
     }
 
     /*

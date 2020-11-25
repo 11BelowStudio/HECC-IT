@@ -18,12 +18,14 @@ public class PassageModel extends Model implements EditModelInterface {
 
 
 
-    Map<UUID, PassageEditingInterface> passageMap;
-    Map<UUID, PassageObject> visibleNetwork;
+    final Map<UUID, PassageEditingInterface> passageMap;
+    final Map<UUID, PassageObject> visibleNetwork;
 
-    MetadataEditingInterface theMetadata;
+    final MetadataEditingInterface theMetadata;
 
-    Vector2D topRightCorner;
+    final Vector2D topRightCorner;
+
+    final Vector2D scrollMovementVector;
 
     public PassageModel(Controller c, EditableMetadata metadata, Map<UUID, PassageEditingInterface> allPassages){
         super(c);
@@ -39,11 +41,14 @@ public class PassageModel extends Model implements EditModelInterface {
         }
 
         topRightCorner = new Vector2D(0,0);
+
+        scrollMovementVector = new Vector2D(0,0);
+
     }
 
 
     public void update(){
-
+        //if (theController.action.)
     }
 
 
