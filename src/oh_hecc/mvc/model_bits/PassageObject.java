@@ -26,11 +26,11 @@ public class PassageObject extends EditModelObject {
 
     private final Map<UUID, PassageLinkObject> linkMap;
 
-    private StringObject passageNameObject;
+    private final StringObject passageNameObject;
 
     private boolean isSelected;
 
-    private static Color SELECTED_COLOUR = new Color(0, 255, 255, 191);
+    private static final Color SELECTED_COLOUR = new Color(0, 255, 255, 191);
 
     public PassageObject(EditModelInterface model, PassageEditingInterface passage){
         super(passage.getPosition(), model);

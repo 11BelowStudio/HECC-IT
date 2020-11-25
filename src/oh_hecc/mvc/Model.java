@@ -4,9 +4,12 @@ import oh_hecc.mvc.controller.Controller;
 import oh_hecc.mvc.controller.ControllerInterface;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
-public abstract class Model {
+public abstract class Model extends Canvas{
 
+    //TODO: work out if it's actually a good idea to extend Canvas?
+    //TODO: clipping.
 
 
     /**
@@ -41,6 +44,8 @@ public abstract class Model {
 
     final ControllerInterface theController;
 
+    final Object SYNC_OBJECT = new Object();
+
     Color backgroundColour = W3_NIGHT;
 
     static final int DEFAULT_MODEL_WIDTH = 800;
@@ -59,13 +64,33 @@ public abstract class Model {
 
     public Model(ControllerInterface c){
         theController = c;
+        setBackground(backgroundColour);
+        setMinimumSize(new Dimension(DEFAULT_MODEL_WIDTH,DEFAULT_MODEL_HEIGHT));
     }
 
-    public abstract void update();
+    public void update(){
+        updateModel();
+        synchronized (SYNC_OBJECT) {
+            refreshDrawables();
+        }
+    }
+
+    abstract void updateModel();
+
+    abstract void refreshDrawables();
+
+    public void paint(Graphics g0){
+        Graphics2D g = (Graphics2D) g0;
+        AffineTransform initialTransform = g.getTransform();
+        synchronized (SYNC_OBJECT) {
+            draw(g);
+        }
+        g.setTransform(initialTransform);
+    }
 
     public void draw(Graphics2D g){
-        g.setColor(backgroundColour);
-        g.fillRect(0,0,MODEL_WIDTH,MODEL_HEIGHT);
+        //g.setColor(backgroundColour);
+        //g.fillRect(0,0,MODEL_WIDTH,MODEL_HEIGHT);
         drawModel(g);
     }
 

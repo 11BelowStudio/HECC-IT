@@ -32,6 +32,8 @@ public class View extends JComponent {
             theModelThatsBeingViewed.draw(g);
         }
 
+        g.setTransform(initialTransform);
+
     }
 
     /**

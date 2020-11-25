@@ -1,7 +1,9 @@
 package oh_hecc.mvc;
 
+import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
+import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.controller.ActionViewer;
 import oh_hecc.mvc.controller.ControllerInterface;
@@ -9,6 +11,7 @@ import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
 import utilities.Vector2D;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -24,6 +27,10 @@ public class PassageModel extends Model implements EditModelInterface {
 
     final Map<UUID, PassageEditingInterface> passageMap;
     final Map<UUID, PassageObject> objectMap;
+
+    final Set<PassageObject> drawablePassageObjects;
+
+    final Set<ModelButtonObject> drawableModelButtons;
 
     final Set<ModelButtonObject> buttons;
 
@@ -45,7 +52,11 @@ public class PassageModel extends Model implements EditModelInterface {
      */
     private Area selectionArea;
 
-    private boolean editDialogOpen;
+    private EditorWindowInterface editWindow;
+
+    private boolean needToAddListenerToEditWindow;
+
+    private final Vector2D drawingTopRight;
 
     /**
      * A blue colour for the selection area
@@ -65,9 +76,14 @@ public class PassageModel extends Model implements EditModelInterface {
             objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
+
         buttons = new HashSet<>();
 
         //TODO: make the buttons
+
+        drawablePassageObjects = new HashSet<>();
+
+        drawableModelButtons = new HashSet<>();
 
         topRightCorner = new Vector2D();
 
@@ -79,12 +95,17 @@ public class PassageModel extends Model implements EditModelInterface {
 
         selectedObjects = new HashSet<>();
 
-        editDialogOpen = false;
+        needToAddListenerToEditWindow = true;
+
+        //dont mind me, just trying to avoid compiler problems.
+        editWindow = closeEvent -> { };
+
+        drawingTopRight = new Vector2D();
 
     }
 
 
-    public void update(){
+    void updateModel(){
         ActionViewer currentAction = theController.getAction();
         //boolean inputRecieved = currentAction.checkForInput();
 
@@ -185,7 +206,9 @@ public class PassageModel extends Model implements EditModelInterface {
         }
     }
 
+
     private void doingNothingActivity(ActionViewer currentAction){
+        //TODO: finish off for other inputs
         if (currentAction.checkForInput()){
             //TODO: wat do if input recieved?
             if (currentAction.checkLeftDoubleClick()){
@@ -200,7 +223,10 @@ public class PassageModel extends Model implements EditModelInterface {
                     }
                 }
                 if (clicked){
-                    getPassageObjectFromUUID(clickedThis).openEditingWindow();
+                    needToAddListenerToEditWindow = true;
+                    editWindow = getPassageObjectFromUUID(clickedThis).openEditingWindow();
+                    activity = CurrentActivity.LDC_EDITING_PASSAGE;
+                    editingPassageActivity(currentAction);
                 }
             }
         }
@@ -240,6 +266,7 @@ public class PassageModel extends Model implements EditModelInterface {
             activity = CurrentActivity.DOING_NOTHING;
         }
     }
+
 
     private void objectsSelectedActivity(ActionViewer currentAction){
         if(currentAction.checkForInput()){
@@ -287,45 +314,108 @@ public class PassageModel extends Model implements EditModelInterface {
         }
     }
 
+    //TODO: finish this
     private void editingPassageActivity(ActionViewer currentAction){
-
+        if (needToAddListenerToEditWindow){
+            editWindow.addWindowClosedListener(
+                    windowEvent -> {
+                        makeSureStartPassageExists();
+                        activity = CurrentActivity.DOING_NOTHING;
+                    }
+            );
+        }
     }
 
+    //TODO this
     private void pressedButtonActivity(ActionViewer currentAction){
 
     }
 
+    //TODO this (move TopRightCorner)
     private void movingViewActivity(ActionViewer currentAction){
 
     }
 
 
+    void refreshDrawables(){
+
+        drawingTopRight.set(topRightCorner);
+
+        drawablePassageObjects.clear();
+        drawablePassageObjects.addAll(objectMap.values());
+
+        drawableModelButtons.clear();
+        drawableModelButtons.addAll(buttons);
+    }
+
+
     public void drawModel(Graphics2D g){
+
+        Shape existingClip = g.getClip();
 
         //backup of the original lack of a transform
         AffineTransform unscrolled = g.getTransform();
 
         //translates everything in the negative direction to where the top-right corner currently is
-        g.translate(-topRightCorner.x,-topRightCorner.y);
+        g.translate(-drawingTopRight.x,-drawingTopRight.y);
+
+        g.setClip((int)drawingTopRight.x,(int)drawingTopRight.y, MODEL_WIDTH,MODEL_HEIGHT);
 
         g.setColor(SELECTION_AREA_COLOUR);
         g.fill(selectionArea);
 
         //the objects representing links between passages are drawn first
-        for (PassageObject p: objectMap.values()) {
+        for (PassageObject p: drawablePassageObjects) {
             p.drawLinks(g);
         }
 
         //then the passage objects themselves are drawn
-        for (PassageObject p: objectMap.values()){
+        for (PassageObject p: drawablePassageObjects){
             p.draw(g);
         }
 
         //now it goes back to where it was before it was scrolled
         g.setTransform(unscrolled);
+
+        g.setClip(0,0,MODEL_WIDTH,MODEL_HEIGHT);
+        for (ModelButtonObject b: drawableModelButtons){
+            b.draw(g);
+        }
     }
 
 
+
+
+
+    private void makeSureStartPassageExists(){
+        boolean startDoesntExist = true;
+        String startName = theMetadata.getStartPassage();
+        for (PassageEditingInterface p: passageMap.values()) {
+            if (p.getPassageName().equals(theMetadata.getStartPassage())){
+                startDoesntExist = false;
+                break;
+            }
+        }
+        if (startDoesntExist){
+            //if start doesn't exist, give user the option of adding the start in automatically
+            if (JOptionPane.showConfirmDialog(
+                            null,
+                            "<html><p>No passage called<br>" +
+                                    startName +
+                                    "<br>exists in your game, however,<br>"+
+                                    "your metadata indicates that a passage with<br>"+
+                                    "that name should be the start passage.<br><br>"+
+                                    "Do you want a new passage with that name to be generated?</html>",
+                            "Your start passage went AWOL.",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    ) == JOptionPane.YES_OPTION) {
+                PassageEditingInterface newStart = new EditablePassage(theMetadata.getStartPassage(), new Vector2D(topRightCorner).add(MODEL_WIDTH / 2.0, 0));
+                passageMap.put(newStart.getPassageUUID(), newStart);
+                objectMap.put(newStart.getPassageUUID(), new PassageObject(this, newStart));
+            }
+        }
+    }
 
     @Override
     public PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet){
