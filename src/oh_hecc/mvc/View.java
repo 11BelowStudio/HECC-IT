@@ -29,7 +29,7 @@ public class View extends JComponent {
         AffineTransform initialTransform = g.getTransform();
 
         if (drawingModel){
-            theModelThatsBeingViewed.drawModel(g);
+            theModelThatsBeingViewed.draw(g);
         }
 
     }

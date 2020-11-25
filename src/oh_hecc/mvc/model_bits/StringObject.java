@@ -107,9 +107,10 @@ public class StringObject extends AbstractObject {
     public String getString(){ return theString; }
 
     @Override
-    public void update() {
+    public void individualUpdate(){
 
     }
+
 
     public boolean isClicked(Point clickLocation){
         return false;

@@ -4,6 +4,7 @@ import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 
 /**
  * Superclass for all objects in the model.
@@ -67,7 +68,14 @@ public abstract class AbstractObject {
     }
 
 
-    public abstract void update();
+    public void update(){
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
+        individualUpdate();
+    }
+
+    public abstract void individualUpdate();
+
+
 
 
     public void draw(Graphics2D g){
@@ -79,6 +87,20 @@ public abstract class AbstractObject {
 
     abstract void individualDraw(Graphics2D g);
 
+    /**
+     * Check whether or not this object's areaRectangle intersects with a particular area
+     * @param a the area that this object is being checked against
+     * @return true if it intersects, false otherwise.
+     */
+    public boolean checkIntersectWithArea(Area a){
+        return (a.intersects(areaRectangle));
+    }
+
+    /**
+     * Check whether or not this object's areaRectangle contains the clickLocation point
+     * @param clickLocation the point that this areaRectangle is being checked against
+     * @return true if areaRectangle contains clickLocation
+     */
     public boolean wasClicked(Point clickLocation){
         return areaRectangle.contains(clickLocation);
     }

@@ -1,12 +1,9 @@
 package oh_hecc.mvc;
 
-import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
-import oh_hecc.game_parts.component_editing_windows.GenericEditorWindow;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.controller.ActionViewer;
-import oh_hecc.mvc.controller.Controller;
 import oh_hecc.mvc.controller.ControllerInterface;
 import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
@@ -26,9 +23,11 @@ public class PassageModel extends Model implements EditModelInterface {
 
 
     final Map<UUID, PassageEditingInterface> passageMap;
-    final Map<UUID, PassageObject> visibleNetwork;
+    final Map<UUID, PassageObject> objectMap;
 
     final Set<ModelButtonObject> buttons;
+
+    final Set<PassageObject> selectedObjects;
 
     final MetadataEditingInterface theMetadata;
 
@@ -46,17 +45,24 @@ public class PassageModel extends Model implements EditModelInterface {
      */
     private Area selectionArea;
 
+    private boolean editDialogOpen;
+
+    /**
+     * A blue colour for the selection area
+     */
+    private static Color SELECTION_AREA_COLOUR = new Color(47, 189, 203);
+
     public PassageModel(ControllerInterface c, EditableMetadata metadata, Map<UUID, PassageEditingInterface> allPassages){
         super(c);
 
         theMetadata = metadata;
         passageMap = allPassages;
 
-        visibleNetwork = new HashMap<>();
+        objectMap = new HashMap<>();
 
         for (PassageEditingInterface p: passageMap.values()) {
             p.updateLinkedUUIDs(allPassages);
-            visibleNetwork.put(p.getPassageUUID(), new PassageObject(this,p));
+            objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
         buttons = new HashSet<>();
@@ -71,49 +77,230 @@ public class PassageModel extends Model implements EditModelInterface {
 
         selectionArea = new Area();
 
+        selectedObjects = new HashSet<>();
+
+        editDialogOpen = false;
+
     }
 
 
     public void update(){
         ActionViewer currentAction = theController.getAction();
-        boolean inputRecieved = currentAction.checkForInput();
+        //boolean inputRecieved = currentAction.checkForInput();
+
         switch (activity){
             case DOING_NOTHING:
+                doingNothingActivity(currentAction);
+                /*
                 if (inputRecieved){
                     //TODO: wat do if input recieved?
+                    if (currentAction.checkLeftDoubleClick()){
+                        Point location = currentAction.getLeftDoubleClickLocation();
+                        UUID clickedThis;
+                        boolean clicked = false;
+                        for (PassageObject p: objectMap.values()) {
+                            if (p.wasClicked(location)){
+                                clicked = true;
+                                clickedThis = p.getTheUUID();
+                                break;
+                            }
+                        }
+                        if (clicked){
+                            getPassageObjectFromUUID(clickedThis).openEditingWindow()
+                        }
+                    }
                 }
+                 */
                 break;
             case LC_DRAGGING_SELECTION_BOX:
-                if (inputRecieved){
-                    //TODO: wat do if input recieved?
+                draggingSelectionBoxActivity(currentAction);
+                /*
+                if(inputRecieved){
+
+                    AffineTransform at = new AffineTransform();
+                    at.translate(topRightCorner.x, topRightCorner.y);
+                    selectionArea = new Area(currentAction.getLeftDragRect()).createTransformedArea(at);
+
+                    if(currentAction.checkLeftHold()){
+                        //nothing really has to be done in this case I guess
+                    } else if (currentAction.isLeftDragFinished()){ //if done drawing the selection rectangle
+                        //clear set of selected objects
+                        selectedObjects.clear();
+
+                        for(PassageObject o: objectMap.values()){
+                            //check for passage objects that intersect with the selection area
+                            if (o.checkIntersectWithArea(selectionArea)){
+                                o.nowSelected();
+                                selectedObjects.add(o);
+                            }
+                        }
+                        selectionArea.reset(); //clear the selection area
+                        if (selectedObjects.isEmpty()){
+                            //if nothing's selected, it's time to go back to doing nothing
+                            activity = CurrentActivity.DOING_NOTHING;
+                        } else{
+                            activity = CurrentActivity.LC_OBJECTS_SELECTED;
+                        }
+                        break;
+                    }
                 } else {
-                    //TODO: wat do if no input recieved?
+                    selectionArea.reset();
+                    activity = CurrentActivity.DOING_NOTHING;
                 }
-                AffineTransform at = new AffineTransform();
-                at.translate(topRightCorner.x, topRightCorner.y);
-                selectionArea = new Area(currentAction.getLeftDragRect()).createTransformedArea(at);
+
+                 */
                 break;
             case LC_OBJECTS_SELECTED:
+                objectsSelectedActivity(currentAction);
                 //TODO: wat do?
+                /*
+                if(inputRecieved){
+                    if (currentAction.checkLeftHold()){
+                        activity = CurrentActivity.LC_MOVING_OBJECTS;
+                    } else if (currentAction.checkRightHold()){
+                        activity = CurrentActivity.RC_MOVING_VIEW;
+                    } else if (currentAction.checkLeftClick()){
+                        activity = CurrentActivity.DOING_NOTHING;
+                    }
+                }
+
+                 */
                 break;
             case LC_MOVING_OBJECTS:
                 //TODO: wat do?
+                movingObjectsActivity(currentAction);
                 break;
             case LDC_EDITING_PASSAGE:
+                editingPassageActivity(currentAction);
                 //TODO: wat do?
                 break;
             case LC_PRESSED_BUTTON:
+                pressedButtonActivity(currentAction);
                 //TODO: wat do?
                 break;
             case RC_MOVING_VIEW:
+                movingViewActivity(currentAction);
                 //TODO: wat do?
                 break;
         }
     }
 
+    private void doingNothingActivity(ActionViewer currentAction){
+        if (currentAction.checkForInput()){
+            //TODO: wat do if input recieved?
+            if (currentAction.checkLeftDoubleClick()){
+                Point location = currentAction.getLeftDoubleClickLocation();
+                UUID clickedThis = null;
+                boolean clicked = false;
+                for (PassageObject p: objectMap.values()) {
+                    if (p.wasClicked(location)){
+                        clicked = true;
+                        clickedThis = p.getTheUUID();
+                        break;
+                    }
+                }
+                if (clicked){
+                    getPassageObjectFromUUID(clickedThis).openEditingWindow();
+                }
+            }
+        }
+    }
+
+    private void draggingSelectionBoxActivity(ActionViewer currentAction){
+        if(currentAction.checkForInput()){
+
+            AffineTransform at = new AffineTransform();
+            at.translate(topRightCorner.x, topRightCorner.y);
+            selectionArea = new Area(currentAction.getLeftDragRect()).createTransformedArea(at);
+
+            if(currentAction.checkLeftHold()){
+                //nothing really has to be done in this case I guess
+            } else if (currentAction.isLeftDragFinished()){ //if done drawing the selection rectangle
+                //clear set of selected objects
+                selectedObjects.clear();
+
+                for(PassageObject o: objectMap.values()){
+                    //check for passage objects that intersect with the selection area
+                    if (o.checkIntersectWithArea(selectionArea)){
+                        o.nowSelected();
+                        selectedObjects.add(o);
+                    }
+                }
+                selectionArea.reset(); //clear the selection area
+                if (selectedObjects.isEmpty()){
+                    //if nothing's selected, it's time to go back to doing nothing
+                    activity = CurrentActivity.DOING_NOTHING;
+                } else{
+                    activity = CurrentActivity.LC_OBJECTS_SELECTED;
+                }
+
+            }
+        } else {
+            selectionArea.reset();
+            activity = CurrentActivity.DOING_NOTHING;
+        }
+    }
+
+    private void objectsSelectedActivity(ActionViewer currentAction){
+        if(currentAction.checkForInput()){
+            if (currentAction.checkLeftHold()){
+                activity = CurrentActivity.LC_MOVING_OBJECTS;
+            } else if (currentAction.checkRightHold()){
+                deselectObjects();
+                activity = CurrentActivity.RC_MOVING_VIEW;
+            } else if (currentAction.checkLeftClick()){
+                deselectObjects();
+                activity = CurrentActivity.DOING_NOTHING;
+            }
+        }
+    }
+
+    private void deselectObjects(){
+        for (PassageObject o: selectedObjects) {
+            o.deselected();
+        }
+        selectedObjects.clear();
+    }
+
+    private void movingObjectsActivity(ActionViewer currentAction){
+        if (currentAction.checkForInput()){
+            if (currentAction.checkLeftHold()){
+                for (PassageObject o: selectedObjects){
+                    o.move(currentAction.getCurrentLeftDrag());
+                }
+                for (PassageObject o: objectMap.values()) {
+                    o.updateLinkedObjectPositions();
+                }
+            } else if (currentAction.isLeftDragFinished()){
+                for (PassageObject o: selectedObjects){
+                    o.move(currentAction.getCurrentLeftDrag());
+                }
+                for (PassageObject o: objectMap.values()) {
+                    o.updateLinkedObjectPositions();
+                }
+                deselectObjects();
+                activity = CurrentActivity.DOING_NOTHING;
+            }
+        } else {
+            deselectObjects();
+            activity = CurrentActivity.DOING_NOTHING;
+        }
+    }
+
+    private void editingPassageActivity(ActionViewer currentAction){
+
+    }
+
+    private void pressedButtonActivity(ActionViewer currentAction){
+
+    }
+
+    private void movingViewActivity(ActionViewer currentAction){
+
+    }
+
 
     public void drawModel(Graphics2D g){
-        super.drawModel(g);
 
         //backup of the original lack of a transform
         AffineTransform unscrolled = g.getTransform();
@@ -121,13 +308,16 @@ public class PassageModel extends Model implements EditModelInterface {
         //translates everything in the negative direction to where the top-right corner currently is
         g.translate(-topRightCorner.x,-topRightCorner.y);
 
+        g.setColor(SELECTION_AREA_COLOUR);
+        g.fill(selectionArea);
+
         //the objects representing links between passages are drawn first
-        for (PassageObject p: visibleNetwork.values()) {
+        for (PassageObject p: objectMap.values()) {
             p.drawLinks(g);
         }
 
         //then the passage objects themselves are drawn
-        for (PassageObject p: visibleNetwork.values()){
+        for (PassageObject p: objectMap.values()){
             p.draw(g);
         }
 
@@ -144,7 +334,7 @@ public class PassageModel extends Model implements EditModelInterface {
 
     @Override
     public PassageObject getPassageObjectFromUUID(UUID uuidOfPassageObjectToGet){
-        return visibleNetwork.get(uuidOfPassageObjectToGet);
+        return objectMap.get(uuidOfPassageObjectToGet);
     }
 
     @Override

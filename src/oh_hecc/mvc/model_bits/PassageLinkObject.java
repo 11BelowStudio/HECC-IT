@@ -85,7 +85,7 @@ public class PassageLinkObject extends EditModelObject {
     }
 
     @Override
-    public void update() {
+    public void individualUpdate() {
 
     }
 

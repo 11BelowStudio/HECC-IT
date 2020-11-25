@@ -6,6 +6,7 @@ import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.Area;
 import java.util.*;
 
 /**
@@ -25,7 +26,11 @@ public class PassageObject extends EditModelObject {
 
     private final Map<UUID, PassageLinkObject> linkMap;
 
-    StringObject passageNameObject;
+    private StringObject passageNameObject;
+
+    private boolean isSelected;
+
+    private static Color SELECTED_COLOUR = new Color(0, 255, 255, 191);
 
     public PassageObject(EditModelInterface model, PassageEditingInterface passage){
         super(passage.getPosition(), model);
@@ -38,7 +43,7 @@ public class PassageObject extends EditModelObject {
 
         areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
 
-
+        isSelected = false;
 
         thePassage = passage;
         theUUID = thePassage.getPassageUUID();
@@ -55,12 +60,9 @@ public class PassageObject extends EditModelObject {
             }
         }
 
-
-
-
     }
 
-    UUID getTheUUID(){
+    public UUID getTheUUID(){
         return theUUID;
     }
 
@@ -70,11 +72,11 @@ public class PassageObject extends EditModelObject {
     }
 
     @Override
-    public void update() {
-
+    public void individualUpdate() {
         this.position.set(thePassage.getPosition());
-
     }
+
+
 
 
     /**
@@ -88,16 +90,31 @@ public class PassageObject extends EditModelObject {
         }
     }
 
+    public void nowSelected(){
+        isSelected = true;
+    }
+
+    public void deselected(){
+        isSelected = false;
+    }
+
 
 
     @Override
     void individualDraw(Graphics2D g) {
+
 
         //setting the colour to objectColour
         g.setColor(objectColour);
 
         //filling in this object's areaRectangle
         g.fill(areaRectangle);
+
+        //if it is selected, overlay with the selectedColour.
+        if (isSelected){
+            g.setColor(SELECTED_COLOUR);
+            g.fill(areaRectangle);
+        }
 
         //draws the passageNameObject (on top of this object)
         passageNameObject.draw(g);
@@ -107,7 +124,7 @@ public class PassageObject extends EditModelObject {
      * Opens the passage editing window for the passage which this object refers to
      * @return that window, via EditorWindowInterface
      */
-    EditorWindowInterface openEditingWindow(){
+    public EditorWindowInterface openEditingWindow(){
         return thePassage.openEditorWindow(theModel.getThePassageMap());
     }
 

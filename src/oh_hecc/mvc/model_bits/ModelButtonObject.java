@@ -56,7 +56,7 @@ public class ModelButtonObject extends EditModelObject {
     }
 
     @Override
-    public void update() {
+    public void individualUpdate() {
 
     }
 
