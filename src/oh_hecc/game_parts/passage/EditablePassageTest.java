@@ -179,26 +179,26 @@ public class EditablePassageTest {
     void testPassageYeet() {
         EditablePassage[] samples = {new EditablePassage("deez nutz", new Vector2D(0,0)), new EditablePassage("lmao gottem", "[[deez nutz]]","",""), new EditablePassage(), new EditablePassage()};
 
-        Map<UUID, EditablePassage> passages = new HashMap<>();
+        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
         for (EditablePassage e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
-        for (EditablePassage e: passages.values()){
+        for (PassageEditingInterface e: passages.values()){
             e.updateLinkedUUIDs(passages);
         }
 
-        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+        for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
             System.out.println(e.getValue().outputAsStringForDebuggingReasons());
         }
 
         System.out.println("\nyeet time\n");
-        EditablePassage yeetThis = passages.get(samples[0].getPassageUUID());
+        PassageEditingInterface yeetThis = passages.get(samples[0].getPassageUUID());
 
         yeetThis.deleteThisPassage(passages);
 
-        for (Map.Entry<UUID, EditablePassage> e: passages.entrySet()) {
+        for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
             System.out.println(e.getValue().outputAsStringForDebuggingReasons());
         }

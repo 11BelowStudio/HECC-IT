@@ -134,8 +134,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
      */
-    @Override @SuppressWarnings("unchecked") //better shut up
-    public <T extends PassageEditingInterface> void updatePassageContent(String newContent, Map<UUID, T> allPassages){ //<T extends PassageEditingInterface>
+    public void updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
         this.setPassageContent(newContent);
 
         for(String s: linkedPassages){
@@ -148,7 +147,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
             }
             if (doesntExist){
                 PassageEditingInterface newChild = new EditablePassage(s, this.getPosition());
-                allPassages.put(newChild.getPassageUUID(), (T) newChild);
+                allPassages.put(newChild.getPassageUUID(), newChild);
 
             }
         }
@@ -189,7 +188,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
      */
     @Override
-    public Map<UUID, ? extends PassageEditingInterface> renameThisPassage(String newName, Map<UUID, ? extends PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException{
+    public Map<UUID, PassageEditingInterface> renameThisPassage(String newName, Map<UUID, PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException{
         String oldName = passageName; //backup of old name
         String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
 
@@ -207,7 +206,8 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
         for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(oldName)){
                 e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
-                e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
+                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
+                e.updateLinkedUUIDs(allPassages);
             }
         }
 
@@ -222,7 +222,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
      * @return a version of the map of all passages with this passage completely removed
      */
     @Override
-    public Map<UUID, ? extends PassageEditingInterface> deleteThisPassage(Map<UUID, ? extends PassageEditingInterface> allPassages){
+    public Map<UUID, PassageEditingInterface> deleteThisPassage(Map<UUID, PassageEditingInterface> allPassages){
 
         //removes this passage from the map of all passages
         allPassages.remove(this.getPassageUUID());
@@ -454,7 +454,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
      * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
      */
     @Override
-    public PassageEditorWindow openEditorWindow(Map<UUID, ? extends PassageEditingInterface> allPassages){
+    public PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages){
         return PassageEditingInterface.openEditorWindow(this,allPassages);
     }
 

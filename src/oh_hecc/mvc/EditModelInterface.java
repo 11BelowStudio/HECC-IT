@@ -26,6 +26,6 @@ public interface EditModelInterface {
 
     Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject);
 
-    Map<UUID, ? extends PassageEditingInterface> getThePassageMap();
+    Map<UUID, PassageEditingInterface> getThePassageMap();
 
 }

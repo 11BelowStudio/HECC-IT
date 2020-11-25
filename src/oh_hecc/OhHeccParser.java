@@ -36,12 +36,12 @@ public class OhHeccParser {
     /**
      * the thing what called the passageParser (which this might need to log info to)
      */
-    private final LoggerInterface logger;
+    //private final LoggerInterface logger;
 
     /**
      * the hecced data which this will construct and output
      */
-    private final ArrayList<String> heccedData;
+    //private final ArrayList<String> heccedData;
 
     /**
      * a set of all the passage names
@@ -57,13 +57,12 @@ public class OhHeccParser {
     /**
      * Creates the HeccParser object
      * @param rawHeccData the raw hecc data that needs passing
-     * @param boundary the implementation of LoggerInterface that this logs important info to
      */
-    public OhHeccParser(String rawHeccData, LoggerInterface boundary){
+    public OhHeccParser(String rawHeccData){//, LoggerInterface boundary){
 
-        logger = boundary;
+        //logger = boundary;
 
-        heccedData = new ArrayList<>();
+        //heccedData = new ArrayList<>();
 
         heccMap = new HashMap<>();
 

@@ -87,7 +87,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
      */
-    <T extends PassageEditingInterface> void updatePassageContent(String newContent, Map<UUID, T> allPassages);
+    void updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
 
 
 
@@ -113,14 +113,14 @@ public interface PassageEditingInterface extends SharedPassage {
      * @throws InvalidPassageNameException if the passage name isn't a valid passage name
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
      */
-    Map<UUID, ? extends PassageEditingInterface> renameThisPassage(String newName, Map<UUID, ? extends PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException;
+    Map<UUID, PassageEditingInterface> renameThisPassage(String newName, Map<UUID, PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException;
 
     /**
      * This method is responsible for deleting this passage (and removing it from the map of all passages)
      * @param allPassages The map of all passages
      * @return a version of the map of all passages with this passage completely removed
      */
-    Map<UUID, ? extends PassageEditingInterface> deleteThisPassage(Map<UUID, ? extends PassageEditingInterface> allPassages);
+    Map<UUID, PassageEditingInterface> deleteThisPassage(Map<UUID, PassageEditingInterface> allPassages);
 
     /**
      * Method that can be used to remove a passage from another passage's linked passages
@@ -187,7 +187,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param allPassages the map of all passages
      * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
      */
-    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, ? extends PassageEditingInterface> allPassages){
+    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages){
         return new PassageEditorWindow(passageToEdit,allPassages);
     }
 
@@ -196,7 +196,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param allPassages the map of all passages
      * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
      */
-    PassageEditorWindow openEditorWindow(Map<UUID, ? extends PassageEditingInterface> allPassages);
+    PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages);
 
 
     @Override

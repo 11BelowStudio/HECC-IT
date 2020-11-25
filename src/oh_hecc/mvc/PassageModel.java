@@ -18,14 +18,14 @@ public class PassageModel extends Model implements EditModelInterface {
 
 
 
-    Map<UUID, ? extends PassageEditingInterface> passageMap;
+    Map<UUID, PassageEditingInterface> passageMap;
     Map<UUID, PassageObject> visibleNetwork;
 
     MetadataEditingInterface theMetadata;
 
     Vector2D topRightCorner;
 
-    public PassageModel(Controller c, EditableMetadata metadata, Map<UUID, ? extends PassageEditingInterface> allPassages){
+    public PassageModel(Controller c, EditableMetadata metadata, Map<UUID, PassageEditingInterface> allPassages){
         super(c);
 
         theMetadata = metadata;
@@ -111,7 +111,7 @@ public class PassageModel extends Model implements EditModelInterface {
     }
 
     @Override
-    public Map<UUID, ? extends PassageEditingInterface> getThePassageMap(){
+    public Map<UUID, PassageEditingInterface> getThePassageMap(){
         return passageMap;
     }
 

@@ -33,7 +33,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * 'no PassageEditingInterface is an island' and all that
      *  (so do not ask for whom the PassageEditorWindow is editing: for it edits thee).
      */
-    private final Map<UUID, ? extends PassageEditingInterface> allPassages;
+    private final Map<UUID, PassageEditingInterface> allPassages;
 
     private JLabel titleLabel;
 
@@ -49,7 +49,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param passageBeingEdited the passage which is being edited
      * @param allThePassages the map of all the passages (just in case that needs to be modified as well)
      */
-    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, ? extends PassageEditingInterface> allThePassages){
+    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages){
         thePassage = passageBeingEdited;
         allPassages = allThePassages;
 
