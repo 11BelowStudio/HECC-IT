@@ -11,7 +11,7 @@ import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class EditableMetadata implements Heccable, Parseable, SharedMetadata, MetadataEditingInterface, MetadataReadingInterface {
+public class EditableMetadata implements MetadataEditingInterface, MetadataReadingInterface {
 
     //TODO: The 'editable' bit of this. Methods to edit title, author, variables, start passage, and multiline comment (ensuring new values are valid).
 

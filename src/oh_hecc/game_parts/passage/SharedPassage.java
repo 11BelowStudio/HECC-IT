@@ -89,12 +89,6 @@ public interface SharedPassage extends Parseable, Heccable {
         return foundLinks; //returns the set of the found links
     }
 
-    /**
-     * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
-     * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
-     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
-     */
-    void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages);
 
 
     /**

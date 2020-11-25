@@ -9,6 +9,7 @@ import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import utilities.IFIDgenerator;
+import utilities.TextAssetReader;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -86,7 +87,7 @@ public class OhHeccParser {
      * This is responsible for setting up the metadata, passageNames, and passageMap objects
      * @return true if this is executed successfully
      */
-    public boolean constructThePassageObjects() throws NoPassagesException, DuplicatePassageNameException{
+    public boolean constructThePassageObjects(){
 
         //trims metadata stuff from dataToParse, and creates the Metadata object
         String dataToParse = makeMetadataObject(this.dataToParse);
@@ -100,6 +101,10 @@ public class OhHeccParser {
         //CONSTRUCTING THE PASSAGE MAP
         heccMap.clear();
         heccMap.putAll(constructPassageMap(dataToParse));
+
+        for (PassageEditingInterface p: heccMap.values()) {
+            p.updateLinkedUUIDs(heccMap);
+        }
 
         //passageMap.clear();
         //passageMap.putAll(constructPassageMap(dataToParse));
@@ -445,12 +450,42 @@ public class OhHeccParser {
 
         //prints the passage objects for debugging reasons
         System.out.println("Passages:");
-        for (Map.Entry<UUID, PassageEditingInterface> e: heccMap.entrySet()){
-            e.getValue().outputAsStringForDebuggingReasons();
-            System.out.println("\n");
+        for (PassageEditingInterface e: heccMap.values()){
+            System.out.println(e.outputAsStringForDebuggingReasons());
+            System.out.println("");
         }
         System.out.println("\nyep thats everything printed");
 
+    }
+
+
+    public String toHecc(){
+        StringBuilder heccBuilder = new StringBuilder();
+
+        heccBuilder.append(theMetadata.toHecc());
+        heccBuilder.append("\n");
+
+        for (PassageEditingInterface h: heccMap.values()) {
+            heccBuilder.append(h.toHecc());
+            heccBuilder.append("\n");
+        }
+
+        return heccBuilder.toString();
+    }
+
+
+    public static void main(String[] args) throws Exception{
+        String sample = TextAssetReader.fileToString("src/assets/textAssets/HeccSample.hecc");
+        System.out.println("SAMPLE HECC CODE:\n----------------------------");
+        System.out.println(sample);
+
+        System.out.println("\nParse time");
+        OhHeccParser p = new OhHeccParser(sample);
+        System.out.println("parsed content in debug form:\n------------------------------");
+        p.printParsedObjects();
+
+        System.out.println("\nAnd now, the parsed content in .hecc form:\n--------------------------");
+        System.out.println(p.toHecc());
     }
 
 

@@ -4,6 +4,7 @@ package hecc_up;
  * This used to be the main class for HECC UP
  * but now it's mainly used for testing the creation of a HECCIN' Game when I'm too lazy to use HeccUpGUI
  */
+@Deprecated
 public class OldHeccUpMain implements LoggerInterface{
     //The former main class for HeccUp
 

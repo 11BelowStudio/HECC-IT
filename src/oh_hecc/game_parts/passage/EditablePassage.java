@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Like Passage but this time it's actually Editable!
  */
-public class EditablePassage implements SharedPassage, PassageEditingInterface, PassageReadingInterface {
+public class EditablePassage implements PassageEditingInterface, PassageReadingInterface {
 
     /**
      * The passageUUID of this particular passage.
@@ -134,7 +134,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
      */
-    public void updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
+    public Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
         this.setPassageContent(newContent);
 
         for(String s: linkedPassages){
@@ -152,6 +152,8 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
             }
         }
         updateLinkedUUIDs(allPassages);
+
+        return allPassages;
     }
 
 
@@ -413,7 +415,7 @@ public class EditablePassage implements SharedPassage, PassageEditingInterface, 
 
 
     @Override
-    public void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages){
+    public void updateLinkedUUIDs(Map<UUID, PassageEditingInterface> allPassages){
         //clears existing list of linkedUUIDs
         linkedUUIDs.clear();
 

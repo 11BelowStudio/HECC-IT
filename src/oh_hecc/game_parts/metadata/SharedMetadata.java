@@ -2,6 +2,7 @@ package oh_hecc.game_parts.metadata;
 
 import heccCeptions.NoMatchException;
 import oh_hecc.Heccable;
+import oh_hecc.Parseable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * A high-level interface for the Metadata class, holding things that are needed by its sub interfaces/high level functionality
  */
-public interface SharedMetadata extends Heccable {
+public interface SharedMetadata extends Heccable, Parseable {
 
     /**
      * Author name declared as '!Author: Author name goes here'

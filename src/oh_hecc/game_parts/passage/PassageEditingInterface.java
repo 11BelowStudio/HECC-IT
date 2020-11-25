@@ -87,7 +87,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
      */
-    void updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
+    Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
 
 
 
@@ -129,6 +129,14 @@ public interface PassageEditingInterface extends SharedPassage {
      * @return true if it got yote
      */
     boolean removeLinkedPassage(String removeThisPassageName, UUID removeThisPassageUUID);
+
+    /**
+     * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
+     * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
+     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
+     */
+    void updateLinkedUUIDs(Map<UUID, PassageEditingInterface> allPassages);
+
 
     /**
      * Obtains the list of passage tags as a string, seperated by spaces, but without the opening/closing []
