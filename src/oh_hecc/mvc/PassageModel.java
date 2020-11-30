@@ -22,25 +22,60 @@ import java.util.*;
  */
 public class PassageModel extends Model implements EditModelInterface {
 
-
-
-
-    final Map<UUID, PassageEditingInterface> passageMap;
-    final Map<UUID, PassageObject> objectMap;
-
-    final Set<PassageObject> drawablePassageObjects;
-
-    final Set<ModelButtonObject> drawableModelButtons;
-
-    final Set<ModelButtonObject> buttons;
-
-    final Set<PassageObject> selectedObjects;
-
+    /**
+     * The Metadata for the game that this model represents
+     */
     final MetadataEditingInterface theMetadata;
 
+    /**
+     * The map of all the PassageEditingInterface objects
+     */
+    final Map<UUID, PassageEditingInterface> passageMap;
+
+    /**
+     * The map of all the PassageObject objects
+     */
+    final Map<UUID, PassageObject> objectMap;
+
+    /**
+     * The map of all the ModelButtonObject buttons
+     */
+    final Set<ModelButtonObject> buttons;
+
+    final ModelButtonObject exitButton;
+
+    final ModelButtonObject helpButton;
+
+    final ModelButtonObject editMetadataObjectButton;
+
+    final ModelButtonObject addPassageButton;
+
+    /**
+     * The set containing the copies of the PassageObjects that are actually rendered
+     */
+    final Set<PassageObject> drawablePassageObjects;
+
+    /**
+     * The set of the copies of the buttonObjects that are actually rendered
+     */
+    final Set<ModelButtonObject> drawableModelButtons;
+
+    /**
+     * A set of all currently-selected PassageObjects
+     */
+    final Set<PassageObject> selectedObjects;
+
+    /**
+     * A Vector2D that indicates where the top-right corner of the viewable area is
+     */
     final Vector2D topRightCorner;
 
-    final Vector2D scrollMovementVector;
+    private final Vector2D drawingTopRight;
+
+    /**
+     * A vector2D representing the current mouse drag action (from where the drag started to where the mouse is now)
+     */
+    final Vector2D mouseDragVector;
 
     /**
      * The current activity being performed by the model
@@ -52,19 +87,30 @@ public class PassageModel extends Model implements EditModelInterface {
      */
     private Area selectionArea;
 
+    /**
+     * Any currently-opened EditorWindowInterface object
+     */
     private EditorWindowInterface editWindow;
 
+    /**
+     * does it need to add listener to editwindow
+     */
     private boolean needToAddListenerToEditWindow;
 
-    private final Vector2D drawingTopRight;
+
 
     /**
      * A blue colour for the selection area
      */
     private static Color SELECTION_AREA_COLOUR = new Color(47, 189, 203);
 
-    public PassageModel(ControllerInterface c, EditableMetadata metadata, Map<UUID, PassageEditingInterface> allPassages){
-        super(c);
+    /**
+     * Constructs the PassageModel object
+     * @param metadata the metadata of the game being edited
+     * @param allPassages all the passages of the game.
+     */
+    public PassageModel(MetadataEditingInterface metadata, Map<UUID, PassageEditingInterface> allPassages){
+        super();
 
         theMetadata = metadata;
         passageMap = allPassages;
@@ -76,18 +122,41 @@ public class PassageModel extends Model implements EditModelInterface {
             objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
+        for(PassageObject p: objectMap.values()){
+            p.updateLinkedObjectPositions();
+        }
+
+
 
         buttons = new HashSet<>();
 
         //TODO: make the buttons
 
+        exitButton = new ModelButtonObject(this,0,0.25f,"Save and Quit");
+
+        helpButton = new ModelButtonObject(this,0.25f,0.5f,"Help");
+
+        editMetadataObjectButton = new ModelButtonObject(this,0.5f,0.75f,"Edit metadata");
+
+        addPassageButton = new ModelButtonObject(this,0.75f,1f,"Add passage");
+
+        buttons.add(exitButton);
+        buttons.add(helpButton);
+        buttons.add(editMetadataObjectButton);
+        buttons.add(addPassageButton);
+
+
+
+
         drawablePassageObjects = new HashSet<>();
+
+
 
         drawableModelButtons = new HashSet<>();
 
         topRightCorner = new Vector2D();
 
-        scrollMovementVector = new Vector2D();
+        mouseDragVector = new Vector2D();
 
         activity = CurrentActivity.DOING_NOTHING;
 
@@ -102,16 +171,21 @@ public class PassageModel extends Model implements EditModelInterface {
 
         drawingTopRight = new Vector2D();
 
+        makeSureStartPassageExists();
+
     }
 
 
+
+    //TODO: replace the parts of this with public methods callable by the Controller object (maybe via interface?), in response to mouse events.
+
     void updateModel(){
-        ActionViewer currentAction = theController.getAction();
+        //ActionViewer currentAction = theController.getAction();
         //boolean inputRecieved = currentAction.checkForInput();
 
         switch (activity){
             case DOING_NOTHING:
-                doingNothingActivity(currentAction);
+                //doingNothingActivity(currentAction);
                 /*
                 if (inputRecieved){
                     //TODO: wat do if input recieved?
@@ -134,7 +208,7 @@ public class PassageModel extends Model implements EditModelInterface {
                  */
                 break;
             case LC_DRAGGING_SELECTION_BOX:
-                draggingSelectionBoxActivity(currentAction);
+                //draggingSelectionBoxActivity(currentAction);
                 /*
                 if(inputRecieved){
 
@@ -172,7 +246,7 @@ public class PassageModel extends Model implements EditModelInterface {
                  */
                 break;
             case LC_OBJECTS_SELECTED:
-                objectsSelectedActivity(currentAction);
+                //objectsSelectedActivity(currentAction);
                 //TODO: wat do?
                 /*
                 if(inputRecieved){
@@ -189,18 +263,18 @@ public class PassageModel extends Model implements EditModelInterface {
                 break;
             case LC_MOVING_OBJECTS:
                 //TODO: wat do?
-                movingObjectsActivity(currentAction);
+                //movingObjectsActivity(currentAction);
                 break;
             case LDC_EDITING_PASSAGE:
-                editingPassageActivity(currentAction);
+                //editingPassageActivity(currentAction);
                 //TODO: wat do?
                 break;
             case LC_PRESSED_BUTTON:
-                pressedButtonActivity(currentAction);
+                //pressedButtonActivity(currentAction);
                 //TODO: wat do?
                 break;
             case RC_MOVING_VIEW:
-                movingViewActivity(currentAction);
+                //movingViewActivity(currentAction);
                 //TODO: wat do?
                 break;
         }
@@ -349,6 +423,10 @@ public class PassageModel extends Model implements EditModelInterface {
     }
 
 
+    /**
+     * Attempt to draw the model
+     * @param g the graphics2D being used
+     */
     public void drawModel(Graphics2D g){
 
         Shape existingClip = g.getClip();
@@ -359,7 +437,7 @@ public class PassageModel extends Model implements EditModelInterface {
         //translates everything in the negative direction to where the top-right corner currently is
         g.translate(-drawingTopRight.x,-drawingTopRight.y);
 
-        g.setClip((int)drawingTopRight.x,(int)drawingTopRight.y, MODEL_WIDTH,MODEL_HEIGHT);
+        g.setClip((int)drawingTopRight.x,(int)drawingTopRight.y, getWidth(),getHeight());
 
         g.setColor(SELECTION_AREA_COLOUR);
         g.fill(selectionArea);
@@ -377,16 +455,39 @@ public class PassageModel extends Model implements EditModelInterface {
         //now it goes back to where it was before it was scrolled
         g.setTransform(unscrolled);
 
-        g.setClip(0,0,MODEL_WIDTH,MODEL_HEIGHT);
+        g.setClip(existingClip);
+
+        g.setClip(0,0,getWidth(),getHeight());
         for (ModelButtonObject b: drawableModelButtons){
             b.draw(g);
         }
     }
 
+    /**
+     * Move the viewable area in the X dimension
+     * @param positive if true, move it +100, if false, move it -100.
+     */
+    @Override
+    public void xMove(boolean positive) {
+        topRightCorner.x += (positive? 100 : -100);
+        System.out.println("top-right: " + topRightCorner);
+        repaint();
+    }
 
+    /**
+     * Move the viewable area in the Y dimension
+     * @param positive if true, move it +100, if false, move it -100.
+     */
+    @Override
+    public void yMove(boolean positive) {
+        topRightCorner.y += (positive? 100: -100);
+        System.out.println("top-right: " + topRightCorner);
+        repaint();
+    }
 
-
-
+    /**
+     * This method can verify that the start passage of the
+     */
     private void makeSureStartPassageExists(){
         boolean startDoesntExist = true;
         String startName = theMetadata.getStartPassage();
@@ -460,7 +561,14 @@ public class PassageModel extends Model implements EditModelInterface {
         return passageMap;
     }
 
-
+    @Override
+    public void setSize(Dimension d){
+        super.setSize(d);
+        for (ModelButtonObject b: buttons) {
+            b.resize(getWidth(),getHeight());
+        }
+        repaint();
+    }
 
 
     /**
@@ -497,6 +605,7 @@ public class PassageModel extends Model implements EditModelInterface {
          */
         RC_MOVING_VIEW
     }
+
 
 
 }

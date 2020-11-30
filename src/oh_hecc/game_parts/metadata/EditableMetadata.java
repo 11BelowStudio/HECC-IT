@@ -71,6 +71,7 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
     private EditableMetadata(){
         title = "An Interactive Fiction";
         author = "Anonymous";
+        startPassage = "Start";
         ifid = generateIFIDString();
         variables = new ArrayList<>();
         comment = "";

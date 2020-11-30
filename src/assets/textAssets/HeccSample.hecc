@@ -19,35 +19,35 @@ this line is before the first passage declaration, so, officially, this line doe
 //nutz
 // lmao gottem!
 
-::Start //this is a comment //ayy lmao eecks dee
+::Start <69,69> //this is a comment //ayy lmao eecks dee
 
 starting passage content goes here.
 
 The following line contains a link to "Another passage".
 [[Another passage]]
 
-::Another passage [yes theres tags] < 34.5 ,35> //this is another passage
+::Another passage [yes theres tags] < 256,96> //this is another passage
 
 congrats you clicked that link to get here, Another passage.
 why not [[click this|Yet Another Passage]] as well?
 
 
-::Yet Another Passage //
+::Yet Another Passage <256,256> //
 
 woah you clicked that so you're now at Yet Another Passage.
 
 Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
 ;;
 this is an comment
-::Left //the left option
+::Left <241,325> //the left option
 
 You go to the left, but the path leads you back to [[dave]].
 
-::Right
+::Right <400,300>
 
 You went to the right, but the path leads you back to [[dave]].
 
-::dave //oh hi dave
+::dave <512,512> //oh hi dave
 
 This passage is called dave.
 

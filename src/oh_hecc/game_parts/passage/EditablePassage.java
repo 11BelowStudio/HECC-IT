@@ -44,12 +44,12 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     /**
      * The set with the names of the other passages this passage links to
      */
-    private Set<String> linkedPassages;
+    private final Set<String> linkedPassages;
 
     /**
      * The set of UUIDs of the passages that this passage is linked to
      */
-    private Set<UUID> linkedUUIDs;
+    private final Set<UUID> linkedUUIDs;
 
     /**
      * The string that's the multiline comment behind this particular passage
@@ -59,7 +59,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     /**
      * The list of tags that this passage has
      */
-    private List<String> passageTags;
+    private final List<String> passageTags;
 
     /**
      * The position of this passage
@@ -91,7 +91,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      */
     public EditablePassage(String passageName, Vector2D parentPosition){
         this();
-        this.passageName = passageName;
+        this.passageName = passageName.trim();
         this.position.set(parentPosition.add(0, 100)); //100 below parent passage
     }
 
@@ -104,13 +104,13 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      */
     public EditablePassage(String passageName, String unparsedContent, String comment, String lineEndMetadata){
         this();
-        this.passageName = passageName;
+        this.passageName = passageName.trim();
         passageContent = unparsedContent;
         trailingComment = comment;
-        passageTags = PassageReadingInterface.readTagMetadata(lineEndMetadata);
+        passageTags.addAll(PassageReadingInterface.readTagMetadata(lineEndMetadata));
         position.set(PassageReadingInterface.readVectorMetadata(lineEndMetadata));
         inlinePassageComment = PassageReadingInterface.getInlineComment(lineEndMetadata);
-        linkedPassages = SharedPassage.findLinks(unparsedContent);
+        linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
     }
 
 
@@ -124,7 +124,8 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     @Override
     public void setPassageContent(String newContent){
         passageContent = newContent; //replaces the content
-        linkedPassages = SharedPassage.findLinks(newContent); //updates the linked passages appropriately
+        linkedPassages.clear();
+        linkedPassages.addAll(SharedPassage.findLinks(newContent)); //updates the linked passages appropriately
     }
 
 
@@ -205,6 +206,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         passageName = trimmedValidatedName;
 
         //updates all passages that link to this passage so they link to its new name
+
         for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(oldName)){
                 e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
@@ -212,6 +214,17 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
                 e.updateLinkedUUIDs(allPassages);
             }
         }
+        /*
+        for (UUID u: allPassages.keySet()){
+            PassageEditingInterface e = allPassages.get(u);
+            if (e.getLinkedPassages().contains(oldName)){
+                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
+                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
+                e.updateLinkedUUIDs(allPassages);
+                allPassages.put(u,e);
+            }
+        }
+        */
 
         //returns the modified map of all passages
         return allPassages;
@@ -230,7 +243,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         allPassages.remove(this.getPassageUUID());
 
         //deletes all traces of this passage from the existing passages
-        for (PassageEditingInterface e: allPassages.values()){
+        for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(this.passageName)){
                 String deletedName = this.passageName + " !WAS DELETED!";
                 //e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName), Collections.unmodifiableMap(allPassages));//, allPassages);
@@ -239,6 +252,20 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
                 e.removeLinkedPassage(deletedName, this.passageUUID);
             }
         }
+        /*
+        for (UUID u: allPassages.keySet()){
+            PassageEditingInterface e = allPassages.get(u);
+            if (e.getLinkedPassages().contains(this.passageName)){
+                String deletedName = this.passageName + " !WAS DELETED!";
+                //e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName), Collections.unmodifiableMap(allPassages));//, allPassages);
+                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));//, allPassages);
+                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
+                e.removeLinkedPassage(deletedName, this.passageUUID);
+                allPassages.replace(u,e);
+            }
+        }
+
+         */
 
         //return the map of all passages (except this one)
         return allPassages;
@@ -305,7 +332,8 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      */
     @Override
     public boolean updatePassageTags(String newPassageTagListString) throws InvalidMetadataDeclarationException{
-        this.passageTags = PassageEditingInterface.makePassageTagListFromString(newPassageTagListString);
+        passageTags.clear();
+        passageTags.addAll(PassageEditingInterface.makePassageTagListFromString(newPassageTagListString));
         return true;
     }
 
@@ -415,15 +443,14 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
 
 
     @Override
-    public void updateLinkedUUIDs(Map<UUID, PassageEditingInterface> allPassages){
+    public void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages){
         //clears existing list of linkedUUIDs
         linkedUUIDs.clear();
 
         //if the set of linkedPassages isn't empty
         if (!linkedPassages.isEmpty()) {
             //copies linkedPassages into a new set (for efficiency later on)
-            TreeSet<String> setToCheck = new TreeSet<>(linkedPassages);
-            //for every passage in the map of all passages
+            Set<String> setToCheck = new HashSet<>(linkedPassages);
             for (SharedPassage e : allPassages.values()) {
 
                 boolean foundString = false; //haven't found it yet
@@ -575,7 +602,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
             sb.append(", ");
         }
         sb.append("\nlinked passage UUIDs: ");
-        for (UUID u:linkedUUIDs) {
+        for (UUID u: linkedUUIDs) {
             sb.append(u);
             sb.append(", ");
         }

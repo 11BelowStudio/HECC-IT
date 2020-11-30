@@ -32,6 +32,11 @@ public abstract class AbstractObject {
     Rectangle areaRectangle;
 
     /**
+     * The area what is filled in when drawing this object (sometimes)
+     */
+    Area fillArea;
+
+    /**
      * What colour this object is supposed to be
      */
     Color objectColour;

@@ -125,7 +125,8 @@ public class StringObject extends AbstractObject {
     public void individualDraw(Graphics2D g) {
         //if (visible) {
             Font tempFont = g.getFont();
-            g.setFont(theFont);
+            //g.setFont(theFont);
+            g.setFont(tempFont.deriveFont(Font.BOLD));
             g.setColor(Color.black);
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             int w = metrics.stringWidth(theString);

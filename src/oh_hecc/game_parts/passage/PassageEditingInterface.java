@@ -135,7 +135,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
      * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
      */
-    void updateLinkedUUIDs(Map<UUID, PassageEditingInterface> allPassages);
+    void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages);
 
 
     /**

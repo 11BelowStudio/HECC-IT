@@ -6,12 +6,31 @@ import java.awt.geom.AffineTransform;
 
 public class View extends JComponent {
 
+    /**
+     * Whether or not this should be drawing a model
+     */
     boolean drawingModel;
+    /**
+     * Reference to the Model being viewed
+     */
     Model theModelThatsBeingViewed;
 
+
+    /**
+     * Create a View that doesn't show a model.
+     */
     public View(){
         drawingModel = false;
     }
+
+    /**
+     * Constructor to show a View with a Model
+     * @param showThis the Model to show
+     */
+    public View(Model showThis){
+        showThisModel(showThis);
+    }
+
 
     /**
      * Call this method to make this View display a Model
@@ -20,16 +39,22 @@ public class View extends JComponent {
     public void showThisModel(Model m){
         theModelThatsBeingViewed = m;
         drawingModel = true;
+        this.setPreferredSize(m.getPreferredSize());
     }
 
     @Override
-    public void paintComponent(Graphics g0){
+    public void paint(Graphics g0){
+        super.paint(g0);
         Graphics2D g = (Graphics2D) g0;
 
         AffineTransform initialTransform = g.getTransform();
 
+        //g.setColor(Color.RED);
+        g.fillRect(0,0,getWidth(),getHeight());
+
         if (drawingModel){
-            theModelThatsBeingViewed.draw(g);
+            //theModelThatsBeingViewed.draw(g);
+            theModelThatsBeingViewed.paint(g);
         }
 
         g.setTransform(initialTransform);
@@ -48,7 +73,9 @@ public class View extends JComponent {
     public void setSize(Dimension d){
         super.setSize(d);
         if (drawingModel) {
-            Model.RESIZE_MODEL(getWidth(), getHeight());
+            //Model.RESIZE_MODEL(getWidth(), getHeight());
+            theModelThatsBeingViewed.setSize(d);
         }
     }
+
 }

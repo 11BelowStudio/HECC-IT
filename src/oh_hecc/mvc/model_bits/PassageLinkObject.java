@@ -5,6 +5,7 @@ import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.util.UUID;
 
 /**
@@ -46,14 +47,14 @@ public class PassageLinkObject extends EditModelObject {
         rotationAngle = vectorFromSourceToDestination.angle();
 
         pointTriangle = new Polygon(
-                new int[] {-32, 0, 32},
+                new int[] {-16, 0, 16},
                 new int[] {0,(int)(vectorFromSourceToDestination.mag()),0},
                 3
         );
 
+
+
         objectColour = SAFETY_PURPLE;
-
-
 
     }
 
@@ -80,6 +81,7 @@ public class PassageLinkObject extends EditModelObject {
 
         //finds the angle of the vector that points from the source to the destination
         rotationAngle = vectorFromSourceToDestination.angle();
+        rotationAngle -= (Math.PI/2.0);
         //resizes pointTriangle to be as tall as the magnitude of that vector
         pointTriangle.ypoints[1] = (int)vectorFromSourceToDestination.mag();
     }
@@ -95,6 +97,14 @@ public class PassageLinkObject extends EditModelObject {
     @Override
     void individualDraw(Graphics2D g) {
         //TODO: draw arrow from position pointing to pointToPosition
+
+        //rotates this according to the rotationAngle
+
+
+
+        g.setColor(objectColour);
+        //g.drawLine((int)0,(int)0,(int)vectorFromSourceToDestination.x,(int)vectorFromSourceToDestination.y);
+
 
         //rotates this according to the rotationAngle
         AffineTransform notRotated = g.getTransform();

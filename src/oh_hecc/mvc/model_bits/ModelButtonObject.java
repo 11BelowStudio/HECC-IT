@@ -5,6 +5,7 @@ import oh_hecc.mvc.*;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.Area;
 
 /**
  * This class basically represents the buttons that will appear across the bottom of the model,
@@ -44,6 +45,7 @@ public class ModelButtonObject extends EditModelObject {
 
         height = 32;
 
+        //TODO: maybe set these to dummy values?
         width = (int)((scaledRightSide-scaledLeftSide) * Model.GET_MODEL_WIDTH());
 
         position.set(
@@ -51,7 +53,11 @@ public class ModelButtonObject extends EditModelObject {
                 Model.GET_MODEL_HEIGHT() - (height/2.0)
         );
 
-        areaRectangle = new Rectangle(-(width/2),-height/2, width,height);
+        areaRectangle = new Rectangle((int) (getPosition().x -(width/2)),(int) (getPosition().y -(height/2)), width,height);
+
+        fillArea = new Area(new Rectangle(-width/2, -height/2, width, height));
+
+        objectColour = Model.W3_MIDNIGHT;
 
     }
 
@@ -61,29 +67,34 @@ public class ModelButtonObject extends EditModelObject {
     }
 
     /**
-     * Call this if the model gets resized, so this will remain the same size (relative to the viewable model itself)
+     * Model should call this for all buttons when it's resized,
+     * so the buttons will remain the same size (relative to the viewable model itself)
      * and at the the bottom of the model
+     * @param w new width of the model
+     * @param h new height of the model
      */
-    public void resize(){
-        width = (int)((scaledRightSide-scaledLeftSide) * Model.GET_MODEL_WIDTH());
+    public void resize(int w, int h){
+        width = (int)((scaledRightSide-scaledLeftSide) * w);
 
         position.set(
-                (scaledLeftSide * Model.GET_MODEL_WIDTH()) + (width/2.0),
-                Model.GET_MODEL_HEIGHT() - (height/2.0)
+                (scaledLeftSide * w) + (width/2.0),
+                h - (height/2.0)
         );
 
-        areaRectangle = new Rectangle(-(width/2),-height/2, width,height);
+        areaRectangle = new Rectangle((int) (position.x -(width/2)),(int) (position.y -(height/2)), width,height);
+
+        fillArea = new Area(new Rectangle(-width/2, -height/2, width, height));
     }
 
     @Override
     void individualDraw(Graphics2D g) {
         //draw the button rectangle
         g.setColor(objectColour);
-        g.fill(areaRectangle);
+        g.fill(fillArea);
 
         //black border for button
         g.setColor(Color.BLACK);
-        g.draw(areaRectangle);
+        g.draw(fillArea);
 
         //draw the button label
         buttonLabel.draw(g);

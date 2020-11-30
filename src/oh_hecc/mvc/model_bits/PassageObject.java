@@ -43,6 +43,8 @@ public class PassageObject extends EditModelObject {
 
         areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
 
+        fillArea = new Area(new Rectangle(- (width/2), - (height/2), width, height));
+
         isSelected = false;
 
         thePassage = passage;
@@ -52,12 +54,17 @@ public class PassageObject extends EditModelObject {
 
         Set<UUID> linkedUUIDs = thePassage.getLinkedPassageUUIDs();
 
+
         linkMap = new HashMap<>();
 
         if (!linkedUUIDs.isEmpty()){
+            System.out.println("linked UUIDS from " + passage.getPassageName());
             for (UUID u: linkedUUIDs){
+                System.out.println(u);
                 linkMap.put(u, new PassageLinkObject(model, this, u));
             }
+        } else{
+            System.out.println("no UUIDs for " + passage.getPassageName());
         }
 
     }
@@ -68,6 +75,7 @@ public class PassageObject extends EditModelObject {
 
     public void moveTo(Vector2D newPosition){
         this.position.set(newPosition);
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
         thePassage.updatePosition(this.position);
     }
 
@@ -108,12 +116,12 @@ public class PassageObject extends EditModelObject {
         g.setColor(objectColour);
 
         //filling in this object's areaRectangle
-        g.fill(areaRectangle);
+        g.fill(fillArea);
 
         //if it is selected, overlay with the selectedColour.
         if (isSelected){
             g.setColor(SELECTED_COLOUR);
-            g.fill(areaRectangle);
+            g.fill(fillArea);
         }
 
         //draws the passageNameObject (on top of this object)

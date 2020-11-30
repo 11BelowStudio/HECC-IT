@@ -122,9 +122,13 @@ public class OhHeccParser {
         heccMap.clear();
         heccMap.putAll(constructPassageMap(rawPassages));
 
-        for (PassageEditingInterface p: heccMap.values()) {
+        /*
+        for (UUID u: heccMap.keySet()) {
+            PassageEditingInterface p = heccMap.get(u);
             p.updateLinkedUUIDs(heccMap);
+            heccMap.put(u,p);
         }
+        */
 
         //passageMap.clear();
         //passageMap.putAll(constructPassageMap(dataToParse));
@@ -361,6 +365,14 @@ public class OhHeccParser {
             pMap.put(thePassage.getPassageUUID(),thePassage);
         } while(notDone);
 
+
+
+        //And now, time to actually update the UUIDs.
+        for (PassageEditingInterface e: pMap.values()){
+            e.updateLinkedUUIDs(pMap);
+        }
+
+
         return pMap;
     }
 
@@ -479,10 +491,15 @@ public class OhHeccParser {
 
         //prints the passage objects for debugging reasons
         System.out.println("Passages:");
+        for (Map.Entry<UUID, PassageEditingInterface> e: heccMap.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+        }
+        /*
         for (PassageEditingInterface e: heccMap.values()){
             System.out.println(e.outputAsStringForDebuggingReasons());
             System.out.println("");
-        }
+        }*/
         System.out.println("\nyep thats everything printed");
 
     }
