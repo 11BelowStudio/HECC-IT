@@ -1,5 +1,7 @@
 package oh_hecc.mvc;
 
+import oh_hecc.mvc.controller.MouseController;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -123,6 +125,16 @@ public class OhHeccNetworkFrame {
                 }
         );
 
+
+        MouseController mc = new MouseController(theView.theModelThatsBeingViewed);
+        theFrame.addMouseListener(
+                mc
+        );
+        theFrame.addMouseMotionListener(
+                mc
+        );
+
+         theFrame.getContentPane().revalidate();
 
     }
 

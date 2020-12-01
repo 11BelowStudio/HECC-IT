@@ -92,7 +92,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     public EditablePassage(String passageName, Vector2D parentPosition){
         this();
         this.passageName = passageName.trim();
-        this.position.set(parentPosition.add(0, 100)); //100 below parent passage
+        this.position.set(Vector2D.add(parentPosition,0,100)); //100 below parent passage
     }
 
     /**

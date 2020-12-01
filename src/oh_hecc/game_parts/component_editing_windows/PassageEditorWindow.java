@@ -141,6 +141,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         contentArea.setEditable(true);
         contentArea.setLineWrap(true);
         contentArea.setWrapStyleWord(true);
+        contentArea.setText(thePassage.getPassageContent());
 
         JScrollPane contentScroll = new JScrollPane(
                 contentArea,
@@ -169,6 +170,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         commentArea.setEditable(true);
         commentArea.setLineWrap(true);
         commentArea.setWrapStyleWord(true);
+        commentArea.setText(thePassage.getTrailingComment());
 
         JScrollPane commentScroll = new JScrollPane(
                 commentArea,
@@ -362,7 +364,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param args le command line parameters have not arrived (because they aren't used)
      */
     public static void main(String args[]){
-        EditablePassage[] samples = {new EditablePassage("deez nutz", new Vector2D(0,0)), new EditablePassage("lmao gottem", "[[deez nutz]]","","")};
+        EditablePassage[] samples = {new EditablePassage("deez nutz", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("lmao gottem", "[[deez nutz]]","","")};
 
         Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 

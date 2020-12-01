@@ -68,7 +68,7 @@ public abstract class AbstractObject {
         areaRectangle = new Rectangle();
     }
 
-    Vector2D getPosition(){
+    public Vector2D getPosition(){
         return position;
     }
 

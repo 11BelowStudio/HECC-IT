@@ -1,5 +1,7 @@
 package oh_hecc.mvc;
 
+import oh_hecc.mvc.controller.MouseController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -40,6 +42,7 @@ public class View extends JComponent {
         theModelThatsBeingViewed = m;
         drawingModel = true;
         this.setPreferredSize(m.getPreferredSize());
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package oh_hecc.mvc;
 
+import GameParts.Passage;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
@@ -7,6 +8,7 @@ import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.controller.ActionViewer;
 import oh_hecc.mvc.controller.ControllerInterface;
+import oh_hecc.mvc.controller.MouseController;
 import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
 import utilities.Vector2D;
@@ -16,11 +18,12 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Okay so this is the Model of the actual network of passages and such
  */
-public class PassageModel extends Model implements EditModelInterface {
+public class PassageModel extends Model implements EditModelInterface, MouseControlModelInterface {
 
     /**
      * The Metadata for the game that this model represents
@@ -69,6 +72,7 @@ public class PassageModel extends Model implements EditModelInterface {
      * A Vector2D that indicates where the top-right corner of the viewable area is
      */
     final Vector2D topRightCorner;
+
 
     private final Vector2D drawingTopRight;
 
@@ -173,6 +177,75 @@ public class PassageModel extends Model implements EditModelInterface {
 
         makeSureStartPassageExists();
 
+        MouseController m = new MouseController(this);
+        this.addMouseListener(m);
+        this.addMouseMotionListener(m);
+
+    }
+
+    @Override
+    public void leftClick(Point mLocation){
+        System.out.println("left click time");
+        /*
+        for (ModelButtonObject b: buttons) {
+            if (b.wasClicked(mLocation)){
+                //TODO: buttons doing a thing
+                System.out.println(b.getPosition());
+                return;
+            }
+        }*/
+        if (editMetadataObjectButton.wasClicked(mLocation)){
+            EditorWindowInterface w = theMetadata.openEditingWindow();
+            w.addWindowClosedListener(
+                    e -> actuallyValidateStuff()
+            );
+        } else if (addPassageButton.wasClicked(mLocation)){
+            //TODO: add passage if this button was clicked
+        } else if (helpButton.wasClicked(mLocation)){
+            //TODO: help button doing a thing if pressed
+        } else if (exitButton.wasClicked(mLocation)){
+            //TODO: exit button stuff if pressed
+        } else {
+            for (PassageObject o : objectMap.values()) {
+                if (o.wasClicked(mLocation)) {
+                    EditorWindowInterface w = o.openEditingWindow();
+                    w.addWindowClosedListener(
+                            e -> this.actuallyValidateStuff()
+                    );
+                    //TODO: other bits to do with opening the stuff
+                    break;
+                }
+            }
+        }
+    }
+
+
+    private void actuallyValidateStuff() {
+        System.out.println("invalid");
+        invalidate();
+        System.out.println("closed");
+        makeSureStartPassageExists();
+
+        /*
+        for (PassageEditingInterface e: passageMap.values()) {
+            System.out.println(e.getPassageName());
+        }
+        */
+        //TODO: something to account for passages getting added to the passageMap
+
+        for (UUID u: objectMap.keySet()){
+            if (!passageMap.containsKey(u)){
+                System.out.println(u + " doesnt exist");
+                objectMap.remove(u);
+            } else{
+                passageMap.get(u).updateLinkedUUIDs(passageMap);
+                objectMap.get(u).update();
+            }
+        }
+        System.out.println("epic gamer moment");
+        repaint();
+        System.out.println("painted");
+        //update(this.getGraphics());
     }
 
 
@@ -411,6 +484,9 @@ public class PassageModel extends Model implements EditModelInterface {
     }
 
 
+    /**
+     * Refreshes the collections of 'drawable' objects basically so  they can be drawn.
+     */
     void refreshDrawables(){
 
         drawingTopRight.set(topRightCorner);

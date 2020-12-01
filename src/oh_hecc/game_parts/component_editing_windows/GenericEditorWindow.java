@@ -96,7 +96,7 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
         theFrame.addWindowListener(
                 new WindowAdapter() {
                     @Override
-                    public void windowClosing(WindowEvent e) {
+                    public void windowClosed(WindowEvent e) {
                         closeEvent.accept(e);
                     }
                 }

@@ -2,6 +2,7 @@ package oh_hecc.game_parts.metadata;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,6 +68,13 @@ public interface MetadataEditingInterface extends SharedMetadata {
      * @throws InvalidPassageNameException if the new start passage isn't valid
      */
     boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException;
+
+
+    /**
+     * Creates an editing window for this object
+     * @return a MetadataEditorWindow which can edit this object
+     */
+    MetadataEditorWindow openEditingWindow();
 
 
     String toString();

@@ -8,7 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
-public abstract class Model extends Canvas{
+public abstract class Model extends Canvas implements MouseControlModelInterface{
 
     //TODO: work out if it's actually a good idea to extend Canvas?
     //TODO: clipping.
@@ -70,6 +70,10 @@ public abstract class Model extends Canvas{
 
     }
 
+    public void update(Graphics g){
+        update();
+        super.update(g);
+    }
 
     public void update(){
         //updateModel();
@@ -89,8 +93,8 @@ public abstract class Model extends Canvas{
 
     @Override
     public void paint(Graphics g0){
+        System.out.println("paint time");
         Graphics2D g = (Graphics2D) g0;
-
         /*
         RenderingHints rh = new RenderingHints(
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON

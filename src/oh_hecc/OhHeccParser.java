@@ -361,7 +361,7 @@ public class OhHeccParser {
                 //throw new EmptyPassageException(currentPassageName);
             }
              */
-            PassageEditingInterface thePassage = new EditablePassage(currentPassageName,currentContent,currentComment,currentPassageMetadata);
+            PassageEditingInterface thePassage = new EditablePassage(currentPassageName.trim(),currentContent.trim(),currentComment,currentPassageMetadata);
             pMap.put(thePassage.getPassageUUID(),thePassage);
         } while(notDone);
 

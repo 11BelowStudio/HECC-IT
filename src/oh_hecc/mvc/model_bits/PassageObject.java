@@ -41,7 +41,7 @@ public class PassageObject extends EditModelObject {
         width = 64;
         height = 32;
 
-        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y + (height/2)), width, height);
 
         fillArea = new Area(new Rectangle(- (width/2), - (height/2), width, height));
 
@@ -75,13 +75,26 @@ public class PassageObject extends EditModelObject {
 
     public void moveTo(Vector2D newPosition){
         this.position.set(newPosition);
-        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y + (height/2)), width, height);
         thePassage.updatePosition(this.position);
+        updateLinkedObjectPositions();
     }
 
     @Override
     public void individualUpdate() {
+        this.passageNameObject.setText(thePassage.getPassageName());
         this.position.set(thePassage.getPosition());
+
+        Set<UUID> connectedSet = thePassage.getLinkedPassageUUIDs();
+        if (!linkMap.keySet().equals(connectedSet)){
+            linkMap.keySet().retainAll(connectedSet);
+            connectedSet.removeAll(linkMap.keySet());
+            for (UUID u: connectedSet) {
+                linkMap.put(u,new PassageLinkObject(theModel,this,u));
+            }
+        }
+
+        updateLinkedObjectPositions();
     }
 
 
@@ -133,7 +146,10 @@ public class PassageObject extends EditModelObject {
      * @return that window, via EditorWindowInterface
      */
     public EditorWindowInterface openEditingWindow(){
-        return thePassage.openEditorWindow(theModel.getThePassageMap());
+        System.out.println("open time");
+        System.out.println(thePassage.getPassageContent());
+        return PassageEditingInterface.openEditorWindow(theModel.getPassageFromUUID(theUUID),theModel.getThePassageMap());
+        //return theModel.getPassageFromUUID(theUUID).openEditorWindow(theModel.getThePassageMap());
     }
 
     /**

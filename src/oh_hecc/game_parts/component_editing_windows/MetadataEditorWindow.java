@@ -51,7 +51,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Creates the MetadataEditorWindow. This is where the magic happens.
      * @param metadata you see this? yeah that. it's gonna get edited.
      */
-    public MetadataEditorWindow(EditableMetadata metadata){
+    public MetadataEditorWindow(MetadataEditingInterface metadata){
         theMetadata = metadata;
         currentTitle = new AttributeString<>("Title:\n", metadata.getTitle());
         currentAuthor = new AttributeString<>("Author:\n", metadata.getAuthor());

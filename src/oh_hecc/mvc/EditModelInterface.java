@@ -9,17 +9,19 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A relatively lightweight interface for PassageModelObject objects to use
+ * A relatively lightweight interface for EditModelObject objects to use
  * instead of the PassageModel class.
  */
 public interface EditModelInterface {
 
-
-
+    /**
+     * Obtains a PassageEditingInterface object from the implementing class's PassageMap via UUID
+     * @param uuidOfPassageToGet the UUID of the passage to get
+     * @return that passage
+     */
     PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet);
 
     PassageObject getPassageObjectFromUUID(UUID uuidOfPassageObjectToGet);
-
 
     Set<UUID> getUUIDsOfPassagesLinkedToParticularPassageFromUUID(UUID sourcePassageUUID);
 
@@ -27,6 +29,10 @@ public interface EditModelInterface {
 
     Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject);
 
+    /**
+     * Gets the passageMap object from the implementing class
+     * @return the passageMap from the implementing class
+     */
     Map<UUID, PassageEditingInterface> getThePassageMap();
 
 
