@@ -16,7 +16,39 @@ public interface SharedPassage extends Parseable, Heccable {
      */
     String TAG_STRING_REGEX = "([\\w]+[ ])*[\\w]+";
 
+    /**
+     * Regular expression for direct passage links
+     */
+    String DIRECT_PASSAGE_LINK_REGEX = "(\\[\\["+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
 
+    /**
+     * Regular expression for indirect passage links
+     */
+    String INDIRECT_PASSAGE_LINK_REGEX = "(\\[\\[[^\\[\\]\\|]+\\|"+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
+
+    /**
+     * Suffix that's appended to the end of the names of deleted passages
+     */
+    String DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX = "! WAS DELETED !";
+
+    /**
+     * A regular expression for finding any deleted link placeholders
+     */
+    String DELETED_PASSAGE_LINK_REGEX = "(\\[\\[([^\\[\\]\\|]+\\|)?" + PASSAGE_NAME_REGEX_WITH_WHITESPACE + DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX + "[\\h]*]])";
+
+
+    /**
+     * Checks if given content contains a link to a now-deleted passage.
+     * @param content the content to check
+     * @return true if it contains a link to a now-deleted passage. false otherwise.
+     */
+    static boolean doesPassageContentContainDeletedLinks(String content){
+        Matcher deletedLinkMatcher = Pattern.compile(
+                DELETED_PASSAGE_LINK_REGEX,
+                Pattern.MULTILINE
+        ).matcher(content);
+        return deletedLinkMatcher.find();
+    }
 
 
     /**
@@ -62,11 +94,11 @@ public interface SharedPassage extends Parseable, Heccable {
         if (direct){
             //direct link regex [[Passage name]]
             //regex = "(\\[\\[[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
-            regex = "(\\[\\["+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
+            regex = DIRECT_PASSAGE_LINK_REGEX;
         } else{
             //indirect link regex [[Link Text | Passage Name]]
             //regex = "(\\[\\[[^\\[\\]\\|]+\\|[\\s]*[\\w]+[\\w- ]*[\\w]+[\\s]*]])";
-            regex = "(\\[\\[[^\\[\\]\\|]+\\|"+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
+            regex = INDIRECT_PASSAGE_LINK_REGEX;
         }
         //creates the matcher
         Matcher theMatcher = Pattern.compile(

@@ -6,6 +6,7 @@ import java.awt.event.MouseMotionListener;
 /**
  * An interface for the Controller
  */
+@Deprecated
 public interface ControllerInterface extends MouseListener, MouseMotionListener {
 
     /**

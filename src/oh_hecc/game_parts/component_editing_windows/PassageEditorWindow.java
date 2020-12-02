@@ -3,6 +3,7 @@ package oh_hecc.game_parts.component_editing_windows;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import utilities.Vector2D;
@@ -14,7 +15,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -22,6 +26,7 @@ import java.util.function.Consumer;
  * (and indirectly edit the other passages it's linked to)
  */
 public class PassageEditorWindow extends GenericEditorWindow {
+
 
     /**
      * This is the actual passage that this passageEditorWindow is, y'know, editing.
@@ -36,6 +41,8 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     private final Map<UUID, PassageEditingInterface> allPassages;
 
+    private final Optional<PassageEditWindowMetadataInterface> metadata;
+
     private JLabel titleLabel;
 
     private JTextField nameField;
@@ -45,12 +52,16 @@ public class PassageEditorWindow extends GenericEditorWindow {
     private JTextArea contentArea;
     private JTextArea commentArea;
 
+
+
+
     /**
      * Constructs the PassageEditorWindow
      * @param passageBeingEdited the passage which is being edited
      * @param allThePassages the map of all the passages (just in case that needs to be modified as well)
+     * @param m optional metadata parameter (in case this is the start passage and is renamed)
      */
-    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages){
+    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages, PassageEditWindowMetadataInterface m){
         thePassage = passageBeingEdited;
         allPassages = allThePassages;
 
@@ -58,8 +69,20 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         theFrame.setVisible(true);
 
+        metadata = Optional.ofNullable(m);
+
+
+
         refresh();
 
+    }
+    /**
+     * Constructs the PassageEditorWindow
+     * @param passageBeingEdited the passage which is being edited
+     * @param allThePassages the map of all the passages (just in case that needs to be modified as well)
+     */
+    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages){
+        this(passageBeingEdited,allThePassages, null);
     }
 
     void makeTheFrame(){
@@ -227,8 +250,12 @@ public class PassageEditorWindow extends GenericEditorWindow {
         }
 
         try{
+            String oldName = thePassage.getPassageName();
             thePassage.renameThisPassage(newName,allPassages);
             nameField.setText(thePassage.getPassageName());
+            if (metadata.isPresent() && metadata.get().getStartPassage().equals(oldName)){
+                metadata.get().updateStartPassage(newName);
+            }
             refresh();
         } catch (InvalidPassageNameException e) {
             JOptionPane.showMessageDialog(

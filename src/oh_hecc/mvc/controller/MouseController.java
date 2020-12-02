@@ -17,8 +17,11 @@ public class MouseController implements MouseListener, MouseMotionListener {
      */
     private final MouseControlModelInterface controlledModel;
 
-    public MouseController(MouseControlModelInterface m){
+    private final JFrame theFrame;
+
+    public MouseController(MouseControlModelInterface m, JFrame f){
         controlledModel = m;
+        theFrame = f;
     }
 
 
@@ -32,6 +35,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
                 controlledModel.rightClick(e.getPoint());
                 break;
         }
+        theFrame.repaint();
     }
 
     @Override
@@ -44,6 +48,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
                 controlledModel.rightPress(e.getPoint());
                 break;
         }
+        theFrame.repaint();
     }
 
     @Override
@@ -56,6 +61,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
                 controlledModel.rightRelease(e.getPoint());
                 break;
         }
+        theFrame.repaint();
     }
 
     @Override
@@ -77,6 +83,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
         if (SwingUtilities.isRightMouseButton(e)){
             controlledModel.rightDrag(e.getPoint());
         }
+        theFrame.repaint();
     }
 
     @Override

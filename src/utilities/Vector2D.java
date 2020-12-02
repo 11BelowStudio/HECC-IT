@@ -9,17 +9,19 @@ import java.awt.*;
 //will be implemented later on in OH-HECC (mainly for positions of the passages in the overlay)
 
 /**
- * 2D vectors
+ * A 2D Cartesian vector.
+ * Also somewhat compatible with java.awt.Point.
+ *
  */
 public final class Vector2D {
 
     /**
-     * x position
+     * x position of the vector.
      */
     public double x;
 
     /**
-     * y position
+     * y position of vector.
      */
     public double y;
 
@@ -33,8 +35,8 @@ public final class Vector2D {
 
     /**
      * constructor for vector with given coordinates
-     * @param x
-     * @param y
+     * @param x x-coordinate
+     * @param y y-coordinate
      */
     public Vector2D(double x, double y) {
         this.x = x;
@@ -43,7 +45,7 @@ public final class Vector2D {
 
     /**
      * constructor for a vector with same coords as a Point
-     * @param p
+     * @param p the point that's being turned into a Vector2D
      */
     public Vector2D(Point p){
         this.x = p.x;
@@ -52,7 +54,7 @@ public final class Vector2D {
 
     /**
      * constructor that copies the argument vector
-     * @param v
+     * @param v the argument vector.
      */
     public Vector2D(Vector2D v) {
         double tempX = v.x;
@@ -62,10 +64,10 @@ public final class Vector2D {
     }
 
     /**
-     * set coordinates
-     * @param x
-     * @param y
-     * @return
+     * sets the coordinates of this vector
+     * @param x new x pos
+     * @param y new y pos
+     * @return this vector
      */
     public Vector2D set(double x, double y) {
         this.x = x;
@@ -75,7 +77,7 @@ public final class Vector2D {
 
     /**
      * set coordinates based on argument vector
-     * @param v
+     * @param v where
      * @return
      */
     public Vector2D set(Vector2D v) {
@@ -97,7 +99,7 @@ public final class Vector2D {
 
     /**
      * Resets x and y to 0
-     * @return
+     * @return this vector after being reset
      */
     public Vector2D reset(){
         this.x = 0;
@@ -107,8 +109,8 @@ public final class Vector2D {
 
     /**
      * compare for equality (note Object type argument)
-     * @param o
-     * @return
+     * @param o the other object
+     * @return true if the other object is a Vector2D which has x and y equal to this Vector2D
      */
     public boolean equals(Object o) {
         if (o instanceof Vector2D){
@@ -129,8 +131,7 @@ public final class Vector2D {
     }
 
     /**
-     * magnitude (= "length") of this vector
-     * @return
+     * @return the magnitude (= "length") of this vector
      */
     public double mag() {
         return (Math.hypot(x,y));
@@ -138,7 +139,7 @@ public final class Vector2D {
     }
 
     /**
-     * angle between vector and horizontal axis in radians in range [-PI,PI]
+     * angle between vector and horizontal axis (polar x=1,y=0) in radians in range [-PI,PI]
      * @return
      */
     public double angle() {
@@ -770,6 +771,12 @@ public final class Vector2D {
 
 
     //and now, collision stuff
+
+    /**
+     * A collision vector for a collision between this and the other vector
+     * @param other the other vector
+     * @return a collision vector for a collision between this and the other vector
+     */
     public Vector2D getCollisionVector(Vector2D other){
         return new Vector2D(other).subtract(this).normalise();
     }

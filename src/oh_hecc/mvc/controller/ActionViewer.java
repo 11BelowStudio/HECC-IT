@@ -7,6 +7,7 @@ import java.awt.*;
 /**
  * Interface for ControllerAction class that basically just holds the methods used for querying it.
  */
+@Deprecated
 public interface ActionViewer {
 
     boolean checkForInput();

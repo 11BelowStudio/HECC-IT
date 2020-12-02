@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+@Deprecated
 public class Controller implements ControllerInterface, MouseListener, MouseMotionListener {
 
 
@@ -109,4 +110,6 @@ public class Controller implements ControllerInterface, MouseListener, MouseMoti
 
     @Override
     public void mouseMoved(MouseEvent e) {}
+
+
 }

@@ -22,6 +22,9 @@ public interface Parseable {
      */
     String PASSAGE_NAME_REGEX_WITH_WHITESPACE = "[\\h]*" + PASSAGE_NAME_REGEX + "[\\h]*";
 
+
+
+
     /**
      * regex for checking if a string that's just supposed to contain a passage name is valid or not (expects end of line)
      */

@@ -1,14 +1,10 @@
 package oh_hecc.mvc;
 
-import GameParts.Passage;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
-import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.controller.ActionViewer;
-import oh_hecc.mvc.controller.ControllerInterface;
-import oh_hecc.mvc.controller.MouseController;
 import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
 import utilities.Vector2D;
@@ -18,7 +14,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 /**
  * Okay so this is the Model of the actual network of passages and such
@@ -101,6 +97,11 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      */
     private boolean needToAddListenerToEditWindow;
 
+    /**
+     * Mouse position during this left-click drag frame
+     */
+    private final Vector2D currentLeftDragPos;
+
 
 
     /**
@@ -127,7 +128,8 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         }
 
         for(PassageObject p: objectMap.values()){
-            p.updateLinkedObjectPositions();
+            //p.updateLinkedObjectPositions();
+            p.update();
         }
 
 
@@ -150,6 +152,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         buttons.add(addPassageButton);
 
 
+        currentLeftDragPos = new Vector2D();
 
 
         drawablePassageObjects = new HashSet<>();
@@ -175,17 +178,78 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         drawingTopRight = new Vector2D();
 
-        makeSureStartPassageExists();
+        makeSureStartPassageExists(null);
+        refreshDrawables();
+        repaint();
 
-        MouseController m = new MouseController(this);
-        this.addMouseListener(m);
-        this.addMouseMotionListener(m);
+        //MouseController m = new MouseController(this);
+        //this.addMouseListener(m);
+        //this.addMouseMotionListener(m);
 
     }
 
+
+    private void actuallyValidateStuff(){ actuallyValidateStuff(null);}
+
+    private void actuallyValidateStuff(String previousStartPassage) {
+        System.out.println("invalid");
+        invalidate();
+        System.out.println("closed");
+        makeSureStartPassageExists(previousStartPassage);
+
+
+        /*
+        for (PassageEditingInterface e: passageMap.values()) {
+            System.out.println(e.getPassageName());
+        }
+        */
+        //TODO: something to account for passages getting added to the passageMap
+
+        Set<UUID> allPossibleUUIDSet = new HashSet<>();
+        allPossibleUUIDSet.addAll(objectMap.keySet());
+        allPossibleUUIDSet.addAll(passageMap.keySet());
+        for (UUID u: allPossibleUUIDSet){
+            if (!passageMap.containsKey(u)){
+                System.out.println(u + " doesnt exist");
+                objectMap.remove(u);
+            } else if (!objectMap.containsKey(u)) {
+                objectMap.put(u, new PassageObject(this,passageMap.get(u)));
+            } else {
+                passageMap.get(u).updateLinkedUUIDs(passageMap);
+                objectMap.get(u).update();
+            }
+        }
+        System.out.println("epic gamer moment");
+        refreshDrawables();
+
+        /*
+        repaint();
+        try {
+            Thread.sleep(100);
+        } catch (Exception e){}
+
+         */
+        //TODO: call the repaint method of the frame instead I guess?
+        //System.out.println("painted");
+        //revalidate();
+        //update(this.getGraphics());
+    }
+
+
+    /**
+     * Call this when the model is left-clicked
+     * @param mLocation location of mouse
+     */
     @Override
     public void leftClick(Point mLocation){
         System.out.println("left click time");
+        if (activity.equals(CurrentActivity.DIALOG_OPEN)){
+            return;
+        }
+
+        activity = CurrentActivity.DOING_NOTHING;
+        clearSelection();
+
         /*
         for (ModelButtonObject b: buttons) {
             if (b.wasClicked(mLocation)){
@@ -195,19 +259,60 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             }
         }*/
         if (editMetadataObjectButton.wasClicked(mLocation)){
+            activity = CurrentActivity.DIALOG_OPEN;
+            String lastStart = theMetadata.getStartPassage();
             EditorWindowInterface w = theMetadata.openEditingWindow();
             w.addWindowClosedListener(
-                    e -> actuallyValidateStuff()
+                    e -> {
+                        System.out.println("previous start: " + lastStart);
+                        actuallyValidateStuff(lastStart);
+                        activity = CurrentActivity.DOING_NOTHING;
+                        this.repaint();
+                    }
             );
         } else if (addPassageButton.wasClicked(mLocation)){
             //TODO: add passage if this button was clicked
+            System.out.println("passage button clicked");
+            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner,getWidth()/2.0,getHeight()/2.0));
+            passageMap.put(newPassage.getPassageUUID(),newPassage);
+            actuallyValidateStuff();
         } else if (helpButton.wasClicked(mLocation)){
             //TODO: help button doing a thing if pressed
         } else if (exitButton.wasClicked(mLocation)){
             //TODO: exit button stuff if pressed
         } else {
-            for (PassageObject o : objectMap.values()) {
-                if (o.wasClicked(mLocation)) {
+            //move the mouse so it's scrolled by the screen scroll amount
+            Point scrolledMouse = moveMouseByScroll(mLocation);
+            //this will hold the clicked passageObject if it was clicked
+            Optional<PassageObject> clicked =
+                objectMap.values().stream().filter(
+                        o -> o.wasClicked(scrolledMouse)
+                ).findAny(); //basically tries to find the first one where the 'wasClicked' method evaluates to true
+
+            if (clicked.isPresent()){
+                //if something was clicked
+                activity = CurrentActivity.DIALOG_OPEN;
+                PassageEditingInterface p = passageMap.get(clicked.get().getTheUUID());
+                EditorWindowInterface w;
+                //if it's the start passage
+                if (theMetadata.getStartPassage().equals(p.getPassageName())){
+                    //open the passage editor window with a reference to the metadata object
+                    w = PassageEditingInterface.openEditorWindow(p,passageMap,theMetadata);
+                } else {
+                    //if this isn't the start passage, we don't give a damn about the metadata object
+                    w = PassageEditingInterface.openEditorWindow(p,passageMap);
+                }
+                w.addWindowClosedListener(
+                        e -> {
+                            actuallyValidateStuff();
+                            activity = CurrentActivity.DOING_NOTHING;
+                        }
+                );
+                //TODO: other bits to do with opening the stuff
+            }
+            /*
+            for (PassageObject o : drawablePassageObjects ) { //objectMap.values()
+                if (o.wasClicked(scrolledMouse)) {
                     EditorWindowInterface w = o.openEditingWindow();
                     w.addWindowClosedListener(
                             e -> this.actuallyValidateStuff()
@@ -216,42 +321,186 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                     break;
                 }
             }
+
+             */
         }
+        revalidate();
     }
 
 
-    private void actuallyValidateStuff() {
-        System.out.println("invalid");
-        invalidate();
-        System.out.println("closed");
-        makeSureStartPassageExists();
 
-        /*
-        for (PassageEditingInterface e: passageMap.values()) {
-            System.out.println(e.getPassageName());
-        }
-        */
-        //TODO: something to account for passages getting added to the passageMap
 
-        for (UUID u: objectMap.keySet()){
-            if (!passageMap.containsKey(u)){
-                System.out.println(u + " doesnt exist");
-                objectMap.remove(u);
-            } else{
-                passageMap.get(u).updateLinkedUUIDs(passageMap);
-                objectMap.get(u).update();
-            }
+    /**
+     * Call this when there's a right-click
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightClick(Point mLocation) {
+        moveMouseByScroll(mLocation);
+        super.rightClick(mLocation);
+    }
+
+    /**
+     * Call this when there's a left press
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void leftPress(Point mLocation){
+        moveMouseByScroll(mLocation);
+
+        currentLeftDragPos.set(mLocation);
+        switch (activity){
+            case DOING_NOTHING:
+
+                Optional<PassageObject> pressed =
+                        objectMap.values().stream().filter(p -> p.wasClicked(mLocation)).findAny();
+                if (pressed.isPresent()){
+                    PassageObject p = pressed.get();
+                    p.nowSelected();
+                    selectedObjects.add(p);
+                    activity = CurrentActivity.LC_MOVING_OBJECTS;
+                    break;
+                } else{
+                    //TODO: START DRAGGING SELECTION AREA
+                    activity = CurrentActivity.LC_DRAGGING_SELECTION_BOX;
+                    break;
+                }
+                //break;
+            case LC_OBJECTS_SELECTED:
+                //TODO: any other things I need to do when left-clicking whilst done selecting the things?
+
+                //If mouse down on a selected object
+                if (selectedObjects.stream().anyMatch( p-> p.wasClicked(mLocation))){
+                    //start moving them
+                   activity = CurrentActivity.LC_MOVING_OBJECTS;
+                } else {
+                    //if mouse down anywhere else, they're now unselected.
+                    clearSelection();
+                    activity = CurrentActivity.DOING_NOTHING;
+                }
+                break;
         }
-        System.out.println("epic gamer moment");
-        repaint();
-        System.out.println("painted");
-        //update(this.getGraphics());
+
+    }
+
+
+    private void clearSelection(){
+        //deselect selectedObjects
+        selectedObjects.forEach(PassageObject::deselected);
+        selectedObjects.clear(); //clear the list of selectedObjects
+    }
+
+    /**
+     * Call this when there's a right press
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightPress(Point mLocation) {
+        moveMouseByScroll(mLocation);
+        super.rightPress(mLocation);
+    }
+
+    /**
+     * Call this when left button is released
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void leftRelease(Point mLocation) {
+        moveMouseByScroll(mLocation);
+        super.leftRelease(mLocation);
+        switch (activity){
+            case LC_DRAGGING_SELECTION_BOX: //if was dragging selection box, finalize selection
+
+                clearSelection();
+                //adds all objects which intersect with selectionArea to selectObjects
+                selectedObjects.addAll(
+                    objectMap.values().stream().filter(
+                            o -> o.checkIntersectWithArea(selectionArea)
+                    ).collect(Collectors.toSet())
+                );
+                activity = CurrentActivity.LC_OBJECTS_SELECTED;
+
+                //TODO: clear selection area
+                break;
+
+            case LC_MOVING_OBJECTS: //if was moving objects, stop moving them
+                clearSelection();
+                activity = CurrentActivity.DOING_NOTHING;
+                break;
+        }
+
+    }
+
+    /**
+     * Call this when right button is released
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightRelease(Point mLocation) {
+        moveMouseByScroll(mLocation);
+        super.rightRelease(mLocation);
+    }
+
+    /**
+     * Call this when dragging with left held
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void leftDrag(Point mLocation) {
+        moveMouseByScroll(mLocation);
+        super.leftDrag(mLocation);
+        //lastLeftDrag is set to last frame's currentLeftDragPos.
+        Vector2D lastLeftDrag = new Vector2D(currentLeftDragPos);
+        //updates currentLeftDragPos to current mouse position
+        currentLeftDragPos.set(mLocation);
+        switch (activity){
+            case LC_DRAGGING_SELECTION_BOX: //if dragging selection box
+                //TODO: drag selection box
+                break;
+            case LC_MOVING_OBJECTS: //if moving objects
+                Vector2D movement = Vector2D.subtract(currentLeftDragPos,lastLeftDrag);
+                selectedObjects.forEach(
+                        o -> o.move(movement)
+                );
+
+                break;
+
+        }
+    }
+
+    /**
+     * Call this when dragging with right held
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightDrag(Point mLocation) {
+        moveMouseByScroll(mLocation);
+        super.rightDrag(mLocation);
+    }
+
+
+
+    /**
+     * Moves a Point (usually the mouse location) by the topRightCorner vector
+     * @param m the mouse location Point
+     * @return m but translated by topRightCorner
+     */
+    private Point moveMouseByScroll(Point m){
+        m.translate((int)topRightCorner.x,(int)topRightCorner.y);
+        return m;
     }
 
 
 
     //TODO: replace the parts of this with public methods callable by the Controller object (maybe via interface?), in response to mouse events.
 
+    @Deprecated
     void updateModel(){
         //ActionViewer currentAction = theController.getAction();
         //boolean inputRecieved = currentAction.checkForInput();
@@ -338,7 +587,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 //TODO: wat do?
                 //movingObjectsActivity(currentAction);
                 break;
-            case LDC_EDITING_PASSAGE:
+            case DIALOG_OPEN:
                 //editingPassageActivity(currentAction);
                 //TODO: wat do?
                 break;
@@ -354,6 +603,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     }
 
 
+    @Deprecated
     private void doingNothingActivity(ActionViewer currentAction){
         //TODO: finish off for other inputs
         if (currentAction.checkForInput()){
@@ -372,7 +622,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 if (clicked){
                     needToAddListenerToEditWindow = true;
                     editWindow = getPassageObjectFromUUID(clickedThis).openEditingWindow();
-                    activity = CurrentActivity.LDC_EDITING_PASSAGE;
+                    activity = CurrentActivity.DIALOG_OPEN;
                     editingPassageActivity(currentAction);
                 }
             }
@@ -466,7 +716,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         if (needToAddListenerToEditWindow){
             editWindow.addWindowClosedListener(
                     windowEvent -> {
-                        makeSureStartPassageExists();
+                        makeSureStartPassageExists(null);
                         activity = CurrentActivity.DOING_NOTHING;
                     }
             );
@@ -493,6 +743,13 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         drawablePassageObjects.clear();
         drawablePassageObjects.addAll(objectMap.values());
+        //ScrollableModelObject.SET_SCROLL(drawingTopRight);
+        /*
+        for (PassageObject p: drawablePassageObjects) {
+            p.scroll(topRightCorner);
+        }
+
+         */
 
         drawableModelButtons.clear();
         drawableModelButtons.addAll(buttons);
@@ -514,6 +771,10 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         g.translate(-drawingTopRight.x,-drawingTopRight.y);
 
         g.setClip((int)drawingTopRight.x,(int)drawingTopRight.y, getWidth(),getHeight());
+        //AbstractObject.SCROLL_OFFSET.set(drawingTopRight);
+
+
+        //g.translate(-ScrollableModelObject.SCROLL_VECTOR.x,-ScrollableModelObject.SCROLL_VECTOR.y);
 
         g.setColor(SELECTION_AREA_COLOUR);
         g.fill(selectionArea);
@@ -532,6 +793,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         g.setTransform(unscrolled);
 
         g.setClip(existingClip);
+        //AbstractObject.SCROLL_OFFSET.set(0,0);
 
         g.setClip(0,0,getWidth(),getHeight());
         for (ModelButtonObject b: drawableModelButtons){
@@ -562,11 +824,13 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     }
 
     /**
-     * This method can verify that the start passage of the
+     * This method can verify that the start passage of the game exists
      */
-    private void makeSureStartPassageExists(){
-        boolean startDoesntExist = true;
+    private void makeSureStartPassageExists(String lastStartName){
+        Optional<String> lastStart = Optional.ofNullable(lastStartName);
         String startName = theMetadata.getStartPassage();
+        /*
+        boolean startDoesntExist = true;
         for (PassageEditingInterface p: passageMap.values()) {
             if (p.getPassageName().equals(theMetadata.getStartPassage())){
                 startDoesntExist = false;
@@ -574,6 +838,26 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             }
         }
         if (startDoesntExist){
+         */
+        //if none of the passages in the passageMap match the name of the start passage
+        if (passageMap.values().stream().noneMatch(p -> p.getPassageName().equals(startName))){
+
+            //but, if the previous name of the starting passage was given as an argument
+            if (lastStart.isPresent()){
+                //see if a passage with that name exists
+                Optional<PassageEditingInterface> p = passageMap.values().stream().filter(
+                        e -> e.getPassageName().equals(lastStart.get())
+                ).findAny();
+                //if it does
+                if (p.isPresent()){
+                    try {
+                        //rename that passage to the name of hte new start passage.
+                        p.get().renameThisPassage(theMetadata.getStartPassage(), passageMap);
+                        return;
+                    } catch (Exception e){}
+                }
+            }
+
             //if start doesn't exist, give user the option of adding the start in automatically
             if (JOptionPane.showConfirmDialog(
                             null,
@@ -587,7 +871,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.WARNING_MESSAGE
                     ) == JOptionPane.YES_OPTION) {
-                PassageEditingInterface newStart = new EditablePassage(theMetadata.getStartPassage(), new Vector2D(topRightCorner).add(MODEL_WIDTH / 2.0, 0));
+                PassageEditingInterface newStart = new EditablePassage(startName, new Vector2D(topRightCorner).add(MODEL_WIDTH / 2.0, 0));
                 passageMap.put(newStart.getPassageUUID(), newStart);
                 objectMap.put(newStart.getPassageUUID(), new PassageObject(this, newStart));
             }
@@ -611,18 +895,27 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
     @Override
     public Set<PassageEditingInterface> getPassagesFromSetOfUUIDs(Set<UUID> getThesePassages){
+        return passageMap.values().stream().filter(
+                p -> getThesePassages.contains(p.getPassageUUID())
+        ).collect(Collectors.toSet());
+        /*
         Set<PassageEditingInterface> thePassages = new HashSet<>();
         if (!getThesePassages.isEmpty()){
             for(UUID u: getThesePassages){
                 thePassages.add(passageMap.get(u));
             }
         }
-        return thePassages;
+        return thePassages;*/
     }
 
     @Override
     public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject){
         Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
+        passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs().forEach(
+                u -> theLinkedPassages.add(passageMap.get(u))
+        );
+        return theLinkedPassages;
+        /*
         Set<UUID> linkedUUIDs = passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs();
         if (!linkedUUIDs.isEmpty()){
             for (UUID u: linkedUUIDs) {
@@ -630,11 +923,38 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             }
         }
         return theLinkedPassages;
+
+         */
     }
 
     @Override
     public Map<UUID, PassageEditingInterface> getThePassageMap(){
         return passageMap;
+    }
+
+    /**
+     * Obtains the UUIDs of the passages that link to the destination passage
+     *
+     * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
+     * @return the UUIDs of all the 'parent' passage
+     */
+    @Override
+    public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
+        return passageMap.keySet().stream().filter(
+                p -> passageMap.get(p).getLinkedPassageUUIDs().contains(destination)
+        ).collect(Collectors.toSet());
+    }
+
+    /**
+     * Update the passageLinks of the passage objects that link to the given passage
+     *
+     * @param destination the UUID of the destination passage whose parents need to update their links.
+     */
+    @Override
+    public void updatePassageObjectLinksWhichLinkToSpecifiedPassage(UUID destination) {
+        getThePassageObjectsWhichLinkToGivenPassageFromUUID(destination).forEach(
+                k -> objectMap.get(k).updatePositionOfSpecificLink(destination)
+        );
     }
 
     @Override
@@ -669,9 +989,9 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
          */
         LC_MOVING_OBJECTS,
         /**
-         * Double-click a PassageObject: start editing that passage object.
+         * Dialog box open
          */
-        LDC_EDITING_PASSAGE,
+        DIALOG_OPEN,
         /**
          * Click on one of the buttons at the bottom of the screen: doing the operation that button is responsible for
          */

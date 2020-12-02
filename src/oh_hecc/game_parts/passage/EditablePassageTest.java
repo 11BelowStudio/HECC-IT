@@ -59,6 +59,7 @@ public class EditablePassageTest {
 
         String output = getPassageContentWithRenamedLinks(inputContent,"old","new");
 
+        System.out.println(inputContent);
         equalsTest(expected, output);
         System.out.println(output);
 

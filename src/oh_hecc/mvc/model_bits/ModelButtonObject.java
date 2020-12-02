@@ -54,7 +54,7 @@ public class ModelButtonObject extends EditModelObject {
                 Model.GET_MODEL_HEIGHT() - (height/2.0)
         );
 
-        areaRectangle = new Rectangle((int) (getPosition().x -(width/2)),(int) (getPosition().y +(height/2)), width,height);
+        areaRectangle = new Rectangle((int) (getPosition().x -(width/2)),(int) (getPosition().y -(height/2)), width,height);
 
         fillArea = new Area(new Rectangle(-width/2, -height/2, width, height));
 
@@ -65,6 +65,15 @@ public class ModelButtonObject extends EditModelObject {
     @Override
     public void individualUpdate() {
 
+    }
+
+    @Override
+    public boolean wasClicked(Point clickLocation) {
+        if (super.wasClicked(clickLocation)){
+            System.out.println(buttonLabel.getString());
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -82,7 +91,7 @@ public class ModelButtonObject extends EditModelObject {
                 h - (height/2.0)
         );
 
-        areaRectangle = new Rectangle((int) (position.x -(width/2)),(int) (position.y +(height/2)), width,height);
+        areaRectangle = new Rectangle((int) (position.x -(width/2)),(int) (position.y -(height/2)), width,height);
 
         fillArea = new Area(new Rectangle(-width/2, -height/2, width, height));
     }
@@ -101,4 +110,6 @@ public class ModelButtonObject extends EditModelObject {
         buttonLabel.draw(g);
 
     }
+
+
 }

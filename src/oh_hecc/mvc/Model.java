@@ -48,7 +48,7 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
 
     final Object SYNC_OBJECT = new Object();
 
-    Color backgroundColour = W3_NIGHT;
+    final Color backgroundColour = W3_NIGHT;
 
     static final int DEFAULT_MODEL_WIDTH = 800;
     static final int DEFAULT_MODEL_HEIGHT = 600;
@@ -70,18 +70,21 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
 
     }
 
+    /*
     public void update(Graphics g){
         update();
         super.update(g);
     }
 
+     */
+    /*
     public void update(){
         //updateModel();
         synchronized (SYNC_OBJECT) {
             refreshDrawables();
         }
     }
-
+     */
 
 
     abstract void updateModel();
@@ -93,8 +96,16 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
 
     @Override
     public void paint(Graphics g0){
+        //super.paint(g0);
+        //update();
+        //refreshDrawables();
         System.out.println("paint time");
         Graphics2D g = (Graphics2D) g0;
+
+        g.setColor(backgroundColour);
+        g.fillRect(0,0,getWidth(),getHeight());
+
+
         /*
         RenderingHints rh = new RenderingHints(
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
@@ -136,7 +147,10 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
 
     @Override
     public void repaint(){
-        update();
+        //update();
+        synchronized (SYNC_OBJECT) {
+            refreshDrawables();
+        }
         super.repaint();
     }
 

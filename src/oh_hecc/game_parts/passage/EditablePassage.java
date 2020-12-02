@@ -9,6 +9,7 @@ import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import utilities.Vector2D;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Like Passage but this time it's actually Editable!
@@ -66,12 +67,17 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      */
     private final Vector2D position;
 
+    /**
+     * Something to let the user know about the status of this passage.
+     */
+    private PassageEditingInterface.PassageStatus status;
+
 
 
     /**
-     * A no-argument constructor for an editable passage. Will be called when the 'new passage' button is pressed.
+     * A no-argument constructor for an editable passage. Only called by the other constructors of this class
      */
-    public EditablePassage(){
+    EditablePassage(){
         passageUUID = UUID.randomUUID();
         passageName = "Untitled Passage "+passageUUID;
         passageContent = "Sample Content";
@@ -82,6 +88,17 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         linkedPassages = new TreeSet<>();
 
         linkedUUIDs = new HashSet<>();
+        updatePassageStatus();
+    }
+
+    /**
+     * Will be called by OH-HECC when pressing the new passage button.
+     * @param position the position for this passage.
+     */
+    public EditablePassage(Vector2D position){
+        this();
+        this.position.set(position);
+        updatePassageStatus();
     }
 
     /**
@@ -93,6 +110,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         this();
         this.passageName = passageName.trim();
         this.position.set(Vector2D.add(parentPosition,0,100)); //100 below parent passage
+        updatePassageStatus();
     }
 
     /**
@@ -111,6 +129,8 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         position.set(PassageReadingInterface.readVectorMetadata(lineEndMetadata));
         inlinePassageComment = PassageReadingInterface.getInlineComment(lineEndMetadata);
         linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
+
+        updatePassageStatus();
     }
 
 
@@ -126,6 +146,24 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         passageContent = newContent; //replaces the content
         linkedPassages.clear();
         linkedPassages.addAll(SharedPassage.findLinks(newContent)); //updates the linked passages appropriately
+
+        updatePassageStatus();
+    }
+
+    /**
+     * This method is used to update the 'status' of this passage.
+     * If the passage contents (still) contains a reference to a deleted passage, this is a 'DELETED_LINK' passage.
+     * If the passage contains no links to other notes, this passage is an END_NODE
+     * otherwise, it's NORMAL.
+     */
+    private void updatePassageStatus(){
+        if(SharedPassage.doesPassageContentContainDeletedLinks(passageContent)){
+            status = PassageStatus.DELETED_LINK;
+        } else if (linkedPassages.isEmpty()){
+            status = PassageStatus.END_NODE;
+        } else{
+            status = PassageStatus.NORMAL;
+        }
     }
 
 
@@ -138,6 +176,21 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     public Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
         this.setPassageContent(newContent);
 
+
+        //gets all the linked passage names that aren't the names of passages that are in allPassages
+        linkedPassages.stream()
+                .filter(
+                    s -> allPassages.values().stream().noneMatch( p -> p.getPassageName().equals(s))
+                )
+                .forEach(
+                //then, for all of those not-yet-present passages, they're made and added to the map of all passages.
+                    s ->
+                    {
+                        PassageEditingInterface p = new EditablePassage(s, this.position);
+                        allPassages.put(p.getPassageUUID(),p);
+                    }
+        );
+        /*
         for(String s: linkedPassages){
             boolean doesntExist = true;
             for (PassageEditingInterface e: allPassages.values()) {
@@ -152,6 +205,8 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
 
             }
         }
+
+         */
         updateLinkedUUIDs(allPassages);
 
         return allPassages;
@@ -195,18 +250,50 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         String oldName = passageName; //backup of old name
         String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
 
+        //checks to see if the new passage name isn't a duplicate of an existing passage name
+        if(allPassages.values().stream()
+            .anyMatch(
+                p -> p.getPassageName().equals(trimmedValidatedName)
+            )
+        ){
+            throw new DuplicatePassageNameException(trimmedValidatedName);
+        }
+
         //checks to see if this isn't a duplicate passage name
+        /*
         for (PassageEditingInterface e: allPassages.values()) {
             if (e.getPassageName().equals(trimmedValidatedName)){
                 throw new DuplicatePassageNameException(trimmedValidatedName);
             }
         }
 
+         */
+
         //updates this passage name
         passageName = trimmedValidatedName;
 
         //updates all passages that link to this passage so they link to its new name
+        allPassages.values().stream()
+            .filter(
+                    //finding the passage s that link to this one
+                p -> p.getLinkedPassageUUIDs().contains(passageUUID)
+            )
+            .forEach(
+                    //and updating their content
+                p -> p.setPassageContent(
+                        PassageEditingInterface.getPassageContentWithRenamedLinks(p.getPassageContent(),oldName,trimmedValidatedName)
+                )
+        );
+        /*
+        Set<PassageEditingInterface> deadnamers =
+                allPassages.values().stream().filter(p -> p.getLinkedPassageUUIDs().contains(passageUUID)).collect(Collectors.toSet());
 
+        deadnamers.forEach(
+                (e) -> e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName))
+        );
+
+         */
+        /*
         for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(oldName)){
                 e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
@@ -214,6 +301,8 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
                 e.updateLinkedUUIDs(allPassages);
             }
         }
+
+         */
         /*
         for (UUID u: allPassages.keySet()){
             PassageEditingInterface e = allPassages.get(u);
@@ -242,16 +331,39 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         //removes this passage from the map of all passages
         allPassages.remove(this.getPassageUUID());
 
+        //makes a version of this passage's name with the deleted passage name placeholder suffix
+        String deletedName = this.passageName + SharedPassage.DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX;
+
+        //and now proceeds to remove all the links to this passage from the passages that link to it
+        allPassages.values().stream()
+            .filter(
+                    //finding the passages that link to this one
+                p -> p.getLinkedPassageUUIDs().contains(this.passageUUID)
+            )
+            .forEach(
+                    //removing their links to this passage
+                p-> p.setPassageContent(
+                    PassageEditingInterface.getPassageContentWithRenamedLinks(
+                        p.getPassageContent(),
+                        this.passageName,
+                        deletedName
+                    )
+                )
+        );
+        /*
+
         //deletes all traces of this passage from the existing passages
         for (PassageEditingInterface e: allPassages.values()) {
             if (e.getLinkedPassages().contains(this.passageName)){
-                String deletedName = this.passageName + " !WAS DELETED!";
+                //String deletedName = this.passageName + SharedPassage.DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX;
                 //e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName), Collections.unmodifiableMap(allPassages));//, allPassages);
                 e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));//, allPassages);
                 //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
                 e.removeLinkedPassage(deletedName, this.passageUUID);
             }
         }
+
+         */
         /*
         for (UUID u: allPassages.keySet()){
             PassageEditingInterface e = allPassages.get(u);
@@ -447,6 +559,17 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         //clears existing list of linkedUUIDs
         linkedUUIDs.clear();
 
+        //add the UUIDs of all the named linked passages to the set of linked UUIDs.
+        allPassages.values().stream()
+                .filter(
+                    p -> this.linkedPassages.contains(p.getPassageName())
+                )
+                .limit(linkedPassages.size())
+                .forEach(
+                    p -> linkedUUIDs.add(p.getPassageUUID())
+        );
+
+        /*
         //if the set of linkedPassages isn't empty
         if (!linkedPassages.isEmpty()) {
             //copies linkedPassages into a new set (for efficiency later on)
@@ -475,6 +598,8 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
                 }
             }
         }
+
+         */
     }
 
     /**
@@ -570,6 +695,16 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
             return (this.passageName.equals(obj));
         }
         return false;
+    }
+
+    /**
+     * Obtain an enum representing the current status of the passage
+     *
+     * @return a passageStatus value for this passage
+     */
+    @Override
+    public PassageStatus getPassageStatus() {
+        return status;
     }
 
 

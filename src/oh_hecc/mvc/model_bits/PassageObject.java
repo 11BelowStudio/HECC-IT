@@ -22,26 +22,47 @@ public class PassageObject extends EditModelObject {
      */
     private final UUID theUUID;
 
+    /**
+     * The PassageEditingInterface held by this object
+     */
     private final PassageEditingInterface thePassage;
 
+    /**
+     * Map of the PassageLinkObjects from this object.
+     */
     private final Map<UUID, PassageLinkObject> linkMap;
 
     private final StringObject passageNameObject;
 
     private boolean isSelected;
 
-    private static final Color SELECTED_COLOUR = new Color(0, 255, 255, 191);
+    private Color overlayColour;
+
+    private static final Color NORMAL_COLOUR = SAFETY_ORANGE;
+
+    private static final Color END_COLOUR = SAFETY_YELLOW;
+
+    private static final Color SELECTED_COLOUR = new Color(0,255,255,191);
+
+    private static final Color START_COLOUR = SAFETY_YELLOW;
+
+    private static final Color ERROR_COLOUR = SAFETY_RED;
+
+    //private static Vector2D SCROLL_VECTOR = new Vector2D();
 
     public PassageObject(EditModelInterface model, PassageEditingInterface passage){
         super(passage.getPosition(), model);
 
         //orang
-        this.objectColour = SAFETY_ORANGE;
+        //this.objectColour = SAFETY_ORANGE;
+        this.objectColour = NORMAL_COLOUR;
+
+        overlayColour = SELECTED_COLOUR;
 
         width = 64;
         height = 32;
 
-        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y + (height/2)), width, height);
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
 
         fillArea = new Area(new Rectangle(- (width/2), - (height/2), width, height));
 
@@ -75,10 +96,12 @@ public class PassageObject extends EditModelObject {
 
     public void moveTo(Vector2D newPosition){
         this.position.set(newPosition);
-        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y + (height/2)), width, height);
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
         thePassage.updatePosition(this.position);
         updateLinkedObjectPositions();
     }
+
+
 
     @Override
     public void individualUpdate() {
@@ -94,9 +117,21 @@ public class PassageObject extends EditModelObject {
             }
         }
 
+        switch (thePassage.getPassageStatus()){
+            case NORMAL:
+                objectColour = NORMAL_COLOUR;
+                break;
+            case DELETED_LINK:
+                objectColour = ERROR_COLOUR;
+                break;
+            case END_NODE:
+                objectColour = END_COLOUR;
+                break;
+        }
+
+
         updateLinkedObjectPositions();
     }
-
 
 
 
@@ -106,6 +141,7 @@ public class PassageObject extends EditModelObject {
      */
     public void drawLinks(Graphics2D g){
 
+
         for (PassageLinkObject l: linkMap.values()){
             l.draw(g);
         }
@@ -113,6 +149,7 @@ public class PassageObject extends EditModelObject {
 
     public void nowSelected(){
         isSelected = true;
+        overlayColour = SELECTED_COLOUR;
     }
 
     public void deselected(){
@@ -125,21 +162,47 @@ public class PassageObject extends EditModelObject {
     void individualDraw(Graphics2D g) {
 
 
+
         //setting the colour to objectColour
         g.setColor(objectColour);
 
         //filling in this object's areaRectangle
         g.fill(fillArea);
 
-        //if it is selected, overlay with the selectedColour.
         if (isSelected){
-            g.setColor(SELECTED_COLOUR);
+
+            g.setColor(overlayColour);
             g.fill(fillArea);
+
         }
+
+
 
         //draws the passageNameObject (on top of this object)
         passageNameObject.draw(g);
+
+
     }
+
+
+    /*
+    @Override
+    public void draw(Graphics2D g){
+        super.draw(g);
+        g.setColor(Color.GREEN);
+        g.fill(areaRectangle);
+    }
+
+     */
+
+
+    /*
+    public void scroll(Vector2D scrollBy){
+        position.set(scrollBy);
+    }
+
+     */
+
 
     /**
      * Opens the passage editing window for the passage which this object refers to
@@ -153,13 +216,31 @@ public class PassageObject extends EditModelObject {
     }
 
     /**
-     * Moves this object to the specified new position (and also updates the position of its associated passage object appropriately)
+     * Moves this object by the specified amount of movement.
+     * Updates the position of this object,
+     * updates the position of the passage,
+     * updates this passage's links,
+     * tells the model to update all the links of other passageObjects that link to this object,
+     * and updates the areaRectangle of this passage (so it can still be clicked and such)
      * @param moveVector the vector2D representing the movement that needs to be done by this object
      */
     @Override
     public void move(Vector2D moveVector) {
         super.move(moveVector);
+        updateLinkedObjectPositions();
         thePassage.updatePosition(position);
+        theModel.updatePassageObjectLinksWhichLinkToSpecifiedPassage(theUUID);
+        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
+    }
+
+    /**
+     * Update the position of a specific passageLinkObject
+     * @param updateThisOne the UUID of the link that needs updating
+     */
+    public void updatePositionOfSpecificLink(UUID updateThisOne){
+        if (linkMap.containsKey(updateThisOne)){
+            linkMap.get(updateThisOne).updatePosition();
+        }
     }
 
     /**

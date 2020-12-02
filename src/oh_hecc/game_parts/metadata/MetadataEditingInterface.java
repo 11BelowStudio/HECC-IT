@@ -7,7 +7,7 @@ import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface MetadataEditingInterface extends SharedMetadata {
+public interface MetadataEditingInterface extends SharedMetadata, PassageEditWindowMetadataInterface {
 
     /**
      * Checks whether or not a new title for the game would be valid or not

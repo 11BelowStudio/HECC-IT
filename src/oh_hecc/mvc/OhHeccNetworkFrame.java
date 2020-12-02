@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * This class holds the JFrame which holds the View object responsible for showing the Model to the user
@@ -30,7 +32,6 @@ public class OhHeccNetworkFrame {
         //TODO: add a WindowListener to theFrame via OhHeccRunner, so that, when the user tries to close the window, they may save their work before it closes.
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         theFrame.setLayout(new BorderLayout());
-
 
     }
 
@@ -59,6 +60,12 @@ public class OhHeccNetworkFrame {
         theFrame.revalidate();
         theFrame.setVisible(true);
 
+        //theView.setSize(800,600);
+
+        theFrame.repaint();
+
+
+
 
 
     }
@@ -73,9 +80,11 @@ public class OhHeccNetworkFrame {
                         System.out.println("Resize event");
                         Dimension newDimension = theFrame.getContentPane().getSize();
                         theView.setSize(newDimension);
+                        theView.repaint();
                     }
                 }
         );
+        theFrame.setSize(800,600);
 
 
         theFrame.addWindowListener(
@@ -116,25 +125,18 @@ public class OhHeccNetworkFrame {
         );
 
 
-        theFrame.addWindowStateListener(
-                new WindowStateListener() {
-                    @Override
-                    public void windowStateChanged(WindowEvent e) {
-
-                    }
-                }
-        );
 
 
-        MouseController mc = new MouseController(theView.theModelThatsBeingViewed);
-        theFrame.addMouseListener(
+        MouseController mc = new MouseController(theView.theModelThatsBeingViewed, theFrame);
+        theFrame.getContentPane().addMouseListener(
                 mc
         );
-        theFrame.addMouseMotionListener(
+        theFrame.getContentPane().addMouseMotionListener(
                 mc
         );
 
          theFrame.getContentPane().revalidate();
+         theFrame.repaint();
 
     }
 

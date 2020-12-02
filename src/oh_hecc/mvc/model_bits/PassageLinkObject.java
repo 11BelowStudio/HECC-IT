@@ -28,6 +28,12 @@ public class PassageLinkObject extends EditModelObject {
 
     private Polygon pointTriangle;
 
+    /**
+     * Constructor for the PassageLinkObject
+     * @param model the EditModelInterface object that this object appears in
+     * @param sourceObject the source PassageObject that this 'link' is 'from'.
+     * @param destinationUUID the UUID of the PassageEditingInterface/PassageObject that this 'link' effectively 'links' to.
+     */
     PassageLinkObject(EditModelInterface model, PassageObject sourceObject, UUID destinationUUID) {
         super(sourceObject.position, model);
 

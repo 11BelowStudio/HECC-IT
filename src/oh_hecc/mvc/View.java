@@ -18,11 +18,15 @@ public class View extends JComponent {
     Model theModelThatsBeingViewed;
 
 
+
+
     /**
      * Create a View that doesn't show a model.
      */
     public View(){
+
         drawingModel = false;
+        this.setSize(800,600);
     }
 
     /**
@@ -41,26 +45,30 @@ public class View extends JComponent {
     public void showThisModel(Model m){
         theModelThatsBeingViewed = m;
         drawingModel = true;
-        this.setPreferredSize(m.getPreferredSize());
 
     }
 
     @Override
-    public void paint(Graphics g0){
-        super.paint(g0);
+    public void paintComponent(Graphics g0){
+        super.paintComponent(g0);
+        //super.paint(g0);
+        //theModelThatsBeingViewed.revalidate();
+        if (drawingModel){
+            //theModelThatsBeingViewed.draw(g);
+            theModelThatsBeingViewed.paint(g0);
+        }
+        /*
         Graphics2D g = (Graphics2D) g0;
 
         AffineTransform initialTransform = g.getTransform();
 
-        //g.setColor(Color.RED);
-        g.fillRect(0,0,getWidth(),getHeight());
 
-        if (drawingModel){
-            //theModelThatsBeingViewed.draw(g);
-            theModelThatsBeingViewed.paint(g);
-        }
+        //g.setColor(Color.RED);
+        //g.fillRect(0,0,getWidth(),getHeight());
+
 
         g.setTransform(initialTransform);
+        */
 
     }
 

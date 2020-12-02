@@ -9,6 +9,9 @@ import oh_hecc.mvc.PassageModel;
 import oh_hecc.mvc.View;
 import utilities.TextAssetReader;
 
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -61,6 +64,23 @@ public class OhHeccRunner {
         editFrame.addTheView(editorView);
         editFrame.addTheListeners();
 
+        editFrame.theFrame.invalidate();
+
+        Timer repaintTimer = new Timer(
+                1000,
+                e -> editorView.repaint()
+        );
+
+        repaintTimer.start();
+
+        editFrame.theFrame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        repaintTimer.stop();
+                    }
+                }
+        );
 
         //Model m = new PassageModel(new EditableMetadata("sample name","a.n.onymous"), new HashMap<>());
         //View v = new View(m);

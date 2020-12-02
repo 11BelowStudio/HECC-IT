@@ -4,6 +4,7 @@ import utilities.Vector2D;
 
 import java.awt.*;
 
+@Deprecated
 public class ControllerAction implements ActionViewer{
 
     private final Point leftLocation;

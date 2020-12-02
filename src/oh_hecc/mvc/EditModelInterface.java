@@ -36,4 +36,18 @@ public interface EditModelInterface {
     Map<UUID, PassageEditingInterface> getThePassageMap();
 
 
+    /**
+     * Obtains the UUIDs of the passages that link to the destination passage
+     * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
+     * @return the UUIDs of all the 'parent' passage
+     */
+    Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination);
+
+    /**
+     * Update the passageLinks of the passage objects that link to the given passage
+     * @param destination the UUID of the destination passage whose parents need to update their links.
+     */
+    void updatePassageObjectLinksWhichLinkToSpecifiedPassage(UUID destination);
+
+
 }
