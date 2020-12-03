@@ -1,7 +1,12 @@
 package utilities;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A utility class that can read text stuff
@@ -16,16 +21,16 @@ public class TextAssetReader {
     /**
      * heccer.js as an Arraylist of strings
      */
-    private final static ArrayList<String> HECCER = fileToStaticStringArrayList("heccer.js");
+    private final static List<String> HECCER = fileToStaticStringArrayList("heccer.js");
     /**
      * index.html as an ArrayList of strings
      */
-    private final static ArrayList<String> INDEX = fileToStaticStringArrayList("index.html");
+    private final static List<String> INDEX = fileToStaticStringArrayList("index.html");
 
     /**
      * iFictionTemplate.iFiction as an ArrayList of strings
      */
-    private final static ArrayList<String> IFICTION_TEMPLATE = fileToStaticStringArrayList("iFictionTemplate.iFiction");
+    private final static List<String> IFICTION_TEMPLATE = fileToStaticStringArrayList("iFictionTemplate.iFiction");
 
     /**
      * HeccSample.hecc as a string
@@ -37,9 +42,9 @@ public class TextAssetReader {
      * @param filename the name of the file
      * @return the contents of the file, as an ArrayList of Strings
      */
-    private static ArrayList<String> fileToStaticStringArrayList(String filename){
+    private static List<String> fileToStaticStringArrayList(String filename){
         //if it wasn't obvious, yes, this was unceremoniously borrowed from my CE218 stuff
-        ArrayList<String> output = new ArrayList<>();
+        List<String> output = new ArrayList<>();
         try{
             InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
             //This allows the specified text asset file to be packaged within the .jar ;)
@@ -57,12 +62,12 @@ public class TextAssetReader {
         return output;
     }
 
+    //this is/was used to read 'HeccSample.hecc' in src/assets/textAssets.
     /**
      * Like fileToStaticStringArrayList, but returns the file as a single String instead
      * @param filename the name of the file to read
      * @return the contents of the file, as a strin
      */
-    //this is/was used to read 'HeccSample.hecc' in src/assets/textAssets.
     private static String fileToStaticString(String filename){
         StringBuilder output = new StringBuilder();
         try{
@@ -86,6 +91,8 @@ public class TextAssetReader {
      * @throws IOException if the file couldn't be read
      */
     public static String fileToString(String fileLocation) throws IOException{
+        return String.join("\n", Files.readAllLines(Paths.get(fileLocation)));
+        /*
         StringBuilder output = new StringBuilder();
         FileReader fr = new FileReader(fileLocation);
         BufferedReader br = new BufferedReader(fr);
@@ -95,6 +102,8 @@ public class TextAssetReader {
         }
         br.close();
         return output.toString();
+
+         */
     }
 
 
@@ -107,16 +116,17 @@ public class TextAssetReader {
      * gets the static ArrayList<String> representation of the heccer.js file
      * @return the static ArrayList<String> representation of the heccer.js file
      */
-    public static ArrayList<String> getHECCER() {return HECCER;}
+    public static List<String> getHECCER() {return HECCER;}
     /**
      * gets the static ArrayList<String> representation of the index.html file
      * @return the static ArrayList<String> representation of the index.html file
      */
-    public static ArrayList<String> getIndex() {return INDEX;}
+    public static List<String> getIndex() {return INDEX;}
 
     /**
      * gets the static ArrayList<String> representation of the iFictionTemplate.iFiction file
      * @return the static ArrayList<String> representation of the iFictionTemplate.iFiction file
      */
-    public static ArrayList<String> getIFictionTemplate(){ return IFICTION_TEMPLATE; }
+    public static List<String> getIFictionTemplate(){ return IFICTION_TEMPLATE; }
+
 }

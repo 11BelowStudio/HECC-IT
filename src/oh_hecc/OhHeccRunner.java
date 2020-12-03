@@ -10,10 +10,14 @@ import oh_hecc.mvc.View;
 import utilities.TextAssetReader;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
-import java.util.UUID;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class OhHeccRunner {
 
@@ -51,8 +55,9 @@ public class OhHeccRunner {
      * yeet this asap.
      */
     private void yknowWhatItsTimeToTestThisOut() throws Exception{
+        heccFilePath = "src/assets/textAssets/HeccSample2.hecc";
         heccParser = new OhHeccParser(
-                TextAssetReader.fileToString("src/assets/textAssets/HeccSample.hecc")
+                TextAssetReader.fileToString(heccFilePath)
         );
         editModel = new PassageModel(heccParser.getMetadata(),heccParser.getHeccMap());
         editorView = new View(editModel);
@@ -77,10 +82,19 @@ public class OhHeccRunner {
                 new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
+
                         repaintTimer.stop();
+
+                        //TODO: better save thing
+                        try {
+                            Files.write(Paths.get(heccFilePath), Collections.singleton(editModel.getHecced()));
+                        } catch (IOException ignored) {
+                        }
                     }
                 }
         );
+
+
 
         //Model m = new PassageModel(new EditableMetadata("sample name","a.n.onymous"), new HashMap<>());
         //View v = new View(m);

@@ -1,5 +1,6 @@
 package oh_hecc.mvc;
 
+import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
@@ -964,6 +965,16 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             b.resize(getWidth(),getHeight());
         }
         repaint();
+    }
+
+    public String getHecced(){
+        //String hecced =
+        return
+            theMetadata.toHecc().concat("\n").concat(
+                    passageMap.values().stream().map(Heccable::toHecc)
+                            .collect(Collectors.joining("\n")));
+        //System.out.println(hecced);
+        //return hecced;
     }
 
 

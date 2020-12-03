@@ -37,7 +37,7 @@ class Passage{
         //returns whether or not this.tags contains the specifiedTag
             //does this by returning whether or not the result of find(specifiedTag) is undefined or not
             //if undefined, it's not present, else, it is present.
-        return (this.tags.find(specifiedTag) != undefined);
+        return (this.tags.find(specifiedTag) !== undefined);
     }
 }
 
@@ -133,7 +133,7 @@ class HECCER{
         var currentPassage = this.passageMap.get(pName); //obtains the passage object from the passageMap which the top GameState refers to
         //console.log(currentPassage);
 
-        if (currentPassage == undefined){
+        if (currentPassage === undefined){
 
             window.alert("uh oh, there's no passage called " + pName + "!");
 

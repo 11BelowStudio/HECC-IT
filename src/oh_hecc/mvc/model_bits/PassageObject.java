@@ -53,9 +53,7 @@ public class PassageObject extends EditModelObject {
     public PassageObject(EditModelInterface model, PassageEditingInterface passage){
         super(passage.getPosition(), model);
 
-        //orang
-        //this.objectColour = SAFETY_ORANGE;
-        this.objectColour = NORMAL_COLOUR;
+
 
         overlayColour = SELECTED_COLOUR;
 
@@ -78,6 +76,8 @@ public class PassageObject extends EditModelObject {
 
         linkMap = new HashMap<>();
 
+        linkedUUIDs.forEach(u -> linkMap.put(u,new PassageLinkObject(model,this,u)));
+        /*
         if (!linkedUUIDs.isEmpty()){
             System.out.println("linked UUIDS from " + passage.getPassageName());
             for (UUID u: linkedUUIDs){
@@ -88,6 +88,26 @@ public class PassageObject extends EditModelObject {
             System.out.println("no UUIDs for " + passage.getPassageName());
         }
 
+         */
+
+        //orang
+        //this.objectColour = SAFETY_ORANGE;
+        whatColourShouldThisObjectBe();
+
+    }
+
+    private void whatColourShouldThisObjectBe(){
+        switch (thePassage.getPassageStatus()){
+            case NORMAL:
+                objectColour = NORMAL_COLOUR;
+                break;
+            case DELETED_LINK:
+                objectColour = ERROR_COLOUR;
+                break;
+            case END_NODE:
+                objectColour = END_COLOUR;
+                break;
+        }
     }
 
     public UUID getTheUUID(){
@@ -117,18 +137,7 @@ public class PassageObject extends EditModelObject {
             }
         }
 
-        switch (thePassage.getPassageStatus()){
-            case NORMAL:
-                objectColour = NORMAL_COLOUR;
-                break;
-            case DELETED_LINK:
-                objectColour = ERROR_COLOUR;
-                break;
-            case END_NODE:
-                objectColour = END_COLOUR;
-                break;
-        }
-
+        whatColourShouldThisObjectBe();
 
         updateLinkedObjectPositions();
     }

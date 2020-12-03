@@ -65,9 +65,6 @@ public class OhHeccNetworkFrame {
         theFrame.repaint();
 
 
-
-
-
     }
 
     public void addTheListeners(){

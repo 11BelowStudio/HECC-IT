@@ -85,7 +85,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         inlinePassageComment = "";
         trailingComment = "";
         position = new Vector2D();
-        linkedPassages = new TreeSet<>();
+        linkedPassages = new HashSet<>();
 
         linkedUUIDs = new HashSet<>();
         updatePassageStatus();

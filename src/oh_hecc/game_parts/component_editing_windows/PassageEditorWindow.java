@@ -93,7 +93,8 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
 
         //RENAMING THE PASSAGE
-        JPanel nameEditPanel = new JPanel(new GridLayout(3,1));
+        //JPanel nameEditPanel = new JPanel(new GridLayout(3,1));
+        JPanel nameEditPanel = new JPanel(new GridLayout(2,1));
         nameEditPanel.setBorder(new TitledBorder(loweredEtchedBorder, "Edit passage name"));
 
         JLabel nameEditLabel = new JLabel();
@@ -101,18 +102,24 @@ public class PassageEditorWindow extends GenericEditorWindow {
         nameEditLabel.setText("Passage name must start/end with numbers/letters/underscore. May contain spaces. Duplicate names are banned.");
         nameEditPanel.add(nameEditLabel);
 
+        JPanel namePanel = new JPanel();
+        namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
         nameField = new JTextField(thePassage.getPassageName(), 64);
         nameField.setEditable(true);
-        nameEditPanel.add(nameField);
-        JButton updateTitleButton = new JButton("Rename Passage");
+        //nameEditPanel.add(nameField);
+        namePanel.add(nameField);
+        JButton updateTitleButton = new JButton("Rename");
         updateTitleButton.addActionListener( e -> updateName(nameField.getText().trim()));
-        nameEditPanel.add(updateTitleButton);
+        //nameEditPanel.add(updateTitleButton);
+        namePanel.add(updateTitleButton);
+        nameEditPanel.add(namePanel);
 
         theFrame.add(nameEditPanel);
 
 
         //EDITING PASSAGE TAGS
-        JPanel tagEditPanel = new JPanel(new GridLayout(3,1));
+        //JPanel tagEditPanel = new JPanel(new GridLayout(3,1));
+        JPanel tagEditPanel = new JPanel(new GridLayout(2,1));
         tagEditPanel.setBorder(new TitledBorder(loweredEtchedBorder, "Edit passage tags"));
 
         JLabel tagEditLabel = new JLabel();
@@ -120,17 +127,25 @@ public class PassageEditorWindow extends GenericEditorWindow {
         tagEditLabel.setText("Tags may only contain letters/numbers/underscores. Must be separated by spaces");
         tagEditPanel.add(tagEditLabel);
 
+        JPanel tagPanel = new JPanel();
+        tagPanel.setLayout(new BoxLayout(tagPanel,BoxLayout.X_AXIS));
         tagField = new JTextField(thePassage.getPassageTagsAsString(), 64);
         tagField.setEditable(true);
-        tagEditPanel.add(tagField);
+        //tagEditPanel.add(tagField);
+        tagPanel.add(tagField);
         JButton updateTagButton = new JButton("Update Tags");
         updateTagButton.addActionListener( e -> updateTags(tagField.getText().trim()));
-        tagEditPanel.add(updateTagButton);
+        //tagEditPanel.add(updateTagButton);
+        tagPanel.add(updateTagButton);
+
+        tagEditPanel.add(tagPanel);
 
         theFrame.add(tagEditPanel);
 
         //EDITING INLINE COMMENT
-        JPanel inlineEditPanel = new JPanel(new GridLayout(2,1));
+        //JPanel inlineEditPanel = new JPanel(new GridLayout(2,1));
+        JPanel inlineEditPanel = new JPanel();
+        inlineEditPanel.setLayout(new BoxLayout(inlineEditPanel,BoxLayout.X_AXIS));
         inlineEditPanel.setBorder(
                 new TitledBorder(
                         loweredEtchedBorder,
@@ -141,7 +156,8 @@ public class PassageEditorWindow extends GenericEditorWindow {
         inlineCommentField = new JTextField(thePassage.getInlinePassageComment(), 64);
         inlineCommentField.setEditable(true);
         inlineEditPanel.add(inlineCommentField);
-        JButton updateInlineButton = new JButton("Update Inline Comment");
+        //JButton updateInlineButton = new JButton("Update Inline Comment");
+        JButton updateInlineButton = new JButton("Update Comment");
         updateInlineButton.addActionListener( e -> updateInlineComment(inlineCommentField.getText().trim()));
         inlineEditPanel.add(updateInlineButton);
 

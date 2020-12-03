@@ -137,6 +137,8 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
         drawModel(g);
     }
 
+    public abstract String getHecced();
+
     public abstract void drawModel(Graphics2D g);
 
 

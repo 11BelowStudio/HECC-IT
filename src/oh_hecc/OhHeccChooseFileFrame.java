@@ -3,6 +3,7 @@ package oh_hecc;
 import oh_hecc.mvc.View;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
 /**
@@ -18,6 +19,7 @@ public class OhHeccChooseFileFrame {
     private boolean selectedHeccFileToOpen;
     private JTextArea openTextArea;
     private JFileChooser openHeccFileChooser;
+    private JButton startEditingButton;
 
 
     private boolean selectedHeccFileToMake;
@@ -54,25 +56,41 @@ public class OhHeccChooseFileFrame {
         selectFileToOpenPanel.setLayout(new BoxLayout(selectFileToOpenPanel,BoxLayout.Y_AXIS));
 
         openTextArea = new JTextArea("Please select a HECC file to open",3,48);
+        openTextArea.setEditable(false);
         selectFileToOpenPanel.add(openTextArea);
+
+        openHeccFileChooser = new JFileChooser();
+        openHeccFileChooser.setMultiSelectionEnabled(false);
+        openHeccFileChooser.setFileFilter(new FileNameExtensionFilter(".hecc files","hecc","HECC","Hecc"));
+        openHeccFileChooser.setDialogTitle("Pick a .hecc file to open");
 
         JButton openButton = new JButton("Select file to open");
         openButton.addActionListener( e-> selectFileToOpen());
         selectFileToOpenPanel.add(openButton);
 
-
-        JButton startEditingButton = new JButton("Start editing");
-        startEditingButton.addActionListener( e -> startEditing());
-
-        selectFileToOpenPanel.add(openExistingFilePanel);
-
         openExistingFilePanel.add(selectFileToOpenPanel);
 
+        startEditingButton = new JButton("Start editing");
+        startEditingButton.addActionListener( e -> startEditing());
+
+        startEditingButton.setVisible(false);
+
+        openExistingFilePanel.add(startEditingButton);
+
+        //selectFileToOpenPanel.add(openExistingFilePanel);
+
+
+
+        theFrame.add(openExistingFilePanel);
 
 
         //TODO: stuff for creating a new hecc file from scratch
         JPanel startFromScratchPanel = new JPanel();
         startFromScratchPanel.setLayout(new BoxLayout(startFromScratchPanel,BoxLayout.Y_AXIS));
+
+
+        theFrame.setVisible(true);
+        theFrame.pack();
 
 
     }
@@ -81,6 +99,14 @@ public class OhHeccChooseFileFrame {
 
     private void selectFileToOpen(){
         //TODO: open JFileChooser, allow user to pick a .hecc file
+
+        if(openHeccFileChooser.showDialog(theFrame,"Open this file") == JFileChooser.APPROVE_OPTION){
+            selectedHeccFileToMake = true;
+            fileLocation = openHeccFileChooser.getSelectedFile().getAbsolutePath();
+            openTextArea.setText(fileLocation);
+            startEditingButton.setVisible(true);
+
+        }
     }
 
     private void startEditing(){
@@ -93,5 +119,9 @@ public class OhHeccChooseFileFrame {
 
     private void startEditingNewFile(){
         //TODO: start editing the new .hecc file
+    }
+
+    public static void main(String[] args) {
+        new OhHeccChooseFileFrame();
     }
 }
