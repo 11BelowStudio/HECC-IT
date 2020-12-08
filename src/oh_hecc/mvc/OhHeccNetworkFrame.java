@@ -1,13 +1,8 @@
 package oh_hecc.mvc;
 
-import oh_hecc.mvc.controller.MouseController;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * This class holds the JFrame which holds the View object responsible for showing the Model to the user

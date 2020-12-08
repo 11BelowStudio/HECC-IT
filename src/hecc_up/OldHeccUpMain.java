@@ -3,6 +3,8 @@ package hecc_up;
 /**
  * This used to be the main class for HECC UP
  * but now it's mainly used for testing the creation of a HECCIN' Game when I'm too lazy to use HeccUpGUI
+ * @deprecated just use HeccUpGUI instead lmao
+ * @see HeccUpGUI
  */
 @Deprecated
 public class OldHeccUpMain implements LoggerInterface{
@@ -15,6 +17,7 @@ public class OldHeccUpMain implements LoggerInterface{
 
     /**
      * Constructor
+     * <br>
      * bottom text
      */
     public OldHeccUpMain(){

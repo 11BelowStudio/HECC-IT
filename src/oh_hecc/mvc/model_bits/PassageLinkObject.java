@@ -5,7 +5,6 @@ import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.util.UUID;
 
 /**
@@ -26,7 +25,7 @@ public class PassageLinkObject extends EditModelObject {
 
     private double rotationAngle;
 
-    private Polygon pointTriangle;
+    private final Polygon pointTriangle;
 
     /**
      * Constructor for the PassageLinkObject

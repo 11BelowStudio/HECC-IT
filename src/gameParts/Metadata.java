@@ -1,11 +1,11 @@
-package GameParts;
+package gameParts;
 
 import heccCeptions.NoMatchException;
 import hecc_up.FolderOutputterMetadataInterface;
-import utilities.IFIDgenerator;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,12 +19,12 @@ public class Metadata implements FolderOutputterMetadataInterface {
     /**
      * string with the raw metadata
      */
-    private String rawMetadata;
+    private final String rawMetadata;
 
     /**
      * boolean value to keep track of whether or not this actually has metadata
      */
-    private boolean hasMetadata;
+    private final boolean hasMetadata;
 
     //These are going to be used to store the metadata about the game title and the author name
     /**
@@ -63,7 +63,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
     /**
      * All the variable definitions
      */
-    private ArrayList<Variable> variables;
+    private final ArrayList<Variable> variables;
 
     /**
      * The multline comment held within the metadata
@@ -309,7 +309,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
                 //Add instructions on declaring an IFID if no IFID was declared
                 instructionBuilder.append(
                         "No Interactive Fiction Identifier declaration found! You can fix this with this line of code:\n"
-                        + "!IFID: " + IFIDgenerator.generateIFIDString()
+                        + "!IFID: " + UUID.randomUUID().toString().toUpperCase()
                         + "\n"
                 );
             }

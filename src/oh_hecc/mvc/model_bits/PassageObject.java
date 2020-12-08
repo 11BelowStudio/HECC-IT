@@ -1,13 +1,15 @@
 package oh_hecc.mvc.model_bits;
 
-import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.Area;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * ok so basically this represents an EditablePassage object

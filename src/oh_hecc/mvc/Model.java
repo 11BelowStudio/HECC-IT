@@ -1,11 +1,6 @@
 package oh_hecc.mvc;
 
-import oh_hecc.mvc.controller.Controller;
-import oh_hecc.mvc.controller.ControllerInterface;
-
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
 public abstract class Model extends Canvas implements MouseControlModelInterface{
@@ -46,6 +41,9 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
 
     //final ControllerInterface theController;
 
+    /**
+     * oh look, some synchronization for multithreaded stuff
+     */
     final Object SYNC_OBJECT = new Object();
 
     final Color backgroundColour = W3_NIGHT;

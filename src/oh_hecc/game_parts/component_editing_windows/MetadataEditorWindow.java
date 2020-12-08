@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
@@ -42,9 +41,9 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
     //some shit what hasn't been used
-    private AttributeString<String> currentTitle;
-    private AttributeString<String> currentAuthor;
-    private AttributeString<String> currentStartPassage;
+    private final AttributeString<String> currentTitle;
+    private final AttributeString<String> currentAuthor;
+    private final AttributeString<String> currentStartPassage;
     private final AttributeString<String> currentIFID;
 
     private JTextArea titleText;

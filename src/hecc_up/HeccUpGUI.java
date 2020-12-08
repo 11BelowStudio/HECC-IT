@@ -350,6 +350,7 @@ public class HeccUpGUI implements LoggerInterface {
 
     /**
      * Main function
+     * <br>
      * bottom text
      * @param args not used
      */

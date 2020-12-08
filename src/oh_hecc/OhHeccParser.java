@@ -1,14 +1,9 @@
 package oh_hecc;
 
-import GameParts.Metadata;
-import GameParts.Passage;
-import heccCeptions.*;
-import hecc_up.LoggerInterface;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import utilities.IFIDgenerator;
 import utilities.TextAssetReader;
 
 import javax.swing.*;
@@ -35,15 +30,6 @@ public class OhHeccParser {
     //TODO: parse the HECC file into the heccMap and theMetadata
 
 
-    /**
-     * the thing what called the passageParser (which this might need to log info to)
-     */
-    //private final LoggerInterface logger;
-
-    /**
-     * the hecced data which this will construct and output
-     */
-    //private final ArrayList<String> heccedData;
 
     /**
      * a set of all the passage names

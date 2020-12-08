@@ -4,9 +4,14 @@ import utilities.Vector2D;
 
 import java.awt.*;
 
+/**
+ * An AbstractObject that basically just displays a string (White text with black border) at a given position in the model.
+ */
 public class StringObject extends AbstractObject {
 
-
+    /**
+     * The string that is actually being displayed.
+     */
     private String theString;
 
     private int alignment;
@@ -21,6 +26,9 @@ public class StringObject extends AbstractObject {
 
 
     //le ebic font has arrived no bamboozle
+    /**
+     * <b>megalovania starts playing in the distance</b>
+     */
     public static final Font SANS = new Font("Comic Sans MS",  Font.PLAIN , 20);
     public static final Font MEDIUM_SANS = new Font("Comic sans MS", Font.PLAIN,40);
     public static final Font BIG_SANS = new Font("Comic sans MS", Font.PLAIN,50);
@@ -131,7 +139,7 @@ public class StringObject extends AbstractObject {
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             int w = metrics.stringWidth(theString);
             int h = metrics.getHeight();
-            int heightOffset = (int)(-h/2);
+            int heightOffset = -h/2;
             int widthOffset;
             switch (alignment){
                 default:

@@ -98,7 +98,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     /**
      * Any currently-opened EditorWindowInterface object
      */
-    private EditorWindowInterface editWindow;
+    private final EditorWindowInterface editWindow;
 
     /**
      * does it need to add listener to editwindow
@@ -115,7 +115,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     /**
      * A blue colour for the selection area
      */
-    private static Color SELECTION_AREA_COLOUR = new Color(47, 189, 203);
+    private static final Color SELECTION_AREA_COLOUR = new Color(47, 189, 203);
 
     /**
      * Constructs the PassageModel object

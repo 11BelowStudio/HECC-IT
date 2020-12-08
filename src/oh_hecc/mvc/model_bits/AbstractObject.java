@@ -89,7 +89,7 @@ public abstract class AbstractObject {
 
     /**
      * Obtains the position vector of this AbstractObject
-     * @return
+     * @return the position
      */
     public Vector2D getPosition(){
         return position;

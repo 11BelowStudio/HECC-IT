@@ -1,6 +1,6 @@
-package GameParts;
+package gameParts;
 
-import heccCeptions.*;
+import heccCeptions.UndefinedPassageException;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -21,17 +21,17 @@ public class Passage {
     /**
      * the name of this passage
      */
-    private String passageName;
+    private final String passageName;
 
     /**
      * raw unparsed content
      */
-    private String unparsedContent;
+    private final String unparsedContent;
 
     /**
      * A trailing multiline comment behind this passage object
      */
-    private String trailingComment;
+    private final String trailingComment;
 
     /**
      * the comment that's inline with the passage declaration
@@ -51,7 +51,7 @@ public class Passage {
     /**
      * a set with the names of all the passages this passage is linked to
      */
-    private Set<String> linkedPassages;
+    private final Set<String> linkedPassages;
 
     /**
      * an arrayList of string tag names (which this passage is tagged with).
@@ -62,7 +62,7 @@ public class Passage {
     /**
      * a position Vector2D. will be used with OH-HECC.
      */
-    private Vector2D position;
+    private final Vector2D position;
         //will be used later on, with OH-HECC
 
     //private final Matcher speechMatcher = Pattern.compile("(?<speechmarks>\\\")",Pattern.MULTILINE).matcher("");

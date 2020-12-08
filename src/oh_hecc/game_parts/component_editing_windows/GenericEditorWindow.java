@@ -2,7 +2,6 @@ package oh_hecc.game_parts.component_editing_windows;
 
 import oh_hecc.Parseable;
 import oh_hecc.game_parts.EditWindowGameDataInterface;
-import oh_hecc.game_parts.GameDataObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -3,13 +3,10 @@ package oh_hecc.game_parts.passage;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.Heccable;
 import oh_hecc.Parseable;
-import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import utilities.Vector2D;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Like Passage but this time it's actually Editable!
@@ -613,17 +610,6 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
          */
     }
 
-    /**
-     * Basically, it's the static {openEditorWindow method but as an instance method instead.
-     * @param allPassages the map of all passages
-     * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
-     */
-    /*
-    @Override
-    public PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages){
-        return PassageEditingInterface.openEditorWindow(this,allPassages);
-    }
-     */
 
     /**
      * This obtains a version of this passage in .hecc format

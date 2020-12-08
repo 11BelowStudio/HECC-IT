@@ -1,6 +1,12 @@
 package misc_testing_and_such.hecc_up_testing;
 
-/*
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
 27/08/2020
 
 HECC-UP parser test
@@ -9,13 +15,10 @@ this basically is a demonstration of the parser bit of HECC-UP
 
 it's basically being given the HECC code from the HECC-SPECC v0.1, and parses it into a HECC game.
 
+ @author Rachel Lowe
+ @deprecated use HECC-UP instead lmao
  */
-
-import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.*;
-
+@Deprecated
 public class HeccUpParserTest {
 
     String dataToParse;
@@ -70,7 +73,7 @@ public class HeccUpParserTest {
             if (startIndex > 1){
                 metadata = dataToParse.substring(0,startIndex-1);
                 hasMetadata = true;
-                dataToParse = dataToParse.substring(startIndex, dataToParse.length());
+                dataToParse = dataToParse.substring(startIndex);
             }
         }
 
@@ -137,7 +140,7 @@ public class HeccUpParserTest {
                     //THROW EXCEPTION HERE
                     throw new UndefinedPassageException(temp);
                 }
-                String link = "<a class=\\\\\"passageLink\\\\\" onclick=\'theHeccer.goToPassage(\\\\\""+temp+"\\\\\")\'>"+temp+"</a>";
+                String link = "<a class=\\\\\"passageLink\\\\\" onclick='theHeccer.goToPassage(\\\\\"" +temp+ "\\\\\")'>" +temp+"</a>";
                 dataToParse = directLinkMatcher.replaceFirst(link);
                 directLinkMatcher.reset(dataToParse);
             }
@@ -165,7 +168,7 @@ public class HeccUpParserTest {
                     //THROW EXCEPTION HERE
                     throw new UndefinedPassageException(linkParts[1]);
                 }
-                String link = "<a class=\\\\\"passageLink\\\\\" onclick=\'theHeccer.goToPassage(\\\\\""+linkParts[1]+"\\\\\")\'>"+linkParts[0]+"</a>";
+                String link = "<a class=\\\\\"passageLink\\\\\" onclick='theHeccer.goToPassage(\\\\\"" +linkParts[1]+ "\\\\\")'>" +linkParts[0]+"</a>";
                 //System.out.println(link);
                 dataToParse = indirectLinkMatcher.replaceFirst(link);
                 indirectLinkMatcher.reset(dataToParse);
@@ -210,7 +213,7 @@ public class HeccUpParserTest {
             if (notDone){
                 String tempDeclaration = declarationMatcher.group(0);
                 //String tempDeclaration = passageNameMatcher.group(0);
-                nextPassageName = tempDeclaration.substring(2,tempDeclaration.length());
+                nextPassageName = tempDeclaration.substring(2);
                 nextDeclarationStart = declarationMatcher.start();
                 //nextDeclarationStart = passageNameMatcher.start();
                 if (!foundFirst){
@@ -353,7 +356,7 @@ public class HeccUpParserTest {
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         /*
         String input = "this line is before the first passage declaration, so, officially, this line doesn't exist! \n\n"

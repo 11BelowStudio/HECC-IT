@@ -3,12 +3,12 @@ package oh_hecc.game_parts.passage;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.Heccable;
-import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
-import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
 import utilities.Vector2D;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -186,44 +186,6 @@ public interface PassageEditingInterface extends SharedPassage {
      */
     void setTrailingComment(String newComment);
 
-
-
-    /**
-     * Creates a PassageEditorWindow for the given passage (and the map of all the passages)
-     * @ param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
-     * @ param allPassages the map of all passages
-     * @ return a {@link PassageEditorWindow} which allows a user to edit the passage in question
-     */
-    /*
-    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages){
-        return new PassageEditorWindow(passageToEdit,allPassages);
-    }
-
-     */
-
-    /**
-     * Creates a PassageEditorWindow for the given passage (and the map of all the passages, along with an optional bit of metadata)
-     * @ param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
-     * @ param allPassages the map of all passages
-     * @ param metadata the metadata. This is only here so, if this is the start passage, the reference to the start passage in the metadata can be renamed.
-     * @ return a {@link PassageEditorWindow} which allows a user to edit the passage in question
-     */
-    /*
-    static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages, PassageEditWindowMetadataInterface metadata){
-        return new PassageEditorWindow(passageToEdit,allPassages,metadata);
-    }
-     */
-
-    /**
-     * Basically, it's the static {openEditorWindow method but as an instance method instead.
-     * @ param allPassages the map of all passages
-     * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
-     */
-    //PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages);
-
-
-    @Override
-    boolean equals(Object obj);
 
     /**
      * Obtain an enum representing the current status of the passage

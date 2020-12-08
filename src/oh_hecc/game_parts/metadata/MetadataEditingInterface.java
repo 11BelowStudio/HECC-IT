@@ -2,7 +2,6 @@ package oh_hecc.game_parts.metadata;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

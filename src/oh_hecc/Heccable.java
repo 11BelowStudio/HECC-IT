@@ -1,7 +1,7 @@
 package oh_hecc;
 
 /**
- * An interface which indicates that this class can be converted into HECC code
+ * An interface which indicates that this class's data can be converted into HECC code
  */
 public interface Heccable {
     /**

@@ -3,26 +3,20 @@ package oh_hecc.game_parts.component_editing_windows;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
-import oh_hecc.Parseable;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import utilities.Vector2D;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -53,7 +47,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
 
     private JTextField tagField;
-    private boolean areTagsValid = true;
+    private final boolean areTagsValid = true;
 
     private JTextField inlineCommentField;
 
@@ -451,7 +445,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
             System.out.println(e.getValue().outputAsStringForDebuggingReasons());
-            System.out.println("");
+            System.out.println();
         }
 
         //PassageEditingInterface editThis = passages.get(samples[0].getPassageUUID());

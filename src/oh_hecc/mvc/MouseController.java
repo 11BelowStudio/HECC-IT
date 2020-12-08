@@ -1,6 +1,4 @@
-package oh_hecc.mvc.controller;
-
-import oh_hecc.mvc.MouseControlModelInterface;
+package oh_hecc.mvc;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -17,6 +15,9 @@ public class MouseController implements MouseListener, MouseMotionListener {
      */
     private final MouseControlModelInterface controlledModel;
 
+    /**
+     * The frame holding the model that's being controlled
+     */
     private final JFrame theFrame;
 
     public MouseController(MouseControlModelInterface m, JFrame f){

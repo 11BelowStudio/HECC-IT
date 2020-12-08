@@ -2,13 +2,11 @@ package oh_hecc;
 
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
-import oh_hecc.mvc.controller.Controller;
 import oh_hecc.mvc.OhHeccNetworkFrame;
 import oh_hecc.mvc.PassageModel;
 import oh_hecc.mvc.View;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
 
 public class OhHeccRunner {
 
@@ -34,7 +32,7 @@ public class OhHeccRunner {
 
     private GameDataObject theGameData;
 
-    private ChooseFile chooseFile;
+    private final ChooseFile chooseFile;
 
     public OhHeccRunner(){
 

@@ -1,4 +1,4 @@
-package GameParts;
+package gameParts;
 
 
 import oh_hecc.Heccable;

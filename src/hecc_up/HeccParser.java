@@ -1,9 +1,8 @@
 package hecc_up;
 
-import GameParts.Metadata;
-import GameParts.Passage;
+import gameParts.Metadata;
+import gameParts.Passage;
 import heccCeptions.*;
-import utilities.IFIDgenerator;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -42,7 +41,7 @@ public class HeccParser {
     /**
      * the raw .hecc data
      */
-    private String dataToParse;
+    private final String dataToParse;
 
     /**
      * the metadata object
@@ -442,7 +441,7 @@ public class HeccParser {
                 + "If you want a better explanation, here's a better explanation: https://ifdb.tads.org/help-ifid\n"
                 + "Anywho, here's a line of code with a newly generated IFID that you can put in your hecc file, before the first passage declaration,\n"
                 + "in case you actually want to declare an IFID for your work:\n\n";
-        String ifidString = "!IFID: " + IFIDgenerator.generateIFIDString();
+        String ifidString = "!IFID: " + UUID.randomUUID().toString().toUpperCase();
         return (suggestion.concat(ifidString));
     }
 

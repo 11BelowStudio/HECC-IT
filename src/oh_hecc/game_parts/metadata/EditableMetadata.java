@@ -1,12 +1,10 @@
 package oh_hecc.game_parts.metadata;
 
-import GameParts.Variable;
+import gameParts.Variable;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import heccCeptions.NoMatchException;
-import oh_hecc.Heccable;
 import oh_hecc.Parseable;
-import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -20,26 +18,11 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
      */
     private String title = "An Interactive Fiction"; //default title used if undefined
 
-    /**
-     * The regex which titles must satisfy.
-     * Titles are declared as '!StoryTitle: Title Goes Here' (the !StoryTitle: prefix is not present here though)
-     * Valid titles must start with 1 non-whitespace character, and end with 1 non-whitespace character.
-     * Any amount of non-whitespace characters and/or spaces are allowed between the start/end non-whitespace characters.
-     * Some horizontal whitespace permitted at very start/end, will be trimmed out anyway
-     */
-    //static final String VALID_TITLE_REGEX = "\\h*[\\S]+[\\S ]*[\\S]+(?=\\h*$)";
 
     /**
      * author name. "Anonymous" by default
      */
     private String author = "Anonymous"; //default author name used if undefined
-
-    /**
-     * Author name declared as '!Author: Author name goes here'
-     * Must start with a letter, and must end in a letter (uppercase or lowercase)
-     * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
-     */
-    //static final String VALID_AUTHOR_REGEX = "\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)";
 
 
     /**
@@ -108,17 +91,7 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
         comment = MetadataReadingInterface.findComment(rawMetadata);
     }
 
-    /**
-     * Creates an editing window for this object
-     * @return a MetadataEditorWindow which can edit this object
-     */
-    /*
-    @Override
-    public MetadataEditorWindow openEditingWindow(){
-        return new MetadataEditorWindow(this);
-    }
 
-     */
 
 
     /**

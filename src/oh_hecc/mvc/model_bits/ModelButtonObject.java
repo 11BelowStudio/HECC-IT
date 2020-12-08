@@ -1,12 +1,11 @@
 package oh_hecc.mvc.model_bits;
 
+import oh_hecc.mvc.EditModelInterface;
 import oh_hecc.mvc.Model;
-import oh_hecc.mvc.*;
 import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.Area;
-import java.util.function.Consumer;
 
 /**
  * This class basically represents the buttons that will appear across the bottom of the model,

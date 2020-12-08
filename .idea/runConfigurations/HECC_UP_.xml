@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="HECC-UP!" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="hecc_up.HeccUpGUI" />
+    <module name="CE301 project folder" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

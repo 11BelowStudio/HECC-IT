@@ -1,6 +1,6 @@
 package hecc_up;
 
-import GameParts.Metadata;
+import gameParts.Metadata;
 import utilities.TextAssetReader;
 
 import java.io.File;
