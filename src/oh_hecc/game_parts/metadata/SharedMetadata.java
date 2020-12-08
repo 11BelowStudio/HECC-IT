@@ -17,7 +17,7 @@ public interface SharedMetadata extends Heccable, Parseable {
      * Must start with a letter, and must end in a letter (uppercase or lowercase)
      * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
      */
-    String VALID_AUTHOR_REGEX = "\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)";
+    String VALID_AUTHOR_REGEX = "\\h*([A-Za-z]+[a-zA-Z., ]*)?[a-zA-Z]+(?=\\h*$)";
     //final String VALID_AUTHOR_REGEX = "\\h*([A-Za-z]+(\\.?) )?)?[A-Za-z]+";
 
     /**

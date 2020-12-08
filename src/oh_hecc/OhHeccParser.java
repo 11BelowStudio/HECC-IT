@@ -28,7 +28,7 @@ public class OhHeccParser {
     /**
      * The metadata
      */
-    MetadataEditingInterface theMetadata;
+    private final MetadataEditingInterface theMetadata;
 
 
     //TODO: parse the HECC file into the heccMap and theMetadata

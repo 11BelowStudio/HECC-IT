@@ -2,11 +2,9 @@ package utilities;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A utility class that can read text stuff
@@ -21,16 +19,16 @@ public class TextAssetReader {
     /**
      * heccer.js as an Arraylist of strings
      */
-    private final static List<String> HECCER = fileToStaticStringArrayList("heccer.js");
+    private final static List<String> HECCER = fileToStaticStringList("heccer.js");
     /**
      * index.html as an ArrayList of strings
      */
-    private final static List<String> INDEX = fileToStaticStringArrayList("index.html");
+    private final static List<String> INDEX = fileToStaticStringList("index.html");
 
     /**
      * iFictionTemplate.iFiction as an ArrayList of strings
      */
-    private final static List<String> IFICTION_TEMPLATE = fileToStaticStringArrayList("iFictionTemplate.iFiction");
+    private final static List<String> IFICTION_TEMPLATE = fileToStaticStringList("iFictionTemplate.iFiction");
 
     /**
      * HeccSample.hecc as a string
@@ -42,8 +40,7 @@ public class TextAssetReader {
      * @param filename the name of the file
      * @return the contents of the file, as an ArrayList of Strings
      */
-    private static List<String> fileToStaticStringArrayList(String filename){
-        //if it wasn't obvious, yes, this was unceremoniously borrowed from my CE218 stuff
+    private static List<String> fileToStaticStringList(String filename){
         List<String> output = new ArrayList<>();
         try{
             InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
