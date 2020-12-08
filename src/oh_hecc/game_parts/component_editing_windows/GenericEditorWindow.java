@@ -1,8 +1,13 @@
 package oh_hecc.game_parts.component_editing_windows;
 
+import oh_hecc.Parseable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,6 +22,10 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     //the
     Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
+
+    Color defaultTextFieldColor = new JTextField().getForeground();
+
+    Color errorTextFieldColor = Color.RED;
 
 
     void refresh(){
@@ -100,6 +109,47 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
                         closeEvent.accept(e);
                     }
                 }
+        );
+    }
+
+
+    /**
+     * Both subclasses of this have a field involving a passage name.
+     * This is a persistent record of whether or not it's currently valid.
+     */
+    boolean isPassageNameValid = true;
+
+    /**
+     * This can be called for either of the JTextComponents that are used for passage names (start passage/current passage name).
+     * If the current text for them isn't a valid passage name (doesn't satisfy PASSAGE_NAME_REGEX), the text will be red.
+     * Otherwise, the text will be same as default.
+     * The text colour will only change if the validity of the JTextComponent's contents changes.
+     * @param passageNameComponent the JTextComponent that
+     */
+    private void isPassageNameRegexValid(JTextComponent passageNameComponent) {
+        boolean stillValid = (passageNameComponent.getText().trim().matches(Parseable.PASSAGE_NAME_REGEX));
+        if (isPassageNameValid ^ stillValid){
+            passageNameComponent.setForeground(stillValid? defaultTextFieldColor : errorTextFieldColor);
+            isPassageNameValid = stillValid;
+        }
+    }
+
+    /**
+     * Creates a DocumentListener that can be used on the passage name JTextComponents,
+     * which can call isPassageNameRegexValid when it's edited,
+     * and adds it to aforementioned JTextComponent's document
+     * @param passageNameComponent the component itself that this will be listening to/will need to update
+     */
+    void addPassageNameDocumentListener(JTextComponent passageNameComponent){
+        passageNameComponent.getDocument().addDocumentListener(
+        new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { isPassageNameRegexValid(passageNameComponent); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { isPassageNameRegexValid(passageNameComponent); }
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        }
         );
     }
 }

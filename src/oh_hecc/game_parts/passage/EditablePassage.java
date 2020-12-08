@@ -102,6 +102,16 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     }
 
     /**
+     * Will be called by OH-HECC when making the first passage in a new heccin game
+     * @param passageName the name for this passage
+     */
+    public EditablePassage(String passageName){
+        this();
+        this.passageName = passageName.trim();
+        updatePassageStatus();
+    }
+
+    /**
      * Will be called when a user creates a link to a passage which doesn't exist yet, creating a passage with that name
      * @param passageName the name of the passage to create
      * @param parentPosition the position of the parent passage that made this one

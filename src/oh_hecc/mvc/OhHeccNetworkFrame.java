@@ -41,6 +41,15 @@ public class OhHeccNetworkFrame {
         theFrame.setLayout(new BorderLayout());
     }
 
+
+    public OhHeccNetworkFrame(JFrame f, View v){
+        theFrame = f;
+        theFrame.getContentPane().removeAll();
+        theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        theFrame.setLayout(new BorderLayout());
+        addTheView(v);
+    }
+
     /**
      * Adds theViewToAdd to TheFrame.
      * <p>

@@ -3,6 +3,7 @@ package oh_hecc.game_parts.component_editing_windows;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.Parseable;
 import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
@@ -46,7 +47,11 @@ public class PassageEditorWindow extends GenericEditorWindow {
     private JLabel titleLabel;
 
     private JTextField nameField;
+
+
     private JTextField tagField;
+    private boolean areTagsValid = true;
+
     private JTextField inlineCommentField;
 
     private JTextArea contentArea;
@@ -106,6 +111,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
         nameField = new JTextField(thePassage.getPassageName(), 64);
         nameField.setEditable(true);
+        addPassageNameDocumentListener(nameField);
         //nameEditPanel.add(nameField);
         namePanel.add(nameField);
         JButton updateTitleButton = new JButton("Rename");
@@ -243,6 +249,9 @@ public class PassageEditorWindow extends GenericEditorWindow {
         theFrame.add(yeetThisPanel);
     }
 
+
+
+
     /**
      * This method attempts to update the passageName of thePassage (and any references to it)
      * @param newName the new name to give to the passage.
@@ -266,6 +275,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         }
 
         try{
+            if (!isPassageNameValid){ throw new InvalidPassageNameException(newName); }
             String oldName = thePassage.getPassageName();
             thePassage.renameThisPassage(newName,allPassages);
             nameField.setText(thePassage.getPassageName());
@@ -307,7 +317,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param newTagList the string that will be converted into this passage's tagList
      */
     private void updateTags(String newTagList){
-        //TODO: update tag list
         try{
             thePassage.updatePassageTags(newTagList);
             tagField.setText(thePassage.getPassageTagsAsString());

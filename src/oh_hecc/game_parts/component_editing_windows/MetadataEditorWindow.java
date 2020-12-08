@@ -4,12 +4,16 @@ import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
+import oh_hecc.game_parts.metadata.SharedMetadata;
 import utilities.AttributeString;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
@@ -22,6 +26,17 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * you see this thing? yeah. this is what we're gonna be editing.
      */
     private final MetadataEditingInterface theMetadata;
+
+
+    /**
+     * Whether or not the current title input is valid
+     */
+    private boolean isTitleValid = true;
+
+    /**
+     * Whether or not the current author input is valid
+     */
+    private boolean isAuthorValid = true;
 
 
 
@@ -152,6 +167,21 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         titleInstructions.setFont(notBold);
         titleEditingPanel.add(titleInstructions);
         titleInput = new JTextField(theMetadata.getTitle(),0);
+        titleInput.getDocument().addDocumentListener(
+                new DocumentListener() {
+                   @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        makeSureTitleIsValid();
+                    }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        makeSureTitleIsValid();
+                    }
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {}
+                }
+        );
+
         titleEditingPanel.add(titleInput);
         JButton titleUpdateButton = new JButton("Update title");
         titleUpdateButton.addActionListener( (e) -> attemptTitleUpdate(titleInput.getText()));
@@ -172,6 +202,16 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         authorInstructions.setFont(notBold);
         authorEditingPanel.add(authorInstructions);
         authorInput = new JTextField(theMetadata.getAuthor(),0);
+        authorInput.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) { makeSureAuthorIsValid(); }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) { makeSureAuthorIsValid(); }
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {}
+                }
+        );
         authorEditingPanel.add(authorInput);
         JButton authorUpdateButton = new JButton("Update author");
         authorUpdateButton.addActionListener( (e) -> attemptAuthorUpdate(authorInput.getText()));
@@ -192,6 +232,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         startInstructions.setFont(notBold);
         startEditingPanel.add(startInstructions);
         startInput = new JTextField(theMetadata.getStartPassage(),0);
+        addPassageNameDocumentListener(startInput);
         startEditingPanel.add(startInput);
         JButton startUpdateButton = new JButton("Update start");
         startUpdateButton.addActionListener( (e) -> attemptStartUpdate(startInput.getText()));
@@ -243,6 +284,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     void attemptTitleUpdate(String newTitle){
         System.out.println(newTitle);
         try{
+            if (!isTitleValid) { throw new InvalidMetadataDeclarationException(newTitle, "title");}
             theMetadata.updateTitle(newTitle);
         } catch (InvalidMetadataDeclarationException e){
             JOptionPane.showMessageDialog(
@@ -266,15 +308,15 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         //TODO: attempt to update the author
         System.out.println(newAuthor);
         try{
+            if (!isAuthorValid){ throw new InvalidMetadataDeclarationException(newAuthor, "author");}
             theMetadata.updateAuthor(newAuthor);
         } catch (InvalidMetadataDeclarationException e){
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
                             +"<p>Invalid author input!<br>"
-                            +"Titles must start and end with letters<br>"
-                            +"but may contain any number of letters,<br>"
-                            +"spaces, full stops, and commas,<br>"
+                            +"Author names must start and end with letters<br>"
+                            +"but may contain spaces, commas, and full stops<br>"
                             +"between the first and last characters</p></html>",
                     "Invalid author input!",
                     JOptionPane.ERROR_MESSAGE
@@ -288,9 +330,10 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * @param newStart the new start passage for the game
      */
     void attemptStartUpdate(String newStart){
-        //TODO: attempt to update start passage
+
         System.out.println(newStart);
         try{
+            if(!isPassageNameValid){ throw new InvalidPassageNameException(newStart); }
             theMetadata.updateStartPassage(newStart);
             //TODO: inform user if specified start passage doesn't exist yet
         } catch ( InvalidPassageNameException e){
@@ -354,6 +397,37 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         System.out.println(newComment);
     }
 
+
+
+
+    /**
+     * Ensures that the title input text in titleInput is valid
+     * It does this by seeing if it satisfies the SharedMetadata.VALID_TITLE_REGEX regex
+     * If it's valid, the text will be black.
+     * Otherwise, it'll be red.
+     */
+    private void makeSureTitleIsValid(){
+        String newTitle = titleInput.getText().trim();
+        boolean stillValid = (newTitle.matches(SharedMetadata.VALID_TITLE_REGEX));
+        if (isTitleValid ^ stillValid){
+            titleInput.setForeground( stillValid ? defaultTextFieldColor : Color.RED);
+            isTitleValid = stillValid;
+        }
+    }
+
+    /**
+     * Ensures that the author input text is valid
+     * It does this by seeing if it satisfies the SharedMetadata.VALID_AUTHOR_REGEX regex.
+     * If it's valid, the text will be black.
+     * Otherwise, it'll be red.
+     */
+    private void makeSureAuthorIsValid(){
+        boolean stillValid = authorInput.getText().trim().matches(SharedMetadata.VALID_AUTHOR_REGEX);
+        if (isAuthorValid ^ stillValid){
+            authorInput.setForeground( stillValid ?  defaultTextFieldColor : Color.RED);
+            isAuthorValid = stillValid;
+        }
+    }
 
 
 

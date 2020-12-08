@@ -117,6 +117,7 @@ public class ChooseFile {
              * Then it'll make a JFileChooser to allow a user to choose where they want to save their new .hecc file
              * Then it does some validation
              * Finally, if everything seems legit, it'll give the selected path, and a newly constructed EditableMetadata to the newFilePathAndMetadataGoesHere BiConsumer
+             * @param e oh look an ActionEvent
              */
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -194,7 +195,17 @@ public class ChooseFile {
 
             }
         });
+
         selectButton.addActionListener(new ActionListener() {
+            /**
+             * This will open the dialog for choosing an existing .hecc file to continue editing.
+             * First, it'll let the user actually select the file.
+             * Then, it'll make sure the selection actually exists and is a .hecc file.
+             * (if it doesn't exist/isn't a .hecc file/etc, it will complain).
+             * If the selection was valid, it'll remember what the selection was, and will show the 'start editing' button.
+             * Otherwise, the user won't be allowed to start editing.
+             * @param e oh look an ActionEvent
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser f = new JFileChooser();
@@ -229,6 +240,12 @@ public class ChooseFile {
         });
 
         startEditingButton.addActionListener(new ActionListener() {
+            /**
+             * If the start editing button is pressed, and the user had actually selected a .hecc file to open,
+             * it'll then attempt to open said file for editing.
+             * If it can't be opened, it'll let the user know.
+             * @param e oh look an ActionEvent
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileHasBeenSelected){
@@ -259,6 +276,9 @@ public class ChooseFile {
         });
 
 
+        /*
+        TL;DR calls makeSureTitleIsValid() whenever the input in make_TitleInput changes
+         */
         make_TitleInput.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) { makeSureTitleIsValid(); }
@@ -268,6 +288,9 @@ public class ChooseFile {
             public void changedUpdate(DocumentEvent e) {}
         });
 
+        /*
+        Encourages the user to ensure that the text in make_TitleInput is valid
+         */
         make_TitleInput.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent input) {
@@ -275,7 +298,9 @@ public class ChooseFile {
             }
         });
 
-
+        /*
+        Encourages the user to ensure that the text in make_AuthorInput is valid
+         */
         make_AuthorInput.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent input) {
@@ -283,7 +308,9 @@ public class ChooseFile {
             }
         });
 
-
+        /*
+        TL;DR calls makeSureAuthorIsValid() whenever the input in make_AuthorInput changes
+         */
         make_AuthorInput.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) { makeSureAuthorIsValid(); }
@@ -294,9 +321,14 @@ public class ChooseFile {
         });
 
 
-        //make_AuthorInput.setInputVerifier(iv);
     }
 
+    /**
+     * Ensures that the author input text in the 'make new hecc file' window is valid.
+     * It does this by seeing if it satisfies the SharedMetadata.VALID_AUTHOR_REGEX regex.
+     * If it's valid, the text will be black.
+     * Otherwise, it'll be red.
+     */
     private void makeSureAuthorIsValid(){
         boolean stillValid = make_AuthorInput.getText().trim().matches(SharedMetadata.VALID_AUTHOR_REGEX);
         if (isAuthorValid ^ stillValid){
@@ -305,6 +337,13 @@ public class ChooseFile {
         }
     }
 
+    /**
+     * Ensures that the title input text in the 'make new hecc file' window is valid.
+     * It does this by seeing if it satisfies the SharedMetadata.VALID_TITLE_REGEX regex,
+     * as well as ensuring it doesn't contain any letters that are invalid for a filename (via Paths.get)
+     * If it's valid, the text will be black.
+     * Otherwise, it'll be red.
+     */
     private void makeSureTitleIsValid(){
         String titleinput = make_TitleInput.getText().trim();
         boolean validPath = false;
@@ -319,10 +358,19 @@ public class ChooseFile {
         }
     }
 
+    /**
+     * Returns the main JPanel that holds all the other components for the file choosing stuff
+     * @return thePanel
+     */
     public JPanel getThePanel(){
         return thePanel;
     }
 
+    /**
+     * le main method has arrived
+     * @param args
+     * @deprecated this existed for testing only basically
+     */
     public static void main(String[] args) {
         ChooseFile cf = new ChooseFile(
                 e -> {

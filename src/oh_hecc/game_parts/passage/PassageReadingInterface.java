@@ -54,9 +54,9 @@ public interface PassageReadingInterface extends SharedPassage {
         Vector2D readVector = new Vector2D();
         //Searches for it in the form
         //<x,y>
-        //x and y are double numbers, may have decimals, and can have leading/trailing whitespace
+        //x and y are double numbers, may be negative, may have decimal point, and can have leading/trailing whitespace
         Matcher vectorCoordsMatcher = Pattern.compile(
-                "<\\h*\\d*\\.?\\d+\\h*,\\h*\\d*\\.?\\d+\\h*>"
+                "<\\h*-?\\h*\\d*\\.?\\d+\\h*,\\h*-?\\h*\\d*\\.?\\d+\\h*>"
         ).matcher(lineEndMetadata);
         if (vectorCoordsMatcher.find()){
             //if it's found, it extracts that string

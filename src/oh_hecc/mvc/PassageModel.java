@@ -1,5 +1,7 @@
 package oh_hecc.mvc;
 
+
+import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
@@ -14,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +24,11 @@ import java.util.stream.Collectors;
  * Okay so this is the Model of the actual network of passages and such
  */
 public class PassageModel extends Model implements EditModelInterface, MouseControlModelInterface {
+
+    /**
+     * The actual GameDataObject
+     */
+    private final GameDataObject theData;
 
     /**
      * The Metadata for the game that this model represents
@@ -112,19 +120,20 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
     /**
      * Constructs the PassageModel object
-     * @param metadata the metadata of the game being edited
-     * @param allPassages all the passages of the game.
+     * @param data the GameDataObject containing all the data for the game.
      */
-    public PassageModel(MetadataEditingInterface metadata, Map<UUID, PassageEditingInterface> allPassages){
+    public PassageModel(GameDataObject data){
         super();
 
-        theMetadata = metadata;
-        passageMap = allPassages;
+        theData = data;
+
+        theMetadata = data.getTheMetadata();
+        passageMap = data.getPassageMap();
 
         objectMap = new HashMap<>();
 
         for (PassageEditingInterface p: passageMap.values()) {
-            p.updateLinkedUUIDs(allPassages);
+            p.updateLinkedUUIDs(passageMap);
             objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
@@ -139,7 +148,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         //TODO: make the buttons
 
-        exitButton = new ModelButtonObject(this,0,0.25f,"Save and Quit");
+        exitButton = new ModelButtonObject(this,0,0.25f,"Save"); //TODO: option to quit?
 
         helpButton = new ModelButtonObject(this,0.25f,0.5f,"Help");
 
@@ -162,7 +171,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         drawableModelButtons = new HashSet<>();
 
-        topRightCorner = new Vector2D();
+        topRightCorner = new Vector2D(-getPreferredSize().getWidth()/2.0, -getPreferredSize().getHeight()/2.0);
 
         mouseDragVector = new Vector2D();
 
@@ -281,6 +290,36 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             //TODO: help button doing a thing if pressed
         } else if (exitButton.wasClicked(mLocation)){
             //TODO: exit button stuff if pressed
+            try{
+                theData.saveTheHecc();
+                JOptionPane.showMessageDialog(
+                        this,
+                        ".hecc file saved successfully!",
+                        "nice",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch ( IOException e){
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Could not save the game!",
+                        "uh oh",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                JFrame f = new JFrame("The backup save method.");
+                f.setLayout(new BorderLayout());
+                f.add(new JLabel("Here's your .hecc code anyway so you don't lose it"), BorderLayout.NORTH);
+                JTextArea heccArea = new JTextArea(theData.toHecc());
+                heccArea.setLineWrap(true);
+                heccArea.setWrapStyleWord(true);
+                f.add(new JScrollPane(
+                        heccArea,
+                        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+                ));
+                f.pack();
+                f.revalidate();
+                f.setVisible(true);
+            }
         } else {
             //move the mouse so it's scrolled by the screen scroll amount
             Point scrolledMouse = moveMouseByScroll(mLocation);
@@ -852,7 +891,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 //if it does
                 if (p.isPresent()){
                     try {
-                        //rename that passage to the name of hte new start passage.
+                        //rename that passage to the name of the new start passage.
                         p.get().renameThisPassage(theMetadata.getStartPassage(), passageMap);
                         return;
                     } catch (Exception e){}
@@ -909,13 +948,23 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         return thePassages;*/
     }
 
+    /**
+     * Obtains the PassageEditingInterface objects of all the passages which the given passage links to
+     *
+     * @param uuidOfSourceObject the UUID of the passage that we're trying to find the 'child' passages of
+     * @return the UUIDs of all the 'child' passages
+     */
     @Override
     public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject){
+        return theData.getPassageEditingInterfaceObjectsConnectedToGivenObject(uuidOfSourceObject);
+        /*
         Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
         passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs().forEach(
                 u -> theLinkedPassages.add(passageMap.get(u))
         );
         return theLinkedPassages;
+
+         */
         /*
         Set<UUID> linkedUUIDs = passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs();
         if (!linkedUUIDs.isEmpty()){
@@ -941,9 +990,13 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      */
     @Override
     public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
+        return theData.getThePassageObjectsWhichLinkToGivenPassageFromUUID(destination);
+        /*
         return passageMap.keySet().stream().filter(
                 p -> passageMap.get(p).getLinkedPassageUUIDs().contains(destination)
         ).collect(Collectors.toSet());
+
+         */
     }
 
     /**
