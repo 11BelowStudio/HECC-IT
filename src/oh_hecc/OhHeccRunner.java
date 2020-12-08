@@ -1,6 +1,7 @@
 package oh_hecc;
 
 import oh_hecc.game_parts.metadata.EditableMetadata;
+import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.Model;
 import oh_hecc.mvc.controller.Controller;
@@ -11,6 +12,7 @@ import utilities.TextAssetReader;
 
 import javax.swing.*;
 import javax.swing.Timer;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -18,10 +20,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.BiPredicate;
 
 public class OhHeccRunner {
 
     private OhHeccChooseFileFrame chooseFileFrame;
+
+    private JFrame theFrame;
 
     private String heccFilePath;
 
@@ -35,18 +40,50 @@ public class OhHeccRunner {
 
     private Controller ohHeccItsAController;
 
+    private GameDataObject theGameData;
+
+    private ChooseFile chooseFile;
+
     public OhHeccRunner(){
         //TODO: make this. Asks user for a hecc file to open/create a new hecc file. Then opens the hecc file via MVC stuff (and runs it)
+        theFrame = new JFrame("OH-HECC!");
+        theFrame.setLayout(new BorderLayout());
+
+        chooseFile = new ChooseFile(
+                this::openFileAtLocation,
+                this::makeNewHeccFileAtLocation
+        );
+        theFrame.add(chooseFile.getThePanel(), BorderLayout.CENTER);
+
+        theFrame.pack();
+        theFrame.revalidate();
+        theFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        theFrame.setVisible(true);
+
     }
 
 
-    void openFileAtLocation(String heccFilePath){
-        //heccParser
+    boolean openFileAtLocation(Path heccFilePath){
+        boolean success = false;
+        try{
+            heccParser = new OhHeccParser(
+                    String.join("\n",Files.readAllLines(heccFilePath))
+            );
+            theGameData = new GameDataObject(heccParser.getHeccMap(),heccParser.getMetadata(),heccFilePath);
+
+            //TODO: open model, yeet file chooser panel
+            success = true;
+            System.out.println("nice");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return success;
     }
 
 
-    void makeNewHeccFileAtLocation(String heccFilePath){
-
+    boolean makeNewHeccFileAtLocation(Path heccFilePath, MetadataEditingInterface meta){
+        //TODO: this
+        return false;
     }
 
     /**
@@ -106,6 +143,6 @@ public class OhHeccRunner {
 
     public static void main(String[] args) throws Exception{
         OhHeccRunner heccRunner = new OhHeccRunner();
-        heccRunner.yknowWhatItsTimeToTestThisOut();
+        //heccRunner.yknowWhatItsTimeToTestThisOut();
     }
 }

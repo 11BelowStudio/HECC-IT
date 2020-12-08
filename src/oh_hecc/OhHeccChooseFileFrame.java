@@ -9,6 +9,7 @@ import java.awt.*;
 /**
  * This class is intended as a frame that holds the prompt for a user to pick a HECC file to edit from
  * (or alternatively create a completely new HECC file to write)
+ * @deprecated {@see ChooseFile.java}
  */
 public class OhHeccChooseFileFrame {
 

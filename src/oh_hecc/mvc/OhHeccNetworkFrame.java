@@ -32,7 +32,13 @@ public class OhHeccNetworkFrame {
         //TODO: add a WindowListener to theFrame via OhHeccRunner, so that, when the user tries to close the window, they may save their work before it closes.
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         theFrame.setLayout(new BorderLayout());
+    }
 
+    public OhHeccNetworkFrame(JFrame f){
+        theFrame = f;
+        theFrame.getContentPane().removeAll();
+        theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        theFrame.setLayout(new BorderLayout());
     }
 
     /**
