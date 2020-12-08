@@ -112,10 +112,13 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
      * Creates an editing window for this object
      * @return a MetadataEditorWindow which can edit this object
      */
+    /*
     @Override
     public MetadataEditorWindow openEditingWindow(){
         return new MetadataEditorWindow(this);
     }
+
+     */
 
 
     /**

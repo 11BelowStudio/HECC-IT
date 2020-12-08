@@ -1,6 +1,8 @@
 package oh_hecc.game_parts.component_editing_windows;
 
 import oh_hecc.Parseable;
+import oh_hecc.game_parts.EditWindowGameDataInterface;
+import oh_hecc.game_parts.GameDataObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,28 +17,23 @@ import java.awt.event.WindowEvent;
 public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     //the frame itself
-    JFrame theFrame;
+    final JFrame theFrame;
 
     //A lowered etched border
-    Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+    final Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
     //the
-    Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
+    final Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
 
-    Color defaultTextFieldColor = new JTextField().getForeground();
+    final Color defaultTextFieldColor = new JTextField().getForeground();
 
-    Color errorTextFieldColor = Color.RED;
+    final Color errorTextFieldColor = Color.RED;
 
+    final EditWindowGameDataInterface gameData;
 
-    void refresh(){
-        theFrame.pack();
-        theFrame.revalidate();
-    }
-
-
-    void makeTheFrame(){
+    public GenericEditorWindow(EditWindowGameDataInterface data){
+        gameData = data;
         theFrame = new JFrame();
-
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         //This basically allows a quit prompt to appear when the user tries to press the 'x' button on the window
@@ -50,14 +47,18 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
                 }
         );
 
-
-
-
-
         //theFrame will use a BoxLayout.
         theFrame.setLayout(new BoxLayout(theFrame.getContentPane(), BoxLayout.Y_AXIS));
-
     }
+
+
+    void refresh(){
+        theFrame.pack();
+        theFrame.revalidate();
+    }
+
+
+    abstract void makeTheFrame();
 
     JPanel donePanel(){
         //button to say 'right thats it im done'

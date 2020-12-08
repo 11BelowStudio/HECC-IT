@@ -97,6 +97,7 @@ public interface PassageEditingInterface extends SharedPassage {
      * @return the previous name of this passage (before it got renamed)
      * @throws InvalidPassageNameException if the passage name isn't a valid passage name
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
+     * @deprecated
      */
     String renameThisPassage(String newName, Set<String> allPassageNames) throws InvalidPassageNameException, DuplicatePassageNameException;
 
@@ -189,31 +190,36 @@ public interface PassageEditingInterface extends SharedPassage {
 
     /**
      * Creates a PassageEditorWindow for the given passage (and the map of all the passages)
-     * @param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
-     * @param allPassages the map of all passages
-     * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
+     * @ param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
+     * @ param allPassages the map of all passages
+     * @ return a {@link PassageEditorWindow} which allows a user to edit the passage in question
      */
+    /*
     static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages){
         return new PassageEditorWindow(passageToEdit,allPassages);
     }
 
+     */
+
     /**
      * Creates a PassageEditorWindow for the given passage (and the map of all the passages, along with an optional bit of metadata)
-     * @param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
-     * @param allPassages the map of all passages
-     * @param metadata the metadata. This is only here so, if this is the start passage, the reference to the start passage in the metadata can be renamed.
-     * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
+     * @ param passageToEdit the individual passage in question which is being edited and needs to have a PassageEditorWindow opened for it
+     * @ param allPassages the map of all passages
+     * @ param metadata the metadata. This is only here so, if this is the start passage, the reference to the start passage in the metadata can be renamed.
+     * @ return a {@link PassageEditorWindow} which allows a user to edit the passage in question
      */
+    /*
     static PassageEditorWindow openEditorWindow(PassageEditingInterface passageToEdit, Map<UUID, PassageEditingInterface> allPassages, PassageEditWindowMetadataInterface metadata){
         return new PassageEditorWindow(passageToEdit,allPassages,metadata);
     }
+     */
 
     /**
      * Basically, it's the static {openEditorWindow method but as an instance method instead.
-     * @param allPassages the map of all passages
+     * @ param allPassages the map of all passages
      * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
      */
-    PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages);
+    //PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages);
 
 
     @Override

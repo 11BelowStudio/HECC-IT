@@ -214,17 +214,6 @@ public class PassageObject extends EditModelObject {
 
 
     /**
-     * Opens the passage editing window for the passage which this object refers to
-     * @return that window, via EditorWindowInterface
-     */
-    public EditorWindowInterface openEditingWindow(){
-        System.out.println("open time");
-        System.out.println(thePassage.getPassageContent());
-        return PassageEditingInterface.openEditorWindow(theModel.getPassageFromUUID(theUUID),theModel.getThePassageMap());
-        //return theModel.getPassageFromUUID(theUUID).openEditorWindow(theModel.getThePassageMap());
-    }
-
-    /**
      * Moves this object by the specified amount of movement.
      * Updates the position of this object,
      * updates the position of the passage,

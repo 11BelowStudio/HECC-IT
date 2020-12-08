@@ -41,7 +41,11 @@ public class OhHeccNetworkFrame {
         theFrame.setLayout(new BorderLayout());
     }
 
-
+    /**
+     * Constructor that utilizes an existing JFrame and View instead
+     * @param f the existing JFrame
+     * @param v the existing View
+     */
     public OhHeccNetworkFrame(JFrame f, View v){
         theFrame = f;
         theFrame.getContentPane().removeAll();
@@ -69,10 +73,9 @@ public class OhHeccNetworkFrame {
         //theFrame.add(BorderLayout.CENTER,theView);
 
 
-
         //makes theFrame visible
         theFrame.pack();
-        theFrame.revalidate();
+        theFrame.invalidate();
         theFrame.setVisible(true);
 
         //theView.setSize(800,600);

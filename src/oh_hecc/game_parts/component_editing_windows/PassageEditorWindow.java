@@ -4,6 +4,8 @@ import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import oh_hecc.Parseable;
+import oh_hecc.game_parts.GameDataObject;
+import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
@@ -14,6 +16,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +45,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     private final Map<UUID, PassageEditingInterface> allPassages;
 
-    private final Optional<PassageEditWindowMetadataInterface> metadata;
+    private final PassageEditWindowMetadataInterface metadata;
 
     private JLabel titleLabel;
 
@@ -59,6 +62,24 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
 
 
+    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, GameDataObject gameData){
+        super(gameData);
+        metadata = gameData.getTheMetadata();
+        thePassage = passageBeingEdited;
+        allPassages = gameData.getPassageMap();
+
+        makeTheFrame();
+
+        theFrame.setVisible(true);
+
+        //metadata = Optional.ofNullable(m);
+
+
+
+        refresh();
+
+    }
+
 
     /**
      * Constructs the PassageEditorWindow
@@ -66,6 +87,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param allThePassages the map of all the passages (just in case that needs to be modified as well)
      * @param m optional metadata parameter (in case this is the start passage and is renamed)
      */
+    /*
     public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages, PassageEditWindowMetadataInterface m){
         thePassage = passageBeingEdited;
         allPassages = allThePassages;
@@ -81,17 +103,22 @@ public class PassageEditorWindow extends GenericEditorWindow {
         refresh();
 
     }
+
+     */
     /**
      * Constructs the PassageEditorWindow
-     * @param passageBeingEdited the passage which is being edited
-     * @param allThePassages the map of all the passages (just in case that needs to be modified as well)
+     * @ param passageBeingEdited the passage which is being edited
+     * @ param allThePassages the map of all the passages (just in case that needs to be modified as well)
      */
+    /*
     public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages){
         this(passageBeingEdited,allThePassages, null);
     }
 
+     */
+
     void makeTheFrame(){
-        super.makeTheFrame();
+        //super.makeTheFrame();
 
 
         theFrame.setTitle("passage editor window");
@@ -195,7 +222,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         );
         contentEditingPanel.add(contentScroll,BorderLayout.CENTER);
         JButton contentUpdateButton = new JButton("Update content (yes, readers will read this. hopefully.)");
-        contentUpdateButton.addActionListener( (e) -> updateContent(contentArea.getText()));
+        contentUpdateButton.addActionListener( (e) -> updateContent(contentArea.getText().trim()));
         contentEditingPanel.add(contentUpdateButton, BorderLayout.SOUTH);
 
         theFrame.add(contentEditingPanel);
@@ -224,7 +251,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         );
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
         JButton commentUpdateButton = new JButton("Update comment");
-        commentUpdateButton.addActionListener( (e) -> updateTrailingComment(commentArea.getText()));
+        commentUpdateButton.addActionListener( (e) -> updateTrailingComment(commentArea.getText().trim()));
         commentEditingPanel.add(commentUpdateButton, BorderLayout.SOUTH);
 
         theFrame.add(commentEditingPanel);
@@ -243,6 +270,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         );
 
         JButton bigRedButtonExceptItsNotRed = new JButton("DELETE THIS PASSAGE");
+        bigRedButtonExceptItsNotRed.setForeground(Color.RED);
         bigRedButtonExceptItsNotRed.addActionListener( e -> deletThis());
         yeetThisPanel.add(bigRedButtonExceptItsNotRed);
 
@@ -279,9 +307,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
             String oldName = thePassage.getPassageName();
             thePassage.renameThisPassage(newName,allPassages);
             nameField.setText(thePassage.getPassageName());
-            if (metadata.isPresent() && metadata.get().getStartPassage().equals(oldName)){
-                metadata.get().updateStartPassage(newName);
-            }
+            gameData.checkForStartRename();
             refresh();
         } catch (InvalidPassageNameException e) {
             JOptionPane.showMessageDialog(
@@ -295,7 +321,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     "Invalid passage name input!",
                     JOptionPane.ERROR_MESSAGE
             );
-            e.printStackTrace();
         } catch (DuplicatePassageNameException e) {
             JOptionPane.showMessageDialog(
                     theFrame,
@@ -307,7 +332,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     "Duplicate passage name input!",
                     JOptionPane.ERROR_MESSAGE
             );
-            e.printStackTrace();
         }
 
     }
@@ -331,7 +355,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     "Invalid tag input!",
                     JOptionPane.ERROR_MESSAGE
             );
-            e.printStackTrace();
         }
     }
 
@@ -406,6 +429,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                         "YEET",
                         JOptionPane.INFORMATION_MESSAGE
                 );
+                gameData.thisPassageHasBeenDeleted(thePassage.getPassageUUID());
                 closeTheWindow();
             }
         }
@@ -415,8 +439,8 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * le main method has arrived
      * @param args le command line parameters have not arrived (because they aren't used)
      */
-    public static void main(String args[]){
-        EditablePassage[] samples = {new EditablePassage("deez nutz", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("lmao gottem", "[[deez nutz]]","","")};
+    public static void main(String[] args){
+        EditablePassage[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
 
         Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
@@ -430,22 +454,33 @@ public class PassageEditorWindow extends GenericEditorWindow {
             System.out.println("");
         }
 
-        PassageEditingInterface editThis = passages.get(samples[0].getPassageUUID());
+        //PassageEditingInterface editThis = passages.get(samples[0].getPassageUUID());
 
         //PassageEditorWindow w = PassageEditingInterface.openEditorWindow(editThis,passages);
 
-        PassageEditorWindow w = editThis.openEditorWindow(passages);
+        GameDataObject gdo = new GameDataObject(
+                passages,
+                new EditableMetadata("A Hypertext Fiction","Anonymous"),
+                Paths.get("k")
+        );
+
+        //PassageEditorWindow w = editThis.openEditorWindow(passages);
+        EditorWindowInterface w = gdo.openPassageEditWindow(samples[0].getPassageUUID());
 
         w.addWindowClosedListener(
                 new Consumer<WindowEvent>() {
                     @Override
                     public void accept(WindowEvent e) {
                         System.out.println("\nFinal state of the passages\n");
+                        System.out.println(gdo.toHecc());
+                        /*
                         for (Map.Entry<UUID, PassageEditingInterface> entry: passages.entrySet()) {
                             System.out.println(entry.getKey());
                             System.out.println(entry.getValue().outputAsStringForDebuggingReasons());
                             System.out.println("");
                         }
+
+                         */
                     }
                 }
         );

@@ -2,7 +2,6 @@ package oh_hecc.mvc;
 
 
 import oh_hecc.game_parts.GameDataObject;
-import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
@@ -50,9 +49,9 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      */
     final Set<ModelButtonObject> buttons;
 
-    final ModelButtonObject exitButton;
+    final ModelButtonObject saveButton;
 
-    final ModelButtonObject helpButton;
+    final ModelButtonObject saveAndQuitButton;
 
     final ModelButtonObject editMetadataObjectButton;
 
@@ -148,16 +147,16 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         //TODO: make the buttons
 
-        exitButton = new ModelButtonObject(this,0,0.25f,"Save"); //TODO: option to quit?
+        saveButton = new ModelButtonObject(this,0,0.25f,"Save"); //TODO: option to quit?
 
-        helpButton = new ModelButtonObject(this,0.25f,0.5f,"Help");
+        saveAndQuitButton = new ModelButtonObject(this,0.25f,0.5f,"Save and quit");
 
         editMetadataObjectButton = new ModelButtonObject(this,0.5f,0.75f,"Edit metadata");
 
         addPassageButton = new ModelButtonObject(this,0.75f,1f,"Add passage");
 
-        buttons.add(exitButton);
-        buttons.add(helpButton);
+        buttons.add(saveButton);
+        buttons.add(saveAndQuitButton);
         buttons.add(editMetadataObjectButton);
         buttons.add(addPassageButton);
 
@@ -203,7 +202,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
     private void actuallyValidateStuff(String previousStartPassage) {
         System.out.println("invalid");
-        invalidate();
+
         System.out.println("closed");
         makeSureStartPassageExists(previousStartPassage);
 
@@ -230,7 +229,9 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             }
         }
         System.out.println("epic gamer moment");
-        refreshDrawables();
+
+        repaint();
+        invalidate();
 
         /*
         repaint();
@@ -271,10 +272,11 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         if (editMetadataObjectButton.wasClicked(mLocation)){
             activity = CurrentActivity.DIALOG_OPEN;
             String lastStart = theMetadata.getStartPassage();
-            EditorWindowInterface w = theMetadata.openEditingWindow();
+            //EditorWindowInterface w = theMetadata.openEditingWindow();
+            EditorWindowInterface w = theData.openMetadataEditWindow();
             w.addWindowClosedListener(
                     e -> {
-                        System.out.println("previous start: " + lastStart);
+                        //System.out.println("previous start: " + lastStart);
                         actuallyValidateStuff(lastStart);
                         activity = CurrentActivity.DOING_NOTHING;
                         this.repaint();
@@ -286,10 +288,48 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner,getWidth()/2.0,getHeight()/2.0));
             passageMap.put(newPassage.getPassageUUID(),newPassage);
             actuallyValidateStuff();
-        } else if (helpButton.wasClicked(mLocation)){
-            //TODO: help button doing a thing if pressed
-        } else if (exitButton.wasClicked(mLocation)){
-            //TODO: exit button stuff if pressed
+        } else if (saveAndQuitButton.wasClicked(mLocation)){
+            //TODO: save and quit button stuff if pressed
+            try{
+                theData.saveTheHecc();
+                JOptionPane.showMessageDialog(
+                        this,
+                        ".hecc file saved successfully!",
+                        "nice",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                System.exit(0);
+            } catch (IOException e){
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Could not save the game!",
+                        "uh oh",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                Thread t = new Thread( () -> {
+                    JFrame f = new JFrame("The backup save method.");
+                    f.setLayout(new BorderLayout());
+                    f.add(new JLabel("Here's your .hecc code anyway so you don't lose it"), BorderLayout.NORTH);
+                    JTextArea heccArea = new JTextArea(theData.toHecc());
+                    heccArea.setLineWrap(true);
+                    heccArea.setWrapStyleWord(true);
+                    f.add(new JScrollPane(
+                            heccArea,
+                            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+                    ));
+                    f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    f.pack();
+                    f.revalidate();
+                    f.setVisible(true);
+                } );
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException ignored){}
+            }
+        } else if (saveButton.wasClicked(mLocation)){
+            //TODO: save button stuff if pressed
             try{
                 theData.saveTheHecc();
                 JOptionPane.showMessageDialog(
@@ -316,6 +356,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
                 ));
+                f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 f.pack();
                 f.revalidate();
                 f.setVisible(true);
@@ -332,9 +373,10 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             if (clicked.isPresent()){
                 //if something was clicked
                 activity = CurrentActivity.DIALOG_OPEN;
-                PassageEditingInterface p = passageMap.get(clicked.get().getTheUUID());
-                EditorWindowInterface w;
+
+                EditorWindowInterface w = theData.openPassageEditWindow(clicked.get().getTheUUID());
                 //if it's the start passage
+                /*
                 if (theMetadata.getStartPassage().equals(p.getPassageName())){
                     //open the passage editor window with a reference to the metadata object
                     w = PassageEditingInterface.openEditorWindow(p,passageMap,theMetadata);
@@ -342,6 +384,8 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                     //if this isn't the start passage, we don't give a damn about the metadata object
                     w = PassageEditingInterface.openEditorWindow(p,passageMap);
                 }
+
+                 */
                 w.addWindowClosedListener(
                         e -> {
                             actuallyValidateStuff();
@@ -661,7 +705,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 }
                 if (clicked){
                     needToAddListenerToEditWindow = true;
-                    editWindow = getPassageObjectFromUUID(clickedThis).openEditingWindow();
+                    //editWindow = getPassageObjectFromUUID(clickedThis).openEditingWindow();
                     activity = CurrentActivity.DIALOG_OPEN;
                     editingPassageActivity(currentAction);
                 }
@@ -867,6 +911,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      * This method can verify that the start passage of the game exists
      */
     private void makeSureStartPassageExists(String lastStartName){
+        /*
         Optional<String> lastStart = Optional.ofNullable(lastStartName);
         String startName = theMetadata.getStartPassage();
         /*
@@ -878,7 +923,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             }
         }
         if (startDoesntExist){
-         */
+         *//*
         //if none of the passages in the passageMap match the name of the start passage
         if (passageMap.values().stream().noneMatch(p -> p.getPassageName().equals(startName))){
 
@@ -916,6 +961,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 objectMap.put(newStart.getPassageUUID(), new PassageObject(this, newStart));
             }
         }
+        */
     }
 
     @Override
@@ -1022,10 +1068,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
     public String getHecced(){
         //String hecced =
-        return
-            theMetadata.toHecc().concat("\n").concat(
-                    passageMap.values().stream().map(Heccable::toHecc)
-                            .collect(Collectors.joining("\n")));
+        return theData.toHecc();
         //System.out.println(hecced);
         //return hecced;
     }

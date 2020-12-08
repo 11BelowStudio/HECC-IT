@@ -1,11 +1,19 @@
 package oh_hecc.game_parts;
 
+import heccCeptions.DuplicatePassageNameException;
+import heccCeptions.InvalidPassageNameException;
 import oh_hecc.Heccable;
+import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
+import oh_hecc.game_parts.component_editing_windows.GenericEditorWindow;
+import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
+import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
+import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.game_parts.passage.SharedPassage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * A single class that can encapsulate all the game data stuff
  */
-public class GameDataObject implements Heccable {
+public class GameDataObject implements Heccable, EditWindowGameDataInterface {
 
     /**
      * Map of all passages, mapped to their UUIDs
@@ -38,6 +46,12 @@ public class GameDataObject implements Heccable {
     private Optional<UUID> startUUID;
 
     /**
+     * A singleton GenericEditorWindow
+     */
+    private GenericEditorWindow editorWindow = null;
+
+
+    /**
      * Instantiates a new Game data object.
      *
      * @param pMap the passage map
@@ -48,7 +62,8 @@ public class GameDataObject implements Heccable {
         passageMap = pMap;
         theMetadata = meta;
         savePath = saveLocation;
-        getStartUUID(false);
+        startUUID = Optional.empty();
+        getStartUUID(true);
         updateLinkedUUIDs();
     }
 
@@ -61,6 +76,7 @@ public class GameDataObject implements Heccable {
         theMetadata = meta;
         savePath = saveLocation;
         passageMap = new HashMap<>();
+        startUUID = Optional.empty();
         getStartUUID(true);
         updateLinkedUUIDs();
         //PassageEditingInterface p = new EditablePassage(theMetadata.getStartPassage());
@@ -74,13 +90,100 @@ public class GameDataObject implements Heccable {
     }
 
     /**
+     * Obtains the UUID of the start passage. Will not forcibly create a start passage.
+     * @return an Optional holding the UUID of the start passage (if it exists)
+     */
+    public Optional<UUID> getStartUUID(){
+        return getStartUUID(false);
+    }
+
+    /**
+     * Attempts to update the 'startPassage' field of the metadata,
+     * along with the startUUID field of this object, and also renaming the existing start passage if needed
+     * @param newStartPassage the name of the new intended start passage
+     * @return true if the start passage was updated successfully
+     * @throws InvalidPassageNameException if the new start passage isn't valid
+     */
+    @Override
+    public boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException {
+        boolean result;
+        String currentStartPassage = theMetadata.getStartPassage();
+        //Optional<PassageEditingInterface> pWithOldName = passageMap.values().stream().filter(p -> p.getPassageName().equals(currentStartPassage)).findAny();
+        Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get)); //(startUUID.isPresent()? Optional.of(passageMap.get(startUUID.get())) : Optional.empty());
+        Optional<PassageEditingInterface> pWithNewName = passageMap.values().stream().filter(p -> p.getPassageName().equals(newStartPassage)).findAny();
+        if (pWithOldName.isPresent()){
+            if (pWithNewName.isPresent()){
+                if (JOptionPane.showConfirmDialog(
+                        null,
+                        "<html><p>Did you want your game to start from</br>"+
+                                newStartPassage + " instead of from</br>" +
+                                currentStartPassage + "?</p></html>",
+                        "Changing start passage to other existing passage",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                ) != JOptionPane.YES_OPTION){
+                    return false;
+                }
+                result = theMetadata.updateStartPassage(newStartPassage);
+                startUUID = Optional.of(pWithNewName.get().getPassageUUID());
+            } else{
+                result = theMetadata.updateStartPassage(newStartPassage);
+                if (JOptionPane.showConfirmDialog(
+                        null,
+                        "<html><p>Did you want to rename your existing start passage</br>"+
+                                currentStartPassage + " to be called</br>" +
+                                newStartPassage + " instead?</p></html>",
+                        "Did you want to rename the existing start passage?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                ) == JOptionPane.YES_OPTION){
+                    try {
+                        pWithOldName.get().renameThisPassage(newStartPassage,passageMap);
+                    } catch (DuplicatePassageNameException ignored) {}
+                } else {
+                    getStartUUID(true);
+                }
+            }
+        } else {
+            result = theMetadata.updateStartPassage(newStartPassage);
+            if (pWithNewName.isPresent()){
+                startUUID = Optional.of(pWithNewName.get().getPassageUUID());
+            } else {
+                getStartUUID(true);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Checks to see if the start passage was renamed, and, if so, it'll rename the reference to it in the metadata appropriately.
+     * And if there is no start passage, it'll forcibly create one.
+     */
+    public void checkForStartRename(){
+        if (startUUID.isPresent()){
+            try {
+                theMetadata.updateStartPassage(passageMap.get(startUUID.get()).getPassageName());
+            } catch (Exception ignored){}
+        } else {
+            getStartUUID();
+        }
+    }
+
+    /**
      * Obtains the UUID of the start passage
      * @param forceCreateStart if this is true, if the start passage doesn't exist yet, it will forcibly create the start passage.
      * @return an Optional holding the UUID of the start passage (if it exists)
      */
     public Optional<UUID> getStartUUID(boolean forceCreateStart){
+        Optional<PassageEditingInterface> start;
         String startName = theMetadata.getStartPassage();
-        Optional<PassageEditingInterface> start = passageMap.values().stream().filter( e -> e.getPassageName().equals(startName)).findAny();
+        if (startUUID.isPresent()){
+            start = (startUUID.map(passageMap::get));
+            if (start.isPresent() && (start.get().getPassageName()).equals(startName)){
+                return startUUID;
+            }
+        }
+        start = passageMap.values().stream().filter( e -> e.getPassageName().equals(startName)).findAny();
         if (start.isPresent()){
             startUUID = Optional.of(start.get().getPassageUUID());
         } else if (forceCreateStart){
@@ -91,6 +194,25 @@ public class GameDataObject implements Heccable {
             startUUID = Optional.empty();
         }
         return startUUID;
+    }
+
+    /**
+     * Informs this object that the passage with the specified UUID has been deleted.
+     * If aforementioned passage was the start passage, this object should set the start passage UUID to be that of another arbitrary passage which still exists.
+     * @param uuid UUID of deleted passage.
+     */
+    public void thisPassageHasBeenDeleted(UUID uuid){
+        passageMap.remove(uuid);
+        if (startUUID.isPresent() && startUUID.get().equals(uuid)){
+            String start = "Start";
+            if (!passageMap.isEmpty()){
+                start = passageMap.values().iterator().next().getPassageName();
+            }
+            try {
+                theMetadata.updateStartPassage(start);
+            } catch (Exception ignored){}
+            getStartUUID(true);
+        }
     }
 
     /**
@@ -119,7 +241,41 @@ public class GameDataObject implements Heccable {
         return savePath;
     }
 
+    /**
+     * Creates a PassageEditorWindow for the given passage (and the entire gamedata)
+     * @param passage the UUID of the passage in question which is having its PassageEditorWindow opened
+     * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
+     */
+    public EditorWindowInterface openPassageEditWindow(UUID passage){
+        EditorWindowInterface pw = new PassageEditorWindow(passageMap.get(passage),this);
+        addClosedListener(pw);
+        return pw;
+    }
 
+    /**
+     * Creates a MetadataEditorWindow for this game
+     * @return the MetadataEditorWindow allowing the user to edit the metadata
+     */
+    public EditorWindowInterface openMetadataEditWindow(){
+        EditorWindowInterface ew = new MetadataEditorWindow(this);
+        addClosedListener(ew);
+        return ew;
+    }
+
+    /**
+     * Adds some window closed listeners (for cleanup and such) to the given EditorWindowInterface object
+     * @param w the EditorWindowInterface that the listeners are being added to
+     * @return the EditorWindowInterface but with the listeners added to it
+     */
+    private EditorWindowInterface addClosedListener(EditorWindowInterface w){
+        w.addWindowClosedListener(
+                e -> {
+                    getStartUUID(true);
+                    updateLinkedUUIDs();
+                }
+        );
+        return w;
+    }
 
 
     /**
@@ -152,9 +308,7 @@ public class GameDataObject implements Heccable {
      * Saves the .hecc
      * @throws IOException
      */
-    public void saveTheHecc() throws IOException {
-        Files.write(savePath, Collections.singleton(toHecc()));
-    }
+    public void saveTheHecc() throws IOException { Files.write(savePath, Collections.singleton(toHecc())); }
 
     /**
      * Get the .hecc version of the data held in this object
@@ -162,14 +316,14 @@ public class GameDataObject implements Heccable {
      */
     @Override
     public String toHecc() {
+
         StringBuilder heccBuilder = new StringBuilder();
         heccBuilder.append(theMetadata.toHecc());
         heccBuilder.append("\n");
         heccBuilder.append(startDepthFirstHeccBuilder());
         return heccBuilder.toString();
-
-
     }
+
 
     /**
      * Returns the entire GameDataObject in .hecc form using streams.

@@ -11,6 +11,7 @@ import oh_hecc.game_parts.passage.PassageEditingInterface;
 import utilities.IFIDgenerator;
 import utilities.TextAssetReader;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -91,7 +92,16 @@ public class OhHeccParser {
 
         theMetadata = new EditableMetadata(splitData[0]);
 
-        heccMap.putAll(constructPassageMap(splitData[1]));
+        try {
+            heccMap.putAll(constructPassageMap(splitData[1]));
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Unable to read any passages within this .hecc file!",
+                    "Could not read file",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
 
 
         //dataToParse = makeMetadataObject(rawHeccData.trim().concat("\n"));
@@ -232,6 +242,8 @@ public class OhHeccParser {
         Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
         //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
         Matcher commentStartMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
+
+        Matcher commentLineMatcher = Pattern.compile("^//",Pattern.MULTILINE).matcher(""); //TODO: maybe edit the comment stuff so it needs to start with // after the ;; line
 
         String currentPassageName;
         String nextPassageName = "";

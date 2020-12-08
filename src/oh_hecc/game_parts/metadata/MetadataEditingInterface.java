@@ -74,7 +74,7 @@ public interface MetadataEditingInterface extends SharedMetadata, PassageEditWin
      * Creates an editing window for this object
      * @return a MetadataEditorWindow which can edit this object
      */
-    MetadataEditorWindow openEditingWindow();
+    //MetadataEditorWindow openEditingWindow();
 
 
     String toString();

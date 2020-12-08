@@ -1,11 +1,12 @@
 package oh_hecc.mvc;
 
-import oh_hecc.mvc.controller.MouseController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
+/**
+ * A view of the Model
+ */
 public class View extends JComponent {
 
     /**

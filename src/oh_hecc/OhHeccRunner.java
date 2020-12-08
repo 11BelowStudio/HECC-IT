@@ -20,11 +20,8 @@ import java.util.*;
 
 public class OhHeccRunner {
 
-    private OhHeccChooseFileFrame chooseFileFrame;
+    private final JFrame theFrame;
 
-    private JFrame theFrame;
-
-    private String heccFilePath;
 
     private OhHeccNetworkFrame editFrame;
 
@@ -34,7 +31,6 @@ public class OhHeccRunner {
 
     private OhHeccParser heccParser;
 
-    private Controller ohHeccItsAController;
 
     private GameDataObject theGameData;
 
@@ -120,6 +116,7 @@ public class OhHeccRunner {
 
         editFrame.theFrame.invalidate();
 
+        /*
         Timer repaintTimer = new Timer(
                 1000,
                 e -> editorView.repaint()
@@ -127,12 +124,14 @@ public class OhHeccRunner {
 
         repaintTimer.start();
 
+         */
+
         editFrame.theFrame.addWindowListener(
                 new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
 
-                        repaintTimer.stop();
+                        //repaintTimer.stop();
 
                         //TODO: better save thing
                         /*

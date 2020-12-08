@@ -2,6 +2,7 @@ package oh_hecc.game_parts.component_editing_windows;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.metadata.SharedMetadata;
@@ -64,14 +65,15 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
     /**
      * Creates the MetadataEditorWindow. This is where the magic happens.
-     * @param metadata you see this? yeah that. it's gonna get edited.
+     * @param gameData the gameData itself
      */
-    public MetadataEditorWindow(MetadataEditingInterface metadata){
-        theMetadata = metadata;
-        currentTitle = new AttributeString<>("Title:\n", metadata.getTitle());
-        currentAuthor = new AttributeString<>("Author:\n", metadata.getAuthor());
-        currentStartPassage = new AttributeString<>("Start passage:\n", metadata.getStartPassage());
-        currentIFID = new AttributeString<>("IFID:\n",metadata.getIfid());
+    public MetadataEditorWindow(GameDataObject gameData){
+        super(gameData);
+        theMetadata = gameData.getTheMetadata();
+        currentTitle = new AttributeString<>("Title:\n", theMetadata.getTitle());
+        currentAuthor = new AttributeString<>("Author:\n", theMetadata.getAuthor());
+        currentStartPassage = new AttributeString<>("Start passage:\n", theMetadata.getStartPassage());
+        currentIFID = new AttributeString<>("IFID:\n",theMetadata.getIfid());
 
 
         makeTheFrame();
@@ -88,7 +90,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Same thing, basically.
      */
     void makeTheFrame(){
-        super.makeTheFrame();
+        //super.makeTheFrame();
 
         theFrame.setTitle("Metadata Editor Window");
 
@@ -184,7 +186,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
         titleEditingPanel.add(titleInput);
         JButton titleUpdateButton = new JButton("Update title");
-        titleUpdateButton.addActionListener( (e) -> attemptTitleUpdate(titleInput.getText()));
+        titleUpdateButton.addActionListener( (e) -> attemptTitleUpdate(titleInput.getText().trim()));
         titleEditingPanel.add(titleUpdateButton);
 
         theFrame.add(titleEditingPanel);
@@ -214,7 +216,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         );
         authorEditingPanel.add(authorInput);
         JButton authorUpdateButton = new JButton("Update author");
-        authorUpdateButton.addActionListener( (e) -> attemptAuthorUpdate(authorInput.getText()));
+        authorUpdateButton.addActionListener( (e) -> attemptAuthorUpdate(authorInput.getText().trim()));
         authorEditingPanel.add(authorUpdateButton);
 
         theFrame.add(authorEditingPanel);
@@ -235,7 +237,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         addPassageNameDocumentListener(startInput);
         startEditingPanel.add(startInput);
         JButton startUpdateButton = new JButton("Update start");
-        startUpdateButton.addActionListener( (e) -> attemptStartUpdate(startInput.getText()));
+        startUpdateButton.addActionListener( (e) -> attemptStartUpdate(startInput.getText().trim()));
         startEditingPanel.add(startUpdateButton);
 
         theFrame.add(startEditingPanel);
@@ -263,7 +265,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         );
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
         JButton commentUpdateButton = new JButton("Update comment");
-        commentUpdateButton.addActionListener( (e) -> attemptCommentUpdate(commentInput.getText()));
+        commentUpdateButton.addActionListener( (e) -> attemptCommentUpdate(commentInput.getText().trim()));
         commentEditingPanel.add(commentUpdateButton, BorderLayout.SOUTH);
 
         theFrame.add(commentEditingPanel);
@@ -334,7 +336,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         System.out.println(newStart);
         try{
             if(!isPassageNameValid){ throw new InvalidPassageNameException(newStart); }
-            theMetadata.updateStartPassage(newStart);
+            gameData.updateStartPassage(newStart);
             //TODO: inform user if specified start passage doesn't exist yet
         } catch ( InvalidPassageNameException e){
             JOptionPane.showMessageDialog(
@@ -358,7 +360,6 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * @param newComment the new comment for the metadata
      */
     void attemptCommentUpdate(String newComment){
-        //TODO: attempt to update the comment
         theMetadata.updateComment(newComment);
         showNewComment();
     }
@@ -370,29 +371,25 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         currentTitle.showValue(newTitle);
         titleText.setText(currentTitle.toString());
         refresh();
-        System.out.println(newTitle);
     }
 
     void showNewAuthor(){
         String newAuthor = theMetadata.getAuthor();
         authorLabel.setText(newAuthor);
-        //TODO: author text entry thing
+        authorInput.setText(newAuthor);
         refresh();
-        System.out.println(newAuthor);
     }
 
     void showNewStartPassage(){
         String newStart = theMetadata.getStartPassage();
         startPassageLabel.setText(newStart);
-        //TODO: start passage text entry thing
+        startInput.setText(newStart);
         refresh();
-        System.out.println(newStart);
     }
 
     void showNewComment(){
         String newComment = theMetadata.getComment();
         commentInput.setText(newComment);
-        //TODO: show the new comment in the comment textarea
         refresh();
         System.out.println(newComment);
     }
@@ -407,8 +404,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Otherwise, it'll be red.
      */
     private void makeSureTitleIsValid(){
-        String newTitle = titleInput.getText().trim();
-        boolean stillValid = (newTitle.matches(SharedMetadata.VALID_TITLE_REGEX));
+        boolean stillValid = titleInput.getText().trim().matches(SharedMetadata.VALID_TITLE_REGEX);
         if (isTitleValid ^ stillValid){
             titleInput.setForeground( stillValid ? defaultTextFieldColor : Color.RED);
             isTitleValid = stillValid;
@@ -434,10 +430,14 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     public static void main(String[] args){
         EditableMetadata theTestMetadata = new EditableMetadata("sample title","an author");
 
+        GameDataObject gdo = new GameDataObject(theTestMetadata,Paths.get("k"));
+
         System.out.println(theTestMetadata.toString());
 
         //MetadataEditorWindow w = new MetadataEditorWindow(theTestMetadata);
-        MetadataEditorWindow w = theTestMetadata.openEditingWindow();
+        //MetadataEditorWindow w = theTestMetadata.openEditingWindow();
+
+        EditorWindowInterface w = gdo.openMetadataEditWindow();
 
         w.addWindowClosedListener(
                 new Consumer<WindowEvent>() {

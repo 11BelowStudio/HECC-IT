@@ -231,6 +231,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      * @return the previous name of this passage (before it got renamed)
      * @throws InvalidPassageNameException if the passage name isn't a valid passage name
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
+     * @deprecated
      */
     @Override
     public String renameThisPassage(String newName, Set<String> allPassageNames) throws InvalidPassageNameException, DuplicatePassageNameException {
@@ -617,10 +618,12 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      * @param allPassages the map of all passages
      * @return a {@link PassageEditorWindow} allowing a user to edit this passage.
      */
+    /*
     @Override
     public PassageEditorWindow openEditorWindow(Map<UUID, PassageEditingInterface> allPassages){
         return PassageEditingInterface.openEditorWindow(this,allPassages);
     }
+     */
 
     /**
      * This obtains a version of this passage in .hecc format
