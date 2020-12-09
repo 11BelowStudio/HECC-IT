@@ -15,6 +15,18 @@ import java.util.regex.Pattern;
  */
 public interface MetadataReadingInterface extends SharedMetadata {
 
+    String AUTHOR_PREFIX = "!author:";
+
+    String TITLE_PREFIX = "!title:";
+
+    String START_PREFIX = "!start:";
+
+    String IFID_PREFIX = "!ifid:";
+
+    String VARIABLE_PREFIX = "!var:";
+
+    String COMMENT_PREFIX = "//";
+
     /**
      * A method that performs the start passage finding stuff
      * @param rawData the raw metadata
@@ -37,7 +49,7 @@ public interface MetadataReadingInterface extends SharedMetadata {
                     rawData
             );*/
             start = SharedMetadata.metadataRegexHandler(
-                    "(?<=^!StartPassageName:)" + Parseable.STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE,
+                    "(?<=^"+START_PREFIX+")" + Parseable.STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE,
                     rawData
             );
         } catch (NoMatchException ignored){}
@@ -56,7 +68,7 @@ public interface MetadataReadingInterface extends SharedMetadata {
             sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
          */
         return SharedMetadata.metadataRegexHandler(
-                "(?<=^!IFID:)\\h*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\h*$)",
+                "(?<="+IFID_PREFIX+")\\h*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\h*$)",
                 rawData
         ).toUpperCase(); //converts the match to uppercase
     }
@@ -75,7 +87,7 @@ public interface MetadataReadingInterface extends SharedMetadata {
             between the start/end non-whitespace characters.
          */
         return SharedMetadata.metadataRegexHandler(
-                "(?<=^!StoryTitle:)" + VALID_TITLE_REGEX,
+                "(?<=^"+TITLE_PREFIX+")" + VALID_TITLE_REGEX,
                 rawData
         );
     }
@@ -94,32 +106,34 @@ public interface MetadataReadingInterface extends SharedMetadata {
             May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
          */
         return SharedMetadata.metadataRegexHandler(
-                "(?<=^!Author:)" + SharedMetadata.VALID_AUTHOR_REGEX,
+                "(?<=^"+AUTHOR_PREFIX+")" + SharedMetadata.VALID_AUTHOR_REGEX,
                 rawData
         );
     }
 
     /**
      * Attempts to find the variable declarations within the metadata stuff, adding each of them to the variables arrayList
-     *
-     * Variables must be in the form
-     *  !Var:
-     *  variableName
-     *      1 or more word characters (alphanumeric+underscore)
-     *  = defaultValue
-     *      defaultValue must be 1 or more non-whitespace characters
-     *      optional
-     *  // comment
-     *      comment is anything between the // and the end of line
-     *      optional
+     * <p>
+     * Variables must be in the form:
+     * <dl>
+     *  <dt>!var:</dt>
+     *  <dt>variableName</dt>
+     *      <dd>1 or more word characters (alphanumeric+underscore)</dd>
+     *  <dt>= defaultValue</dt>
+     *      <dd>defaultValue must be 1 or more non-whitespace characters
+     *      (optional)</dd>
+     *  <dt>// comment</dt>
+     *      <dd>comment is anything between the // and the end of line
+     *      (optional)</dd>
+     * </dl>
      * @param rawData the raw metadata that is being looked through
      * @return a List of all the Variable objects
      */
     static List<Variable> findVariables(String rawData){
         List<Variable> variables = new ArrayList<>();
         Matcher variableMatcher = Pattern.compile(
-                "(?<=^!Var:)\\h*\\w+\\h*(=\\h*.+?\\h*)?(\\/\\/\\h*?.+)?(?=$)",
-                Pattern.MULTILINE
+                "(?<=^"+VARIABLE_PREFIX+")\\h*\\w+\\h*(=\\h*.+?\\h*)?(\\/\\/\\h*?.+)?(?=$)",
+                Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(rawData);
         while(variableMatcher.find()){
             //System.out.println(variableMatcher.group(0));
@@ -137,8 +151,8 @@ public interface MetadataReadingInterface extends SharedMetadata {
         //a StringBuilder that constructs the comment
         StringBuilder commentBuilder = new StringBuilder();
         Matcher commentMatcher = Pattern.compile(
-                "((?<=^\\/\\/).*$)",
-                Pattern.MULTILINE
+                "((?<=^"+COMMENT_PREFIX+").*$)",
+                Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(rawData); //matches lines that start with a '//' (getting everything from the // to end of line)
 
         while(commentMatcher.find()){

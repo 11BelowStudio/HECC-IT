@@ -2,9 +2,9 @@ this line is before the first passage declaration, so, officially, this line doe
 
 //multiline comment line 1
 
-!StartPassageName: Start
+!Start: k
 !IFID: de7b3d02-81bb-4c2a-82ba-7ca9398b2262
-!StoryTitle: HECCSample
+!Title: HECCSample
 !Author: R. Lowe
 
 //line 2
@@ -19,7 +19,7 @@ this line is before the first passage declaration, so, officially, this line doe
 //nutz
 // lmao gottem!
 
-::Start <69,69> //this is a comment //ayy lmao eecks dee
+::k <69,69> //this is a comment //ayy lmao eecks dee
 
 starting passage content goes here.
 

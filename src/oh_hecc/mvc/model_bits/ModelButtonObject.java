@@ -45,12 +45,16 @@ public class ModelButtonObject extends EditModelObject {
 
         height = 32;
 
+        Dimension modelDimension = model.getSize();
+        int mw = modelDimension.width;
+        int mh = modelDimension.height;
+
         //TODO: maybe set these to dummy values?
-        width = (int)((scaledRightSide-scaledLeftSide) * Model.GET_MODEL_WIDTH());
+        width = (int)((scaledRightSide-scaledLeftSide) * mw);
 
         position.set(
-                (scaledLeftSide * Model.GET_MODEL_WIDTH()) + (width/2.0),
-                Model.GET_MODEL_HEIGHT() - (height/2.0)
+                (scaledLeftSide * mw) + (width/2.0),
+                mh - (height/2.0)
         );
 
         areaRectangle = new Rectangle((int) (getPosition().x -(width/2)),(int) (getPosition().y -(height/2)), width,height);

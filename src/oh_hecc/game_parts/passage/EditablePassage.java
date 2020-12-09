@@ -637,8 +637,9 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         //and finally, the trailing comment
         heccBuilder.append("\n;;\n");
         heccBuilder.append(trailingComment);
+        heccBuilder.append("\n;;\n");
         //end with a newline, and then return the string
-        heccBuilder.append("\n");
+        //heccBuilder.append("\n");
         return heccBuilder.toString();
     }
 

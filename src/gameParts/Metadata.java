@@ -2,12 +2,15 @@ package gameParts;
 
 import heccCeptions.NoMatchException;
 import hecc_up.FolderOutputterMetadataInterface;
+import oh_hecc.game_parts.metadata.MetadataReadingInterface;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static oh_hecc.game_parts.metadata.MetadataReadingInterface.*;
 
 /**
  * This object basically represents the metadata for the HECCIN' Game
@@ -87,7 +90,8 @@ public class Metadata implements FolderOutputterMetadataInterface {
      */
     public void parseMetadata(){
         if (hasMetadata){ //only bothers doing this if there actually is any metadata to parse
-            startPassage = findStartPassage(rawMetadata);
+            //startPassage = findStartPassage(rawMetadata);
+            startPassage = MetadataReadingInterface.findStartPassage(rawMetadata);
             findIFID();
             findTitle();
             findAuthor();
@@ -120,7 +124,10 @@ public class Metadata implements FolderOutputterMetadataInterface {
      * A method that wraps the start passage finding stuff
      * @param rawData the raw metadata
      * @return the name of the defined starting passage ("Start" if it wasn't defined)
+     * @deprecated by oh_hecc.game_parts.metadata.MetadataReadingInterface.findStartPassage(String)
+     * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findStartPassage(String)
      */
+    @Deprecated
     private String findStartPassage(String rawData){
         /*
         finds the declaration for the starting passage,
@@ -132,11 +139,11 @@ public class Metadata implements FolderOutputterMetadataInterface {
          */
         String start = "Start";
         try{
-            startPassage = metadataRegexHandler(
+            start = metadataRegexHandler(
                 "(?<=^!StartPassageName:)\\h*[\\w]+[\\w- ]*[\\w]+(?=\\h*$)",
                 rawData
             );
-            System.out.println(startPassage);
+            System.out.println(start);
         } catch (NoMatchException e){
             //start = "Start";
         }
@@ -144,7 +151,8 @@ public class Metadata implements FolderOutputterMetadataInterface {
     }
 
     /**
-     * Finds IFID declaration
+     * Finds IFID declaration.
+     * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findIfid(String)
      */
     private void findIFID(){
         /*
@@ -152,10 +160,14 @@ public class Metadata implements FolderOutputterMetadataInterface {
             sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
          */
         try{
+            ifid = MetadataReadingInterface.findIfid(rawMetadata);
+            /*
             ifid = metadataRegexHandler(
                 "(?<=^!IFID:)\\h*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\h*$)",
                 rawMetadata
             ).toUpperCase(); //converts the match to uppercase
+
+             */
             isIfidDeclared = true;
         } catch (NoMatchException e){
             isIfidDeclared = false;
@@ -164,6 +176,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
 
     /**
      * A method which finds the title metadata
+     * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findTitle(String)
      */
     private void findTitle(){
         /*
@@ -173,19 +186,24 @@ public class Metadata implements FolderOutputterMetadataInterface {
             between the start/end non-whitespace characters.
          */
         try{
+            /*
             title = metadataRegexHandler(
                 "(?<=^!StoryTitle:)\\h*[\\S]+[\\S ]*[\\S]+(?=\\h*$)",
                 rawMetadata
             );
+             */
+            title = MetadataReadingInterface.findTitle(rawMetadata);
             isTitleDeclared = true;
         } catch (NoMatchException e){
             title = "An Interactive Fiction";
             isTitleDeclared = false;
         }
+        System.out.println(title);
     }
 
     /**
      * Method to find the author metadata
+     * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findAuthor(String)
      */
     private void findAuthor(){
         /*
@@ -194,10 +212,13 @@ public class Metadata implements FolderOutputterMetadataInterface {
             May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
          */
         try{
+            author = MetadataReadingInterface.findAuthor(rawMetadata);
+            /*
             author = metadataRegexHandler(
                 "(?<=^!Author:)\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)",
                 rawMetadata
             );
+             */
             isAuthorDeclared = true;
         } catch (NoMatchException e){
             author = "Anonymous";
@@ -207,19 +228,23 @@ public class Metadata implements FolderOutputterMetadataInterface {
 
     /**
      * Attempts to find the variable declarations within the metadata stuff, adding each of them to the variables arrayList
-     *
-     * Variables must be in the form
-     *  !Var:
-     *  variableName
-     *      1 or more word characters (alphanumeric+underscore)
-     *  = defaultValue
-     *      defaultValue must be 1 or more non-whitespace characters
-     *      optional
-     *  // comment
-     *      comment is anything between the // and the end of line
-     *      optional
+     * <p>
+     * Variables must be in the form:
+     * <dl>
+     *  <dt>!var:</dt>
+     *  <dt>variableName</dt>
+     *      <dd>1 or more word characters (alphanumeric+underscore)</dd>
+     *  <dt>= defaultValue</dt>
+     *      <dd>defaultValue must be 1 or more non-whitespace characters
+     *      (optional)</dd>
+     *  <dt>// comment</dt>
+     *      <dd>comment is anything between the // and the end of line
+     *      (optional)</dd>
+     * </dl>
      */
     private void findVariables(){
+        variables.addAll(MetadataReadingInterface.findVariables(rawMetadata));
+        /*
         Matcher variableMatcher = Pattern.compile(
                 "(?<=^!Var:)\\h*\\w+\\h*(=\\h*.+?\\h*)?(//\\h*.+)?(?=\\h*$)",
                 Pattern.MULTILINE
@@ -228,6 +253,8 @@ public class Metadata implements FolderOutputterMetadataInterface {
             //System.out.println(variableMatcher.group(0));
             variables.add(new Variable(variableMatcher.group(0).trim()));
         }
+
+         */
         /*
         for (Variable v: variables) {
             System.out.println(v.toString());
@@ -240,6 +267,8 @@ public class Metadata implements FolderOutputterMetadataInterface {
      * @return the multiline comment held within the metadata (as a string)
      */
     private String findComment(String rawData){
+        return MetadataReadingInterface.findComment(rawData);
+        /*
         //a StringBuilder that constructs the comment
         StringBuilder commentBuilder = new StringBuilder();
         Matcher commentMatcher = Pattern.compile(
@@ -255,6 +284,8 @@ public class Metadata implements FolderOutputterMetadataInterface {
         }
         //returns the string built by the commentBuilder
         return commentBuilder.toString();
+
+         */
     }
 
     /**
@@ -310,7 +341,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
                 //Add instructions on declaring an IFID if no IFID was declared
                 instructionBuilder.append(
                         "No Interactive Fiction Identifier declaration found! You can fix this with this line of code:\n"
-                        + "!IFID: " + UUID.randomUUID().toString().toUpperCase()
+                        + IFID_PREFIX + " " + UUID.randomUUID().toString().toUpperCase()
                         + "\n"
                 );
             }
@@ -318,7 +349,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
                 //Add instructions for declaring the title if no title was declared
                 instructionBuilder.append(
                         "No title declaration found! You can fix this with this line of code:\n"
-                        + "!StoryTitle: INSERT TITLE HERE"
+                        + TITLE_PREFIX + " INSERT TITLE HERE"
                         + "\n"
                 );
             }
@@ -326,7 +357,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
                 //Add instructions for declaring author if no author was declared
                 instructionBuilder.append(
                         "No author declaration found! You can fix this with this line of code:\n"
-                        + "!Author: YOUR NAME HERE"
+                        + AUTHOR_PREFIX +" YOUR NAME HERE"
                         + "\n"
                 );
             }

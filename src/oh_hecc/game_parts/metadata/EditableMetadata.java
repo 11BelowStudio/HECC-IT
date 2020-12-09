@@ -208,22 +208,26 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
         heccBuilder.append("\n\n");
 
         //title declaration
-        heccBuilder.append("!StoryTitle: ");
+        heccBuilder.append(TITLE_PREFIX);
+        heccBuilder.append(" ");
         heccBuilder.append(title);
         heccBuilder.append("\n");
 
         //author declaration
-        heccBuilder.append("!Author: ");
+        heccBuilder.append(AUTHOR_PREFIX);
+        heccBuilder.append(" ");
         heccBuilder.append(author);
         heccBuilder.append("\n");
 
         //IFID declaration
-        heccBuilder.append("!IFID: ");
+        heccBuilder.append(IFID_PREFIX);
+        heccBuilder.append(" ");
         heccBuilder.append(ifid);
         heccBuilder.append("\n");
 
         //Start passage declaration
-        heccBuilder.append("!StartPassageName: ");
+        heccBuilder.append(START_PREFIX);
+        heccBuilder.append(" ");
         heccBuilder.append(startPassage);
         heccBuilder.append("\n");
 
@@ -256,7 +260,8 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
         String[] segmentsOfTheComment = multilineComment.split("\n");
         StringBuilder heccedMultilineCommentBuilder = new StringBuilder();
         for (String s: segmentsOfTheComment) {
-            heccedMultilineCommentBuilder.append("// ");
+            heccedMultilineCommentBuilder.append(COMMENT_PREFIX);
+            heccedMultilineCommentBuilder.append(" ");
             heccedMultilineCommentBuilder.append(s);
             heccedMultilineCommentBuilder.append("\n");
         }

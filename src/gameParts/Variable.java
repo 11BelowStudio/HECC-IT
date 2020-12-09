@@ -103,7 +103,7 @@ public class Variable implements Heccable {
     @Override
     public String toHecc() {
         StringBuilder heccBuilder = new StringBuilder();
-        heccBuilder.append("!Var: ");
+        heccBuilder.append("!var: ");
         heccBuilder.append(variableName);
         heccBuilder.append(" = ");
         heccBuilder.append(defaultValue);

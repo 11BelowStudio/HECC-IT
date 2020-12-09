@@ -46,10 +46,10 @@ public class HeccUpHandler {
     }
 
     /**
-     *
-     * @param heccFileLocation
-     * @param outputFolderLocation
-     * @return
+     * Attempts to hecc up the game
+     * @param heccFileLocation where the .hecc file is
+     * @param outputFolderLocation where the output folder is
+     * @return true if it could be parsed/output successfully. false otherwise.
      * @throws HeccCeption parser-related exception
      * @throws IOException thrown if there's a problem opening/reading the file
      */

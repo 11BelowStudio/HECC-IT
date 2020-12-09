@@ -102,9 +102,16 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
      */
     abstract void refreshDrawables();
 
+
+    /**
+     * Actually, y'know, paints this canvas.
+     * Calls drawModel(g).
+     * @param g0 the Graphics context that's being used for the repainting.
+     * @see #drawModel(Graphics2D)
+     */
     @Override
     public void paint(Graphics g0){
-        //super.paint(g0);
+        super.paint(g0);
         //update();
         //refreshDrawables();
         System.out.println("paint time");
@@ -173,6 +180,11 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
     public abstract void yMove(boolean positive);
 
 
+    /**
+     * Calls refreshDrawables then attempts to repaint.
+     * @see #refreshDrawables()
+     * @see java.awt.Canvas#repaint()
+     */
     @Override
     public void repaint(){
         //update();

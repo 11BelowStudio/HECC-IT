@@ -3,6 +3,7 @@ package oh_hecc.mvc;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.model_bits.PassageObject;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -47,6 +48,12 @@ public interface EditModelInterface {
      * @param destination the UUID of the destination passage whose parents need to update their links.
      */
     void updatePassageObjectLinksWhichLinkToSpecifiedPassage(UUID destination);
+
+    /**
+     * Returns the size of the model
+     * @return the dimension representing the size of the model
+     */
+    Dimension getSize();
 
 
 }

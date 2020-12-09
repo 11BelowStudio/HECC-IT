@@ -12,8 +12,12 @@ import java.util.regex.Pattern;
  */
 public interface SharedMetadata extends Heccable, Parseable {
 
+
+
+
+
     /**
-     * Author name declared as '!Author: Author name goes here'
+     * Author name declared as '!author: Author name goes here'
      * Must start with a letter, and must end in a letter (uppercase or lowercase)
      * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
      */
@@ -27,7 +31,7 @@ public interface SharedMetadata extends Heccable, Parseable {
      * Any amount of non-whitespace characters and/or spaces are allowed between the start/end non-whitespace characters.
      * Some horizontal whitespace permitted at very start/end, will be trimmed out anyway
      */
-    String VALID_TITLE_REGEX = "\\h*([\\S]+[\\S ]*)?[\\S]+(?=\\h*$)";
+    String VALID_TITLE_REGEX = "\\h*(([\\S]+[\\S ]*)?[\\S]+)(?=\\h*$)";
 
 
     /**
@@ -41,7 +45,7 @@ public interface SharedMetadata extends Heccable, Parseable {
     static String metadataRegexHandler(String regex, String input) throws NoMatchException {
         Matcher metadataMatcher = Pattern.compile(
                 regex,
-                Pattern.MULTILINE
+                Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(input);
         if (metadataMatcher.find()){
             return metadataMatcher.group(0).trim(); //returns first match, with whitespace trimmed

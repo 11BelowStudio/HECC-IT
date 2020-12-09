@@ -17,17 +17,17 @@ public class EditableMetadataTests {
                 "\n" +
                 "//multiline comment line 1\n" +
                 "\n" +
-                "!StartPassageName: Start\n" +
+                "!start: Start\n" +
                 "!IFID: de7b3d02-81bb-4c2a-82ba-7ca9398b2262\n" +
-                "!StoryTitle: HECCSample\n" +
+                "!title: HECCSample\n" +
                 "!Author: R. Lowe\n" +
                 "\n" +
                 "//line 2\n" +
                 "\n" +
-                "!Var: variableA = defaultValue //comment\n" +
-                "!Var: variableB = defaultValue\n" +
-                "!Var: variableC //comment\n" +
-                "!Var: variableD\n" +
+                "!var: variableA = defaultValue //comment\n" +
+                "!var: variableB = defaultValue\n" +
+                "!var: variableC //comment\n" +
+                "!var: variableD\n" +
                 "\n" +
                 "//deez\n" +
                 "//\n" +

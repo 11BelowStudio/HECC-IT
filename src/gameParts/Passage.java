@@ -30,11 +30,13 @@ public class Passage {
 
     /**
      * A trailing multiline comment behind this passage object
+     * @deprecated not actually used
      */
     private final String trailingComment;
 
     /**
      * the comment that's inline with the passage declaration
+     * @deprecated not actually used
      */
     private String inlineComment;
 
@@ -77,12 +79,11 @@ public class Passage {
      * Constructs a passage object without any metadata
      * @param passageName the name of this passage
      * @param unparsedContent the raw content of it
-     * @param comment the multiline comment for the passage
      */
-    public Passage(String passageName, String unparsedContent, String comment){
+    public Passage(String passageName, String unparsedContent){//}, String comment){
         this.passageName = passageName.trim();
         this.unparsedContent = unparsedContent.trim();
-        this.trailingComment = comment.trim();
+        this.trailingComment ="";
         linkedPassages = new TreeSet<>();
 
         System.out.println(unparsedContent);
@@ -97,11 +98,10 @@ public class Passage {
      * Creates a Passage object with metadata
      * @param passageName the name of this passage
      * @param unparsedContent the raw content of it
-     * @param comment the multiline comment for the passage
      * @param lineEndMetadata the raw metadata of it
      */
-    public Passage(String passageName, String unparsedContent, String comment, String lineEndMetadata){
-        this(passageName,unparsedContent, comment);
+    public Passage(String passageName, String unparsedContent, String lineEndMetadata){//{
+        this(passageName,unparsedContent);
         //processes metadata
         readMetadata(lineEndMetadata);
 

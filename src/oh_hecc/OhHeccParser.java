@@ -218,24 +218,22 @@ public class OhHeccParser {
         boolean notDone;
 
         //matches declarations
-        Matcher declarationMatcher = Pattern.compile("(?<declarations>^::("+ Parseable.PASSAGE_NAME_REGEX_WITH_WHITESPACE + "))", Pattern.MULTILINE).matcher(dataToParse);
+        Matcher declarationMatcher = Pattern.compile("(^::("+ Parseable.PASSAGE_NAME_REGEX_WITH_WHITESPACE + "))", Pattern.MULTILINE).matcher(dataToParse);
         //will give this the everythingAfterDeclaration (the content)
-        Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
+        Matcher passageContentMatcher = Pattern.compile("((?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
         //Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\R)(?!^::).*\\R(?!^::).+)", Pattern.MULTILINE).matcher("");
         //will use this to crop leading whitespace lines
         Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\h*$", Pattern.MULTILINE).matcher("");
         //matches whitespace at the end of the line
         Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
-        //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
-        Matcher commentStartMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
+        //This matches the line that indicates the start/end of a multiline comment at the end of a passage (containing only ;;)
+        Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 
-        Matcher commentLineMatcher = Pattern.compile("^//",Pattern.MULTILINE).matcher(""); //TODO: maybe edit the comment stuff so it needs to start with // after the ;; line
+        //Matcher commentLineMatcher = Pattern.compile("^//",Pattern.MULTILINE).matcher(""); //TODO: maybe edit the comment stuff so it needs to start with // after the ;; line
 
         String currentPassageName;
         String nextPassageName = "";
         String everythingAfterDeclaration;
-        String currentContent;
-        String currentComment;
 
         String currentPassageMetadata;
         //int currentPassageMetadataStart;
@@ -300,8 +298,9 @@ public class OhHeccParser {
             everythingAfterDeclaration = dataToParse.substring(thisDeclarationStart, nextDeclarationStart);
             passageContentMatcher.reset(everythingAfterDeclaration);
 
-            currentContent = ""; //sets up the current content string
-            currentComment = ""; //sets up current comment string
+
+            StringBuilder contentBuilder = new StringBuilder(); //builds a content string
+            StringBuilder commentBuilder = new StringBuilder(); //builds a comment string
 
             contentFound = false;
             boolean commentStarted = false;
@@ -313,12 +312,17 @@ public class OhHeccParser {
                 //System.out.println(temp);
 
 
+                //if comment has started
                 if (commentStarted){
-                    currentComment = currentComment.concat(temp);
+                    if (commentStartEndMatcher.reset(temp).matches()){ //if the start-end indicator is reached again, that's the end of the comment.
+                        break; //no more looping
+                    }
+                    //otherwise append the current line to the currentComment
+                    commentBuilder.append(temp);
                     continue;
                 } else {
                     if (contentFound) { //if content has been found
-                        if (commentStartMatcher.reset(temp).matches()) { //if the current line matches the comment start line
+                        if (commentStartEndMatcher.reset(temp).matches()) { //if the current line matches the comment start line
                             commentStarted = true; //the comment has started
                             continue; //skip this line
                         }
@@ -336,7 +340,8 @@ public class OhHeccParser {
                 //lineEndWhitespaceMatcher.reset(temp);
                 //temp = lineEndWhitespaceMatcher.replaceAll("</br>");
                 //adds the current line of content to the currentContent
-                currentContent = currentContent.concat(temp);
+                //currentContent = currentContent.concat(temp);
+                contentBuilder.append(temp);
             }
 
             /*
@@ -359,7 +364,13 @@ public class OhHeccParser {
                 //throw new EmptyPassageException(currentPassageName);
             }
              */
-            PassageEditingInterface thePassage = new EditablePassage(currentPassageName.trim(),currentContent.trim(),currentComment,currentPassageMetadata);
+            PassageEditingInterface thePassage = new EditablePassage(
+                    currentPassageName.trim(),
+                    contentBuilder.toString().trim(),
+                    commentBuilder.toString().trim(),
+                    currentPassageMetadata
+            );
+            //PassageEditingInterface thePassage = new EditablePassage(currentPassageName.trim(),currentContent.trim(),currentComment,currentPassageMetadata);
             pMap.put(thePassage.getPassageUUID(),thePassage);
         } while(notDone);
 
@@ -461,6 +472,7 @@ public class OhHeccParser {
         return true;
     }
     */
+
 
 
     /**

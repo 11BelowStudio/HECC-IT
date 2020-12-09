@@ -20,6 +20,11 @@ public class MouseController implements MouseListener, MouseMotionListener {
      */
     private final JFrame theFrame;
 
+    /**
+     * Creates this controller.
+     * @param m the model that's being controlled
+     * @param f the frame holding the model that's being controlled
+     */
     public MouseController(MouseControlModelInterface m, JFrame f){
         controlledModel = m;
         theFrame = f;

@@ -56,6 +56,7 @@ public class HeccParser {
      */
     public HeccParser(String rawHeccData, LoggerInterface boundary){
 
+
         logger = boundary;
 
         heccedData = new ArrayList<>();
@@ -191,7 +192,7 @@ public class HeccParser {
         //matches whitespace at the end of the line
         Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
         //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
-        Matcher commentStartMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
+        Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 
         String currentPassageName;
         String nextPassageName = "";
@@ -260,7 +261,6 @@ public class HeccParser {
             passageContentMatcher.reset(everythingAfterDeclaration);
 
             currentContent = ""; //sets up the current content string
-            currentComment = ""; //sets up current comment string
 
             contentFound = false;
             boolean commentStarted = false;
@@ -272,26 +272,31 @@ public class HeccParser {
                 //System.out.println(temp);
 
 
+                /*
                 if (commentStarted){
-                    currentComment = currentComment.concat(temp);
+                    if (commentStartEndMatcher.reset(temp).matches()) { //if the current line matches the comment start/end line
+                        break;
+                    }
+                    //currentComment = currentComment.concat(temp);
                     continue;
-                } else {
-                    if (contentFound) { //if content has been found
-                        if (commentStartMatcher.reset(temp).matches()) { //if the current line matches the comment start line
-                            commentStarted = true; //the comment has started
-                            continue; //skip this line
-                        }
-                    } else { //if no content has been found yet
-                        //check if this current line is entirely whitespace
-                        if (entirelyWhitespaceMatcher.reset(temp).matches()) {
-                            continue;
-                            //skip this line if it's entirely whitespace
-                        } else {
-                            contentFound = true;
-                            //content has been found once first not-entirely-whitespace line has been reached
-                        }
+                } else {*/
+                if (contentFound) { //if content has been found
+                    if (commentStartEndMatcher.reset(temp).matches()) { //if the current line matches the comment start/end line
+                        //commentStarted = true; //the comment has started
+                        //continue; //skip this line
+                        break;
+                    }
+                } else { //if no content has been found yet
+                    //check if this current line is entirely whitespace
+                    if (entirelyWhitespaceMatcher.reset(temp).matches()) {
+                        continue;
+                        //skip this line if it's entirely whitespace
+                    } else {
+                        contentFound = true;
+                        //content has been found once first not-entirely-whitespace line has been reached
                     }
                 }
+                //}
                 //lineEndWhitespaceMatcher.reset(temp);
                 //temp = lineEndWhitespaceMatcher.replaceAll("</br>");
                 //adds the current line of content to the currentContent
@@ -307,9 +312,9 @@ public class HeccParser {
                 //System.out.println(currentContent);
                 //if content was found, add it to the passage content map
                 if (passageMetadataFound){
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentComment,currentPassageMetadata));
+                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentPassageMetadata));
                 } else{
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentComment));
+                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent));
                 }
             } else{
                 //System.out.println("No content found for passage " + currentPassageName);

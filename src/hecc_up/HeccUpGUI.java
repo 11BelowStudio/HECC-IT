@@ -7,6 +7,9 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * This class is basically a GUI for the HECC-UP stuff
@@ -42,7 +45,12 @@ public class HeccUpGUI implements LoggerInterface {
     /**
      * the frame that has the gui
      */
-    public JFrame guiFrame;
+    public JFrame theFrame;
+
+    /**
+     * The panel that will actually hold the GUI
+     */
+    private JPanel thePanel;
 
     /**
      * JTextArea stating the location of the chosen hecc file
@@ -86,10 +94,10 @@ public class HeccUpGUI implements LoggerInterface {
         makeTheGui();
 
         //then it'll make the GUI visible, revalidated, packed, etc
-        guiFrame.setVisible(true);
-        guiFrame.setPreferredSize(new Dimension(800,600));
-        guiFrame.revalidate();
-        guiFrame.pack();
+        theFrame.setVisible(true);
+        theFrame.setPreferredSize(new Dimension(800,600));
+        theFrame.revalidate();
+        theFrame.pack();
 
         //setting up the AttributeStrings so they can be easily used later on
         heccFileAttributeString = new AttributeString<>(".hecc file: ","");
@@ -110,15 +118,21 @@ public class HeccUpGUI implements LoggerInterface {
     private void makeTheGui(){
 
         //makes the frame
-        guiFrame = new JFrame();
-        guiFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //exits when closed
-        guiFrame.setTitle("HECC Uncomplicated Parser"); //verbose title
+        theFrame = new JFrame();
+        theFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //exits when closed
+        theFrame.setTitle("HECC Uncomplicated Parser"); //verbose title
 
         //A lowered etched border
         Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
+        theFrame.setLayout(new GridLayout(1,1));
+
+        //thePanel will have a BoxLayout
+        thePanel = new JPanel();
+        thePanel.setLayout(new BoxLayout(thePanel, BoxLayout.Y_AXIS));
+
         //guiFrame will use a BoxLayout.
-        guiFrame.setLayout(new BoxLayout(guiFrame.getContentPane(), BoxLayout.Y_AXIS));
+        //theFrame.setLayout(new BoxLayout(theFrame.getContentPane(), BoxLayout.Y_AXIS));
 
 
         //Creating the title panel to hold the title label
@@ -130,7 +144,7 @@ public class HeccUpGUI implements LoggerInterface {
                 SwingConstants.CENTER
         );
         titlePanel.add(titleLabel); //it's been added to the titlePanel
-        guiFrame.add(titlePanel); //and this title panel is now in the frame
+        thePanel.add(titlePanel); //and this title panel is now in the frame
         
 
         //Creating the 'select your HECC file' panel
@@ -163,7 +177,7 @@ public class HeccUpGUI implements LoggerInterface {
         selectHeccFileChooser = setupTheFileChoosers(true);
 
         //and now, the hecc selection panel is added to the gui frame
-        guiFrame.add(selectHeccFilePanel);
+        thePanel.add(selectHeccFilePanel);
 
 
 
@@ -196,7 +210,7 @@ public class HeccUpGUI implements LoggerInterface {
         selectGameLocationChooser = setupTheFileChoosers(false);
 
 
-        guiFrame.add(selectGameLocationPanel);
+        thePanel.add(selectGameLocationPanel);
 
         //and now, a panel for the 'HECC-UP' button
         JPanel heccItUpPanel = new JPanel();
@@ -213,7 +227,7 @@ public class HeccUpGUI implements LoggerInterface {
 
         heccItUpPanel.add(heccItUpButton);
         //and the heccItUpPanel is added to the gui Frame
-        guiFrame.add(heccItUpPanel);
+        thePanel.add(heccItUpPanel);
 
 
         //And now, an output panel thing
@@ -233,7 +247,9 @@ public class HeccUpGUI implements LoggerInterface {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         outputPanel.add(logScroll);
-        guiFrame.add(outputPanel);
+        thePanel.add(outputPanel);
+
+        theFrame.add(thePanel);
     }
 
 
@@ -268,7 +284,7 @@ public class HeccUpGUI implements LoggerInterface {
      */
     private void selectHeccFileHandler(){
         //opens the selectHeccFileChooser filechooser
-        int fcReturnValue = selectHeccFileChooser.showOpenDialog(guiFrame);
+        int fcReturnValue = selectHeccFileChooser.showOpenDialog(theFrame);
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a .hecc file was chosen
             //finds the path of the selected .hecc file
             heccFileLocation = selectHeccFileChooser.getSelectedFile().getAbsolutePath();
@@ -288,7 +304,7 @@ public class HeccUpGUI implements LoggerInterface {
      */
     private void selectOutputFileHandler(){
         //opens the selectGameLocationChooser fileChooser
-        int fcReturnValue = selectGameLocationChooser.showDialog(guiFrame,"Select");
+        int fcReturnValue = selectGameLocationChooser.showDialog(theFrame,"Select");
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a directory was chosen
             //records the path of it
             outputFolderLocation = selectGameLocationChooser.getSelectedFile().getAbsolutePath();
@@ -302,7 +318,6 @@ public class HeccUpGUI implements LoggerInterface {
         }
     }
 
-    //TODO: parser broke
 
 
     /**
@@ -310,25 +325,62 @@ public class HeccUpGUI implements LoggerInterface {
      * bottom text
      */
     private void revalidate(){
-        guiFrame.revalidate();
-        guiFrame.pack();
+        theFrame.revalidate();
+        theFrame.pack();
     }
 
     /**
-     * Attempts to call the attemptToHeccUpTheGame method of the heccUpHandler object
-     * Complains via JOptionPane if user hasn't defined a hecc file and an output folder
+     * Attempts to call the attemptToHeccUpTheGame method of the heccUpHandler object.
+     * <p>
+     * Complains via JOptionPane if user hasn't defined a hecc file and an output folder,
+     * or if the .hecc file couldn't be hecced up successfully.
+     * <p>
+     * If it was successful, it gives the user the option of opening it directly in their web browser
+     * (and will complain if it was unsuccessful)
      */
     private void heccUpTheGame(){
         //only attempts to hecc it up if the hecc file was chosen and the output folder was chosen
         if(heccFileChosen && outputFolderChosen) {
-            heccUpHandler.attemptToHeccUpTheGame(
+            //attempts to hecc it up
+            if (heccUpHandler.attemptToHeccUpTheGame(
                     heccFileLocation,
                     outputFolderLocation
-            );
+            )) {
+                if (JOptionPane.showConfirmDialog(
+                        theFrame,
+                        "<html><p>Successfully exported your HECCIN Game!<br>Do you want to play it now?</p></html>",
+                        "it worked!",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                ) == JOptionPane.YES_OPTION){
+                    try{
+                        File gameFile = new File(outputFolderLocation + "/index.html");
+                        Desktop desktop = Desktop.getDesktop();
+                        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)){
+                            desktop.browse(gameFile.toURI());
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(
+                                theFrame,
+                                "<html><p>HECC-UP was unable to open your web browser.<br>You'll need to go to your output folder and open index.html manually.</p></html>",
+                                "Unable to open the game",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
+            } else{
+                JOptionPane.showMessageDialog(
+                        theFrame,
+                        "<html><p>Could not HECC-UP your game!<br>Please see the event log for further details.</p></html>",
+                        "uh oh looks like we had a HECC-UP!",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
         } else{
             //complain if the user attempted to HECC-UP when there's no HECC to HECC-UP and/or no output folder was defined
             JOptionPane.showMessageDialog(
-                    guiFrame,
+                    theFrame,
                     "Please select a .Hecc file to parse\n" +
                             "and a folder for your HECCIN Game\n" +
                             "before pressing the 'HECC-IT' button.",
