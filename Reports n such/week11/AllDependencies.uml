@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="166.0" y="112.0">oh_hecc.game_parts.passage.SharedPassage</node>
+    <node x="197.0" y="1132.0">oh_hecc.OhHeccRunner</node>
+    <node x="1451.3000000000002" y="617.0">oh_hecc.mvc.PassageModel</node>
+    <node x="801.0" y="617.0">oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow</node>
+    <node x="386.0" y="1132.0">oh_hecc.OhHeccParser</node>
+    <node x="349.0" y="933.0">hecc_up.LoggerInterface</node>
+    <node x="96.0" y="1035.0">gameParts.Metadata</node>
+    <node x="0.0" y="617.0">oh_hecc.mvc.model_bits.ModelButtonObject</node>
+    <node x="799.0" y="933.0">oh_hecc.mvc.PassageModel.CurrentActivity</node>
+    <node x="1029.0" y="617.0">oh_hecc.game_parts.component_editing_windows.PassageEditorWindow</node>
+    <node x="921.0" y="1132.0">utilities.Vector2D</node>
+    <node x="373.0" y="1035.0">hecc_up.HeccUpGUI</node>
+    <node x="1422.5500000000002" y="413.0">oh_hecc.mvc.MouseControlModelInterface</node>
+    <node x="1864.0" y="933.0">hecc_up.HeccUpHandler</node>
+    <node x="1274.0" y="515.0">oh_hecc.mvc.EditModelInterface</node>
+    <node x="376.0" y="617.0">oh_hecc.mvc.model_bits.PassageLinkObject</node>
+    <node x="0.0" y="836.0">heccCeptions.NoMatchException</node>
+    <node x="252.0" y="214.0">oh_hecc.game_parts.passage.PassageEditingInterface</node>
+    <node x="575.0" y="1132.0">hecc_up.HeccParser</node>
+    <node x="310.0" y="0.0">oh_hecc.Parseable</node>
+    <node x="716.0" y="836.0">heccCeptions.InvalidMetadataDeclarationException</node>
+    <node x="504.0" y="214.0">oh_hecc.game_parts.metadata.MetadataReadingInterface</node>
+    <node x="896.0" y="112.0">oh_hecc.game_parts.GameDataObject</node>
+    <node x="917.0" y="515.0">oh_hecc.game_parts.component_editing_windows.GenericEditorWindow</node>
+    <node x="884.0" y="0.0">oh_hecc.game_parts.EditWindowGameDataInterface</node>
+    <node x="748.0" y="1132.0">oh_hecc.ChooseFile</node>
+    <node x="158.0" y="316.0">oh_hecc.game_parts.passage.EditablePassage</node>
+    <node x="0.0" y="1132.0">oh_hecc.game_parts.passage.PassageEditingInterface.PassageStatus</node>
+    <node x="706.0" y="0.0">oh_hecc.Heccable</node>
+    <node x="1012.0" y="933.0">utilities.AttributeString</node>
+    <node x="1332.0" y="836.0">heccCeptions.DuplicatePassageNameException</node>
+    <node x="966.0" y="714.0">heccCeptions.HeccCeption</node>
+    <node x="1064.0" y="836.0">heccCeptions.UndefinedPassageException</node>
+    <node x="1948.0" y="836.0">heccCeptions.NoPassagesException</node>
+    <node x="384.0" y="515.0">oh_hecc.mvc.model_bits.StringObject</node>
+    <node x="1486.0" y="515.0">oh_hecc.mvc.Model</node>
+    <node x="1225.0" y="933.0">oh_hecc.mvc.MouseController</node>
+    <node x="1438.0" y="933.0">hecc_up.FolderOutputter</node>
+    <node x="1076.0" y="112.0">oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface</node>
+    <node x="432.0" y="836.0">heccCeptions.InvalidPassageNameException</node>
+    <node x="376.0" y="413.0">oh_hecc.mvc.model_bits.AbstractObject</node>
+    <node x="1227.0" y="1132.0">oh_hecc.mvc.View</node>
+    <node x="562.0" y="933.0">oh_hecc.mvc.OhHeccNetworkFrame</node>
+    <node x="812.0" y="316.0">oh_hecc.game_parts.metadata.EditableMetadata</node>
+    <node x="764.0" y="112.0">gameParts.Variable</node>
+    <node x="0.0" y="933.0">hecc_up.FolderOutputterMetadataInterface</node>
+    <node x="1056.0" y="214.0">oh_hecc.game_parts.metadata.MetadataEditingInterface</node>
+    <node x="204.0" y="617.0">oh_hecc.mvc.model_bits.PassageObject</node>
+    <node x="1078.0" y="1132.0">gameParts.Passage</node>
+    <node x="584.0" y="112.0">oh_hecc.game_parts.metadata.SharedMetadata</node>
+    <node x="1632.0" y="836.0">heccCeptions.MissingStartingPassageException</node>
+    <node x="196.0" y="836.0">heccCeptions.EmptyPassageException</node>
+    <node x="548.0" y="515.0">oh_hecc.mvc.model_bits.StartHighlightObject</node>
+    <node x="196.0" y="515.0">oh_hecc.mvc.model_bits.EditModelObject</node>
+    <node x="0.0" y="214.0">oh_hecc.game_parts.passage.PassageReadingInterface</node>
+    <node x="1651.0" y="933.0">utilities.TextAssetReader</node>
+    <node x="909.0" y="413.0">oh_hecc.game_parts.component_editing_windows.EditorWindowInterface</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="oh_hecc.game_parts.GameDataObject" target="oh_hecc.Heccable">
+      <point x="-40.0" y="-26.0" />
+      <point x="936.0" y="82.0" />
+      <point x="804.0" y="82.0" />
+      <point x="42.0" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.UndefinedPassageException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="1188.0" y="816.0" />
+      <point x="1042.5" y="816.0" />
+      <point x="8.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.component_editing_windows.PassageEditorWindow" target="oh_hecc.game_parts.component_editing_windows.GenericEditorWindow">
+      <point x="0.0" y="-26.0" />
+      <point x="1129.0" y="592.0" />
+      <point x="1067.0" y="592.0" />
+      <point x="50.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.passage.PassageReadingInterface" target="oh_hecc.game_parts.passage.SharedPassage">
+      <point x="0.0" y="-26.0" />
+      <point x="116.0" y="189.0" />
+      <point x="204.0" y="189.0" />
+      <point x="-38.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.model_bits.EditModelObject" target="oh_hecc.mvc.model_bits.AbstractObject">
+      <point x="0.0" y="-26.0" />
+      <point x="280.0" y="490.0" />
+      <point x="402.6666666666667" y="490.0" />
+      <point x="-53.333333333333314" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.EmptyPassageException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="304.0" y="796.0" />
+      <point x="991.5" y="796.0" />
+      <point x="-42.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.EditableMetadata" target="oh_hecc.game_parts.metadata.MetadataEditingInterface">
+      <point x="44.0" y="-26.0" />
+      <point x="944.0" y="291.0" />
+      <point x="1176.0" y="291.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.model_bits.PassageObject" target="oh_hecc.mvc.model_bits.EditModelObject">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.passage.SharedPassage" target="oh_hecc.Parseable">
+      <point x="-38.0" y="-26.0" />
+      <point x="204.0" y="72.0" />
+      <point x="340.0" y="72.0" />
+      <point x="-30.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.PassageModel" target="oh_hecc.mvc.MouseControlModelInterface">
+      <point x="48.0" y="-26.0" />
+      <point x="1571.3000000000002" y="592.0" />
+      <point x="1584.5" y="592.0" />
+      <point x="1584.5" y="490.0" />
+      <point x="1614.5500000000002" y="490.0" />
+      <point x="64.0" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.InvalidPassageNameException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="564.0" y="806.0" />
+      <point x="1008.5" y="806.0" />
+      <point x="-25.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.SharedMetadata" target="oh_hecc.Heccable">
+      <point x="40.0" y="-26.0" />
+      <point x="704.0" y="92.0" />
+      <point x="748.0" y="92.0" />
+      <point x="-14.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.MetadataEditingInterface" target="oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface">
+      <point x="60.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.EditableMetadata" target="oh_hecc.game_parts.metadata.MetadataReadingInterface">
+      <point x="-44.0" y="-26.0" />
+      <point x="856.0" y="291.0" />
+      <point x="624.0" y="291.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.passage.EditablePassage" target="oh_hecc.game_parts.passage.PassageEditingInterface">
+      <point x="42.0" y="-26.0" />
+      <point x="284.0" y="291.0" />
+      <point x="368.0" y="291.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.passage.PassageEditingInterface" target="oh_hecc.game_parts.passage.SharedPassage">
+      <point x="0.0" y="-26.0" />
+      <point x="368.0" y="189.0" />
+      <point x="280.0" y="189.0" />
+      <point x="38.0" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.DuplicatePassageNameException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="1472.0" y="806.0" />
+      <point x="1059.5" y="806.0" />
+      <point x="25.5" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.NoMatchException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="88.0" y="786.0" />
+      <point x="974.5" y="786.0" />
+      <point x="-59.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.passage.SharedPassage" target="oh_hecc.Heccable">
+      <point x="38.0" y="-26.0" />
+      <point x="280.0" y="82.0" />
+      <point x="720.0" y="82.0" />
+      <point x="-42.0" y="26.0" />
+    </edge>
+    <edge source="gameParts.Metadata" target="hecc_up.FolderOutputterMetadataInterface">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.SharedMetadata" target="oh_hecc.Parseable">
+      <point x="-40.0" y="-26.0" />
+      <point x="624.0" y="72.0" />
+      <point x="400.0" y="72.0" />
+      <point x="30.0" y="26.0" />
+    </edge>
+    <edge source="hecc_up.HeccUpGUI" target="hecc_up.LoggerInterface">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="gameParts.Variable" target="oh_hecc.Heccable">
+      <point x="0.0" y="-26.0" />
+      <point x="820.0" y="92.0" />
+      <point x="776.0" y="92.0" />
+      <point x="14.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.model_bits.PassageLinkObject" target="oh_hecc.mvc.model_bits.EditModelObject">
+      <point x="0.0" y="-26.0" />
+      <point x="468.0" y="592.0" />
+      <point x="336.0" y="592.0" />
+      <point x="56.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.Model" target="oh_hecc.mvc.MouseControlModelInterface">
+      <point x="0.0" y="-26.0" />
+      <point x="1530.0" y="490.0" />
+      <point x="1486.5500000000002" y="490.0" />
+      <point x="-64.0" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.MissingStartingPassageException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="1780.0" y="796.0" />
+      <point x="1076.5" y="796.0" />
+      <point x="42.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.model_bits.StringObject" target="oh_hecc.mvc.model_bits.AbstractObject">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.passage.EditablePassage" target="oh_hecc.game_parts.passage.PassageReadingInterface">
+      <point x="-42.0" y="-26.0" />
+      <point x="200.0" y="291.0" />
+      <point x="116.0" y="291.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.MetadataEditingInterface" target="oh_hecc.game_parts.metadata.SharedMetadata">
+      <point x="-60.0" y="-26.0" />
+      <point x="1116.0" y="189.0" />
+      <point x="704.0" y="189.0" />
+      <point x="40.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.component_editing_windows.GenericEditorWindow" target="oh_hecc.game_parts.component_editing_windows.EditorWindowInterface">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.InvalidMetadataDeclarationException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="880.0" y="816.0" />
+      <point x="1025.5" y="816.0" />
+      <point x="-8.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.PassageModel" target="oh_hecc.mvc.EditModelInterface">
+      <point x="-48.0" y="-26.0" />
+      <point x="1475.3000000000002" y="592.0" />
+      <point x="1370.0" y="592.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="heccCeptions.NoPassagesException" target="heccCeptions.HeccCeption">
+      <point x="0.0" y="-26.0" />
+      <point x="2048.0" y="786.0" />
+      <point x="1093.5" y="786.0" />
+      <point x="59.5" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.PassageModel" target="oh_hecc.mvc.Model">
+      <point x="0.0" y="-26.0" />
+      <point x="1523.3000000000002" y="592.0" />
+      <point x="1530.0" y="592.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.metadata.MetadataReadingInterface" target="oh_hecc.game_parts.metadata.SharedMetadata">
+      <point x="0.0" y="-26.0" />
+      <point x="-40.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.model_bits.StartHighlightObject" target="oh_hecc.mvc.model_bits.AbstractObject">
+      <point x="0.0" y="-26.0" />
+      <point x="652.0" y="490.0" />
+      <point x="509.33333333333337" y="490.0" />
+      <point x="53.33333333333337" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.GameDataObject" target="oh_hecc.game_parts.EditWindowGameDataInterface">
+      <point x="40.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.mvc.model_bits.ModelButtonObject" target="oh_hecc.mvc.model_bits.EditModelObject">
+      <point x="0.0" y="-26.0" />
+      <point x="92.0" y="592.0" />
+      <point x="224.0" y="592.0" />
+      <point x="-56.0" y="26.0" />
+    </edge>
+    <edge source="oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow" target="oh_hecc.game_parts.component_editing_windows.GenericEditorWindow">
+      <point x="0.0" y="-26.0" />
+      <point x="905.0" y="592.0" />
+      <point x="967.0" y="592.0" />
+      <point x="-50.0" y="26.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6283783783783784" x="2793.344086021505" y="572.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
