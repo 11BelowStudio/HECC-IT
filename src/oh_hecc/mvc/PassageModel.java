@@ -9,6 +9,7 @@ import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.controller.ActionViewer;
 import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
+import oh_hecc.mvc.model_bits.StartHighlightObject;
 import utilities.Vector2D;
 
 import javax.swing.*;
@@ -58,6 +59,11 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     final ModelButtonObject addPassageButton;
 
     /**
+     * A StartHighlightObject. Will be positioned behind the starting passage object at all times.
+     */
+    private final StartHighlightObject startHighlight;
+
+    /**
      * The set containing the copies of the PassageObjects that are actually rendered
      */
     final Set<PassageObject> drawablePassageObjects;
@@ -77,7 +83,9 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      */
     final Vector2D topRightCorner;
 
-
+    /**
+     * A copy of TopRightCorner used for the draw operation
+     */
     private final Vector2D drawingTopRight;
 
     /**
@@ -143,6 +151,8 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
 
 
+        startHighlight = new StartHighlightObject();
+
         buttons = new HashSet<>();
 
         //TODO: make the buttons
@@ -187,7 +197,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         drawingTopRight = new Vector2D();
 
-        makeSureStartPassageExists(null);
+        actuallyValidateStuff();
         refreshDrawables();
         repaint();
 
@@ -197,14 +207,12 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
     }
 
-
-    private void actuallyValidateStuff(){ actuallyValidateStuff(null);}
-
-    private void actuallyValidateStuff(String previousStartPassage) {
+    /**
+     * Actually validates stuff
+     */
+    private void actuallyValidateStuff() {
         System.out.println("invalid");
 
-        System.out.println("closed");
-        makeSureStartPassageExists(previousStartPassage);
 
 
         /*
@@ -228,6 +236,19 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 objectMap.get(u).update();
             }
         }
+
+        //move the start highlight to be highlighting the start passage
+        Optional<UUID> startUUID = theData.getStartUUID();
+        if (startUUID.isPresent()){
+            startHighlight.setStartObject(objectMap.get(startUUID.get()));
+            System.out.println(startUUID.get());
+            System.out.println(passageMap.get(startUUID.get()).getPassageName());
+        } else{
+            startHighlight.hide();
+            System.out.println("hide");
+        }
+
+
         System.out.println("epic gamer moment");
 
         repaint();
@@ -277,7 +298,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
             w.addWindowClosedListener(
                     e -> {
                         //System.out.println("previous start: " + lastStart);
-                        actuallyValidateStuff(lastStart);
+                        actuallyValidateStuff();
                         activity = CurrentActivity.DOING_NOTHING;
                         this.repaint();
                     }
@@ -469,6 +490,9 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     }
 
 
+    /**
+     * Deselects and clears the set of selectedObjects
+     */
     private void clearSelection(){
         //deselect selectedObjects
         selectedObjects.forEach(PassageObject::deselected);
@@ -713,6 +737,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         }
     }
 
+    @Deprecated
     private void draggingSelectionBoxActivity(ActionViewer currentAction){
         if(currentAction.checkForInput()){
 
@@ -749,6 +774,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     }
 
 
+    @Deprecated
     private void objectsSelectedActivity(ActionViewer currentAction){
         if(currentAction.checkForInput()){
             if (currentAction.checkLeftHold()){
@@ -770,6 +796,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         selectedObjects.clear();
     }
 
+    @Deprecated
     private void movingObjectsActivity(ActionViewer currentAction){
         if (currentAction.checkForInput()){
             if (currentAction.checkLeftHold()){
@@ -795,24 +822,24 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         }
     }
 
-    //TODO: finish this
+    @Deprecated
     private void editingPassageActivity(ActionViewer currentAction){
         if (needToAddListenerToEditWindow){
             editWindow.addWindowClosedListener(
                     windowEvent -> {
-                        makeSureStartPassageExists(null);
+
                         activity = CurrentActivity.DOING_NOTHING;
                     }
             );
         }
     }
 
-    //TODO this
+    @Deprecated
     private void pressedButtonActivity(ActionViewer currentAction){
 
     }
 
-    //TODO this (move TopRightCorner)
+    @Deprecated
     private void movingViewActivity(ActionViewer currentAction){
 
     }
@@ -823,10 +850,14 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      */
     void refreshDrawables(){
 
+
+
         drawingTopRight.set(topRightCorner);
 
         drawablePassageObjects.clear();
         drawablePassageObjects.addAll(objectMap.values());
+
+
         //ScrollableModelObject.SET_SCROLL(drawingTopRight);
         /*
         for (PassageObject p: drawablePassageObjects) {
@@ -862,6 +893,10 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         g.setColor(SELECTION_AREA_COLOUR);
         g.fill(selectionArea);
+
+        //draw the start highlight
+        startHighlight.update();
+        startHighlight.draw(g);
 
         //the objects representing links between passages are drawn first
         for (PassageObject p: drawablePassageObjects) {
@@ -905,63 +940,6 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         topRightCorner.y += (positive? 100: -100);
         System.out.println("top-right: " + topRightCorner);
         repaint();
-    }
-
-    /**
-     * This method can verify that the start passage of the game exists
-     */
-    private void makeSureStartPassageExists(String lastStartName){
-        /*
-        Optional<String> lastStart = Optional.ofNullable(lastStartName);
-        String startName = theMetadata.getStartPassage();
-        /*
-        boolean startDoesntExist = true;
-        for (PassageEditingInterface p: passageMap.values()) {
-            if (p.getPassageName().equals(theMetadata.getStartPassage())){
-                startDoesntExist = false;
-                break;
-            }
-        }
-        if (startDoesntExist){
-         *//*
-        //if none of the passages in the passageMap match the name of the start passage
-        if (passageMap.values().stream().noneMatch(p -> p.getPassageName().equals(startName))){
-
-            //but, if the previous name of the starting passage was given as an argument
-            if (lastStart.isPresent()){
-                //see if a passage with that name exists
-                Optional<PassageEditingInterface> p = passageMap.values().stream().filter(
-                        e -> e.getPassageName().equals(lastStart.get())
-                ).findAny();
-                //if it does
-                if (p.isPresent()){
-                    try {
-                        //rename that passage to the name of the new start passage.
-                        p.get().renameThisPassage(theMetadata.getStartPassage(), passageMap);
-                        return;
-                    } catch (Exception e){}
-                }
-            }
-
-            //if start doesn't exist, give user the option of adding the start in automatically
-            if (JOptionPane.showConfirmDialog(
-                            null,
-                            "<html><p>No passage called<br>" +
-                                    startName +
-                                    "<br>exists in your game, however,<br>"+
-                                    "your metadata indicates that a passage with<br>"+
-                                    "that name should be the start passage.<br><br>"+
-                                    "Do you want a new passage with that name to be generated?</html>",
-                            "Your start passage went AWOL.",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.WARNING_MESSAGE
-                    ) == JOptionPane.YES_OPTION) {
-                PassageEditingInterface newStart = new EditablePassage(startName, new Vector2D(topRightCorner).add(MODEL_WIDTH / 2.0, 0));
-                passageMap.put(newStart.getPassageUUID(), newStart);
-                objectMap.put(newStart.getPassageUUID(), new PassageObject(this, newStart));
-            }
-        }
-        */
     }
 
     @Override
@@ -1057,6 +1035,10 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         );
     }
 
+    /**
+     * Resizes this model
+     * @param d the new size for it
+     */
     @Override
     public void setSize(Dimension d){
         super.setSize(d);
@@ -1066,12 +1048,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         repaint();
     }
 
-    public String getHecced(){
-        //String hecced =
-        return theData.toHecc();
-        //System.out.println(hecced);
-        //return hecced;
-    }
+    //public String getHecced(){ return theData.toHecc(); }
 
 
     /**

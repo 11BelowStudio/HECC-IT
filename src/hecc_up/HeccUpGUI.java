@@ -302,6 +302,9 @@ public class HeccUpGUI implements LoggerInterface {
         }
     }
 
+    //TODO: parser broke
+
+
     /**
      * Revalidates and re-packs the guiFrame
      * bottom text

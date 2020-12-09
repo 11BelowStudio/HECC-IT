@@ -114,8 +114,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
             if (pWithNewName.isPresent()){
                 if (JOptionPane.showConfirmDialog(
                         null,
-                        "<html><p>Did you want your game to start from</br>"+
-                                newStartPassage + " instead of from</br>" +
+                        "<html><p>Did you want your game to start from<br>"+
+                                newStartPassage + " instead of <br>" +
                                 currentStartPassage + "?</p></html>",
                         "Changing start passage to other existing passage",
                         JOptionPane.YES_NO_OPTION,
@@ -129,8 +129,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
                 result = theMetadata.updateStartPassage(newStartPassage);
                 if (JOptionPane.showConfirmDialog(
                         null,
-                        "<html><p>Did you want to rename your existing start passage</br>"+
-                                currentStartPassage + " to be called</br>" +
+                        "<html><p>Did you want to rename your existing start passage<br>"+
+                                currentStartPassage + " to be called<br>" +
                                 newStartPassage + " instead?</p></html>",
                         "Did you want to rename the existing start passage?",
                         JOptionPane.YES_NO_OPTION,

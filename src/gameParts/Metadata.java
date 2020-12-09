@@ -136,6 +136,7 @@ public class Metadata implements FolderOutputterMetadataInterface {
                 "(?<=^!StartPassageName:)\\h*[\\w]+[\\w- ]*[\\w]+(?=\\h*$)",
                 rawData
             );
+            System.out.println(startPassage);
         } catch (NoMatchException e){
             //start = "Start";
         }

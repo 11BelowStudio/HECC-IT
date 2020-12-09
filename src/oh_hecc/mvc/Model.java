@@ -3,6 +3,10 @@ package oh_hecc.mvc;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+/**
+ * A superclass for the 'Model' bit of 'MVC'.
+ * Extends canvas.
+ */
 public abstract class Model extends Canvas implements MouseControlModelInterface{
 
     //TODO: work out if it's actually a good idea to extend Canvas?
@@ -46,8 +50,14 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
      */
     final Object SYNC_OBJECT = new Object();
 
+    /**
+     * Background colour for this model
+     */
     final Color backgroundColour = W3_NIGHT;
 
+    /**
+     * default width/height stuff
+     */
     static final int DEFAULT_MODEL_WIDTH = 800;
     static final int DEFAULT_MODEL_HEIGHT = 600;
 
@@ -118,7 +128,7 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
         );
         g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
+                RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON
         );
 
 
@@ -129,19 +139,37 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
         g.setTransform(initialTransform);
     }
 
+    /**
+     * Literally just calls drawModel(g)
+     * @param g Graphics2D being used to draw this
+     */
     public void draw(Graphics2D g){
         //g.setColor(backgroundColour);
         //g.fillRect(0,0,MODEL_WIDTH,MODEL_HEIGHT);
         drawModel(g);
     }
 
-    public abstract String getHecced();
-
+    /**
+     * This method actually draws the model itself.
+     * <p>
+     * Subclass should override this method to hold the actual drawing code
+     * @param g the Graphics2D context being used for the drawing of the model
+     */
     public abstract void drawModel(Graphics2D g);
 
+    //public abstract String getHecced();
 
+
+    /**
+     * Move the viewport in the X direction
+     * @param positive whether it should be moved in positive X or in negative X
+     */
     public abstract void xMove(boolean positive);
 
+    /**
+     * Move the viewport in the Y direction
+     * @param positive whether it should be moved in positive Y or in negative Y
+     */
     public abstract void yMove(boolean positive);
 
 
