@@ -1,29 +1,27 @@
 # HECC-IT (Hypertext Editing And Creation Code Integrated Toolkit)
 
-By R. Lowe
+By Rachel Lowe
 
 Git repo for this project: https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m
 
-readme last updated 16/10/2020
+readme last updated 09/12/2020
 
 ## Welcome to HECC-IT!
 
 This is a toolkit that you can use to produce hypertext games.
 
-You could consider this as the MMVP (Minimal Minimal Viable Product)
-version of HECC-IT, seeing as there isn't much to use just yet.
-Currently, the only thing this does is construct hypertext games,
-constructed from .hecc files.
+You are looking at the MVP version of HECC-IT.
+You can convert .hecc files into playable hypertext games with HECC-UP.
+And you can get some help making and editing your .hecc files using OH-HECC.
 
 So let's cut to the chase.
 
 ## What the HECC does this do?
 
-* You can write your hypertext game in .hecc format.
-    * Consult the 'HECC-SPECC' document if you need to see a reference for it.
+* You can use OH-HECC to make and edit your hypertext game in .hecc format.
+    * You can also just write your .hecc file with any text editor if you'd prefer to do that.
+    * Consult the 'HECC-SPECC' document if you need to see a reference for the HECC language.
         * HECC Super Precise Explanation for Creating Code
-    * You can use any text editor for this task
-        * Just make sure you save it as a .hecc file
 * You can use HECC-UP to convert your .hecc code into a playable HECCIN Game
     * Select your .hecc file
     * Select a folder to output your game to
@@ -46,6 +44,9 @@ So let's cut to the chase.
 * HECC-SPECC
     * HECC Super Precise Explanation for Creating Code
         * The specification for the .hecc language
+* OH-HECC
+    * Optional Help for HECC
+        * A GUI that you have the option of using to make your .hecc code
 * HECC-UP
     * HECC Uncomplicated Parser
         * Give it a .hecc file, and a folder to output a HECCIN Game to
