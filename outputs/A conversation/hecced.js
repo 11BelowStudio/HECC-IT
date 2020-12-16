@@ -41,8 +41,8 @@ var startingPassageName = "Greetings";
 
 	theHeccer.addPassageToMap(
 		new Passage(
-			"shameless plug",
-			"<p>Well, I have a perfect idea for what we can use to write our even better thing.</p><p>Have you ever heard of a system called HECC-IT?<br>Actually, that&#39s a silly question, seeing as you downloaded this game with that system.<br>So you probably know about it already.</p><p>We&#39ll have to write our game in .hecc format, either manually or using OH-HECC to get a nice graphical overview of it,<br>and then we simply use the HECC-UP program to convert it into a playable HECCIN Game.</p><p>We can read the HECC-SPECC document to find out all the syntax and such for the .hecc format,<br>or we could just look at the .hecc file for this game and work it out from there.</p><p>So, let&#39s write our own HECCIN Game, and put this poor excuse of a story to shame!</p><p><a class='passageLink' onclick='theHeccer.goToPassage(\"good idea\")'>I agree, let&#39s do this!</a><br><a class='passageLink' onclick='theHeccer.goToPassage(\"shill alert\")'>This sounds like a very poorly disguised advert.</a></p>",
+			"beemoviescript2",
+			"<p>Actually, wait, I&#39ve just had a call from my lawyer.<br>It looks like Dreamworks is going to sue us if we continue this performance of The Bee Movie.</p><p><a class='passageLink' onclick='theHeccer.goToPassage(\"whats the point\")'>Then why did you start performing it in the first place?</a></p>",
 			[]
 		)
 	);
@@ -59,8 +59,8 @@ var startingPassageName = "Greetings";
 
 	theHeccer.addPassageToMap(
 		new Passage(
-			"beemoviescript2",
-			"<p>Actually, wait, I&#39ve just had a call from my lawyer.<br>It looks like Dreamworks is going to sue us if we continue this performance of The Bee Movie.</p><p><a class='passageLink' onclick='theHeccer.goToPassage(\"whats the point\")'>Then why did you start performing it in the first place?</a></p>",
+			"shameless plug",
+			"<p>Well, I have a perfect idea for what we can use to write our even better thing.</p><p>Have you ever heard of a system called HECC-IT?<br>Actually, that&#39s a silly question, seeing as you downloaded this game with that system.<br>So you probably know about it already.</p><p>We&#39ll have to write our game in .hecc format, either manually or using OH-HECC to get a nice graphical overview of it,<br>and then we simply use the HECC-UP program to convert it into a playable HECCIN Game.</p><p>We can read the HECC-SPECC document to find out all the syntax and such for the .hecc format,<br>or we could just look at the .hecc file for this game and work it out from there.</p><p>So, let&#39s write our own HECCIN Game, and put this poor excuse of a story to shame!</p><p><a class='passageLink' onclick='theHeccer.goToPassage(\"good idea\")'>I agree, let&#39s do this!</a><br><a class='passageLink' onclick='theHeccer.goToPassage(\"shill alert\")'>This sounds like a very poorly disguised advert.</a></p>",
 			[]
 		)
 	);
