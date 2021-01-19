@@ -32,7 +32,10 @@ class Passage{
     getParsedContent(){
         //stores content as tempContent for the time being
         const tempContent = this.content;
-
+        const htmlContent = converter.makeHtml(this.content);
+        console.log(htmlContent);
+        return htmlContent;
+        //return "<p>" + converter.makeHtml(this.content) + "</p>";
     }
     getTags(){
         //returns passage tags
@@ -46,6 +49,12 @@ class Passage{
     }
 }
 
+class ContentParseTree{
+    static
+    constructor(passageContent){
+
+    }
+}
 
 class GameState{
     constructor(pName){
@@ -152,7 +161,7 @@ class HECCER{
 
         } else{
 
-            const passageContent = currentPassage.getContent(); //obtains passage content from the currentPassage
+            const passageContent = currentPassage.getParsedContent(); //obtains passage content from the currentPassage
             //console.log(passageContent);
 
             document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content

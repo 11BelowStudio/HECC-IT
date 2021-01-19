@@ -57,7 +57,7 @@
 </head>
 <body>
 
-<!-- UUID://63D65442-B886-434C-B354-7C95F53E6862// -->
+<!-- UUID://A1DBC5EE-B123-4198-ACA5-C9D13BAD8A46// -->
 
 <div class = "outerDiv">
     <div class="innerDiv">
@@ -77,16 +77,23 @@
     </div>
 </div>
 
+<script src="showdown.min.js"></script>
+<script src = "heccstension.js"></script>
 <script src="heccer.js"></script>
 <script src="hecced.js"></script>
 <script>
 //this stuff has to be inline here otherwise it doesn't work for some reason
 
-    var theHeccer = new HECCER(startingPassageName);
-    //constructs a 'Heccer' object, called 'TheHeccer', starting from the named starting passage (as defined in HECCED.js)
+const theHeccer = new HECCER(startingPassageName);
+//constructs a 'heccer' object, called 'TheHeccer', starting from the named starting passage (as defined in HECCED.js)
 
-    window.onload = getHECCED;
-    //when the window loads, it will call the getHECCED() method defined in HECCED.js (setting up theHeccer and making it start working)
+showdown.extension('heccstension', heccstension);
+showdown.setOption('simpleLineBreaks', true);
+
+const converter = new showdown.Converter({ extensions: ['heccstension']});
+
+window.onload = getHECCED;
+//when the window loads, it will call the getHECCED() method defined in HECCED.js (setting up theHeccer and making it start working)
 
 </script>
 </body>
