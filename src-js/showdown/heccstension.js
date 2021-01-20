@@ -21,10 +21,10 @@ var heccstension = function(){
         }
     };
 
-    const checc = {
+    const ifWithElse = {
         type: "lang",
-        regex: "\\{if:([^}]*)\\}\\[(.*)\\](\\{else:\\}\\[(.*)\\])?",
-        replace: function(match, statement, showIf, theElse, showElse){
+        regex: /(?:{if:([^}]*)}{(.*)})(?:{else:}{(.*)})/gm,
+        replace: function(match, statement, showIf, showElse){
             //Doesn't work entirely as intended yet. But it's a start I guess.
             if (theHeccer.checcer.checc(statement)){
                 return showIf;
@@ -32,10 +32,34 @@ var heccstension = function(){
                 return showElse;
             }
         }
-
     };
 
-    return[directPassageLinks, indirectPassageLinks, checc];
+    const ifWithoutElse = {
+        type: "lang",
+        regex: /(?:{if:([^}]*)}{(.*)})/gm,
+        replace: function(match, statement, showIf){
+            //Doesn't work entirely as intended yet. But it's a start I guess.
+            if (theHeccer.checcer.checc(statement)){
+                return showIf;
+            } else{
+                return "";
+            }
+        }
+    };
+
+    /*
+    {if: *conditions* }{ text if that thing is true }{else:}{ text if that thing is false}
+
+    not(statement)
+    and(statement1, statement2, ...)
+    or(statement1, statement2, ...)
+    pAny(passage1, passage2, ...)
+    pAll(passage1, passage2, ...)
+    tAny(tag1, tag2, ...)
+    tAll(tag1, tag2, ...)
+     */
+
+    return[directPassageLinks, indirectPassageLinks, ifWithElse,ifWithoutElse];
 }
 
 

@@ -26,7 +26,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"if time",
-			"Pick [[A]] or [[B]].",
+			"Pick [[A]] or [[B]] or [[C]].",
 			[]
 		)
 	);
@@ -34,7 +34,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"A",
-			"This is A.\n\n[[your choice]]",
+			"This is A.\n\n[[lets see]]",
 			["tagA"]
 		)
 	);
@@ -42,15 +42,24 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"B",
-			"This is B.\n\n[[your choice]]",
+			"This is B.\n\n[[lets see]]",
 			["tagB"]
 		)
 	);
 
 	theHeccer.addPassageToMap(
 		new Passage(
-			"your choice",
-			"{if: pAll('A')}[You picked A earlier.]{else:}[You didn't pick B earlier.]",
+			"C",
+			"This is C.\n\n[[lets see]]",
+			["tagC"]
+		)
+	);
+
+
+	theHeccer.addPassageToMap(
+		new Passage(
+			"lets see",
+			"{if: pAll('A')}{You picked A earlier.}{else:}{You didn't pick A earlier.{if: pAll('B')}{ You picked B instead.}}",
 			[]
 		)
 	);
