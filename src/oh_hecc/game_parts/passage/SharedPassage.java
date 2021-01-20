@@ -27,7 +27,7 @@ public interface SharedPassage extends Parseable, Heccable {
     /**
      * Regular expression for indirect passage links
      */
-    String INDIRECT_PASSAGE_LINK_REGEX = "(\\[\\[[^\\[\\]\\|]+\\|"+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
+    String INDIRECT_PASSAGE_LINK_REGEX = "(\\[\\[[\\h]*[^\\[\\]\\|]+[\\h]*\\|"+ PASSAGE_NAME_REGEX_WITH_WHITESPACE +"]])";
 
     /**
      * Suffix that's appended to the end of the names of deleted passages
@@ -37,7 +37,7 @@ public interface SharedPassage extends Parseable, Heccable {
     /**
      * A regular expression for finding any deleted link placeholders
      */
-    String DELETED_PASSAGE_LINK_REGEX = "(\\[\\[([^\\[\\]\\|]+\\|)?" + PASSAGE_NAME_REGEX_WITH_WHITESPACE + DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX + "[\\h]*]])";
+    String DELETED_PASSAGE_LINK_REGEX = "(\\[\\[([\\h]*[^\\[\\]\\|]+[\\h]*\\|)?" + PASSAGE_NAME_REGEX_WITH_WHITESPACE + DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX + "[\\h]*]])";
 
 
     /**

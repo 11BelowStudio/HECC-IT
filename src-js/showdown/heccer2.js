@@ -12,7 +12,28 @@ by R. Lowe, 07/09/2020
 (this version has been fed into the Hecc Up Parser!)
 */
 
+/**
+ * tl;dr JavaScript's /s (whitespace) regex matches linebreaks. Which I don't want. So this is basically just horizontal whitespace
+ * @type {string}
+ */
+var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
+/**
+ * Passage name regexes with horizontal whitespace
+ * @type {string}
+ */
+var passageNameWithWhitespace = anyHorizontalWhitespace + "(([\\w]+[\\w- ]*)?[\\w]+)\\s*" + anyHorizontalWhitespace;
+
+/**
+ * Tag name regex with horizontal whitespace
+ * @type {string}
+ */
+var tagWithWhitespace = anyHorizontalWhitespace + "([\\w]+)" + anyHorizontalWhitespace;
+
+/**
+ * HECC Engine for Runtime
+ */
 var theHeccer = {
+
     /**
      * The map of all the passage objects
      */
@@ -102,16 +123,60 @@ var theHeccer = {
     },
 
     /**
+     * Checks the conditionals and such
+     */
+    checcer: new Checcer(),
+
+
+
+};
+
+
+/**
+ * checks the hecc for conditionals and such
+ * @constructor
+ */
+function Checcer(){
+
+
+
+    /**
+     * Will checc a statement it's been given
+     * @param statementToCheck
+     * @returns {boolean} whether it evaulates to true or not
+     */
+    this.checc = function(statementToCheck){
+
+        let statement = statementToCheck.replace(/pAny\(/g,"theHeccer.checcer.pAny(");
+        statement = statement.replace(/pAll\(/g,"theHeccer.checcer.pAll(");
+
+        statement = statement.replace(/tAny\(/g,"theHeccer.checcer.tAny(");
+        statement = statement.replace(/tAll\(/g,"theHeccer.checcer.tAll(");
+
+        statement = statement.replace(/and\(/g,"theHeccer.checcer.and(");
+        statement = statement.replace(/or\(/g,"theHeccer.checcer.or(");
+        statement = statement.replace(/not\(/g,"theHeccer.checcer.not(");
+
+        console.log(statement);
+
+        try{
+            return !!eval(statement);
+        } catch(e){
+            return false;
+        }
+    }
+
+    /**
      * Whether or not any of the named passages have been encountered (OR)
      * @param passageNames the names of the passages being looked for
      * @returns {boolean} false if none were visited, true if at least one was visited
      */
-    haveAnyOfThesePassagesBeenVisited: function(...passageNames){
+    this.pAny = function(...passageNames){
         if (!theHeccer.stateStack.areTherePriorStates()){//}  || passageNames.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.getUniqueVisitedStateNames();
+        const priorStates = theHeccer.stateStack.visitedPassages;
         let wereAnyVisited = false;
         for(let i = passageNames.length-1; i >= 0; i--){
             if (priorStates.has(passageNames[i])){
@@ -120,19 +185,19 @@ var theHeccer = {
             }
         }
         return wereAnyVisited;
-    },
+    };
 
     /**
      * Whether or not all of the named passages have been visited (AND)
      * @param passageNames the names of the passages being looked for
      * @returns {boolean} true if all were visited, false otherwise
      */
-    haveAllOfThesePassagesBeenVisited: function(...passageNames){
+    this.pAll = function(...passageNames){
         if (!theHeccer.stateStack.areTherePriorStates()  || passageNames.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.getUniqueVisitedStateNames();
+        const priorStates = theHeccer.stateStack.visitedPassages;
         let wereAllVisited = true;
         for(let i = passageNames.length-1; i >= 0; i--){
             if (!priorStates.has(passageNames[i])){
@@ -141,26 +206,20 @@ var theHeccer = {
             }
         }
         return wereAllVisited;
-    },
+    };
 
     /**
      * Whether or not any of the named tags have been encountered/a passage with any of the named tags was visited (OR)
      * @param tags the passage tags of being looked for
      * @returns {boolean} false if none were encountered, true if at least one was encountered
      */
-    haveAnyOfTheseTagsBeenEncountered: function(...tags){
+    this.tAny = function(...tags){
         if (!theHeccer.stateStack.areTherePriorStates()){//}  || tags.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.getUniqueVisitedStateNames();
-        const priorTags = new Set();
 
-        priorStates.forEach(
-            state => theHeccer.passageMap.get(state).getTags().forEach(
-                tag => priorTags.add(tag)
-            )
-        );
+        const priorTags = theHeccer.stateStack.seenTags;
 
         let wereAnyEncountered = false;
         for(let i = tags.length-1; i >= 0; i--){
@@ -170,25 +229,20 @@ var theHeccer = {
             }
         }
         return wereAnyEncountered;
-    },
+    };
+
     /**
      * Whether or not all of the given tags have been encountered in prior passages(AND)
      * @param tags the tags being looked for
      * @returns {boolean} true if all were encountered, false otherwise
      */
-    haveAllOfTheseTagsBeenEncountered: function(...tags){
+    this.tAll = function(...tags){
         if (!theHeccer.stateStack.areTherePriorStates() || tags.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.getUniqueVisitedStateNames();
-        const priorTags = new Set();
 
-        priorStates.forEach(
-            state => theHeccer.passageMap.get(state).getTags().forEach(
-                tag => priorTags.add(tag)
-            )
-        );
+        const priorTags = theHeccer.stateStack.seenTags;
 
         let wereAllEncountered = true;
         for(let i = tags.length-1; i >= 0; i--){
@@ -198,9 +252,69 @@ var theHeccer = {
             }
         }
         return wereAllEncountered;
+    };
+
+    /**
+     * performs an AND for all the given statements
+     * @param statements the statements to check
+     * @returns {boolean} true if they are all true, false otherwise
+     */
+    this.and = function(...statements){
+
+        let notFalseYet = true;
+        let nothingTrueYet = true;
+        for(let i = statements.length - 1; i >= 0; i--){
+            let currentResult = false;
+            try{
+                currentResult = !!eval(statements[i]);
+            } catch{
+                currentResult = false;
+            }
+
+            if (currentResult){
+                if (nothingTrueYet){
+                    nothingTrueYet = false;
+                }
+            } else{
+                notFalseYet = false;
+                break;
+            }
+        }
+
+        return ((!nothingTrueYet) && notFalseYet);
+
     }
 
-};
+    /**
+     * Performs an OR for all the given statements
+     * @param statements the statements to check
+     * @returns {boolean} true if at least one is true, false otherwise
+     */
+    this.or = function(...statements){
+
+        let result = false;
+        for(let i = statements.length - 1; i >= 0; i--){
+            try {
+                if (!!eval(statements[i])) {
+                    result = true;
+                    break;
+                }
+            } catch (e) {} //if current eval throws an exception, skip it.
+        }
+        return result;
+    }
+
+    /**
+     * Performs a binary NOT for the given statement
+     * @param statement the statement to check
+     * @returns {boolean} the reverse of its result
+     */
+    this.not = function(statement){
+        return(!eval(statement));
+    }
+
+
+}
 
 function GameState(pName) {
     this.passageName = pName;
@@ -235,6 +349,7 @@ function GameStateStack(startPassageName){
      */
     this.pushState = function(passageName){
         this.states.push(new GameState(passageName));
+        this.refreshVisitedStuff();
     };
 
     /**
@@ -247,11 +362,39 @@ function GameStateStack(startPassageName){
         if (this.areTherePriorStates){
             //if there is a state which it can go back to, it just pops the top state off the stack
             this.states.pop();
+            this.refreshVisitedStuff();
         } else{
             //complains (very loudly!) if the player attempts to go back when they aren't allowed to go back
             window.alert("why are you trying to go back? theres no prior states to go back to! >:(");
         }
     };
+
+    this.seenTags = new Set();
+
+    this.visitedPassages = new Set();
+
+    this.refreshVisitedStuff = function(){
+
+        const tags = new Set();
+        const passages = new Set();
+
+        if (this.areTherePriorStates){
+
+            const prior = this.states.slice(0, this.states.length-1);
+            prior.forEach(
+                state => passages.add(state.getPassageName())
+            );
+            passages.forEach(
+                passage => theHeccer.passageMap.get(passage).getTags().forEach(
+                    tag => tags.add(tag)
+                )
+            );
+
+        }
+        this.seenTags = tags;
+        this.visitedPassages = passages;
+
+    }
 
     /**
      * returns a json stringified version of the states array
@@ -348,6 +491,7 @@ function Passage(passageName, passageContent, passageTags){
         return (this.tags.find(specifiedTag) !== undefined);
     };
 }
+
 
 
 

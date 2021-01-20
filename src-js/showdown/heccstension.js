@@ -4,8 +4,8 @@
  */
 var heccstension = function(){
 
-    const anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
-    const passageNameWithWhitespace = anyHorizontalWhitespace + "(([\\w]+[\\w- ]*)?[\\w]+)\\s*" + anyHorizontalWhitespace;
+    //const anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
+    //const passageNameWithWhitespace = anyHorizontalWhitespace + "(([\\w]+[\\w- ]*)?[\\w]+)\\s*" + anyHorizontalWhitespace;
     const directPassageLinks = {
         type: "lang",
         regex: "\\[\\["+passageNameWithWhitespace+"]]",
@@ -21,7 +21,21 @@ var heccstension = function(){
         }
     };
 
-    return[directPassageLinks, indirectPassageLinks];
+    const checc = {
+        type: "lang",
+        regex: "\\{if:([^}]*)\\}\\[(.*)\\](\\{else:\\}\\[(.*)\\])?",
+        replace: function(match, statement, showIf, theElse, showElse){
+            //Doesn't work entirely as intended yet. But it's a start I guess.
+            if (theHeccer.checcer.checc(statement)){
+                return showIf;
+            } else{
+                return showElse;
+            }
+        }
+
+    };
+
+    return[directPassageLinks, indirectPassageLinks, checc];
 }
 
 

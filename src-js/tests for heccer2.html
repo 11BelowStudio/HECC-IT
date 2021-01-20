@@ -48,21 +48,57 @@
 
     QUnit.module('firstPassage', function() {
         QUnit.test('first passage any name should be false', function(assert) {
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1"), false, '1');
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("x"), false, 'x');
+            assert.equal(theHeccer.checcer.pAny("1"), false, '1');
+            assert.equal(theHeccer.checcer.pAny("x"), false, 'x');
         });
         QUnit.test('first passage all names should be false', function(assert) {
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("x"), false, 'x');
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("1"), false, '1');
+            assert.equal(theHeccer.checcer.pAll("x"), false, 'x');
+            assert.equal(theHeccer.checcer.pAll("1"), false, '1');
         });
         QUnit.test('first passage any tags should be false', function(assert) {
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("x"), false, 'x');
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A"), false, 'A');
+            assert.equal(theHeccer.checcer.tAny("x"), false, 'x');
+            assert.equal(theHeccer.checcer.tAny("A"), false, 'A');
         });
         QUnit.test('first passage all tags should be false', function(assert) {
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("x"), false, 'x');
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("A"), false, 'A');
+            assert.equal(theHeccer.checcer.tAll("x"), false, 'x');
+            assert.equal(theHeccer.checcer.tAll("A"), false, 'A');
         });
+    });
+
+    QUnit.module('firstPassage with the checcer doing the checc', function() {
+        QUnit.test('first passage any name should be false', function(assert) {
+            assert.equal(theHeccer.checcer.checc("pAny('1')"), false, '1');
+            assert.equal(theHeccer.checcer.checc("pAny('x')"), false, 'x');
+        });
+        QUnit.test('first passage all names should be false', function(assert) {
+            assert.equal(theHeccer.checcer.checc('pAll("x")'), false, 'x');
+            assert.equal(theHeccer.checcer.checc('pAll("1")'), false, '1');
+        });
+        QUnit.test('first passage any tags should be false', function(assert) {
+            assert.equal(theHeccer.checcer.checc('tAny("x")'), false, 'x');
+            assert.equal(theHeccer.checcer.checc('tAny("A")'), false, 'A');
+        });
+        QUnit.test('first passage all tags should be false', function(assert) {
+            assert.equal(theHeccer.checcer.checc('tAll("x")'), false, 'x');
+            assert.equal(theHeccer.checcer.checc('tAll("A")'), false, 'A');
+        });
+
+        QUnit.test('first passage not stuff should be true', function(assert) {
+            assert.equal(theHeccer.checcer.checc("not(pAny('1'))"), true, "not(pAny('1'))");
+            assert.equal(theHeccer.checcer.checc('not(pAll("x"))'), true, 'not(pAll("1"))');
+            assert.equal(theHeccer.checcer.checc('not(tAny("x"))'), true, 'not(tAny("A"))');
+            assert.equal(theHeccer.checcer.checc('not(tAll("x"))'), true, 'not(tAll("A"))');
+        });
+
+        QUnit.test("really fucking weird shit",function(assert){
+            assert.equal(theHeccer.checcer.checc("dave"),false, "dave");
+            assert.equal(theHeccer.checcer.checc("1+1 === 2"),true, "1+1 === 2");
+            assert.equal(theHeccer.checcer.checc("69"),true, "69");
+            assert.equal(theHeccer.checcer.checc("0"),false, "0");
+            assert.equal(theHeccer.checcer.checc("theHeccer.ayylmao()"),false,"theHeccer.ayylmao()");
+        })
+
+
     });
 
     QUnit.module('secondPassage',{
@@ -71,57 +107,75 @@
             }
         }, function(){
             QUnit.test('second passage any should be true if only matching first', function(assert) {
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1"), true, "should be true");
+                assert.equal(theHeccer.checcer.pAny("1"), true, "should be true");
             });
             QUnit.test('second passage all should be true if only matching first', function(assert){
-               assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("1"),true,"should be true");
+               assert.equal(theHeccer.checcer.pAll("1"),true,"should be true");
             });
             QUnit.test('second passage any should be true if matching first and others', function (assert) {
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","2"), true, "1,2");
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","3"), true, "1,3");
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","56","deez nutz"), true, "1,56,deez nutz");
+                assert.equal(theHeccer.checcer.pAny("1","2"), true, "1,2");
+                assert.equal(theHeccer.checcer.pAny("1","3"), true, "1,3");
+                assert.equal(theHeccer.checcer.pAny("1","56","deez nutz"), true, "1,56,deez nutz");
             });
 
             QUnit.test('second tags any should be true if only matching first', function(assert) {
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A"),true,"should be true");
+                assert.equal(theHeccer.checcer.tAny("A"),true,"should be true");
             });
             QUnit.test('second tags all should be true if only matching first', function(assert) {
-                assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("A"),true,"should be true");
+                assert.equal(theHeccer.checcer.tAll("A"),true,"should be true");
             });
             QUnit.test('second tags any should be true if matching first and others', function(assert) {
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A","B"),true,"A, B");
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A","C"),true,"A, C");
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A","deez nutz"),true,"A, deez nutz");
+                assert.equal(theHeccer.checcer.tAny("A","B"),true,"A, B");
+                assert.equal(theHeccer.checcer.tAny("A","C"),true,"A, C");
+                assert.equal(theHeccer.checcer.tAny("A","deez nutz"),true,"A, deez nutz");
             });
 
             QUnit.test("second any passage should be false if not matching first", function(assert) {
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("2"),false,"2");
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("3","2"),false,"3, 2");
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited(),false,"literally nothing");
-                assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("462"),false,"462");
+                assert.equal(theHeccer.checcer.pAny("2"),false,"2");
+                assert.equal(theHeccer.checcer.pAny("3","2"),false,"3, 2");
+                assert.equal(theHeccer.checcer.pAny(),false,"literally nothing");
+                assert.equal(theHeccer.checcer.pAny("462"),false,"462");
             });
 
             QUnit.test("second all passage should be false if not matching first and only first", function(assert){
-                assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("1","2"),false,"1,2");
-                assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("2"),false,"2");
-                assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited(),false,"literally nothing");
-                assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("deez nutz"),false,"deez nutz");
+                assert.equal(theHeccer.checcer.pAll("1","2"),false,"1,2");
+                assert.equal(theHeccer.checcer.pAll("2"),false,"2");
+                assert.equal(theHeccer.checcer.pAll(),false,"literally nothing");
+                assert.equal(theHeccer.checcer.pAll("deez nutz"),false,"deez nutz");
             });
 
             QUnit.test("second any tags should be false if not matching first", function (assert) {
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("B"),false,"B");
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("B","C"),false,"B,C");
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered(),false,"nothing");
-                assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("deez nutz"),false,"deez nutz");
+                assert.equal(theHeccer.checcer.tAny("B"),false,"B");
+                assert.equal(theHeccer.checcer.tAny("B","C"),false,"B,C");
+                assert.equal(theHeccer.checcer.tAny(),false,"nothing");
+                assert.equal(theHeccer.checcer.tAny("deez nutz"),false,"deez nutz");
             });
 
             QUnit.test("second all tags should be false if not matching first and only first", function (assert) {
-                assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("A","B"),false,"A,B");
-                assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("B"),false,"B");
-                assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered(),false,"literally nothing");
-                assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("deez nutz"),false,"deez nutz");
+                assert.equal(theHeccer.checcer.tAll("A","B"),false,"A,B");
+                assert.equal(theHeccer.checcer.tAll("B"),false,"B");
+                assert.equal(theHeccer.checcer.tAll(),false,"literally nothing");
+                assert.equal(theHeccer.checcer.tAll("deez nutz"),false,"deez nutz");
+            });
+
+            QUnit.test("fuck you, eval time", function(assert){
+                assert.equal(theHeccer.checcer.checc("pAny('1','2')"),true,"pAny('1','2')");
+                assert.equal(theHeccer.checcer.checc("pAll('1','2')"),false,"pAll('1','2')");
+                assert.equal(theHeccer.checcer.checc("tAny('A','B')"),true,"tAny('A','B')");
+                assert.equal(theHeccer.checcer.checc("tAll('A','B')"),false,"tAll('A','B')");
+                assert.equal(theHeccer.checcer.checc("and(pAny('1','2'),tAny('A','B'))"),true,"and(pAny('1','2'),tAny('A','B'))");
+                assert.equal(theHeccer.checcer.checc("and(pAll('1','2'),tAny('A','B'))"),false,"and(pAll('1','2'),tAny('A','B'))");
+                assert.equal(theHeccer.checcer.checc("and()"),false,"and()");
+                assert.equal(theHeccer.checcer.checc("or(pAny('1','2'),tAny('A','B'))"),true,"or(pAny('1','2'),tAny('A','B'))");
+                assert.equal(theHeccer.checcer.checc("or(pAll('1','2'),tAny('A','B'))"),true,"or(pAll('1','2'),tAny('A','B'))");
+                assert.equal(theHeccer.checcer.checc("or(pAll('1','2'),tAll('A','B'))"),false,"or(pAll('1','2'),tAll('A','B'))");
+                assert.equal(theHeccer.checcer.checc("or()"),false,"or()");
+                assert.equal(theHeccer.checcer.checc("and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B')))"),true,"and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B')))");
+                assert.equal(theHeccer.checcer.checc("not(and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B'))))"),false,"not(and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B'))))");
             });
     });
+
+
 
     QUnit.module('thirdPassage',{
         before: function(){
@@ -130,58 +184,58 @@
         }
     }, function(){
         QUnit.test('3rd passage any should be true if only matching first and/or 2nd', function(assert) {
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1"), true, "1st");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("2"), true, "2nd");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","2"), true, "1st + 2nd");
+            assert.equal(theHeccer.checcer.pAny("1"), true, "1st");
+            assert.equal(theHeccer.checcer.pAny("2"), true, "2nd");
+            assert.equal(theHeccer.checcer.pAny("1","2"), true, "1st + 2nd");
         });
         QUnit.test('3rd passage all should be true if only matching first and or 2nd', function(assert){
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("1"), true, "1st");
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("2"), true, "2nd");
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("1","2"), true, "1st + 2nd");
+            assert.equal(theHeccer.checcer.pAll("1"), true, "1st");
+            assert.equal(theHeccer.checcer.pAll("2"), true, "2nd");
+            assert.equal(theHeccer.checcer.pAll("1","2"), true, "1st + 2nd");
         });
         QUnit.test('3rd passage any should be true if matching first/second and others', function (assert) {
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","2","3"), true, "1,2,3");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","3"), true, "1,3");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("2","3"), true, "2,3");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("1","56","deez nutz"), true, "1,56,deez nutz");
+            assert.equal(theHeccer.checcer.pAny("1","2","3"), true, "1,2,3");
+            assert.equal(theHeccer.checcer.pAny("1","3"), true, "1,3");
+            assert.equal(theHeccer.checcer.pAny("2","3"), true, "2,3");
+            assert.equal(theHeccer.checcer.pAny("1","56","deez nutz"), true, "1,56,deez nutz");
         });
         QUnit.test('3rd tags any should be true if only matching first/2nd', function(assert) {
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A"),true,"A");
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("B"),true,"B");
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("A","B"),true,"A,B");
+            assert.equal(theHeccer.checcer.tAny("A"),true,"A");
+            assert.equal(theHeccer.checcer.tAny("B"),true,"B");
+            assert.equal(theHeccer.checcer.tAny("A","B"),true,"A,B");
         });
         QUnit.test('3rd tags all should be true if only matching first/2nd', function(assert) {
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("A"),true,"A");
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("B"),true,"B");
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("A","B"),true,"A,B");
+            assert.equal(theHeccer.checcer.tAll("A"),true,"A");
+            assert.equal(theHeccer.checcer.tAll("B"),true,"B");
+            assert.equal(theHeccer.checcer.tAll("A","B"),true,"A,B");
         });
 
         QUnit.test("3rd any passage should be false if not matching first/2nd", function(assert) {
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("3"),false,"3");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("3","4"),false,"3, 4");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited(),false,"literally nothing");
-            assert.equal(theHeccer.haveAnyOfThesePassagesBeenVisited("462"),false,"462");
+            assert.equal(theHeccer.checcer.pAny("3"),false,"3");
+            assert.equal(theHeccer.checcer.pAny("3","4"),false,"3, 4");
+            assert.equal(theHeccer.checcer.pAny(),false,"literally nothing");
+            assert.equal(theHeccer.checcer.pAny("462"),false,"462");
         });
 
         QUnit.test("3rd all passage should be false if not matching only first/second", function(assert){
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("1","2","3"),false,"1,2,3");
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("3"),false,"3");
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited(),false,"literally nothing");
-            assert.equal(theHeccer.haveAllOfThesePassagesBeenVisited("deez nutz"),false,"deez nutz");
+            assert.equal(theHeccer.checcer.pAll("1","2","3"),false,"1,2,3");
+            assert.equal(theHeccer.checcer.pAll("3"),false,"3");
+            assert.equal(theHeccer.checcer.pAll(),false,"literally nothing");
+            assert.equal(theHeccer.checcer.pAll("deez nutz"),false,"deez nutz");
         });
 
         QUnit.test("3rd any tags should be false if not matching first/2nd", function (assert) {
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("C"),false,"C");
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("C","D"),false,"C,D");
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered(),false,"nothing");
-            assert.equal(theHeccer.haveAnyOfTheseTagsBeenEncountered("deez nutz"),false,"deez nutz");
+            assert.equal(theHeccer.checcer.tAny("C"),false,"C");
+            assert.equal(theHeccer.checcer.tAny("C","D"),false,"C,D");
+            assert.equal(theHeccer.checcer.tAny(),false,"nothing");
+            assert.equal(theHeccer.checcer.tAny("deez nutz"),false,"deez nutz");
         });
 
         QUnit.test("3rd all tags should be false if not matching only first/2nd", function (assert) {
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("A","B","C"),false,"A,B,C");
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("C"),false,"C");
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered(),false,"literally nothing");
-            assert.equal(theHeccer.haveAllOfTheseTagsBeenEncountered("deez nutz"),false,"deez nutz");
+            assert.equal(theHeccer.checcer.tAll("A","B","C"),false,"A,B,C");
+            assert.equal(theHeccer.checcer.tAll("C"),false,"C");
+            assert.equal(theHeccer.checcer.tAll(),false,"literally nothing");
+            assert.equal(theHeccer.checcer.tAll("deez nutz"),false,"deez nutz");
         });
     });
 
