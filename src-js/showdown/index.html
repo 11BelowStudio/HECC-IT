@@ -78,14 +78,10 @@
 </div>
 
 <script src="hecced.js"></script>
-<script src="heccer2.js"></script>
+<script src="heccer.js"></script>
 <script src="showdown.min.js"></script>
-<script src = "heccstension.js"></script>
 <script>
-//this stuff has to be inline here otherwise it doesn't work for some reason
-
-//const theHeccer = new HECCER(startingPassageName);
-//constructs a 'heccer' object, called 'TheHeccer', starting from the named starting passage (as defined in HECCED.js)
+//this stuff has to be inline here otherwise it doesn't work
 
 showdown.extension('heccstension', heccstension);
 showdown.setOption('simpleLineBreaks', true);

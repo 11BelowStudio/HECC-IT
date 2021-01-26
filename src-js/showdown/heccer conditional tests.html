@@ -32,9 +32,8 @@
 
 <script src="https://code.jquery.com/qunit/qunit-2.14.0.js"></script>
 <script>var startingPassageName = "Start";</script>
-<script src="heccer2.js"></script>
+<script src="heccer.js"></script>
 <script src="showdown.min.js"></script>
-<script src="heccstension.js"></script>
 <script>
 
 
@@ -55,7 +54,7 @@
     }, function(){
 
         QUnit.test("{if:pAny('1')}{ok}", function(assert) {
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -70,8 +69,24 @@
             theHeccer.goBack();
         });
 
+        QUnit.test("{if:pAny('1','2')}{ok}", function(assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pAny('1','2')}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
         QUnit.test("{if:pAll('1')}{ok}", function(assert) {
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -86,9 +101,25 @@
             theHeccer.goBack();
         });
 
+        QUnit.test("{if:pAll('1','2')}{no}{else:ok}", function(assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pAll('1','2')}{no}{else:ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
         QUnit.test("{if:tAny('a')}{ok}", function(assert) {
 
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -103,8 +134,25 @@
             theHeccer.goBack();
         });
 
+        QUnit.test("{if:tAny('a','b')}{ok}", function(assert) {
+
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tAny('a','b')}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
         QUnit.test("{if:tAll('a')}{ok}", function(assert) {
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -119,9 +167,25 @@
             theHeccer.goBack();
         });
 
+        QUnit.test("{if:tAll('a','b')}{no}{else:ok}", function(assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tAll('a','b')}{no}{else:ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
 
         QUnit.test("{if:not(pAny('1'))}{no}{else:ok}", function(assert) {
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -137,7 +201,7 @@
         });
 
         QUnit.test("{if:not(pAll('1'))}{no}{else:ok}", function(assert) {
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -154,7 +218,7 @@
 
         QUnit.test("{if:not(tAny('a'))}{no}{else:ok}", function(assert) {
 
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
@@ -170,11 +234,69 @@
         });
 
         QUnit.test("{if:not(tAll('a'))}{no}{else:ok}", function(assert) {
-            const temp = Date.now().toString();
+            const temp = Date.now().toString() + Math.random().toString();
             theHeccer.addPassageToMap(
                 new Passage(
                     temp,
                     "{if:not(tAll('a'))}{no}{else:ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+    });
+
+    QUnit.module("some nested stuff", {
+        before: function(){
+            theHeccer.goToPassage('1');
+            theHeccer.goToPassage('2');
+        }
+    }, function(){
+
+        QUnit.test("{if:pAny('1')}{{if:pAny('2')/}{ok/}}{else:no}", function(assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pAny('1')}{{if:pAny('2')/}{ok/}}{else:no}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:pAny('3')}{no}{else:{if:pAny('2')/}{ok/}}", function(assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pAny('3')}{no}{else:{if:pAny('2')/}{ok/}}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+
+        QUnit.test("{if:false}{no}{else:{if:false/}{no/}{else:{if:true//}{ok//}{else:no//}/}}", function(assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:false}{no}{else:{if:false/}{no/}{else:{if:true//}{ok//}{else:no//}/}}",
                     []
                 )
             );

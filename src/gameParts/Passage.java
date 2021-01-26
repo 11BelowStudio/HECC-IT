@@ -14,9 +14,7 @@ import java.util.regex.Pattern;
  */
 public class Passage {
 
-    //TODO: put the OH-HECC specific stuff into a seperate class to the HECC-UP specific stuff.
-    //TODO: make the HECC-UP Passage focus entirely on holding a representation of HECCED-formatted data
-    //TODO: maybe make the HECC-UP Passage into a Kotlin data class or something?
+    //TODO: merge with the OH-HECC passage.
 
     /**
      * the name of this passage
@@ -211,6 +209,8 @@ public class Passage {
      */
     public void parseContent(){
 
+        //TODO: actually not parse the content because the output will be parsing itself (still need to parse the tags tho)
+
         //string for the WIP parsed content
         String parsedContentWIP = unparsedContent.trim();
 
@@ -235,6 +235,7 @@ public class Passage {
      * @return version of input with the escape characters escaped
      */
     private String escapeHtmlCharacters(String input){
+        //TODO: probably get rid of this.
         input = input.replaceAll("&","&amp"); //escapes ampersands
         input = input.replaceAll("<","&lt"); //escapes <
         input = input.replaceAll(">","&gt"); //escapes >
@@ -250,7 +251,7 @@ public class Passage {
      */
     private String parsePassageContent(String input){
         
-        //TODO: markdown formatting code would probably go here
+        //TODO: remove this formatting stuff, will be handled by the output game instead.
         
         //putting an opening paragraph tag onto the formatted string
         String formatted = "\"<p>";
@@ -295,6 +296,8 @@ public class Passage {
      * @return the input passage text with the links converted into hecc links
      */
     private String actuallyParseThePassageLinks(String input, boolean direct, boolean converting){
+
+        //TODO: yeah we just need to get the passage link set stuff, not convert the links.
 
         String regex; //local variable for the regex being used
         if (direct){

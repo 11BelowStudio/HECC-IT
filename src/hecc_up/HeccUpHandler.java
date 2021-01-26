@@ -11,6 +11,8 @@ import java.io.IOException;
  */
 public class HeccUpHandler {
 
+    //TODO: incorporate into OH-HECC
+
     /**
      * The LoggerInterface object that this will log important info to
      */

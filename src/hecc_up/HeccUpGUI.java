@@ -17,6 +17,8 @@ import java.net.URL;
  */
 public class HeccUpGUI implements LoggerInterface {
 
+    //TODO: incorporate into OH-HECC
+
     /**
      * the heccUpHandler object that handles the process of heccing things up
      */

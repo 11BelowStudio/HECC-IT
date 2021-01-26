@@ -1,8 +1,16 @@
+/**
+ * @deprecated
+ * now part of heccer.js in this folder.
+ *
+ * pls to ignore
+ */
+
+
 
 /**
  An extension for showdown to do some hecc-related stuff
  */
-var heccstension = function(){
+var heccstensionDeprecated = function(){
 
     //const anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
     //const passageNameWithWhitespace = anyHorizontalWhitespace + "(([\\w]+[\\w- ]*)?[\\w]+)\\s*" + anyHorizontalWhitespace;
@@ -21,125 +29,120 @@ var heccstension = function(){
         }
     };
 
-    const ifWithElse = {
-        type: "output",
-        regex: /(?:{if:([^}]*)}{(.*)})(?:{else:}{(.*)})/g,
-        replace: function(match, statement, showIf, showElse){
-            //Doesn't work entirely as intended yet. But it's a start I guess.
-            if (theHeccer.checcer.checc(statement)){
-                return showIf;
-            } else{
-                return showElse;
-            }
-        }
-    };
 
-    const ifWithoutElse = {
-        type: "output",
-        regex: /(?:{if:([^}]*)}{(.*)})/g,
-        replace: function(match, statement, showIf){
-            //Doesn't work entirely as intended yet. But it's a start I guess.
-            if (theHeccer.checcer.checc(statement)){
-                return showIf;
-            } else{
-                return "";
-            }
-        }
-    };
 
-    const anotherRule = {
-        type: "output",
+
+    const conditionals = {
+        type: "lang",
         filter: function(text, converter){
-            const unescapedCloseBrace = "(?<!\\/)}";
+
+            //a regex check for a } which does not have a / in front of it
+            const unescapedCloseBrace = /(?<!\/)}/g;
+
+            //look for where the if/else statement starts
             let ifElseStart = text.search(/(?<!\/){if:/g); //find where the if/else statement starts
             if (ifElseStart === -1){
+                //if nothing's found, return text as-is
                 return text;
             }
+            //console.log(text);
+
             let trimmedString = text.substring(ifElseStart); //removes everything before the first if
-            console.log(trimmedString);
+            //console.log(trimmedString);
             let statementEnd = trimmedString.search(unescapedCloseBrace);
 
-            let theStatement = trimmedString.substring(4,statementEnd);
+            let theStatement = trimmedString.substring(4,statementEnd); //find the statement itself
 
             let ifElseEnd = ifElseStart + statementEnd; //find where the if/else statement ends
 
-            theStatement = theStatement.replace(/\/}/g,"}"); //unescaping any escaped }s in the if statement
-            console.log("statement:" + theStatement);
+            theStatement = theStatement.replace(/\/}/g,"}"); //unescaping any /'d }s in the if statement
+            //console.log("statement:" + theStatement);
 
             let currentSubstring = trimmedString.substring(statementEnd+1); //move the trimmedString to everything after the statement
 
             ifElseEnd += 1;
 
+            //find where the if branch starts
             let ifBranchStart = trimmedString.search("{");
-            currentSubstring = currentSubstring.substring(ifBranchStart+1); //trimmedString is now everything after the start of the if branch
+            currentSubstring = currentSubstring.substring(ifBranchStart+1); //currentSubstring is now everything after the start of the if branch
 
             ifElseEnd += (ifBranchStart + 1);
 
-            let ifBranchEnd = currentSubstring.search(unescapedCloseBrace);
+            let ifBranchEnd = currentSubstring.search(unescapedCloseBrace); //where the if branch ends
             ifElseEnd += (ifBranchEnd + 1);
 
-            let ifBranchText = currentSubstring.substring(0, ifBranchEnd);
+            let ifBranchText = currentSubstring.substring(0, ifBranchEnd); //the entire if branch
+
+            //console.log("if branch text: " + ifBranchText);
 
             let afterIfBranch = currentSubstring.substring(ifBranchEnd+1);
-            let elseBranchDeclaration = afterIfBranch.search("{else:");
-            let hasElse = (elseBranchDeclaration !== -1);
-            let elseBranchText = "";
+            let elseBranchDeclaration = afterIfBranch.search("{else:"); //look for an else branch
+            let hasElse = (elseBranchDeclaration !== -1); //if there is no else branch, don't bother validating it
+            let elseBranchText = ""; //else branch text initially false
 
             if (hasElse){
-
+                //if there's just whitespace between the end of the if and the start of the else, we associate the else with the if
                 if(/^\s*$/g.test(afterIfBranch.substring(0,elseBranchDeclaration))){
 
-                    console.log("has else");
+                    //and then we basically extract the else text and find out where the entire if/else ends
+
+                    //console.log("has else");
                     afterIfBranch = afterIfBranch.substring(elseBranchDeclaration + 6);
-                    console.log("The after if branch text: " + afterIfBranch);
+                    //console.log("The after if branch text: " + afterIfBranch);
+
 
                     let potentialElseEnd = (elseBranchDeclaration + 6)
 
 
                     let elseEnd = afterIfBranch.search(unescapedCloseBrace);
 
+                    //if there's no end to the else, we ignore it.
                     if (elseEnd === -1){
-                        console.log("actually nope thats not an else");
+                        //console.log("actually nope thats not an else");
                         hasElse = false;
                     } else {
                         potentialElseEnd += elseEnd;
                         elseBranchText = afterIfBranch.substring(0,elseEnd);
                         ifElseEnd += potentialElseEnd;
                         ifElseEnd += 1;
-                        console.log("Else branch text: " + elseBranchText);
+
                     }
 
                 } else{
                     hasElse = false;
-                    console.log("no else");
+                    //console.log("no else");
                 }
             }
-
+            //console.log("Else branch text: " + elseBranchText);
 
             let replacementString = "";
 
+            //if theStatement evaluates to true when checced
             if(theHeccer.checcer.checc(theStatement)){
 
+                //use the ifBranchText
                 replacementString = ifBranchText;
 
             } else if (hasElse){
-
+                //if it's false, and there's an else branch, use the elseBranchText
                 replacementString = elseBranchText;
-                //DO THE ELSE STUFF
+
             }
-            console.log("unescaped replacement string: " + replacementString);
-            replacementString = replacementString.replace(/\/}/g,"}"); //unescaping any escaped }s in the if statement
-            console.log("escaped replacement string: " + replacementString);
-            replacementString = anotherRule.filter(replacementString);
+            //console.log("unescaped replacement string: " + replacementString);
 
-            let prefixString = text.substring(0,ifElseStart);
+            replacementString = replacementString.replace(/\/}/g,"}"); //unescaping any escaped /}s in the if statement
 
-            let suffixString = text.substring(ifElseEnd);
-            console.log("suffix: " + suffixString);
+            //console.log("escaped replacement string: " + replacementString);
 
-            text = prefixString + replacementString + suffixString;
+            replacementString = conditionals.filter(replacementString); //process the output of this conditional (for nested conditionals)
 
-            return text;
+            let prefixString = text.substring(0,ifElseStart); //everything before this conditional
+
+            let suffixString = text.substring(ifElseEnd); //everything after this conditional
+
+            text = prefixString + replacementString + suffixString; //basically replace the conditional with the output we just found
+
+            return text; //and return it
 
         }
     }
@@ -156,8 +159,8 @@ var heccstension = function(){
     tAll(tag1, tag2, ...)
      */
 
-    //return[directPassageLinks, indirectPassageLinks, ifWithElse,ifWithoutElse];
-    return[directPassageLinks, indirectPassageLinks, anotherRule];
+
+    return[directPassageLinks, indirectPassageLinks, conditionals];
 }
 
 
@@ -176,7 +179,7 @@ var heccstension = function(){
 }(function (showdown) {
 
 
-    showdown.extension('heccstension', function () {
+    showdown.extension('heccstensionDeprecated', function () {
         //const passageNameWithWhitespace = "\\h*(([\\w]+[\\w- ]*)?[\\w]+)\\h*";
 
         return [

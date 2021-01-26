@@ -31,9 +31,8 @@
 
 <script src="https://code.jquery.com/qunit/qunit-2.14.0.js"></script>
 <script src = "hecced.js"></script>
-<script src="showdown/heccer2.js"></script>
+<script src="showdown/heccer.js"></script>
 <script src="showdown/showdown.min.js"></script>
-<script src="showdown/heccstension.js"></script>
 <script>
 
     showdown.extension('heccstension', heccstension);
@@ -90,7 +89,7 @@
             assert.equal(theHeccer.checcer.checc('not(tAll("x"))'), true, 'not(tAll("A"))');
         });
 
-        QUnit.test("really fucking weird shit",function(assert){
+        QUnit.test("really heccin weird stuff",function(assert){
             assert.equal(theHeccer.checcer.checc("dave"),false, "dave");
             assert.equal(theHeccer.checcer.checc("1+1 === 2"),true, "1+1 === 2");
             assert.equal(theHeccer.checcer.checc("69"),true, "69");

@@ -42,7 +42,7 @@ public class OldHeccUpMain implements LoggerInterface{
 
     /**
      * main method bottom text
-     * @param args
+     * @param args le command line arguments have arrived (and will promptly be ignored)
      */
     public static void main(String[] args) {
         OldHeccUpMain heccUp = new OldHeccUpMain();
@@ -51,9 +51,3 @@ public class OldHeccUpMain implements LoggerInterface{
 
 }
 
-
-//TODO stuff for after MVP
-
-//TODO (after MVP): further Metadata
-
-//TODO (after MVP): OH-HECC (Optional Help for HECC)
