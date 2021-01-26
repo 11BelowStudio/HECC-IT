@@ -8,7 +8,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Start",
-			"oh hey im here with my good friend inspector gadget and also\n\n#**DEEZ NUTZ**\n*lmao gottem!*\n\n[[next]]",
+			"oh hey i'm here with my good friend inspector gadget and also\n\n#**DEEZ NUTZ**\n*lmao gottem!*\n\n[[next]]",
 			//"<p><a class='passageLink' onclick='theHeccer.goToPassage(\"next\")'>next</a></p>",
 			["tag1"]
 		)
@@ -59,7 +59,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"lets see",
-			"{if: pAll('A')}{You picked A earlier.}{else:}{You didn't pick A earlier.{if: pAll('B')}{ You picked B instead.}}",
+			"{if: pAll('A')}{You picked {A/} earlier.}{else:You didn't pick A earlier.\n\n{if: pAll('B')/}{ You picked B instead./}}",
 			[]
 		)
 	);
