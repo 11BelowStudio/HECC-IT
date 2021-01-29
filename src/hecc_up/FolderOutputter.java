@@ -95,6 +95,9 @@ public class FolderOutputter {
 
                 File indexFile = new File(outputFolderPath.concat("index.html"));
                 writeTheFile(indexFile, TextAssetReader.getIndex());
+
+                File showdownFile = new File(outputFolderPath.concat("showdown.min.js"));
+                writeTheFile(showdownFile, TextAssetReader.getShowdownMinJs());
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -110,6 +113,9 @@ public class FolderOutputter {
 
                 File heccerFile = new File(outputFolderPath.concat("heccer.js"));
                 writeTheFile(heccerFile, TextAssetReader.getHECCER());
+
+                File showdownFile = new File(outputFolderPath.concat("showdown.min.js"));
+                writeTheFile(showdownFile, TextAssetReader.getShowdownMinJs());
 
                 writeIndexButWithMetadata(metadata);
 
@@ -135,6 +141,9 @@ public class FolderOutputter {
 
             File heccerFile = makeTheFile("heccer.js");
             writeTheFile(heccerFile, TextAssetReader.getHECCER());
+
+            File showdownFile = new File(outputFolderPath.concat("showdown.min.js"));
+            writeTheFile(showdownFile, TextAssetReader.getShowdownMinJs());
 
             writeIndexButWithMetadata(metadata);
 

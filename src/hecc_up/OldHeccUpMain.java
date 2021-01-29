@@ -28,13 +28,13 @@ public class OldHeccUpMain implements LoggerInterface{
 
     /**
      * Attempts to hecc up the game stored as src/assets/textAssets/HeccSample.hecc,
-     * and attempts to output it to outputs/hecc_up_testing_v2/heccin_game
+     * and attempts to output it to outputs/hecc_up_testing_v3/heccin_game
      */
     public void heccUpTheGame(){
 
         heccUpHandler.attemptToHeccUpTheGame(
                 "src/assets/textAssets/HeccSample.hecc",
-                "outputs/hecc_up_testing_v2/heccin_game"
+                "outputs/hecc_up_testing_v3/heccin_game"
         );
 
     }

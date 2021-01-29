@@ -50,6 +50,11 @@ public class PassageObject extends EditModelObject {
 
     private static final Color ERROR_COLOUR = SAFETY_RED;
 
+    /**
+     * darker orange if there's nothing in the passage
+     */
+    private static final Color EMPTY_COLOUR = new Color(190, 70, 30);
+
     //private static Vector2D SCROLL_VECTOR = new Vector2D();
 
     public PassageObject(EditModelInterface model, PassageEditingInterface passage){
@@ -108,6 +113,9 @@ public class PassageObject extends EditModelObject {
                 break;
             case END_NODE:
                 objectColour = END_COLOUR;
+                break;
+            case EMPTY_CONTENT:
+                objectColour = EMPTY_COLOUR;
                 break;
         }
     }

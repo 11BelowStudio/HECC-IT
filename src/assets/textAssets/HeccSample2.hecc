@@ -28,7 +28,7 @@ The following line contains a link to "Another passage".
 [[Another passage]]
 ;;
 
-
+;;
 
 
 ::Another passage [yes theres tags] <30.0,-212.0> //this is another passage
@@ -36,7 +36,7 @@ congrats you clicked that link to get here, Another passage.
 why not [[click this|Yet Another Passage]] as well?
 ;;
 
-
+;;
 
 
 
@@ -46,7 +46,7 @@ You go to the left, but the path leads you back to [[dave]].
 ;;
 
 
-
+;;
 
 
 ::Yet Another Passage [] <-65.0,-60.0> //
@@ -55,7 +55,7 @@ woah you clicked that so you're now at Yet Another Passage.
 Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
 ;;
 this is an comment
-
+;;
 
 
 
@@ -63,7 +63,7 @@ this is an comment
 You went to the right, but the path leads you back to [[dave]].
 ;;
 
-
+;;
 ::dave [] <81.0,142.0> //oh hi dave
 This passage is called dave.
 
@@ -73,5 +73,5 @@ So I guess this counts as the end.
 yep it's the end
 
 wack
-
+;;
 

@@ -3,6 +3,8 @@ package hecc_up;
 import gameParts.Metadata;
 import gameParts.Passage;
 import heccCeptions.*;
+import oh_hecc.game_parts.passage.OutputtablePassage;
+import oh_hecc.game_parts.passage.PassageOutputtingInterface;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -31,7 +33,7 @@ public class HeccParser {
     /**
      * a map of all the passages
      */
-    private final Map<String, Passage> passageMap;
+    private final Map<String, PassageOutputtingInterface> passageMap;
 
     /**
      * a set of all the passage names
@@ -176,9 +178,9 @@ public class HeccParser {
      * @return A map of the passage objects declared in the raw data
      * @throws EmptyPassageException if a passage is empty
      */
-    private Map<String, Passage> constructPassageMap(String dataToParse) throws EmptyPassageException{
+    private Map<String, PassageOutputtingInterface> constructPassageMap(String dataToParse) throws EmptyPassageException{
         //creating the map
-        Map<String, Passage> pMap = new HashMap<>();
+        Map<String, PassageOutputtingInterface> pMap = new HashMap<>();
 
         boolean notDone;
 
@@ -312,9 +314,9 @@ public class HeccParser {
                 //System.out.println(currentContent);
                 //if content was found, add it to the passage content map
                 if (passageMetadataFound){
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentPassageMetadata));
+                    pMap.put(currentPassageName,new OutputtablePassage(currentPassageName,currentContent,currentPassageMetadata));
                 } else{
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent));
+                    pMap.put(currentPassageName,new OutputtablePassage(currentPassageName,currentContent));
                 }
             } else{
                 //System.out.println("No content found for passage " + currentPassageName);
@@ -335,8 +337,8 @@ public class HeccParser {
     public boolean validatePassages() throws UndefinedPassageException, MissingStartingPassageException {
         if ((metadata.doesStartPassageExist(passageNames))){
             //ensure that every single linked passage is valid
-            for (Map.Entry<String, Passage> e: passageMap.entrySet()){
-                Passage current = e.getValue();
+            for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
+                PassageOutputtingInterface current = e.getValue();
                 current.validateLinkedPassagesThrowingException(passageNames);
                 //exception is thrown if an undefined passage is being linked
                 e.setValue(current);
@@ -363,7 +365,7 @@ public class HeccParser {
 
         heccedData.clear();
 
-        heccedData.add("//HECC UP output (as of 15/10/2020) (R. Lowe, 2020)\n\n");
+        heccedData.add("//HECC UP output (as of 29/01/2021) (R. Lowe, 2021)\n\n");
 
         //declaration of starting passage name is added to heccedData
         heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\r\n\r");
@@ -373,10 +375,10 @@ public class HeccParser {
 
 
         //parses each passage, and ensure that the links are all valid and such
-        for (Map.Entry<String, Passage> e: passageMap.entrySet()){
-            Passage current = e.getValue();
+        for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
+            PassageOutputtingInterface current = e.getValue();
 
-            current.parseContent();
+            //current.parseContent();
 
             //ensure that the passages they link to are valid
             if (current.validateLinkedPassages(passageNames)){
@@ -432,7 +434,7 @@ public class HeccParser {
      */
     public void printPassageObjects(){
         //prints the passage objects for debugging reasons
-        for (Map.Entry<String, Passage> e: passageMap.entrySet()){
+        for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
             e.getValue().printPassageInfoForDebuggingReasons();
             System.out.println("\n");
         }

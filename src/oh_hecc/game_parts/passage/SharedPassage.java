@@ -186,4 +186,10 @@ public interface SharedPassage extends Parseable, Heccable {
      * @return a string representing this passage for debugging reasons
      */
     String outputAsStringForDebuggingReasons();
+
+    /**
+     * Obtain an enum representing the current status of the passage
+     * @return a passageStatus value for this passage
+     */
+    PassageStatus getPassageStatus();
 }

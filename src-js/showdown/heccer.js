@@ -1,13 +1,13 @@
 
 /*
-this is heccer.js (HECC Environment for Runtime) (v0.1)
+this is heccer.js (HECC Environment for Runtime) (v1.0)
 
 This is basically a prototype of HECCER, which I mainly made right now because I honestly had no idea how JavaScript actually works.
 
 The game data stuff is in hecced.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in hecced.js gives the passage info to the HECCER.
 
-by R. Lowe, 07/09/2020
+by R. Lowe, 29/01/2020
 
 (this version has been fed into the Hecc Up Parser!)
 */

@@ -39,6 +39,11 @@ public class TextAssetReader {
     private final static String STATIC_HECC_STRING = fileToStaticString("HeccSample.hecc");
 
     /**
+     * showdown.min.js as a string
+     */
+    private final static List<String> SHOWDOWN_MIN_JS = fileToStaticStringList("showdown.min.js");
+
+    /**
      * This reads the files held in src/assets/textAssets, in a way which allows them to be included in a .jar file
      * @param filename the name of the file
      * @return the contents of the file, as an ArrayList of Strings
@@ -66,7 +71,7 @@ public class TextAssetReader {
     /**
      * Like fileToStaticStringArrayList, but returns the file as a single String instead
      * @param filename the name of the file to read
-     * @return the contents of the file, as a strin
+     * @return the contents of the file, as a string
      */
     private static String fileToStaticString(String filename){
         StringBuilder output = new StringBuilder();
@@ -107,6 +112,8 @@ public class TextAssetReader {
     }
 
 
+
+
     /**
      * @return the STATIC_HECC_STRING
      */
@@ -128,5 +135,12 @@ public class TextAssetReader {
      * @return the static ArrayList<String> representation of the iFictionTemplate.iFiction file
      */
     public static List<String> getIFictionTemplate(){ return IFICTION_TEMPLATE; }
+
+
+    /**
+     * gets the showdown.min.js file contents
+     * @return the showdown.min.js file contents
+     */
+    public static List<String> getShowdownMinJs(){ return SHOWDOWN_MIN_JS; }
 
 }

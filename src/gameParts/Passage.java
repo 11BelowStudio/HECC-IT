@@ -1,6 +1,7 @@
 package gameParts;
 
 import heccCeptions.UndefinedPassageException;
+import oh_hecc.game_parts.passage.PassageOutputtingInterface;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * This class represents a Passage within the HECCIN' Game
  */
-public class Passage {
+public class Passage implements PassageOutputtingInterface {
 
     //TODO: merge with the OH-HECC passage.
 

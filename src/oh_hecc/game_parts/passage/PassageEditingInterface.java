@@ -187,28 +187,6 @@ public interface PassageEditingInterface extends SharedPassage {
     void setTrailingComment(String newComment);
 
 
-    /**
-     * Obtain an enum representing the current status of the passage
-     * @return a passageStatus value for this passage
-     */
-    PassageStatus getPassageStatus();
 
-    /**
-     * A set of possible statuses for this passage
-     */
-    enum PassageStatus{
-        /**
-         * Use this one if there's no problems with the passage
-         */
-        NORMAL,
-        /**
-         * Use this one if the passage has no links (it's an end passage)
-         */
-        END_NODE,
-        /**
-         * use this one after a link gets deleted and it still has the '!! was deleted !!' message in the passage body
-         */
-        DELETED_LINK
-    }
 
 }

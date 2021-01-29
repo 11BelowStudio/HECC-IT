@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Like Passage but this time it's actually Editable!
  */
-public class EditablePassage implements PassageEditingInterface, PassageReadingInterface {
+public class EditablePassage extends AbstractPassage implements PassageEditingInterface, PassageReadingInterface {
 
     /**
      * The passageUUID of this particular passage.
@@ -22,17 +22,17 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      * Anywho, they're generated dynamically (never saved in .hecc format or in the final heccin game),
      * so I'm not even going to give you the opportunity to set up a collision.
      */
-    private final UUID passageUUID;
+    final UUID passageUUID;
 
     /**
      * The name of this passage
      */
-    private String passageName;
+    //private String passageName;
 
     /**
      * The actual raw contents of this passage
      */
-    private String passageContent;
+    //private String passageContent;
 
     /**
      * The comment that's inline with the passage declaration
@@ -42,7 +42,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     /**
      * The set with the names of the other passages this passage links to
      */
-    private final Set<String> linkedPassages;
+    //private final Set<String> linkedPassages;
 
     /**
      * The set of UUIDs of the passages that this passage is linked to
@@ -57,7 +57,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     /**
      * The list of tags that this passage has
      */
-    private final List<String> passageTags;
+    //private final List<String> passageTags;
 
     /**
      * The position of this passage
@@ -67,7 +67,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
     /**
      * Something to let the user know about the status of this passage.
      */
-    private PassageEditingInterface.PassageStatus status;
+    //private PassageStatus status;
 
 
 
@@ -75,14 +75,15 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      * A no-argument constructor for an editable passage. Only called by the other constructors of this class
      */
     EditablePassage(){
+        super();
         passageUUID = UUID.randomUUID();
         passageName = "Untitled Passage "+passageUUID;
         passageContent = "Sample Content";
-        passageTags = new ArrayList<>();
+        //passageTags = new ArrayList<>();
         inlinePassageComment = "";
         trailingComment = "";
         position = new Vector2D();
-        linkedPassages = new HashSet<>();
+        //linkedPassages = new HashSet<>();
 
         linkedUUIDs = new HashSet<>();
         updatePassageStatus();
@@ -163,7 +164,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
      * If the passage contains no links to other notes, this passage is an END_NODE
      * otherwise, it's NORMAL.
      */
-    private void updatePassageStatus(){
+    void updatePassageStatus(){
         if(SharedPassage.doesPassageContentContainDeletedLinks(passageContent)){
             status = PassageStatus.DELETED_LINK;
         } else if (linkedPassages.isEmpty()){
@@ -401,32 +402,7 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         return this.passageUUID;
     }
 
-    /**
-     * Obtains the passage content
-     * @return passage content
-     */
-    @Override
-    public String getPassageContent(){
-        return this.passageContent;
-    }
 
-    /**
-     * Obtains the passage name
-     * @return passage name
-     */
-    @Override
-    public String getPassageName(){
-        return this.passageName;
-    }
-
-    /**
-     * Obtains the list of passage tags
-     * @return passageTags
-     */
-    @Override
-    public List<String> getPassageTags(){
-        return passageTags;
-    }
 
     /**
      * Obtains the list of passage tags as a string, seperated by spaces, but without the opening/closing []
@@ -495,14 +471,6 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         return position;
     }
 
-    /**
-     * gets the set of linked passages
-     * @return linkedPassages
-     */
-    @Override
-    public Set<String> getLinkedPassages(){
-        return linkedPassages;
-    }
 
     /**
      * Gets the set of linked passage UUIDs
@@ -674,37 +642,6 @@ public class EditablePassage implements PassageEditingInterface, PassageReadingI
         posBuilder.append(position.y);
         posBuilder.append(">");
         return posBuilder.toString();
-    }
-
-
-    /**
-     * equals method. bottom text.
-     * @param obj the thing that this is being compared to.
-     *            If obj is an EditablePassage, this returns true if the passageUUID of this and obj are equal.
-     *            If obj is a String, this returns true if the passageName of this is the same as the string obj.
-     *            Otherwise, imma just ignore what obj is and return false anyway
-     * @return true if it's equal, false otherwise
-     */
-    public boolean equals(Object obj){
-
-        //is SharedPassage a superclass of whatever class obj is?
-        if (SharedPassage.class.isAssignableFrom(obj.getClass())){
-        //if (EditablePassage.class.equals(obj.getClass())) {
-            return (this.passageUUID.compareTo(((SharedPassage) obj).getPassageUUID()) == 0);
-        } else if (String.class.equals(obj.getClass())) {
-            return (this.passageName.equals(obj));
-        }
-        return false;
-    }
-
-    /**
-     * Obtain an enum representing the current status of the passage
-     *
-     * @return a passageStatus value for this passage
-     */
-    @Override
-    public PassageStatus getPassageStatus() {
-        return status;
     }
 
 
