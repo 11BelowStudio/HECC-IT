@@ -18,8 +18,40 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"next",
-			"* this is the next passage.\nDo you want to:\n1. [[go back|Start]]\n2. [[continue?|Greetings]]\n3. [[conditional stuff|if time]]\n\n[[\nbruh]]\n\n[[\n\nbreh|\n\nok]]",
+			"* this is the next passage.\nDo you want to:\n1. [[go back|Start]]\n2. [[continue?|Greetings]]\n3. [[conditional stuff|if time]]\n\n[[POINT OF NO RETURN]]\n\n[[\nbruh]]\n\n[[\n\nbreh|\n\nok]]",
 			[]
+		)
+	);
+
+	theHeccer.addPassageToMap(
+		new Passage(
+			"POINT OF NO RETURN",
+			"congrats you went past the point of no return.\nYou cannot go back.\nYou may only move [[onwards|nr2]]",
+			["noreturn"]
+		)
+	);
+
+	theHeccer.addPassageToMap(
+		new Passage(
+			"nr2",
+			"yeah you can go back now. or you can [[keep going|nr3]]",
+			[]
+		)
+	);
+
+	theHeccer.addPassageToMap(
+		new Passage(
+			"nr3",
+			"want to go back to the earlier [[POINT OF NO RETURN]]?\n\nOr to a [[different one|nr4]]?",
+			[]
+		)
+	);
+
+	theHeccer.addPassageToMap(
+		new Passage(
+			"nr4",
+			"congrats ur stuck",
+			["noreturn"]
 		)
 	);
 

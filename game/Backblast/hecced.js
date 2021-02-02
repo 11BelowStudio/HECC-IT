@@ -13,7 +13,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"boom",
-			"#**BEEP BEEP BEEP BEEP**\n\nBefore you realize what's happening, [[everything fades out to white|bomb]]",
+			"##BEEP BEEP BEEP BEEP\n#**BOOM**\n\nBefore you realize what's happening, [[everything fades out to white|bomb]]",
 			["noreturn"]
 		)
 	);
@@ -42,7 +42,7 @@ var startingPassageName = "Start";
 		new Passage(
 			"bomb",
 			"You find yourself in front of a bomb.\n\nYou know it's a bomb, because, in large, friendly letters on the surface of the bomb, it says **This is a bomb**.\n\nDo you [[look for an exit]], or do you [[attempt to defuse the bomb|bomb1]]?",
-			[]
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -63,20 +63,20 @@ var startingPassageName = "Start";
 		new Passage(
 			"wiresCut",
 			"With both wires cut, you wait to see what happens next.\n\nAnd, for some reason, the cover of the bomb opens up, to reveal two buttons.\n\nOne of those buttons is big, red button, labelled with the word '**DETONATE**'\nThe other one is a small, green button, labelled with a power button (&#x23fb;).\n\nDo you [[press the big red button|boom]]?\nOr do you [[press the small green button|greenPressed]]?",
-			["wiresCut"]
+			["wiresCut","noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
 			"greenPressed",
 			"The bomb turns off.\n\nyou win.",
-			[]
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
 			"bomb1",
-			"You notice two wires poking out from the bomb, along with some pliers.  \nOne wire is red, and the other wire is blue.  \nAnd you've seen enough bomb defusal scenes in films to work out that you're supposed to cut at least one wire.\n\nBut which wire do you cut{if:not(pAll(\"redCut\",\"blueCut\"))}{ first}?\n\n{if:not(pAny(\"redCut\"))}{[[The red wire|redCut]]}\n{if:not(pAny(\"blueCut\"))}{[[The blue wire|blueCut]]}\n{if:pAll(\"wiresCut\")}{[[You cut both wires|wiresCut]]}",
+			"You notice two wires poking out from the bomb, along with some pliers.  \nOne wire is red, and the other wire is blue.  \nAnd you've seen enough bomb defusal scenes in films to work out that you're supposed to cut at least one wire.\n\nBut which wire do you cut{if:not(pAll(\"redCut\",\"blueCut\"))}{ first}?\n\n{if:not(pAny(\"redCut\"))}{[[The red wire|redCut]]}\n{if:not(pAny(\"blueCut\"))}{[[The blue wire|blueCut]]}\n{if:or(pAll(\"wiresCut\"),pAll(\"redCut\",\"blueCut\"))}{[[You cut both wires|wiresCut]]}",
 			[]
 		)
 	);
