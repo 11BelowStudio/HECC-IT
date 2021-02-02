@@ -641,6 +641,8 @@ var heccstension = function(){
 
             let suffixString = text.substring(ifElseEnd); //everything after this conditional
 
+            suffixString = conditionals.filter(suffixString);
+
             text = prefixString + replacementString + suffixString; //basically replace the conditional with the output we just found
 
             return text; //and return it
