@@ -26,6 +26,13 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"deja vu what is it",
+			"Sample Content",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"Start3",
 			"The envelope feels expensive. It feels like the sender really wanted to send you this, and get your attention.\n\nYou turn it around to try opening it.\n\nYou notice some handwritten text on the rear of the envelope saying '**PRIVATE AND CONFIDENTIAL**'. And where a bill would say where to return the envelope if it's undelivered, this instead says '**IF UNDELIVERED, PLEASE INCINERATE THIS ENVELOPE**'.\n\nYou turn it around again to make sure that it definitely *is* addressed to you.\n\nIt is.\n\nSomeone clearly wants you to receive this letter, and clearly doesn't want anyone else to read it.\n\nSo you [[open the envelope|Start4]], and see what all the fuss is about.",
 			[]
@@ -35,6 +42,13 @@ var startingPassageName = "Start";
 		new Passage(
 			"MeetPercival-RoomService",
 			"This mysterious individual clearly doesn't seem too happy about being asked if they're here for room service.\n\n\"***Room service!?*** Me!? Percival!? He who checks off the checklists!? Mistaken for a mere customer service tool!?\"\n\nThe nasal tone of his voice still takes you by surprise. But at least you now know who's at the door.\n\n[[\"So, Percival, why are you here if you're not here to take my breakfast order?\"|MeetPercival-Explained]]",
+			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"deja vu ambush",
+			"You hide in the blind spot from the door, waiting for Percival to open the door, so you can catch him off-guard.\n\n\"Subject C? Where are you?\"\n\nHe doesn't know you're here. This is good.\n\nAll that's left is just creeping up behind him and [[kicking his high-vis behind into next Tuesday|deja vu amush 2]].",
 			["noreturn"]
 		)
 	);
@@ -62,7 +76,14 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"MeetPercival-Explained",
-			"\"If you would just follow me, I'll take you to the briefing room where things can be explained to you in a bit more detail. And if you don't come with me willingly, I would like to mention that I am authorized to knock you out again and carry you there. Yes, I know, it sounds awkward, and I'd rather not do that either.\"\n\nYou shudder at the thought of the mere thought of Percival attempting to fight, and inevitably ending up in a situation that manages to fill you with secondhand embarrassment.\n\nAnd then there's the thought of somehow *losing* to this pathetic excuse of a man.\n\nIt would probably be for the best if you just [[go quietly|MeetPercival-ToTheBriefingRoom]], at least until you know what's going on.",
+			"\"If you would just follow me, I'll take you to the briefing room where things can be explained to you in a bit more detail. And if you don't come with me willingly, I would like to mention that I am authorized to knock you out again and carry you there. Yes, I know, it sounds awkward, and I'd rather not do that either.\"\n\nYou shudder at the thought of the mere thought of Percival attempting to fight, and inevitably ending up in a situation that manages to fill you with secondhand embarrassment.\n\nAnd then there's the thought of somehow *losing* to this pathetic excuse of a person.\n\nIt would probably be for the best if you just [[go quietly|MeetPercival-ToTheBriefingRoom]], at least until you know what's going on.",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"deja vu hide",
+			"You open the door to what you hope is an en-suite.\n\nTo your surprise, it actually is one.\n\nUnfortunately, it looks like Percival's worked out that you're in there as well.\n\n\"Subject C, would you mind hurrying up in there? We have a full schedule today, and the sooner you get out of there, the better.\"\n\nPercival's voice sounds oddly calm for the voice of someone who recently took you to what felt like a near-death experience.\n\nAre you going to respond to him?\n\n[[\"Just give me a moment, I'm on the toilet\"|deja vu hide give up]]\n[[Say nothing. Hope that he goes away.|deja vu hide gas]]",
 			[]
 		)
 	);
@@ -104,7 +125,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"movedElsewhere",
-			"You wake up in an unfamiliar rectangular room, on your back, looking up at a softly flickering fluorescent light on the ceiling, illuminating the room.\n\nThere is a single bed in the room, affixed to the wall. It looks reasonably comfortable, not that you know for sure, seeing as you've woken up on the floor.\n\nIt's certainly not the most comfortable floor you've woken up on. But it could be worse. Sure, it's a hard, wooden floor. At least it's not concrete or something like that.\n\nThe walls are completely bare, besides some curtains on the wall opposite the door.\n\nThat's when you realize that there's a door.\n\nIt looks suspiciously like the sort of door you'd expect to see in the deep, staff-only, backrooms of a ship. More of a hatch in the wall than anything else. You think that this might be the exit, but you can't see any obvious way to open it.\n\nThere is a somewhat triangular extrusion from a corner of the room, next to the exit door. This extrusion also has a door, but the door looks much more like a normal door. You come to the conclusion that it's probably an en-suite wetroom shower/toilet room. You don't feel that you need to use it right now, so you resume looking around the room.\n\nIt's at this point when you realize that you're no longer wearing the clothes you had on earlier. Someone decided to put you in a beige prison uniform-esque jumpsuit instead, with a somewhat disconcerting bit of text saying 'SUBJECT C' on it.\n\nYou notice a wardrobe opposite the bed.\n\nAll it contains are even more of the same jumpsuits.\n\nYou start to realize that the offer might have been too good to be true.\n\n{if:tAny(\"death\")}{You can't help but realize that this all feels [[oddly familiar|deja vu]].}{else:But you then notice that there's [[a folded piece of paper|elsewhere-2]] on the bed, with your name handwritten on it.}",
+			"You wake up in an unfamiliar rectangular room, on your back, looking up at a softly flickering fluorescent light on the ceiling, illuminating the room.\n\nThere is a single bed in the room, affixed to the wall. It looks reasonably comfortable, not that you know for sure, seeing as you've woken up on the floor.\n\nIt's certainly not the most comfortable floor you've woken up on. But it could be worse. Sure, it's a hard, wooden floor. At least it's not concrete or something like that.\n\nThe walls are completely bare, besides some curtains on the wall opposite the door.\n\nThat's when you realize that there's a door.\n\nIt looks suspiciously like the sort of door you'd expect to see in the deep, staff-only, backrooms of a ship. More of a hatch in the wall than anything else. You think that this might be the exit, but you can't see any obvious way to open it.\n\nThere is a somewhat triangular extrusion from a corner of the room, next to the exit door. This extrusion also has a door, but the door looks much more like a normal door. You come to the conclusion that it's probably an en-suite wetroom shower/toilet room. You don't feel that you need to use it right now, so you resume looking around the room.\n\nIt's at this point when you realize that you're no longer wearing the clothes you had on earlier. Someone decided to put you in a beige prison uniform-esque jumpsuit instead, with a somewhat disconcerting bit of text saying 'SUBJECT C' on it.\n\nYou notice a wardrobe opposite the bed.\n\nAll it contains are even more of the same jumpsuits.\n\nYou start to realize that the offer might have been too good to be true.\n\n{if:tAny(\"death\")}{You can't help but realize that this all feels [[oddly familiar|deja vu-1]].}{else:But you then notice that there's [[a folded piece of paper|elsewhere-2]] on the bed, with your name handwritten on it.}",
 			["noreturn"]
 		)
 	);
@@ -117,6 +138,13 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"deja vu hide give up",
+			"Sample Content",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"Ending1-2",
 			"You look towards your front door, as you notice some post getting shoved through your letterbox.\n\nToday, there's just one envelope, stuck in the flap of the letterbox, above the puddle of mediocrity.\n\nAn envelope with an entirely handwritten name and address.\n\nAnd it's handwriting you recognize.\n\n[[You cautiously pick up the envelope|Ending1-3]]",
 			[]
@@ -124,8 +152,15 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"deja vu hide gas",
+			"You say nothing.\n\nYou hear Percival making his way out of the room.\n\nYou're safe.\n\nYou hear a gentle *pshhhhh* coming from various points in the walls.\n\nSmoke fills the room.\n\n[[And everything fades to black|BriefingRoom2-KO]]",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"BriefingRoom1-5",
-			"*\"Thing is, if you were the one we were looking for, you would have thrown this projector out of the back window by now. Oh well.*\n\nYou're taken by surprise at that almost-instruction.\n\n*\"But I suppose that those bikers had to get caught in the crash in order for them to be warned about it, didn't they?\"*\n\nBefore you can move towards the projector in order to throw it out of the window, you notice a very bright, very warm, flash coming from the projector.\n\nHeading straight towards you.\n\n[[And everything fades to white|movedElsewhere]].",
+			"*\"Thing is, if you were the one we were looking for, you would have thrown this projector out of the back window by now. Oh well.\"*\n\nYou're taken by surprise at that almost-instruction.\n\n*\"But I suppose that those bikers had to get caught in the crash in order for them to be warned about it, didn't they?\"*\n\nBefore you can move towards the projector in order to throw it out of the window, you notice a very bright, very warm, flash coming from the projector.\n\nHeading straight towards you.\n\n[[And everything fades to white|movedElsewhere]].",
 			["noreturn","death","BriefingRoomDeath"]
 		)
 	);
@@ -133,6 +168,13 @@ var startingPassageName = "Start";
 		new Passage(
 			"BriefingRoom1-4",
 			"The voiceover kept talking, this time feeling a bit more direct than it did previously.\n\n*\"We are performing quite a bit of research into the feasibility of performing such a feat in reality, and you have been identified as a person of interest in this search, which is why we have summoned you here.\"*\n\nYou find yourself feeling rather confused, because you're not entirely sure if there's been any times in your life where you have done anything even close to the sort of thing being discussed earlier on.\n\nThe voice shifts to a somewhat more apologetic tone, which catches you somewhat off-guard.\n\n*\"Regrettably, in this search, sacrifices may have to be made, so, if the worst happens, you have our condolences.\"*\n\nThe projection shifts to some cartoon mourners, on cue with the narration.\n\nPart of you thinks that it might be worth [[trying to escape|BriefingRoom1-tryTheDoor]]. But part of you thinks [[it's probably nothing to worry about|BriefingRoom1-5]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"deja vu-2",
+			"Knowing your luck with people knocking at your door and then weird things happening, you come to the conclusion that you'd rather not deal with any more shenanigans from visitors.\n\nBut this time, you think you know what to expect.\n\nYou hear percival's voice from the other side of the door again.\n\n\"Subject C, I know you're awake and in there, I'm going to open the door.\"\n\nYou hear the noise of a crank being turned, and some bolts getting unbolted.\n\nDo you:\n[[Hide in the en-suite|deja vu hide]]\n[[Attempt to ambush Percival|deja vu ambush]]\n[[\"What is it this time, Percival?\"|deja vu what is it]]",
 			[]
 		)
 	);
@@ -152,16 +194,16 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"deja vu",
-			"You try to remember what just happened.\n\nDidn't you already wake up here?",
-			[]
+			"BriefingRoom1-1",
+			"You step into the room, and you hear the door slam shut behind you.\n\nOn the positive side, you are free from having to listen to Percival's voice.\n\nOn the negative side, you are now all alone again, which makes you think that something's not right.\n\nThe room has many rows of tables, with benches behind them, looking somewhat like a lecture hall.\n\nThe rear wall, behind those tables and benches, has a large window, overlooking an empty warehouse-like room.\n\nOn the front most desk, there's a projector, projecting some text saying '**YOUR ATTENTION, PLEASE**' onto the front wall.\n\n[[May as well find out what all the fuss is about.|BriefingRoom1-2]].",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"BriefingRoom1-1",
-			"You step into the room, and you hear the door slam shut behind you.\n\nOn the positive side, you are free from having to listen to Percival's voice.\n\nOn the negative side, you are now all alone again, which makes you think that something's not right.\n\nThe room has many rows of tables, with benches behind them, looking somewhat like a lecture hall.\n\nThe rear wall, behind those tables and benches, has a large window, overlooking an empty warehouse-like room.\n\nBut, in front of the tables and benches, there's some text saying '**YOUR ATTENTION, PLEASE**. Sit comfortably and then we'll start the briefing' projected on the wall.\n\n[[May as well find out what all the fuss is about.|BriefingRoom1-2]].",
-			["noreturn"]
+			"deja vu-1",
+			"You try to remember what just happened.\n\nDidn't you already wake up here?\n\nBut what was that about with the briefing room? And that film?\n\nYour mind starts racing, trying to comprehend what happened to you.\n\nYou hear someone [[knocking|deja vu-2]] on the door, and a muffled, familiar voice calling for a \"*Subject C?*\"",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -173,9 +215,23 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"deja vu amush 2",
+			"As you're preparing to beat him up, Percival casually turns around, to double-check that he actually was at the right room.\n\nAfter all, he is Percival. The man who follows every single instruction to the letter and never leaves any check on a checklist unchecked. Could he, Percival, have somehow made a mistake somewhere?\n\nHis eyes widen as he inadvertently notices you approaching him to beat him up.\n\nHe screams a very nasally scream, in panic.\n\nYou scream, panicking because he wasn't supposed to have seen you.\n\nHe panics, trying to defend himself.\n\nYou panic, trying to follow through on your planned ambush.\n\nHe fumbles around his high-vis vest and digs up a small black and yellow device, making a distinctive *zzzzt* noise.\n\nYou launch yourself at him, trying to take him down before he can fully comprehend what's happening.\n\n*zzzzt*\n\n[[Everything fades to black|BriefingRoom2-KO]]",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"elsewhere-3",
 			"You look towards the door with some concern, knowing what happened the last time someone from this institute started knocking at your door.\n\nHowever, this door does look rather solid, and there doesn't appear to be any obvious holes that someone could shove yet another smoke grenade through.\nBut chances are that if they really wanted to do that again, they'd have probably put some nozzles for that in the room itself, so they could engulf the room directly.\n\nYou don't want to risk it though, so you stay as still as possible, trying to not make any noise to indicate that you're awake, to buy yourself some more time to properly wrap your head around the fact that you're now here, where-ever 'here' actually is.\n\nYou hear the voice from the other side of the door again.\n\n\"Subject C, I know you're awake and in there, I'm going to open the door.\"\n\nYou hear the noise of a crank being turned, and some bolts getting unbolted.\n\nThe door opens, revealing a rather boring looking hallway, and [[a relatively unassuming-looking fellow standing in the doorway|elsewhere-4-MeetPercival]].",
 			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"BriefingRoom2-KO",
+			"percival angery\n\nwake up in briefing room\n\npercival's in there too this time.\n\nalso this time there actually isnt a bomb in the projector but you only find that out after you yeet it.",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -201,16 +257,16 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"elsewhere-2",
-			"You prepare for the worst as you unfold the piece of paper and start reading it.\n\n*Greetings.*\n\n*I would like to apologize profusely for the theatrics when bringing you here.*\n\n*Yes, I know, sleeping gas is far from the most pleasant method of welcoming you here, however, we have to take these sorts of precautions with the whole 'top secret' nature of this place. Personally, I would have preferred it if we could have just told you the address and allowed you to make your own way here. But that's life, I suppose.*\n\n*I should also mention that, by being here, you are officially bound by all that legislation that prohibits any discussion of the stuff you're doing here. Officially, you're on a residential training bootcamp for creating algorithms to efficiently traverse directed graphs and other sorts of techno mumbo-jumbo that nobody really understands anyway.*\n\n*So, you're probably wondering what's happening here. This is understandable. In short, you'll be helping us out with some experiments into the nature of reality itself. Yes, you might get very confused by everything that's going on, but that's generally what happens here.*\n\n*Now, once you've read this, we'll bring you to the briefing room where we'll explain everything that's going on. And yes, everyone in this facility will be referring to you as 'Subject C' from now on, mostly because we haven't let the staff know your name, and mostly because it's easier to do our work this way.*\n\n*Thank you, once again, for your participation*\n\n*- Dr. Archibald Albert*\n\nAs you finish reading this slip of paper, you can hear some [[knocking|elsewhere-3]] on the door, and a muffled, unfamiliar voice calling for a \"*Subject C?*\".",
-			[]
+			"Ending1",
+			"It's an ordinary morning for you.\nNothing wacky and/or uncharacteristic, just the same stuff you usually experience.\n\n[[But there's a noise at the door.|Ending1-2]]",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"Ending1",
-			"It's an ordinary morning for you.\nNothing wacky and/or uncharacteristic, just the same stuff you usually experience.\n\n[[But there's a noise at the door.|Ending1-2]]",
-			["noreturn"]
+			"elsewhere-2",
+			"You prepare for the worst as you unfold the piece of paper and start reading it.\n\n*Greetings.*\n\n*I would like to apologize profusely for the theatrics when bringing you here.*\n\n*Yes, I know, sleeping gas is far from the most pleasant method of welcoming you here, however, we have to take these sorts of precautions with the whole 'top secret' nature of this place. Personally, I would have preferred it if we could have just told you the address and allowed you to make your own way here. But that's life, I suppose.*\n\n*I should also mention that, by being here, you are officially bound by all that legislation that prohibits any discussion of the stuff you're doing here. Officially, you're on a residential training bootcamp for creating algorithms to efficiently traverse directed graphs and other sorts of techno mumbo-jumbo that nobody really understands anyway.*\n\n*So, you're probably wondering what's happening here. This is understandable. In short, you'll be helping us out with some experiments into the nature of reality itself. Yes, you might get very confused by everything that's going on, but that's generally what happens here.*\n\n*Now, once you've read this, we'll bring you to the briefing room where we'll explain everything that's going on. And yes, everyone in this facility will be referring to you as 'Subject C' from now on, mostly because we haven't let the staff know your name, and mostly because it's easier to do our work this way.*\n\n*Thank you, once again, for your participation*\n\n*- Dr. Archibald Albert*\n\nAs you finish reading this slip of paper, you can hear some [[knocking|elsewhere-3]] on the door, and a muffled, unfamiliar voice calling for a \"*Subject C?*\".",
+			[]
 		)
 	);
 
