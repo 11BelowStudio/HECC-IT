@@ -898,7 +898,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         startHighlight.update();
         startHighlight.draw(g);
 
-        //the objects representing links between passages are drawn first
+        //the objects representing links between passages are drawn first, so they're underneath everything else.
         for (PassageObject p: drawablePassageObjects) {
             p.drawLinks(g);
         }
@@ -906,6 +906,11 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         //then the passage objects themselves are drawn
         for (PassageObject p: drawablePassageObjects){
             p.draw(g);
+        }
+
+        //and then the names of the passage objects are drawn, on top of all the passages.
+        for (PassageObject p: drawablePassageObjects){
+            p.drawPassageNameObject(g);
         }
 
         //now it goes back to where it was before it was scrolled

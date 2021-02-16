@@ -5,11 +5,9 @@ import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ok so basically this represents an EditablePassage object
@@ -38,25 +36,45 @@ public class PassageObject extends EditModelObject {
 
     private boolean isSelected;
 
+    /**
+     * What colour is overlaying this object (will be drawn over the actual colour when needed)
+     */
     private Color overlayColour;
 
+    /**
+     * Colour for the outline of this object.
+     */
+    private Color outlineColour;
+
     private static final Color NORMAL_COLOUR = SAFETY_ORANGE;
+    private static final Color NORMAl_OUTLINE_COLOUR = OUTLINE_SAFETY_ORANGE;
 
     private static final Color END_COLOUR = SAFETY_YELLOW;
+    private static final Color END_OUTLINE_COLOUR = OUTLINE_SAFETY_YELLOW;
 
     private static final Color SELECTED_COLOUR = new Color(0,255,255,191);
 
     private static final Color START_COLOUR = SAFETY_YELLOW;
 
     private static final Color ERROR_COLOUR = SAFETY_RED;
+    private static final Color ERROR_OUTLINE_COLOUR = OUTLINE_SAFETY_RED;
 
     /**
      * darker orange if there's nothing in the passage
      */
     private static final Color EMPTY_COLOUR = new Color(190, 70, 30);
+    /**
+     * empty_colour but it's 57% lightness instead of 43%
+     */
+    private static final Color EMPTY_OUTLINE_COLOUR = new Color(225, 105, 65);
 
     //private static Vector2D SCROLL_VECTOR = new Vector2D();
 
+    /**
+     * Constructor for the PassageObject
+     * @param model the model that it's part of
+     * @param passage the passage this represents
+     */
     public PassageObject(EditModelInterface model, PassageEditingInterface passage){
         super(passage.getPosition(), model);
 
@@ -107,15 +125,19 @@ public class PassageObject extends EditModelObject {
         switch (thePassage.getPassageStatus()){
             case NORMAL:
                 objectColour = NORMAL_COLOUR;
+                outlineColour = NORMAl_OUTLINE_COLOUR;
                 break;
             case DELETED_LINK:
                 objectColour = ERROR_COLOUR;
+                outlineColour = ERROR_OUTLINE_COLOUR;
                 break;
             case END_NODE:
                 objectColour = END_COLOUR;
+                outlineColour = END_OUTLINE_COLOUR;
                 break;
             case EMPTY_CONTENT:
                 objectColour = EMPTY_COLOUR;
+                outlineColour = EMPTY_OUTLINE_COLOUR;
                 break;
         }
     }
@@ -195,12 +217,29 @@ public class PassageObject extends EditModelObject {
 
         }
 
+        //and also does an outline of it.
+        g.setColor(outlineColour);
+        g.draw(fillArea);
+
 
 
         //draws the passageNameObject (on top of this object)
+        //passageNameObject.draw(g);
+
+
+    }
+
+    /**
+     * This method just draws the passageNameObject for this passageObject.
+     * Why? Because this way, these can all be rendered after all the passageObjects themselves,
+     * so they won't end up covered by another passageObject's rectangle.
+     * @param g the Graphics2D object responsible for the actual drawing stuff
+     */
+    public void drawPassageNameObject(Graphics2D g){
+        AffineTransform backup = g.getTransform();
+        g.translate(position.x, position.y);
         passageNameObject.draw(g);
-
-
+        g.setTransform(backup);
     }
 
 
@@ -235,8 +274,8 @@ public class PassageObject extends EditModelObject {
     @Override
     public void move(Vector2D moveVector) {
         super.move(moveVector);
-        updateLinkedObjectPositions();
         thePassage.updatePosition(position);
+        updateLinkedObjectPositions();
         theModel.updatePassageObjectLinksWhichLinkToSpecifiedPassage(theUUID);
         areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
     }
