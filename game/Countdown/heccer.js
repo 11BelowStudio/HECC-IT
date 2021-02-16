@@ -16,7 +16,7 @@ by R. Lowe, 02/02/2021
  * tl;dr JavaScript's /s (whitespace) regex matches linebreaks. Which I don't want. So this is basically just horizontal whitespace
  * @type {string}
  */
-var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
+var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025\\u3000\\ufeff]*";
 /**
  * Passage name regexes with horizontal whitespace
  * @type {string}
@@ -668,7 +668,7 @@ var heccstension = function(){
 
             //console.log("escaped replacement string: " + replacementString);
 
-            replacementString = conditionals.filter(replacementString); //process the output of this conditional (for nested conditionals)
+            replacementString = conditionals.filter(replacementString, converter); //process the output of this conditional (for nested conditionals)
 
 
 
@@ -676,7 +676,7 @@ var heccstension = function(){
 
             let suffixString = text.substring(ifElseEnd); //everything after this conditional
 
-            suffixString = conditionals.filter(suffixString);
+            suffixString = conditionals.filter(suffixString, converter);
 
             text = prefixString + replacementString + suffixString; //basically replace the conditional with the output we just found
 

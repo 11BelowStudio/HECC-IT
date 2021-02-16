@@ -16,7 +16,7 @@ by R. Lowe, 02/02/2021
  * tl;dr JavaScript's /s (whitespace) regex matches linebreaks. Which I don't want. So this is basically just horizontal whitespace
  * @type {string}
  */
-var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
+var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025\\u3000\\ufeff]*";
 /**
  * Passage name regexes with horizontal whitespace
  * @type {string}
