@@ -668,7 +668,7 @@ var heccstension = function(){
 
             //console.log("escaped replacement string: " + replacementString);
 
-            replacementString = conditionals.filter(replacementString); //process the output of this conditional (for nested conditionals)
+            replacementString = conditionals.filter(replacementString, converter); //process the output of this conditional (for nested conditionals)
 
 
 
@@ -676,7 +676,7 @@ var heccstension = function(){
 
             let suffixString = text.substring(ifElseEnd); //everything after this conditional
 
-            suffixString = conditionals.filter(suffixString);
+            suffixString = conditionals.filter(suffixString, converter);
 
             text = prefixString + replacementString + suffixString; //basically replace the conditional with the output we just found
 

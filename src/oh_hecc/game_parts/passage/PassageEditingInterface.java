@@ -187,6 +187,12 @@ public interface PassageEditingInterface extends SharedPassage {
     void setTrailingComment(String newComment);
 
 
+    /**
+     * Is this passage a 'point of no return'?
+     * (it's a point of no return if it has a 'noreturn' tag)
+     * @return true if yes, false if not.
+     */
+    boolean isThisAPointOfNoReturn();
 
 
 }

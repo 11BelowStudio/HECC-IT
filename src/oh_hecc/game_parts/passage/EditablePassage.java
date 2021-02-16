@@ -160,12 +160,15 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
 
     /**
      * This method is used to update the 'status' of this passage.
+     * If the passage contents are empty, status is EMPTY_CONTENT
      * If the passage contents (still) contains a reference to a deleted passage, this is a 'DELETED_LINK' passage.
      * If the passage contains no links to other notes, this passage is an END_NODE
      * otherwise, it's NORMAL.
      */
     void updatePassageStatus(){
-        if(SharedPassage.doesPassageContentContainDeletedLinks(passageContent)){
+        if(this.getPassageContent().equals("")){
+            status = PassageStatus.EMPTY_CONTENT;
+        } else if(SharedPassage.doesPassageContentContainDeletedLinks(passageContent)){
             status = PassageStatus.DELETED_LINK;
         } else if (linkedPassages.isEmpty()){
             status = PassageStatus.END_NODE;
@@ -514,6 +517,16 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     @Override
     public void setTrailingComment(String newComment){
         trailingComment = newComment;
+    }
+
+    /**
+     * Is this passage a 'point of no return'?
+     * (it's a point of no return if it has a 'noreturn' tag)
+     * @return true if yes, false if not.
+     */
+    @Override
+    public boolean isThisAPointOfNoReturn() {
+        return passageTags.contains("noreturn");
     }
 
     /**

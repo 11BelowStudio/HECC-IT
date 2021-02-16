@@ -34,6 +34,8 @@ public class PassageObject extends EditModelObject {
 
     private final StringObject passageNameObject;
 
+    //private Rectangle fillRect;
+
     private boolean isSelected;
 
     /**
@@ -57,7 +59,11 @@ public class PassageObject extends EditModelObject {
     private static final Color START_COLOUR = SAFETY_YELLOW;
 
     private static final Color ERROR_COLOUR = SAFETY_RED;
-    private static final Color ERROR_OUTLINE_COLOUR = OUTLINE_SAFETY_RED;
+
+    /**
+     * Colour for the outline if this passage is a 'point of no return'
+     */
+    private static final Color POINT_OF_NO_RETURN_OUTLINE_COLOUR = OUTLINE_SAFETY_RED;
 
     /**
      * darker orange if there's nothing in the passage
@@ -67,6 +73,12 @@ public class PassageObject extends EditModelObject {
      * empty_colour but it's 57% lightness instead of 43%
      */
     private static final Color EMPTY_OUTLINE_COLOUR = new Color(225, 105, 65);
+
+
+    /**
+     * Whether or not the passage this refers to is a 'Point Of No Return'
+     */
+    private boolean pointOfNoReturn = false;
 
     //private static Vector2D SCROLL_VECTOR = new Vector2D();
 
@@ -88,6 +100,8 @@ public class PassageObject extends EditModelObject {
         areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
 
         fillArea = new Area(new Rectangle(- (width/2), - (height/2), width, height));
+        //fillRect = new Rectangle(- (width/2), - (height/2), width, height);
+        //fillArea = new Area(fillRect);
 
         isSelected = false;
 
@@ -125,21 +139,18 @@ public class PassageObject extends EditModelObject {
         switch (thePassage.getPassageStatus()){
             case NORMAL:
                 objectColour = NORMAL_COLOUR;
-                outlineColour = NORMAl_OUTLINE_COLOUR;
                 break;
             case DELETED_LINK:
                 objectColour = ERROR_COLOUR;
-                outlineColour = ERROR_OUTLINE_COLOUR;
                 break;
             case END_NODE:
                 objectColour = END_COLOUR;
-                outlineColour = END_OUTLINE_COLOUR;
                 break;
             case EMPTY_CONTENT:
                 objectColour = EMPTY_COLOUR;
-                outlineColour = EMPTY_OUTLINE_COLOUR;
                 break;
         }
+        pointOfNoReturn = thePassage.isThisAPointOfNoReturn();
     }
 
     public UUID getTheUUID(){
@@ -208,19 +219,27 @@ public class PassageObject extends EditModelObject {
         g.setColor(objectColour);
 
         //filling in this object's areaRectangle
-        g.fill(fillArea);
+        //g.fill(fillArea);
+        //actually we're filling it in 3d now so it basically has an outline.
+        g.fill3DRect(-(width/2), -(height/2), width, height, true);
 
         if (isSelected){
-
+            //has the 'selected' overlay if this passageObject is selected.
             g.setColor(overlayColour);
             g.fill(fillArea);
 
         }
 
-        //and also does an outline of it.
-        g.setColor(outlineColour);
-        g.draw(fillArea);
+        if (pointOfNoReturn){
+            //outlined in red if the passage is a point of no return
+            g.setColor(POINT_OF_NO_RETURN_OUTLINE_COLOUR);
+            g.draw(fillArea);
+        }
 
+        //and also does an outline of it.
+        //g.setColor(outlineColour);
+        //g.draw(fillArea);
+        //g.draw3DRect(-(width/2), -(height/2), width, height, true);
 
 
         //draws the passageNameObject (on top of this object)
