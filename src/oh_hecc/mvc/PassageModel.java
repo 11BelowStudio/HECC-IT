@@ -943,7 +943,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     @Override
     public void yMove(boolean positive) {
         topRightCorner.y += (positive? 100: -100);
-        System.out.println("top-right: " + topRightCorner);
+        //System.out.println("top-right: " + topRightCorner);
         repaint();
     }
 

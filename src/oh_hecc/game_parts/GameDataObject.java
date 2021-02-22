@@ -295,7 +295,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * Obtains the UUIDs of the passages that link to the destination passage
      *
      * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
-     * @return the UUIDs of all the 'parent' passage
+     * @return the UUIDs of all the 'parent' passages
      */
     public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
         return passageMap.keySet().stream().filter(
@@ -399,16 +399,22 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * @param current UUID of the current key being looked at
      * @return a string containing the .hecc code for the current passage and all its children, constructed depth-first.
      */
-    private String depthFirstHeccBuilder(Set<UUID> allKeys, UUID current){
+    private String depthFirstHeccBuilder(Set<UUID> allKeys, UUID current) {
         StringBuilder sb = new StringBuilder();
         SharedPassage sp = passageMap.get(current);
         sb.append(sp.toHecc());
-        Set<UUID> kids = sp.getLinkedPassageUUIDs();
+        /*
+        we explicitly do a deep clone here, because not doing a deep clone leads to the actual
+        set of linked passage UUIDs belonging to the current object getting messed with.
+
+        Which, as you can imagine, is kinda awkward.
+         */
+        Set<UUID> kids = new HashSet<>(sp.getLinkedPassageUUIDs());
         kids.retainAll(allKeys);
         if (!kids.isEmpty()) {
             allKeys.removeAll(kids);
             for (UUID u : kids) {
-                sb.append(depthFirstHeccBuilder(allKeys,u));
+                sb.append(depthFirstHeccBuilder(allKeys, u));
             }
         }
         return sb.toString();
