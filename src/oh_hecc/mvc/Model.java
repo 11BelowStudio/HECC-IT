@@ -1,5 +1,8 @@
 package oh_hecc.mvc;
 
+import utilities.Vector2D;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -7,7 +10,7 @@ import java.awt.geom.AffineTransform;
  * A superclass for the 'Model' bit of 'MVC'.
  * Extends canvas.
  */
-public abstract class Model extends Canvas implements MouseControlModelInterface{
+public abstract class Model extends JComponent implements ControllableModelInterface {
 
     //TODO: work out if it's actually a good idea to extend Canvas?
     //TODO: clipping.
@@ -16,7 +19,7 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
     /**
      * Sky blue: 94bfac
      */
-    public static final Color SKYBLUE =new Color(48, 191, 172);
+    public static final Color SKYBLUE = new Color(48, 191, 172);
     /**
      * night: 282b2f
      */
@@ -61,22 +64,71 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
     static final int DEFAULT_MODEL_WIDTH = 800;
     static final int DEFAULT_MODEL_HEIGHT = 600;
 
+    /**
+     * The width/height of the model.
+     */
     static int MODEL_WIDTH = DEFAULT_MODEL_WIDTH;
     static int MODEL_HEIGHT = DEFAULT_MODEL_HEIGHT;
 
+    /**
+     * A Vector2D that indicates where the top-right corner of the viewable area is
+     */
+    final Vector2D topRightCorner;
 
 
-    public static int GET_MODEL_WIDTH(){return MODEL_WIDTH;}
-    public static int GET_MODEL_HEIGHT(){return MODEL_HEIGHT;}
+    public static int GET_MODEL_WIDTH() {
+        return MODEL_WIDTH;
+    }
 
-    public Model(){
+    public static int GET_MODEL_HEIGHT() {
+        return MODEL_HEIGHT;
+    }
+
+    public Model() {
         //theController = c;
-        setBackground(backgroundColour);
-        setPreferredSize(new Dimension(DEFAULT_MODEL_WIDTH,DEFAULT_MODEL_HEIGHT));
+        //setBackground(backgroundColour);
+        //setPreferredSize(new Dimension(DEFAULT_MODEL_WIDTH,DEFAULT_MODEL_HEIGHT));
 
 
+        topRightCorner = new Vector2D(-getWidth() / 2, -getHeight() / 2);
 
     }
+
+    /**
+     * returns the x size of the model
+     *
+     * @return x size
+     */
+    public int getWidth() {
+        return MODEL_WIDTH;
+    }
+
+    /**
+     * returns the y size of the model
+     *
+     * @return y size
+     */
+    public int getHeight() {
+        return MODEL_HEIGHT;
+    }
+
+
+    /**
+     * Resizes the model to be the same size as the given dimension.
+     *
+     * @param d the given dimension
+     */
+    public void setSize(Dimension d) {
+        MODEL_WIDTH = d.width;
+        MODEL_HEIGHT = d.height;
+    }
+
+    public Dimension getSize() {
+        return new Dimension(MODEL_WIDTH, MODEL_HEIGHT);
+    }
+
+
+
 
     /*
     public void update(Graphics g){
@@ -109,7 +161,6 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
      * @param g0 the Graphics context that's being used for the repainting.
      * @see #drawModel(Graphics2D)
      */
-    @Override
     public void paint(Graphics g0){
         super.paint(g0);
         //update();
@@ -121,15 +172,6 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
         g.fillRect(0,0,getWidth(),getHeight());
 
 
-        /*
-        RenderingHints rh = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
-        );
-        rh.put(
-                RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
-        );
-        g.setRenderingHints(rh);
-         */
 
         g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
@@ -144,16 +186,29 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
             drawModel(g);
         }
         g.setTransform(initialTransform);
+
+
     }
 
     /**
      * Literally just calls drawModel(g)
      * @param g Graphics2D being used to draw this
      */
-    public void draw(Graphics2D g){
-        //g.setColor(backgroundColour);
-        //g.fillRect(0,0,MODEL_WIDTH,MODEL_HEIGHT);
-        drawModel(g);
+    public void draw(Graphics2D g) {
+        System.out.println("draw");
+        g.setColor(backgroundColour);
+        g.fillRect(0, 0, MODEL_WIDTH, MODEL_HEIGHT);
+        g.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
+        );
+        g.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        );
+        AffineTransform initialTransform = g.getTransform();
+        synchronized (SYNC_OBJECT) {
+            drawModel(g);
+        }
+        g.setTransform(initialTransform);
     }
 
     /**
@@ -183,15 +238,16 @@ public abstract class Model extends Canvas implements MouseControlModelInterface
     /**
      * Calls refreshDrawables then attempts to repaint.
      * @see #refreshDrawables()
-     * @see java.awt.Canvas#repaint()
+     *
      */
     @Override
-    public void repaint(){
-        //update();
-        synchronized (SYNC_OBJECT) {
-            refreshDrawables();
-        }
+    public void repaint() {
+
+        //synchronized (SYNC_OBJECT) {
+        //    refreshDrawables();
+        //}
         super.repaint();
+
     }
 
 

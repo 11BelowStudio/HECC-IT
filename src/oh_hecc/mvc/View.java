@@ -55,8 +55,9 @@ public class View extends JComponent {
         //super.paint(g0);
         //theModelThatsBeingViewed.revalidate();
         if (drawingModel){
-            //theModelThatsBeingViewed.draw(g);
-            theModelThatsBeingViewed.paint(g0);
+            Graphics2D g = (Graphics2D) g0;
+            theModelThatsBeingViewed.draw(g);
+            //theModelThatsBeingViewed.paint(g0);
         }
         /*
         Graphics2D g = (Graphics2D) g0;

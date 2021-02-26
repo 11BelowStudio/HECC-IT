@@ -41,23 +41,23 @@ public class ModelButtonObject extends EditModelObject {
         scaledLeftSide = relativeLeft;
         scaledRightSide = relativeRight;
 
-        buttonLabel = new StringObject(text,StringObject.MIDDLE_ALIGN);
+        buttonLabel = new StringObject(text, StringObject.MIDDLE_ALIGN);
 
         height = 32;
 
-        Dimension modelDimension = model.getSize();
-        int mw = modelDimension.width;
-        int mh = modelDimension.height;
+        //Dimension modelDimension = model.getSize();
+        int mw = model.getWidth();
+        int mh = model.getHeight();
 
         //TODO: maybe set these to dummy values?
-        width = (int)((scaledRightSide-scaledLeftSide) * mw);
+        width = (int) ((scaledRightSide - scaledLeftSide) * mw);
 
         position.set(
-                (scaledLeftSide * mw) + (width/2.0),
-                mh - (height/2.0)
+                (scaledLeftSide * mw) + (width / 2.0),
+                mh - (height / 2.0)
         );
 
-        areaRectangle = new Rectangle((int) (getPosition().x -(width/2)),(int) (getPosition().y -(height/2)), width,height);
+        areaRectangle = new Rectangle((int) (getPosition().x - (width / 2)), (int) (getPosition().y - (height / 2)), width, height);
 
         fillArea = new Area(new Rectangle(-width/2, -height/2, width, height));
 

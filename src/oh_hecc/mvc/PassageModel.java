@@ -14,6 +14,7 @@ import utilities.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Okay so this is the Model of the actual network of passages and such
  */
-public class PassageModel extends Model implements EditModelInterface, MouseControlModelInterface {
+public class PassageModel extends Model implements EditModelInterface, ControllableModelInterface {
 
     /**
      * The actual GameDataObject
@@ -78,10 +79,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
      */
     final Set<PassageObject> selectedObjects;
 
-    /**
-     * A Vector2D that indicates where the top-right corner of the viewable area is
-     */
-    final Vector2D topRightCorner;
+
 
     /**
      * A copy of TopRightCorner used for the draw operation
@@ -180,7 +178,7 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         drawableModelButtons = new HashSet<>();
 
-        topRightCorner = new Vector2D(-getPreferredSize().getWidth()/2.0, -getPreferredSize().getHeight()/2.0);
+        //topRightCorner = new Vector2D(-getPreferredSize().getWidth()/2.0, -getPreferredSize().getHeight()/2.0);
 
         mouseDragVector = new Vector2D();
 
@@ -197,20 +195,22 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         drawingTopRight = new Vector2D();
 
-        actuallyValidateStuff();
         refreshDrawables();
+        revalidate();
         repaint();
 
-        //MouseController m = new MouseController(this);
+        //ModelController m = new ModelController(this);
         //this.addMouseListener(m);
         //this.addMouseMotionListener(m);
 
     }
 
+
     /**
-     * Actually validates stuff
+     * invalidates itself
      */
-    private void actuallyValidateStuff() {
+    @Override
+    public void revalidate() {
         System.out.println("invalid");
 
 
@@ -239,20 +239,24 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
 
         //move the start highlight to be highlighting the start passage
         Optional<UUID> startUUID = theData.getStartUUID();
-        if (startUUID.isPresent()){
+        if (startUUID.isPresent()) {
             startHighlight.setStartObject(objectMap.get(startUUID.get()));
             System.out.println(startUUID.get());
             System.out.println(passageMap.get(startUUID.get()).getPassageName());
-        } else{
+        } else {
             startHighlight.hide();
             System.out.println("hide");
         }
 
+        synchronized (SYNC_OBJECT) {
+            refreshDrawables();
+        }
 
-        System.out.println("epic gamer moment");
 
-        repaint();
-        invalidate();
+        System.out.println("and imma invalidate myself");
+        super.revalidate();
+
+        //repaint();
 
         /*
         repaint();
@@ -290,98 +294,36 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 return;
             }
         }*/
-        if (editMetadataObjectButton.wasClicked(mLocation)){
+        if (editMetadataObjectButton.wasClicked(mLocation)) {
             activity = CurrentActivity.DIALOG_OPEN;
             String lastStart = theMetadata.getStartPassage();
             //EditorWindowInterface w = theMetadata.openEditingWindow();
             EditorWindowInterface w = theData.openMetadataEditWindow();
-            w.addWindowClosedListener(
+            w.addWindowClosedListener(this::editingWindowClosed);
+                    /*
                     e -> {
                         //System.out.println("previous start: " + lastStart);
                         actuallyValidateStuff();
                         activity = CurrentActivity.DOING_NOTHING;
                         this.repaint();
                     }
-            );
+                    );
+                     */
+
         } else if (addPassageButton.wasClicked(mLocation)){
             //TODO: add passage if this button was clicked
             System.out.println("passage button clicked");
             PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner,getWidth()/2.0,getHeight()/2.0));
-            passageMap.put(newPassage.getPassageUUID(),newPassage);
-            actuallyValidateStuff();
+            passageMap.put(newPassage.getPassageUUID(), newPassage);
+            revalidate();
         } else if (saveAndQuitButton.wasClicked(mLocation)){
             //TODO: save and quit button stuff if pressed
-            try{
-                theData.saveTheHecc();
-                JOptionPane.showMessageDialog(
-                        this,
-                        ".hecc file saved successfully!",
-                        "nice",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+            if (saveTheHecc()) {
                 System.exit(0);
-            } catch (IOException e){
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Could not save the game!",
-                        "uh oh",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                Thread t = new Thread( () -> {
-                    JFrame f = new JFrame("The backup save method.");
-                    f.setLayout(new BorderLayout());
-                    f.add(new JLabel("Here's your .hecc code anyway so you don't lose it"), BorderLayout.NORTH);
-                    JTextArea heccArea = new JTextArea(theData.toHecc());
-                    heccArea.setLineWrap(true);
-                    heccArea.setWrapStyleWord(true);
-                    f.add(new JScrollPane(
-                            heccArea,
-                            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-                    ));
-                    f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    f.pack();
-                    f.revalidate();
-                    f.setVisible(true);
-                } );
-                t.start();
-                try {
-                    t.join();
-                } catch (InterruptedException ignored){}
             }
         } else if (saveButton.wasClicked(mLocation)){
             //TODO: save button stuff if pressed
-            try{
-                theData.saveTheHecc();
-                JOptionPane.showMessageDialog(
-                        this,
-                        ".hecc file saved successfully!",
-                        "nice",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-            } catch ( IOException e){
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Could not save the game!",
-                        "uh oh",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                JFrame f = new JFrame("The backup save method.");
-                f.setLayout(new BorderLayout());
-                f.add(new JLabel("Here's your .hecc code anyway so you don't lose it"), BorderLayout.NORTH);
-                JTextArea heccArea = new JTextArea(theData.toHecc());
-                heccArea.setLineWrap(true);
-                heccArea.setWrapStyleWord(true);
-                f.add(new JScrollPane(
-                        heccArea,
-                        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-                ));
-                f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                f.pack();
-                f.revalidate();
-                f.setVisible(true);
-            }
+            saveTheHecc();
         } else {
             //move the mouse so it's scrolled by the screen scroll amount
             Point scrolledMouse = moveMouseByScroll(mLocation);
@@ -407,12 +349,14 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 }
 
                  */
-                w.addWindowClosedListener(
+                w.addWindowClosedListener(this::editingWindowClosed);
+                        /*
                         e -> {
                             actuallyValidateStuff();
                             activity = CurrentActivity.DOING_NOTHING;
                         }
                 );
+                         */
                 //TODO: other bits to do with opening the stuff
             }
             /*
@@ -433,6 +377,58 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
     }
 
 
+    /**
+     * This method attempts to save the .hecc file.
+     * If the .hecc file could be saved successfully, it lets the user know that it was saved successfully.
+     * If the .hecc file couldn't be saved successfully, it'll present the 'Emergency Save Method' dialog to the user,
+     * allowing them to basically copy and paste the contents of their .hecc file and save it manually.
+     *
+     * @return true if it could be saved. false if it failed.
+     */
+    private boolean saveTheHecc() {
+        try {
+            theData.saveTheHecc();
+            JOptionPane.showMessageDialog(
+                    this,
+                    ".hecc file saved successfully!",
+                    "that's pretty heccin' nice",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            return true;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not save the .hecc file!",
+                    "Something hecced up.",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            JFrame f = new JFrame("The emergency save method.");
+            f.setLayout(new BorderLayout());
+            f.add(new JLabel("We couldn't save your .hecc file. However, here's your .hecc code, for you to copy and paste into a new .hecc file"), BorderLayout.NORTH);
+            JTextArea heccArea = new JTextArea(theData.toHecc());
+            heccArea.setLineWrap(true);
+            heccArea.setWrapStyleWord(true);
+            f.add(new JScrollPane(
+                    heccArea,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+            ));
+            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            f.pack();
+            f.revalidate();
+            f.setVisible(true);
+        }
+        return false;
+    }
+
+    /**
+     * This method will be called whenever an editing window is closed.
+     */
+    void editingWindowClosed(WindowEvent e) {
+        revalidate();
+        activity = CurrentActivity.DOING_NOTHING;
+        this.repaint();
+    }
 
 
     /**
@@ -704,7 +700,6 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
                 //TODO: wat do?
                 break;
             case RC_MOVING_VIEW:
-                //movingViewActivity(currentAction);
                 //TODO: wat do?
                 break;
         }
@@ -919,32 +914,56 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         g.setClip(existingClip);
         //AbstractObject.SCROLL_OFFSET.set(0,0);
 
-        g.setClip(0,0,getWidth(),getHeight());
-        for (ModelButtonObject b: drawableModelButtons){
+        g.setClip(0, 0, getWidth(), getHeight());
+        for (ModelButtonObject b : drawableModelButtons) {
             b.draw(g);
         }
     }
 
+
     /**
      * Move the viewable area in the X dimension
+     *
+     * @param xDist move it by this amount.
+     */
+    void xMove(float xDist) {
+        topRightCorner.x += xDist;
+        revalidate();
+        repaint();
+        //repaint();
+        //revalidate();
+    }
+
+    /**
+     * Move the viewable area in the X dimension
+     *
+     * @param yDist move it by this amount.
+     */
+    void yMove(float yDist) {
+        topRightCorner.y += yDist;
+        revalidate();
+        repaint();
+        //repaint();
+        //revalidate();
+    }
+
+    /**
+     * Move the viewable area by a fixed amount in the X dimension
+     *
      * @param positive if true, move it +100, if false, move it -100.
      */
     @Override
     public void xMove(boolean positive) {
-        topRightCorner.x += (positive? 100 : -100);
-        System.out.println("top-right: " + topRightCorner);
-        repaint();
+        xMove((positive ? 100 : -100));
     }
 
     /**
-     * Move the viewable area in the Y dimension
+     * Move the viewable area by a fixed amount in the Y dimension
      * @param positive if true, move it +100, if false, move it -100.
      */
     @Override
     public void yMove(boolean positive) {
-        topRightCorner.y += (positive? 100: -100);
-        //System.out.println("top-right: " + topRightCorner);
-        repaint();
+        yMove((positive? 100: -100));
     }
 
     @Override
@@ -1050,7 +1069,9 @@ public class PassageModel extends Model implements EditModelInterface, MouseCont
         for (ModelButtonObject b: buttons) {
             b.resize(getWidth(),getHeight());
         }
+        revalidate();
         repaint();
+        //repaint();
     }
 
     //public String getHecced(){ return theData.toHecc(); }

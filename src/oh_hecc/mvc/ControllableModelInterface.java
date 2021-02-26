@@ -5,13 +5,14 @@ import java.awt.*;
 /**
  * An interface that can be called by a Controller to control a Model
  */
-public interface MouseControlModelInterface {
+public interface ControllableModelInterface {
 
     /**
      * Call this when the model is left-clicked
+     *
      * @param mLocation location of mouse
      */
-    default void leftClick(Point mLocation){
+    default void leftClick(Point mLocation) {
         System.out.println("Left clicked at " + mLocation.toString());
     }
 
@@ -65,11 +66,27 @@ public interface MouseControlModelInterface {
 
     /**
      * Call this when dragging with right held
+     *
      * @param mLocation location of mouse
      */
-    default void rightDrag(Point mLocation){
+    default void rightDrag(Point mLocation) {
         System.out.println("Right drag at " + mLocation.toString());
     }
+
+    /**
+     * Move the viewable area by a fixed amount in the X dimension
+     *
+     * @param positive if true, move it +100, if false, move it -100.
+     */
+    void xMove(boolean positive);
+
+
+    /**
+     * Move the viewable area by a fixed amount in the Y dimension
+     *
+     * @param positive if true, move it +100, if false, move it -100.
+     */
+    void yMove(boolean positive);
 
 
 }

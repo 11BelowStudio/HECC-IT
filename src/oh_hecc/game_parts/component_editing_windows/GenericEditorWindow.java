@@ -40,7 +40,7 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
         theFrame.addWindowListener(
                 new WindowAdapter() {
                     @Override
-                    public void windowClosing(WindowEvent e){
+                    public void windowClosing(WindowEvent e) {
                         confirmWindowClose();
                     }
                 }
@@ -48,6 +48,8 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
 
         //theFrame will use a BoxLayout.
         theFrame.setLayout(new BoxLayout(theFrame.getContentPane(), BoxLayout.Y_AXIS));
+
+        theFrame.requestFocus();
     }
 
 

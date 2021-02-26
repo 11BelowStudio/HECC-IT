@@ -35,6 +35,7 @@ public final class Vector2D {
 
     /**
      * constructor for vector with given coordinates
+     *
      * @param x x-coordinate
      * @param y y-coordinate
      */
@@ -44,10 +45,22 @@ public final class Vector2D {
     }
 
     /**
+     * constructor for vector with given int coordinates
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
+    public Vector2D(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
      * constructor for a vector with same coords as a Point
+     *
      * @param p the point that's being turned into a Vector2D
      */
-    public Vector2D(Point p){
+    public Vector2D(Point p) {
         this.x = p.x;
         this.y = p.y;
     }
@@ -550,8 +563,8 @@ public final class Vector2D {
 
     /**
      * Capping y axis of vector
-     * @param maxY
-     * @return
+     * @param maxY maximum y value
+     * @return itself
      */
     public Vector2D capY(double maxY){
         //capping the Y value of a Vector2D.

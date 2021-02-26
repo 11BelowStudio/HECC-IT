@@ -107,6 +107,7 @@ public class OhHeccNetworkFrame {
                 }
         );
 
+        /*
         theFrame.addKeyListener(
                 new KeyAdapter() {
                     @Override
@@ -134,19 +135,21 @@ public class OhHeccNetworkFrame {
                 }
         );
 
+         */
 
 
+        ModelController mc = new ModelController(theView.theModelThatsBeingViewed, theFrame);
+        theFrame.addKeyListener(mc);
 
-        MouseController mc = new MouseController(theView.theModelThatsBeingViewed, theFrame);
-        theFrame.getContentPane().addMouseListener(
-                mc
-        );
-        theFrame.getContentPane().addMouseMotionListener(
-                mc
-        );
+        theFrame.revalidate();
 
-         theFrame.getContentPane().revalidate();
-         theFrame.repaint();
+        theFrame.getContentPane().addMouseListener(mc);
+        theFrame.getContentPane().addMouseMotionListener(mc);
+
+        theFrame.getContentPane().revalidate();
+        theFrame.repaint();
+
+        theFrame.requestFocus();
 
     }
 

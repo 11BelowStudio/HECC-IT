@@ -12,6 +12,7 @@ import oh_hecc.game_parts.passage.PassageEditingInterface;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -55,8 +56,13 @@ public class PassageEditorWindow extends GenericEditorWindow {
     private JTextArea commentArea;
 
 
-
-    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, GameDataObject gameData){
+    /**
+     * Constructs the PassageEditorWindow
+     *
+     * @param passageBeingEdited the passage which is being edited
+     * @param gameData           the data about the rest of the heccin' game.
+     */
+    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, GameDataObject gameData) {
         super(gameData);
         metadata = gameData.getTheMetadata();
         thePassage = passageBeingEdited;
@@ -66,7 +72,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         theFrame.setVisible(true);
 
-        //metadata = Optional.ofNullable(m);
 
 
 
@@ -75,41 +80,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
     }
 
 
-    /**
-     * Constructs the PassageEditorWindow
-     * @param passageBeingEdited the passage which is being edited
-     * @param allThePassages the map of all the passages (just in case that needs to be modified as well)
-     * @param m optional metadata parameter (in case this is the start passage and is renamed)
-     */
-    /*
-    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages, PassageEditWindowMetadataInterface m){
-        thePassage = passageBeingEdited;
-        allPassages = allThePassages;
-
-        makeTheFrame();
-
-        theFrame.setVisible(true);
-
-        metadata = Optional.ofNullable(m);
-
-
-
-        refresh();
-
-    }
-
-     */
-    /**
-     * Constructs the PassageEditorWindow
-     * @ param passageBeingEdited the passage which is being edited
-     * @ param allThePassages the map of all the passages (just in case that needs to be modified as well)
-     */
-    /*
-    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, Map<UUID, PassageEditingInterface> allThePassages){
-        this(passageBeingEdited,allThePassages, null);
-    }
-
-     */
 
     void makeTheFrame(){
         //super.makeTheFrame();
@@ -136,7 +106,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         //nameEditPanel.add(nameField);
         namePanel.add(nameField);
         JButton updateTitleButton = new JButton("Rename");
-        updateTitleButton.addActionListener( e -> updateName(nameField.getText().trim()));
+        updateTitleButton.addActionListener(this::updateName);
         //nameEditPanel.add(updateTitleButton);
         namePanel.add(updateTitleButton);
         nameEditPanel.add(namePanel);
@@ -161,7 +131,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         //tagEditPanel.add(tagField);
         tagPanel.add(tagField);
         JButton updateTagButton = new JButton("Update Tags");
-        updateTagButton.addActionListener( e -> updateTags(tagField.getText().trim()));
+        updateTagButton.addActionListener(this::updateTags);
         //tagEditPanel.add(updateTagButton);
         tagPanel.add(updateTagButton);
 
@@ -185,7 +155,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         inlineEditPanel.add(inlineCommentField);
         //JButton updateInlineButton = new JButton("Update Inline Comment");
         JButton updateInlineButton = new JButton("Update Comment");
-        updateInlineButton.addActionListener( e -> updateInlineComment(inlineCommentField.getText().trim()));
+        updateInlineButton.addActionListener(this::updateInlineComment);
         inlineEditPanel.add(updateInlineButton);
 
         theFrame.add(inlineEditPanel);
@@ -216,7 +186,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         );
         contentEditingPanel.add(contentScroll,BorderLayout.CENTER);
         JButton contentUpdateButton = new JButton("Update content (yes, readers will read this. hopefully.)");
-        contentUpdateButton.addActionListener( (e) -> updateContent(contentArea.getText().trim()));
+        contentUpdateButton.addActionListener(this::updateContent);
         contentEditingPanel.add(contentUpdateButton, BorderLayout.SOUTH);
 
         theFrame.add(contentEditingPanel);
@@ -245,7 +215,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         );
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
         JButton commentUpdateButton = new JButton("Update comment");
-        commentUpdateButton.addActionListener( (e) -> updateTrailingComment(commentArea.getText().trim()));
+        commentUpdateButton.addActionListener(this::updateTrailingComment);
         commentEditingPanel.add(commentUpdateButton, BorderLayout.SOUTH);
 
         theFrame.add(commentEditingPanel);
@@ -272,57 +242,58 @@ public class PassageEditorWindow extends GenericEditorWindow {
     }
 
 
-
-
     /**
      * This method attempts to update the passageName of thePassage (and any references to it)
-     * @param newName the new name to give to the passage.
+     *
+     * @param e is here so I can use this as a lambda.
      */
-    private void updateName(String newName){
-
+    private void updateName(ActionEvent e) {
+        String newName = nameField.getText().trim();
         //if the user has entered the current passage name *again*
-        if (newName.equals(thePassage.getPassageName())){
+        if (newName.equals(thePassage.getPassageName())) {
             //bruh
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><p>"
-                    + "If you want to rename this passage,<br>"
-                    + "it helps if you provide a new name for it.</p>"
-                    + "<p>Not the current name <em>again</em>"
-                    + "</p></html>",
+                            + "If you want to rename this passage,<br>"
+                            + "it helps if you provide a new name for it.</p>"
+                            + "<p>Not the current name <em>again</em>"
+                            + "</p></html>",
                     "bruh",
                     JOptionPane.INFORMATION_MESSAGE
             );
             return;
         }
 
-        try{
-            if (!isPassageNameValid){ throw new InvalidPassageNameException(newName); }
+        try {
+            if (!isPassageNameValid) {
+                throw new InvalidPassageNameException(newName);
+            }
             String oldName = thePassage.getPassageName();
-            thePassage.renameThisPassage(newName,allPassages);
+            thePassage.renameThisPassage(newName, allPassages);
             nameField.setText(thePassage.getPassageName());
             gameData.checkForStartRename();
             refresh();
-        } catch (InvalidPassageNameException e) {
+        } catch (InvalidPassageNameException ex) {
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
-                            +"<p>Invalid passage name input!<br>"
-                            +"Passage names must start and end with letters,<br>"
-                            +"numbers, or underscores, but may contain any<br>"
-                            +"number of letters/numbers/underscores or spaces<br>"
-                            +"between the first and last characters</p></html>",
+                            + "<p>Invalid passage name input!<br>"
+                            + "Passage names must start and end with letters,<br>"
+                            + "numbers, or underscores, but may contain any<br>"
+                            + "number of letters/numbers/underscores or spaces<br>"
+                            + "between the first and last characters</p></html>",
                     "Invalid passage name input!",
                     JOptionPane.ERROR_MESSAGE
             );
-        } catch (DuplicatePassageNameException e) {
+        } catch (DuplicatePassageNameException ex2) {
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
-                            +"<p>Duplicate passage name input!<br>"
-                            +"A passage called '"
+                            + "<p>Duplicate passage name input!<br>"
+                            + "A passage called '"
                             + newName
-                            +"' already exists!</p></html>",
+                            + "' already exists!</p></html>",
                     "Duplicate passage name input!",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -332,20 +303,22 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
     /**
      * Attempts to update the tagList of the passage
-     * @param newTagList the string that will be converted into this passage's tagList
+     *
+     * @param e an actionEvent so I can just use this as a lambda basically.
      */
-    private void updateTags(String newTagList){
-        try{
+    private void updateTags(ActionEvent e) {
+        String newTagList = tagField.getText().trim();
+        try {
             thePassage.updatePassageTags(newTagList);
             tagField.setText(thePassage.getPassageTagsAsString());
             refresh();
-        } catch (InvalidMetadataDeclarationException e) {
+        } catch (InvalidMetadataDeclarationException ex) {
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
-                            +"<p>Invalid tag string entered!<br>"
-                            +"Tags must only contain letters, numbers, and underscores<br>"
-                            +"and must be separated by spaces.</p></html>",
+                            + "<p>Invalid tag string entered!<br>"
+                            + "Tags must only contain letters, numbers, and underscores<br>"
+                            + "and must be separated by spaces.</p></html>",
                     "Invalid tag input!",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -354,9 +327,11 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
     /**
      * Will update the inline comment of the passage
-     * @param newInlineComment the string being used as the passage's new inline comment
+     *
+     * @param e an actionEvent so I can just use this as a lambda basically.
      */
-    private void updateInlineComment(String newInlineComment){
+    private void updateInlineComment(ActionEvent e) {
+        String newInlineComment = inlineCommentField.getText().trim();
         thePassage.setInlinePassageComment(newInlineComment);
         inlineCommentField.setText(thePassage.getInlinePassageComment());
         refresh();
@@ -364,19 +339,23 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
     /**
      * Attempts to update the passage content (and also creates new passages to link to if newly linked passages dont exist yet)
-     * @param newContent the new content for this passage
+     *
+     * @param e so I can lambda this binch
      */
-    private void updateContent(String newContent){
-        thePassage.updatePassageContent(newContent,allPassages);
+    private void updateContent(ActionEvent e) {
+        String newContent = contentArea.getText().trim();
+        thePassage.updatePassageContent(newContent, allPassages);
         contentArea.setText(thePassage.getPassageContent());
         refresh();
     }
 
     /**
      * Updates the trailing comment of this passage
-     * @param newTrailingComment the new trailing comment for this passage
+     *
+     * @param e lambda time
      */
-    private void updateTrailingComment(String newTrailingComment){
+    private void updateTrailingComment(ActionEvent e) {
+        String newTrailingComment = commentArea.getText().trim();
         thePassage.setTrailingComment(newTrailingComment);
         commentArea.setText(thePassage.getTrailingComment());
         refresh();

@@ -5,6 +5,7 @@ import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.mvc.OhHeccNetworkFrame;
 import oh_hecc.mvc.PassageModel;
 import oh_hecc.mvc.View;
+import utilities.ImageManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +35,13 @@ public class OhHeccRunner {
 
     private final ChooseFile chooseFile;
 
-    public OhHeccRunner(){
+    public OhHeccRunner() {
 
         //TODO: make this. Asks user for a hecc file to open/create a new hecc file. Then opens the hecc file via MVC stuff (and runs it)
         theFrame = new JFrame("OH-HECC!");
         theFrame.setLayout(new BorderLayout());
+
+        theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
 
         chooseFile = new ChooseFile(
                 this::openFileAtLocation,
@@ -110,8 +113,9 @@ public class OhHeccRunner {
         editorView = new View(editModel);
         editFrame = new OhHeccNetworkFrame(theFrame, editorView);
 
+        System.out.println("no listeners");
         editFrame.addTheListeners();
-
+        System.out.println("listeners");
         editFrame.theFrame.invalidate();
 
         /*
