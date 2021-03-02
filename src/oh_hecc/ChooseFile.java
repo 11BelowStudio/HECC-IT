@@ -363,8 +363,9 @@ public class ChooseFile {
     }
 
     /**
-     * le main method has arrived
-     * @param args
+     * le main method for testing has arrived
+     *
+     * @param args command line arguments.
      * @deprecated this existed for testing only basically
      */
     public static void main(String[] args) {

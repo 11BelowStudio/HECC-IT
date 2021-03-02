@@ -289,7 +289,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         /*
         for (ModelButtonObject b: buttons) {
             if (b.wasClicked(mLocation)){
-                //TODO: buttons doing a thing
                 System.out.println(b.getPosition());
                 return;
             }

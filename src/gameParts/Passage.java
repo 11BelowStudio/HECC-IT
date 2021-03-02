@@ -12,10 +12,12 @@ import java.util.regex.Pattern;
 
 /**
  * This class represents a Passage within the HECCIN' Game
+ *
+ * @see oh_hecc.game_parts.passage.OutputtablePassage instead.
+ * @deprecated
  */
+@Deprecated
 public class Passage implements PassageOutputtingInterface {
-
-    //TODO: merge with the OH-HECC passage.
 
     /**
      * the name of this passage
@@ -64,15 +66,6 @@ public class Passage implements PassageOutputtingInterface {
      * a position Vector2D. will be used with OH-HECC.
      */
     private final Vector2D position;
-        //will be used later on, with OH-HECC
-
-    //private final Matcher speechMatcher = Pattern.compile("(?<speechmarks>\\\")",Pattern.MULTILINE).matcher("");
-
-    //private final Matcher directLinkMatcher = Pattern.compile("(?<directLinks>\\[\\[[\\w]+[\\w- ]*[\\w]+\\]\\])", Pattern.MULTILINE).matcher("");
-
-    //private final Matcher indirectLinkMatcher = Pattern.compile("(?<indirectLinks>\\[\\[[^\\[\\]\\|]+\\|[\\w]+[\\w- ]*[\\w]+\\]\\])", Pattern.MULTILINE).matcher("");
-
-    //private final Matcher lineEndWhitespaceMatcher = Pattern.compile("\\s*\\R$", Pattern.MULTILINE).matcher("");
 
     /**
      * Constructs a passage object without any metadata
@@ -108,7 +101,8 @@ public class Passage implements PassageOutputtingInterface {
 
     /**
      * This is a wrapper function for all the metadata reading stuff
-     * @param lineEndMetadata
+     *
+     * @param lineEndMetadata the string with the raw line end metadata
      */
     private void readMetadata(String lineEndMetadata){
         System.out.println(lineEndMetadata);

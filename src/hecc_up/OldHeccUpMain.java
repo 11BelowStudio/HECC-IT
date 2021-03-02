@@ -1,13 +1,16 @@
 package hecc_up;
 
+import java.nio.file.Paths;
+
 /**
  * This used to be the main class for HECC UP
  * but now it's mainly used for testing the creation of a HECCIN' Game when I'm too lazy to use HeccUpGUI
- * @deprecated just use HeccUpGUI instead lmao
+ *
  * @see HeccUpGUI
+ * @deprecated just use HeccUpGUI instead lmao
  */
 @Deprecated
-public class OldHeccUpMain implements LoggerInterface{
+public class OldHeccUpMain implements LoggerInterface {
     //The former main class for HeccUp
 
     /**
@@ -33,8 +36,8 @@ public class OldHeccUpMain implements LoggerInterface{
     public void heccUpTheGame(){
 
         heccUpHandler.attemptToHeccUpTheGame(
-                "src/assets/textAssets/HeccSample.hecc",
-                "outputs/hecc_up_testing_v3/heccin_game"
+                Paths.get("src/assets/textAssets/HeccSample.hecc"),
+                Paths.get("outputs/hecc_up_testing_v3/heccin_game")
         );
 
     }

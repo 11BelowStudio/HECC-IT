@@ -135,8 +135,11 @@ public class PassageObject extends EditModelObject {
 
     }
 
-    private void whatColourShouldThisObjectBe(){
-        switch (thePassage.getPassageStatus()){
+    /**
+     * Works out what colour this object should be, using the getPassageStatus() method of this object's passage.
+     */
+    private void whatColourShouldThisObjectBe() {
+        switch (thePassage.getPassageStatus()) {
             case NORMAL:
                 objectColour = NORMAL_COLOUR;
                 break;
@@ -191,20 +194,24 @@ public class PassageObject extends EditModelObject {
      * This method draws the linkObjects associated with this object
      * @param g the Graphics2D thing responsible for the actual drawing stuff
      */
-    public void drawLinks(Graphics2D g){
+    public void drawLinks(Graphics2D g) {
 
 
-        for (PassageLinkObject l: linkMap.values()){
+        for (PassageLinkObject l : linkMap.values()) {
             l.draw(g);
         }
     }
 
-    public void nowSelected(){
+    /**
+     * Call this if this PassageObject is now selected.
+     * Sets isSelected to true, and overlays the colour of this passage object with the SELECTED_COLOUR.
+     */
+    public void nowSelected() {
         isSelected = true;
         overlayColour = SELECTED_COLOUR;
     }
 
-    public void deselected(){
+    public void deselected() {
         isSelected = false;
     }
 

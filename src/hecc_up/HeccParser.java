@@ -1,7 +1,6 @@
 package hecc_up;
 
 import gameParts.Metadata;
-import gameParts.Passage;
 import heccCeptions.*;
 import oh_hecc.game_parts.passage.OutputtablePassage;
 import oh_hecc.game_parts.passage.PassageOutputtingInterface;
@@ -165,7 +164,7 @@ public class HeccParser {
         }
 
         if (pNames.size() == 0){
-            System.out.println("no passages found!");
+            //System.out.println("no passages found!");
             throw new NoPassagesException();
             //complains if there are no passages
         }
@@ -399,13 +398,13 @@ public class HeccParser {
         heccedData.add("\n//that's all, folks!\n\n");
 
         for(String h: heccedData){
-            System.out.println(h);
+            //System.out.println(h);
         }
 
         //outputs any info the user might need regarding any missing metadata in the Metadata object
         logger.logInfo(metadata.outputMetadataDefinitionInstructions());
 
-        metadata.printDebugData();
+        //metadata.printDebugData();
 
         //printPassageObjects();
 
@@ -440,6 +439,7 @@ public class HeccParser {
         }
 
     }
+
 
     private String suggestIFID(){
         //returns a string suggesting that you add an IFID

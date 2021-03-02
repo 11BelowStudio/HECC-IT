@@ -7,9 +7,11 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * This class is basically a GUI for the HECC-UP stuff
@@ -37,11 +39,11 @@ public class HeccUpGUI implements LoggerInterface {
     /**
      * the location of the .hecc file
      */
-    private String heccFileLocation;
+    private Path heccFileLocation;
     /**
      * where to save the HECCIN Game to
      */
-    private String outputFolderLocation;
+    private Path outputFolderLocation;
 
     //and now, the classes which are to be used for the GUI
     /**
@@ -122,7 +124,7 @@ public class HeccUpGUI implements LoggerInterface {
         //makes the frame
         theFrame = new JFrame();
         theFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //exits when closed
-        theFrame.setTitle("HECC Uncomplicated Parser"); //verbose title
+        theFrame.setTitle("HECC Ultra Parser"); //verbose title
 
         //A lowered etched border
         Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
@@ -173,7 +175,7 @@ public class HeccUpGUI implements LoggerInterface {
         //button to open hecc file chooser
         //Button to open the selectHeccFileChooser
         JButton selectHeccFileButton = new JButton("Choose .hecc file");
-        selectHeccFileButton.addActionListener(e -> this.selectHeccFileHandler());
+        selectHeccFileButton.addActionListener(this::selectHeccFileHandler);
         selectHeccFilePanel.add(selectHeccFileButton);
         //jFileChooser for hecc file
         selectHeccFileChooser = setupTheFileChoosers(true);
@@ -206,7 +208,7 @@ public class HeccUpGUI implements LoggerInterface {
         //output directory button
         //will open selectGameLocationChooser
         JButton selectGameLocationButton = new JButton("Select output directory");
-        selectGameLocationButton.addActionListener(e -> this.selectOutputFileHandler());
+        selectGameLocationButton.addActionListener(this::selectOutputFileHandler);
         selectGameLocationPanel.add(selectGameLocationButton);
         //jFileChooser for the game location stuff
         selectGameLocationChooser = setupTheFileChoosers(false);
@@ -225,7 +227,7 @@ public class HeccUpGUI implements LoggerInterface {
         );
         //the 'HECC-IT' button
         JButton heccItUpButton = new JButton("HECC-IT!");
-        heccItUpButton.addActionListener(e -> this.heccUpTheGame());
+        heccItUpButton.addActionListener(this::heccUpTheGame);
 
         heccItUpPanel.add(heccItUpButton);
         //and the heccItUpPanel is added to the gui Frame
@@ -283,52 +285,116 @@ public class HeccUpGUI implements LoggerInterface {
     /**
      * This method is called when someone attempts to select an input hecc file.
      * It handles the process of choosing the hecc file.
+     *
+     * @param e so I can use this as a lambda.
      */
-    private void selectHeccFileHandler(){
+    private void selectHeccFileHandler(ActionEvent e) {
         //opens the selectHeccFileChooser filechooser
         int fcReturnValue = selectHeccFileChooser.showOpenDialog(theFrame);
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a .hecc file was chosen
+
+            Path thePath = selectHeccFileChooser.getSelectedFile().toPath().toAbsolutePath();
+
+            selectedAHeccFile(thePath);
             //finds the path of the selected .hecc file
-            heccFileLocation = selectHeccFileChooser.getSelectedFile().getAbsolutePath();
+            //heccFileLocation = selectHeccFileChooser.getSelectedFile().getAbsolutePath();
             //updates the display to show the new hecc file location
-            heccFileAttributeString.showValue(heccFileLocation);
-            heccFileLocationDisplay.setText(heccFileAttributeString.toString());
+            //heccFileAttributeString.showValue(heccFileLocation);
+            //heccFileLocationDisplay.setText(heccFileAttributeString.toString());
             //marks it as being chosen
-            heccFileChosen = true;
-            revalidate();
-            logInfo("hecc file has been chosen!");
+            //heccFileChosen = true;
+            //revalidate();
+            //logInfo("hecc file has been chosen!");
         }
+    }
+
+    /**
+     * Given a path to a .hecc file, this will save it as the heccFileLocation
+     * and update the GUI/internal state of this object accordingly.
+     *
+     * @param heccFilePath the path to the hecc file
+     */
+    private void selectedAHeccFile(Path heccFilePath) {
+
+
+        heccFileLocation = heccFilePath;
+
+        //updates the display to show the new hecc file location
+        String stringHeccPath = heccFilePath.toString();
+        heccFileAttributeString.showValue(stringHeccPath);
+        heccFileLocationDisplay.setText(heccFileAttributeString.toString());
+
+        //marks it as being chosen
+        heccFileChosen = true;
+
+        //updates GUI, logs it as being chosen.
+        revalidate();
+        logInfo("hecc file has been chosen!");
     }
 
     /**
      * This method is used when the button to select an output folder is pressed
      * It handles the process of choosing an output folder
+     *
+     * @param e so I can use this as a lambda.
      */
-    private void selectOutputFileHandler(){
+    private void selectOutputFileHandler(ActionEvent e) {
         //opens the selectGameLocationChooser fileChooser
-        int fcReturnValue = selectGameLocationChooser.showDialog(theFrame,"Select");
+        int fcReturnValue = selectGameLocationChooser.showDialog(theFrame, "Select");
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a directory was chosen
+
+            Path thePath = selectGameLocationChooser.getSelectedFile().toPath().toAbsolutePath();
+            selectedAnOutputFolder(thePath);
             //records the path of it
-            outputFolderLocation = selectGameLocationChooser.getSelectedFile().getAbsolutePath();
+            //outputFolderLocation = selectGameLocationChooser.getSelectedFile().getAbsolutePath();
             //updates the display to show the path of it
-            gameLocationAttributeString.showValue(outputFolderLocation);
-            gameLocationDisplay.setText(gameLocationAttributeString.toString());
+            //gameLocationAttributeString.showValue(outputFolderLocation);
+            //gameLocationDisplay.setText(gameLocationAttributeString.toString());
             //marks it as being chosen
-            outputFolderChosen = true;
-            revalidate();
-            logInfo("Output folder has been chosen!");
+            //outputFolderChosen = true;
+            //revalidate();
+            //logInfo("Output folder has been chosen!");
         }
     }
 
+    /**
+     * Given a path to an output folder for the heccin game, this will save it as the outputFolderLocation
+     * and update the GUI/internal state of this object accordingly.
+     *
+     * @param outputPath the path to the output folder
+     */
+    private void selectedAnOutputFolder(Path outputPath) {
+        //records the path of it
+        outputFolderLocation = outputPath;
+
+        String pathString = outputPath.toString();
+        //updates the display to show the path of it
+        gameLocationAttributeString.showValue(pathString);
+        gameLocationDisplay.setText(gameLocationAttributeString.toString());
+        //marks it as being chosen
+        outputFolderChosen = true;
+        revalidate();
+        logInfo("Output folder has been chosen!");
+    }
 
 
     /**
      * Revalidates and re-packs the guiFrame
      * bottom text
      */
-    private void revalidate(){
+    private void revalidate() {
         theFrame.revalidate();
         theFrame.pack();
+    }
+
+
+    /**
+     * A version of heccUpTheGame but it's callable as a lambda instead.
+     *
+     * @param e is here so I can call it via lambda.
+     */
+    private void heccUpTheGame(ActionEvent e) {
+        heccUpTheGame();
     }
 
     /**
