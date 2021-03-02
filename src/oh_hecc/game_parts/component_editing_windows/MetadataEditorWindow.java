@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
@@ -185,7 +186,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
         titleEditingPanel.add(titleInput);
         JButton titleUpdateButton = new JButton("Update title");
-        titleUpdateButton.addActionListener( (e) -> attemptTitleUpdate(titleInput.getText().trim()));
+        titleUpdateButton.addActionListener(this::attemptTitleUpdate);
         titleEditingPanel.add(titleUpdateButton);
 
         theFrame.add(titleEditingPanel);
@@ -215,7 +216,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         );
         authorEditingPanel.add(authorInput);
         JButton authorUpdateButton = new JButton("Update author");
-        authorUpdateButton.addActionListener( (e) -> attemptAuthorUpdate(authorInput.getText().trim()));
+        authorUpdateButton.addActionListener(this::attemptAuthorUpdate);
         authorEditingPanel.add(authorUpdateButton);
 
         theFrame.add(authorEditingPanel);
@@ -236,7 +237,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         addPassageNameDocumentListener(startInput);
         startEditingPanel.add(startInput);
         JButton startUpdateButton = new JButton("Update start");
-        startUpdateButton.addActionListener( (e) -> attemptStartUpdate(startInput.getText().trim()));
+        startUpdateButton.addActionListener(this::attemptStartUpdate);
         startEditingPanel.add(startUpdateButton);
 
         theFrame.add(startEditingPanel);
@@ -264,7 +265,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         );
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
         JButton commentUpdateButton = new JButton("Update comment");
-        commentUpdateButton.addActionListener( (e) -> attemptCommentUpdate(commentInput.getText().trim()));
+        commentUpdateButton.addActionListener(this::attemptCommentUpdate);
         commentEditingPanel.add(commentUpdateButton, BorderLayout.SOUTH);
 
         theFrame.add(commentEditingPanel);
@@ -279,86 +280,151 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     }
 
     /**
-     * Attempts to update the metadata title
-     * @param newTitle the new title for the game
+     * A method to be called by the 'exit' button in the 'done' panel
+     *
+     * @param e an actionEvent to allow this to be used as a lambda.
      */
-    void attemptTitleUpdate(String newTitle){
-        System.out.println(newTitle);
-        try{
-            if (!isTitleValid) { throw new InvalidMetadataDeclarationException(newTitle, "title");}
+    @Override
+    void imDone(ActionEvent e) {
+        attemptCommentUpdate();
+        if (attemptTitleUpdate() && attemptStartUpdate() && attemptAuthorUpdate()) {
+            closeTheWindow();
+        }
+    }
+
+    /**
+     * Attempts to update the metadata title
+     *
+     * @param e so we can use this as a lambda.
+     */
+    void attemptTitleUpdate(ActionEvent e) {
+        attemptTitleUpdate();
+    }
+
+    /**
+     * Attempts to update the metadata title
+     *
+     * @return true if it could be updated, false otherwise
+     */
+    boolean attemptTitleUpdate() {
+        String newTitle = titleInput.getText().trim();
+        try {
+            if (!isTitleValid) {
+                throw new InvalidMetadataDeclarationException(newTitle, "title");
+            }
             theMetadata.updateTitle(newTitle);
-        } catch (InvalidMetadataDeclarationException e){
+            showNewTitle();
+            return true;
+        } catch (InvalidMetadataDeclarationException e) {
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
-                            +"<p>Invalid title input!<br>"
-                            +"Titles must start and end with non-whitespace characters<br>"
-                            +"but may contain spaces between the first and last characters</p></html>",
+                            + "<p>Invalid title input!<br>"
+                            + "Titles must start and end with non-whitespace characters<br>"
+                            + "but may contain spaces between the first and last characters</p></html>",
                     "Invalid title input!",
                     JOptionPane.ERROR_MESSAGE
             );
         }
         showNewTitle();
+        return false;
     }
 
     /**
      * Attempts to update the metadata author
-     * @param newAuthor the new author for the game
+     *
+     * @param e so we can use this as a lambda
      */
-    void attemptAuthorUpdate(String newAuthor){
-        //TODO: attempt to update the author
-        System.out.println(newAuthor);
-        try{
-            if (!isAuthorValid){ throw new InvalidMetadataDeclarationException(newAuthor, "author");}
+    void attemptAuthorUpdate(ActionEvent e) {
+        attemptAuthorUpdate();
+    }
+
+    /**
+     * Attempts to update the metadata author
+     *
+     * @return true if it could be updated, false otherwise
+     */
+    boolean attemptAuthorUpdate() {
+        String newAuthor = authorInput.getText().trim();
+        try {
+            if (!isAuthorValid) {
+                throw new InvalidMetadataDeclarationException(newAuthor, "author");
+            }
             theMetadata.updateAuthor(newAuthor);
-        } catch (InvalidMetadataDeclarationException e){
+            showNewAuthor();
+            return true;
+        } catch (InvalidMetadataDeclarationException e) {
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
-                            +"<p>Invalid author input!<br>"
+                            + "<p>Invalid author input!<br>"
                             +"Author names must start and end with letters<br>"
-                            +"but may contain spaces, commas, and full stops<br>"
-                            +"between the first and last characters</p></html>",
+                            + "but may contain spaces, commas, and full stops<br>"
+                            + "between the first and last characters</p></html>",
                     "Invalid author input!",
                     JOptionPane.ERROR_MESSAGE
             );
         }
         showNewAuthor();
+        return false;
     }
 
     /**
      * Attempts to update the metadata start passage
-     * @param newStart the new start passage for the game
+     *
+     * @param e so we can lambda this
      */
-    void attemptStartUpdate(String newStart){
+    void attemptStartUpdate(ActionEvent e) {
+        attemptStartUpdate();
+    }
 
-        System.out.println(newStart);
-        try{
-            if(!isPassageNameValid){ throw new InvalidPassageNameException(newStart); }
+
+    /**
+     * Attempts to update the metadata start passage
+     *
+     * @return true if it could be updated, false otherwise
+     */
+    boolean attemptStartUpdate() {
+        String newStart = startInput.getText().trim();
+        try {
+            if (!isPassageNameValid) {
+                throw new InvalidPassageNameException(newStart);
+            }
             gameData.updateStartPassage(newStart);
             //TODO: inform user if specified start passage doesn't exist yet
-        } catch ( InvalidPassageNameException e){
+            showNewStartPassage();
+            return true;
+        } catch (InvalidPassageNameException e) {
             JOptionPane.showMessageDialog(
                     theFrame,
                     "<html><h1>ERROR!</h1>"
                             +"<p>Invalid start passage input!<br>"
                             +"Passage names must start and end with letters,<br>"
-                            +"numbers, or underscores, but may contain any<br>"
-                            +"number of letters/numbers/underscores or spaces<br>"
-                            +"between the first and last characters</p></html>",
+                            + "numbers, or underscores, but may contain any<br>"
+                            + "number of letters/numbers/underscores or spaces<br>"
+                            + "between the first and last characters</p></html>",
                     "Invalid start passage input!",
                     JOptionPane.ERROR_MESSAGE
             );
         }
         showNewStartPassage();
-
+        return false;
     }
 
     /**
      * Attempts to update the metadata comment
-     * @param newComment the new comment for the metadata
+     *
+     * @param e so this can be lambda'd
      */
-    void attemptCommentUpdate(String newComment){
+    void attemptCommentUpdate(ActionEvent e) {
+        attemptCommentUpdate();
+    }
+
+    /**
+     * Attempts to update the metadata comment
+     */
+    void attemptCommentUpdate() {
+        String newComment = commentInput.getText().trim();
         theMetadata.updateComment(newComment);
         showNewComment();
     }
@@ -448,18 +514,6 @@ public class MetadataEditorWindow extends GenericEditorWindow {
                 }
         );
 
-        /*
-        w.theFrame.addWindowListener(
-                new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        //making sure that the window updated theTestMetadata, by seeing the printout of its internal state
-                        System.out.println(theTestMetadata.toString());
-                    }
-                }
-        );
-
-         */
 
 
         

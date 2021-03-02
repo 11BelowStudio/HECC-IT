@@ -197,7 +197,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         commentEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
-                        "Edit metadata comment (note: readers won't see this)"
+                        "Edit trailing comment (note: readers won't see this)"
                 )
         ); //border
 
@@ -235,12 +235,27 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         JButton bigRedButtonExceptItsNotRed = new JButton("DELETE THIS PASSAGE");
         bigRedButtonExceptItsNotRed.setForeground(Color.RED);
-        bigRedButtonExceptItsNotRed.addActionListener( e -> deletThis());
+        bigRedButtonExceptItsNotRed.addActionListener(e -> deletThis());
         yeetThisPanel.add(bigRedButtonExceptItsNotRed);
 
         theFrame.add(yeetThisPanel);
     }
 
+    /**
+     * A method to be called by the 'exit' button in the 'done' panel.
+     * Basically saves any unsaved changes, and closes the window.
+     *
+     * @param e an actionEvent to allow this to be used as a lambda.
+     */
+    @Override
+    void imDone(ActionEvent e) {
+        updateInlineComment();
+        updateTrailingComment();
+        updateContent();
+        if (updateName(false) && updateTags()) {
+            closeTheWindow();
+        }
+    }
 
     /**
      * This method attempts to update the passageName of thePassage (and any references to it)
@@ -248,21 +263,32 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param e is here so I can use this as a lambda.
      */
     private void updateName(ActionEvent e) {
+        updateName(true);
+    }
+
+    /**
+     * This method attempts to update the passageName of thePassage (and any references to it)
+     *
+     * @param checkingIfUnchanged if true, we check if the passage name was unchanged.
+     * @return true if it could be updated, false otherwise
+     */
+    private boolean updateName(boolean checkingIfUnchanged) {
         String newName = nameField.getText().trim();
         //if the user has entered the current passage name *again*
         if (newName.equals(thePassage.getPassageName())) {
-            //bruh
-            JOptionPane.showMessageDialog(
-                    theFrame,
-                    "<html><p>"
-                            + "If you want to rename this passage,<br>"
-                            + "it helps if you provide a new name for it.</p>"
-                            + "<p>Not the current name <em>again</em>"
-                            + "</p></html>",
-                    "bruh",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-            return;
+            if (checkingIfUnchanged) {
+                JOptionPane.showMessageDialog(
+                        theFrame,
+                        "<html><p>"
+                                + "If you want to rename this passage,<br>"
+                                + "it helps if you provide a new name for it.</p>"
+                                + "<p>Not the current name <em>again</em>"
+                                + "</p></html>",
+                        "bruh",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+            return true;
         }
 
         try {
@@ -274,6 +300,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
             nameField.setText(thePassage.getPassageName());
             gameData.checkForStartRename();
             refresh();
+            return true;
         } catch (InvalidPassageNameException ex) {
             JOptionPane.showMessageDialog(
                     theFrame,
@@ -298,7 +325,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-
+        return false;
     }
 
     /**
@@ -307,11 +334,21 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param e an actionEvent so I can just use this as a lambda basically.
      */
     private void updateTags(ActionEvent e) {
+        updateTags();
+    }
+
+    /**
+     * Attempts to update the tagList of the passage
+     *
+     * @return true if it could be updated, false otherwise.
+     */
+    private boolean updateTags() {
         String newTagList = tagField.getText().trim();
         try {
             thePassage.updatePassageTags(newTagList);
             tagField.setText(thePassage.getPassageTagsAsString());
             refresh();
+            return true;
         } catch (InvalidMetadataDeclarationException ex) {
             JOptionPane.showMessageDialog(
                     theFrame,
@@ -323,6 +360,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+        return false;
     }
 
     /**
@@ -331,6 +369,13 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param e an actionEvent so I can just use this as a lambda basically.
      */
     private void updateInlineComment(ActionEvent e) {
+        updateInlineComment();
+    }
+
+    /**
+     * Will update the inline comment of the passage
+     */
+    private void updateInlineComment() {
         String newInlineComment = inlineCommentField.getText().trim();
         thePassage.setInlinePassageComment(newInlineComment);
         inlineCommentField.setText(thePassage.getInlinePassageComment());
@@ -340,9 +385,16 @@ public class PassageEditorWindow extends GenericEditorWindow {
     /**
      * Attempts to update the passage content (and also creates new passages to link to if newly linked passages dont exist yet)
      *
-     * @param e so I can lambda this binch
+     * @param e an actionEvent so I can just use this as a lambda basically.
      */
     private void updateContent(ActionEvent e) {
+        updateContent();
+    }
+
+    /**
+     * Attempts to update the passage content (and also creates new passages to link to if newly linked passages dont exist yet)
+     */
+    private void updateContent() {
         String newContent = contentArea.getText().trim();
         thePassage.updatePassageContent(newContent, allPassages);
         contentArea.setText(thePassage.getPassageContent());
@@ -355,6 +407,13 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param e lambda time
      */
     private void updateTrailingComment(ActionEvent e) {
+        updateTrailingComment();
+    }
+
+    /**
+     * Updates the trailing comment of this passage
+     */
+    private void updateTrailingComment() {
         String newTrailingComment = commentArea.getText().trim();
         thePassage.setTrailingComment(newTrailingComment);
         commentArea.setText(thePassage.getTrailingComment());

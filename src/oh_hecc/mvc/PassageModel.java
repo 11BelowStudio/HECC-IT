@@ -155,9 +155,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         //TODO: make the buttons
 
-        saveButton = new ModelButtonObject(this,0,0.25f,"Save"); //TODO: option to quit?
+        saveButton = new ModelButtonObject(this, 0, 0.25f, "Save");
 
-        saveAndQuitButton = new ModelButtonObject(this,0.25f,0.5f,"Save and quit");
+        saveAndQuitButton = new ModelButtonObject(this, 0.25f, 0.5f, "Save and quit"); //TODO: option to launch OH-HECC
 
         editMetadataObjectButton = new ModelButtonObject(this,0.5f,0.75f,"Edit metadata");
 
@@ -311,18 +311,16 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                      */
 
         } else if (addPassageButton.wasClicked(mLocation)){
-            //TODO: add passage if this button was clicked
-            System.out.println("passage button clicked");
+            //System.out.println("passage button clicked");
             PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner,getWidth()/2.0,getHeight()/2.0));
             passageMap.put(newPassage.getPassageUUID(), newPassage);
             revalidate();
         } else if (saveAndQuitButton.wasClicked(mLocation)){
-            //TODO: save and quit button stuff if pressed
+            //TODO: actually launch OH-HECC instead.
             if (saveTheHecc()) {
                 System.exit(0);
             }
         } else if (saveButton.wasClicked(mLocation)){
-            //TODO: save button stuff if pressed
             saveTheHecc();
         } else {
             //move the mouse so it's scrolled by the screen scroll amount

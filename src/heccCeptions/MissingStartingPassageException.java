@@ -7,7 +7,11 @@ package heccCeptions;
 public class MissingStartingPassageException extends HeccCeption {
     /**
      * YEET
+     *
      * @param startingPassageName the specified starting passage (that doesn't exist)
      */
-    public MissingStartingPassageException(String startingPassageName){super("The starting passage is defined as '"+startingPassageName+"', but there are no passages with that name!");}
+    public MissingStartingPassageException(String startingPassageName) {
+        super("How is the player supposed to start from '" + startingPassageName +
+                "', when that passage doesn't exist?");
+    }
 }

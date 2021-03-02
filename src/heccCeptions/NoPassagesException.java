@@ -7,5 +7,7 @@ public class NoPassagesException extends HeccCeption {
     /**
      * YEET
      */
-    public NoPassagesException(){ super("How do you expect anyone to play this game, seeing as you forgot to define any passages?");}
+    public NoPassagesException() {
+        super("How do you expect anyone to play this game, seeing as you forgot to define any passages?");
+    }
 }

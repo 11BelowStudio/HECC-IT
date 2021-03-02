@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -61,24 +62,31 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     abstract void makeTheFrame();
 
-    JPanel donePanel(){
+    JPanel donePanel() {
         //button to say 'right thats it im done'
-        JPanel donePanel = new JPanel(new GridLayout(1,1));
-        JButton thatsItImDone = new JButton("Exit");
-        thatsItImDone.addActionListener( (e) -> confirmWindowClose());
+        JPanel donePanel = new JPanel(new GridLayout(1, 1));
+        JButton thatsItImDone = new JButton("Save and Exit");
+        thatsItImDone.addActionListener(this::imDone);
         donePanel.add(thatsItImDone);
         return donePanel;
     }
 
     /**
+     * A method to be called by the 'exit' button in the 'done' panel
+     *
+     * @param e an actionEvent to allow this to be used as a lambda.
+     */
+    abstract void imDone(ActionEvent e);
+
+    /**
      * Brings up a JOptionPane ConfirmDialog to ask the user if they're sure they want to quit
      * Closes the window if the user confirms that they want to close the window.
      */
-    void confirmWindowClose(){
+    void confirmWindowClose() {
         if (JOptionPane.showConfirmDialog(
                 theFrame,
                 "<html><p>"
-                        +"Do you want to close this window?<br>"
+                        + "Do you want to close this window?<br>"
                         +"All unsaved changes will be lost!"
                         +"</p></html>",
                 "Are you sure?",
