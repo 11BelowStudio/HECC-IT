@@ -7,7 +7,7 @@ This is basically a prototype of HECCER, which I mainly made right now because I
 The game data stuff is in hecced.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in hecced.js gives the passage info to the HECCER.
 
-by R. Lowe, 29/01/2020
+by R. Lowe, 02/02/2021
 
 (this version has been fed into the Hecc Up Parser!)
 */
@@ -16,7 +16,7 @@ by R. Lowe, 29/01/2020
  * tl;dr JavaScript's /s (whitespace) regex matches linebreaks. Which I don't want. So this is basically just horizontal whitespace
  * @type {string}
  */
-var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025f\\u3000\\ufeff]*";
+var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025\\u3000\\ufeff]*";
 /**
  * Passage name regexes with horizontal whitespace
  * @type {string}
@@ -61,12 +61,12 @@ var theHeccer = {
 
     /**
      * Will be called by the 'back' button when attempting to go back.
-     * And it will only go back if the 'back' button allows it.
+     * And it will only go back if the 'back' button allows it (there is something to go back to, and the back button isn't disabled)
      */
-    goBack: function(){
+    goBack: function() {
         //The 'back' button will call this method in an attempt to go back
-        if(theHeccer.stateStack.areTherePriorStates()){
-            //will only go back if the stateStack permits it
+        if (theHeccer.allowedToGoBack && theHeccer.stateStack.areTherePriorStates()) {
+            //will only go back if the reader is allowed to go back, and if there are prior states to go back to.
             theHeccer.stateStack.popState(); //pops the top state from stateStack
             theHeccer.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
         }
@@ -100,12 +100,30 @@ var theHeccer = {
 
             window.alert("uh oh, there's no passage called " + pName + "!");
 
-        } else{
+        } else {
 
             const passageContent = currentPassage.getParsedContent(); //obtains passage content from the currentPassage
             //console.log(passageContent);
 
             document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content
+
+            //whether or not the current passage allows the player to go back
+            const pointOfNoReturn = currentPassage.containsSpecifiedTag("noreturn");
+
+            //if the back button currently is enabled
+            if (theHeccer.allowedToGoBack) {
+                //and if this passage is a point of no return
+                if (pointOfNoReturn) {
+                    //the back button gets disabled.
+                    document.getElementById("backButton").innerHTML = theHeccer.noReturnText;
+                    theHeccer.allowedToGoBack = false;
+                }
+            } else if (!pointOfNoReturn) {
+                //but, if the back button was enabled, and this passage isn't a point of no return, the back button is re-enabled.
+                document.getElementById("backButton").innerHTML = theHeccer.defaultBackText;
+                theHeccer.allowedToGoBack = true;
+            }
+
 
             //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
             //update: yep, it does.
@@ -116,9 +134,25 @@ var theHeccer = {
     },
 
     /**
+     * default text for the back button
+     */
+    defaultBackText: "Click this button to go back",
+
+    /**
+     * Text for the back button when a 'noreturn' passage is reached
+     */
+    noReturnText: "POINT OF NO RETURN",
+
+    /**
+     * whether or not the player is currently allowed to go back
+     */
+    allowedToGoBack: true,
+
+
+    /**
      * Logs the passageMap to the console for debugging reasons
      */
-    printPassages: function(){
+    printPassages: function () {
         console.log(this.passageMap);
     },
 
@@ -485,11 +519,11 @@ function Passage(passageName, passageContent, passageTags){
      * @param specifiedTag the tag being looked for in the tags
      * @returns {boolean} true if the specifiedTag is present, false otherwise
      */
-    this.containsSpecifiedTag = function(specifiedTag){
+    this.containsSpecifiedTag = function(specifiedTag) {
         //returns whether or not this.tags contains the specifiedTag
-        //does this by returning whether or not the result of find(specifiedTag) is undefined or not
-        //if undefined, it's not present, else, it is present.
-        return (this.tags.find(specifiedTag) !== undefined);
+        //does this by checking tags.includes(specifiedTag).
+        //true if present, false otherwise.
+        return (this.tags.includes(specifiedTag));
     };
 }
 
@@ -629,17 +663,18 @@ var heccstension = function(){
             }
             //console.log("unescaped replacement string: " + replacementString);
 
-            replacementString = replacementString.replace(/\/}/g,"}"); //unescaping any escaped /}s in the if statement
+            replacementString = replacementString.replace(/\/}/g, "}"); //unescaping any escaped /}s in the if statement
 
             //console.log("escaped replacement string: " + replacementString);
 
-            replacementString = conditionals.filter(replacementString); //process the output of this conditional (for nested conditionals)
+            replacementString = conditionals.filter(replacementString, converter); //process the output of this conditional (for nested conditionals)
 
 
-
-            let prefixString = text.substring(0,ifElseStart); //everything before this conditional
+            let prefixString = text.substring(0, ifElseStart); //everything before this conditional
 
             let suffixString = text.substring(ifElseEnd); //everything after this conditional
+
+            suffixString = conditionals.filter(suffixString, converter);
 
             text = prefixString + replacementString + suffixString; //basically replace the conditional with the output we just found
 
@@ -663,4 +698,7 @@ var heccstension = function(){
 
     return[directPassageLinks, indirectPassageLinks, conditionals];
 }
+
+
+
 
