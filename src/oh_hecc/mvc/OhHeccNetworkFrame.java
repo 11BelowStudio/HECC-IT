@@ -34,7 +34,8 @@ public class OhHeccNetworkFrame {
 
     public OhHeccNetworkFrame(JFrame f) {
         theFrame = f;
-        theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
+        //theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
+        theFrame.setIconImages(ImageManager.getOhHeccIcons());
         theFrame.setTitle("OH-HECC!");
         theFrame.getContentPane().removeAll();
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

@@ -1,6 +1,7 @@
 package oh_hecc.mvc;
 
 
+import heccCeptions.HeccCeption;
 import hecc_up.HeccUpGUI;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
@@ -371,7 +372,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private boolean saveTheHecc() {
         try {
-            theData.saveTheHecc();
+            //theData.saveTheHecc();
+            theData.saveTheHeccCheckingValidity();
             JOptionPane.showMessageDialog(
                     this,
                     ".hecc file saved successfully!",
@@ -379,7 +381,16 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                     JOptionPane.INFORMATION_MESSAGE
             );
             return true;
-        } catch (IOException e) {
+        } catch (HeccCeption h) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
+                    "pls fix this",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+        } catch (IOException ioe) {
             JOptionPane.showMessageDialog(
                     this,
                     "Could not save the .hecc file!",
@@ -388,7 +399,12 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             );
             JFrame f = new JFrame("The emergency save method.");
             f.setLayout(new BorderLayout());
-            f.add(new JLabel("We couldn't save your .hecc file. However, here's your .hecc code, for you to copy and paste into a new .hecc file"), BorderLayout.NORTH);
+            JPanel topPanel = new JPanel();
+            topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+            topPanel.add(new JLabel("We couldn't save your .hecc file."));
+            topPanel.add(new JLabel("However, here's your .hecc code, for you to copy and paste into a new .hecc file"));
+            topPanel.add(new JLabel("We apologize for any inconvenience caused."));
+            f.add(topPanel, BorderLayout.NORTH);
             JTextArea heccArea = new JTextArea(theData.toHecc());
             heccArea.setLineWrap(true);
             heccArea.setWrapStyleWord(true);

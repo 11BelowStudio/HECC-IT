@@ -493,7 +493,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         GameDataObject gdo = new GameDataObject(
                 passages,
                 new EditableMetadata("A Hypertext Fiction","Anonymous"),
-                Paths.get("k")
+                Paths.get("Z://samplePath/ok.hecc")
         );
 
         //PassageEditorWindow w = editThis.openEditorWindow(passages);

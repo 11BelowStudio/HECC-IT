@@ -55,7 +55,8 @@ public class HeccItRunner {
         theFrame = new JFrame("HECC-IT!");
         theFrame.setLayout(new BorderLayout());
 
-        theFrame.setIconImage(ImageManager.getImage("HECC-IT icon"));
+        //theFrame.setIconImage(ImageManager.getImage("HECC-IT icon"));
+        theFrame.setIconImages(ImageManager.getHeccItIcons());
 
         chooseFile = new ChooseFile(
                 this::openAndStartEditingFileAtLocation,

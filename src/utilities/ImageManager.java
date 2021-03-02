@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,13 +107,78 @@ public class ImageManager {
         }
     }
 
+    /**
+     * Holds the icons used by OH-HECC's windows.
+     */
+    private static final List<Image> OH_HECC_IMAGES = new ArrayList<>();
+    /**
+     * Holds the icons used by HECC-UP's windows.
+     */
+    private static final List<Image> HECC_UP_IMAGES = new ArrayList<>();
+    /**
+     * Holds the icons used by HECC-IT's windows.
+     */
+    private static final List<Image> HECC_IT_IMAGES = new ArrayList<>();
+
+    /**
+     * Returns the list of icons used by OH-HECC.
+     *
+     * @return the list of icons used by OH-HECC.
+     */
+    public static List<Image> getOhHeccIcons() {
+        return OH_HECC_IMAGES;
+    }
+
+    /**
+     * Returns the list of icons used by HECC-UP.
+     *
+     * @return the list of icons used by HECC-UP.
+     */
+    public static List<Image> getHeccUpIcons() {
+        return HECC_UP_IMAGES;
+    }
+
+    /**
+     * Returns the list of icons used by HECC-IT.
+     *
+     * @return the list of icons used by HECC-IT.
+     */
+    public static List<Image> getHeccItIcons() {
+        return HECC_IT_IMAGES;
+    }
+
 
     //and here we attempt to load some images.
     static {
         try {
-            ImageManager.loadImage("HECC-IT icon");
-            ImageManager.loadImage("HECC-UP icon");
-            ImageManager.loadImage("OH-HECC icon");
+            Image heccIt = ImageManager.loadImage("HECC-IT icon");
+            Image heccUp = ImageManager.loadImage("HECC-UP icon");
+            Image ohHecc = ImageManager.loadImage("OH-HECC icon");
+            Image smallHecc = ImageManager.loadImage("HECC small");
+            Image heccIt64 = ImageManager.loadImage("HECC-IT 64");
+            Image heccUp64 = ImageManager.loadImage("HECC-UP 64");
+            Image ohHecc64 = ImageManager.loadImage("OH-HECC 64");
+            Image heccItBig = ImageManager.loadImage("HECC-IT large");
+            Image heccUpBig = ImageManager.loadImage("HECC-UP large");
+            Image ohHeccBig = ImageManager.loadImage("OH-HECC large");
+
+            //puts the icons into the appropriate lists.
+            OH_HECC_IMAGES.add(smallHecc);
+            OH_HECC_IMAGES.add(ohHecc);
+            OH_HECC_IMAGES.add(ohHecc64);
+            OH_HECC_IMAGES.add(ohHeccBig);
+
+            HECC_UP_IMAGES.add(smallHecc);
+            HECC_UP_IMAGES.add(heccUp);
+            HECC_UP_IMAGES.add(heccUp64);
+            HECC_UP_IMAGES.add(heccUpBig);
+
+            HECC_IT_IMAGES.add(smallHecc);
+            HECC_IT_IMAGES.add(heccIt);
+            HECC_IT_IMAGES.add(heccIt64);
+            HECC_IT_IMAGES.add(heccItBig);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

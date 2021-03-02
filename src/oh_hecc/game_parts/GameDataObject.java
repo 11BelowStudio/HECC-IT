@@ -1,7 +1,6 @@
 package oh_hecc.game_parts;
 
-import heccCeptions.DuplicatePassageNameException;
-import heccCeptions.InvalidPassageNameException;
+import heccCeptions.*;
 import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.component_editing_windows.GenericEditorWindow;
@@ -10,6 +9,7 @@ import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
+import oh_hecc.game_parts.passage.PassageStatus;
 import oh_hecc.game_parts.passage.SharedPassage;
 
 import javax.swing.*;
@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A single class that can encapsulate all the game data stuff
@@ -40,6 +41,11 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
     private final Path savePath;
 
     /**
+     * A file to use as a backup for the last valid version of the .hecc file.
+     */
+    private final Path lastValidPath;
+
+    /**
      * UUID of the start passage
      */
     private Optional<UUID> startUUID;
@@ -50,20 +56,32 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
     private final GenericEditorWindow editorWindow = null;
 
 
+    //public GameDataObject()
+
+
     /**
      * Instantiates a new Game data object.
      *
-     * @param pMap the passage map
-     * @param meta the metadataeditinginterface object
+     * @param pMap         the passage map
+     * @param meta         the metadataeditinginterface object
      * @param saveLocation where the hecc file is saved
      */
-    public GameDataObject(Map<UUID, PassageEditingInterface> pMap, MetadataEditingInterface meta, Path saveLocation){
+    public GameDataObject(Map<UUID, PassageEditingInterface> pMap, MetadataEditingInterface meta, Path saveLocation) {
         passageMap = pMap;
         theMetadata = meta;
         savePath = saveLocation;
         startUUID = Optional.empty();
         getStartUUID(true);
         updateLinkedUUIDs();
+
+        Path fpath = savePath.getFileName();
+
+        String fname = fpath.toString();
+        if (fname.endsWith(".hecc")) {
+            fname = fname.substring(0, fname.length() - 5);
+        }
+        fname = fname + "_lastValidVersion.hecc";
+        lastValidPath = savePath.getParent().resolve(fname);
 
     }
 
@@ -72,15 +90,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * @param meta the MetadataEditingInterface containing metadata for the new game
      * @param saveLocation the save file location for this new game
      */
-    public GameDataObject(MetadataEditingInterface meta, Path saveLocation){
-        theMetadata = meta;
-        savePath = saveLocation;
-        passageMap = new HashMap<>();
-        startUUID = Optional.empty();
-        getStartUUID(true);
-        updateLinkedUUIDs();
-        //PassageEditingInterface p = new EditablePassage(theMetadata.getStartPassage());
-        //passageMap.put(p.getPassageUUID(),p);
+    public GameDataObject(MetadataEditingInterface meta, Path saveLocation) {
+        this(new HashMap<>(), meta, saveLocation);
     }
 
     public void updateLinkedUUIDs(){
@@ -306,12 +317,34 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
 
     /**
      * Saves the .hecc
-     * @throws IOException
+     *
+     * @throws IOException if it couldn't be saved.
      */
-    public void saveTheHecc() throws IOException { Files.write(savePath, Collections.singleton(toHecc())); }
+    public void saveTheHecc() throws IOException {
+        Files.write(savePath, Collections.singleton(toHecc()));
+    }
+
+    /**
+     * Saves the .hecc, but also checks to see if it's valid or not (and, if it's valid, it overwrites the '_lastValidVersion' backup)
+     *
+     * @throws IOException if there's an IO problem preventing it from being saved.
+     * @throws HeccCeption if there's a problem with the .hecc file that renders it invalid.
+     */
+    public void saveTheHeccCheckingValidity() throws IOException, HeccCeption {
+        Files.write(savePath, Collections.singleton(toHecc()));
+
+        //try{
+        if (checkForValidity()) {
+            Files.write(lastValidPath, Collections.singleton(toHecc()));
+        }
+        //} catch(HeccCeption e){
+        //throw e;
+        //}
+    }
 
     /**
      * Get the .hecc version of the data held in this object
+     *
      * @return The data held within theMetadata and in passageMap but in .hecc form
      */
     @Override
@@ -419,6 +452,39 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Call this to work out if the current game is valid or not.
+     *
+     * @return true if it's valid, false otherwise.
+     * @throws HeccCeption with details of the problem if it's invalid.
+     */
+    public boolean checkForValidity() throws HeccCeption {
+
+        if (passageMap.isEmpty()) {
+            throw new NoPassagesException();
+        }
+        if (!startUUID.isPresent()) {
+            throw new MissingStartingPassageException(theMetadata.getStartPassage());
+        }
+        for (PassageEditingInterface p : passageMap.values()) {
+            if (!p.isThisValid()) {
+                String thePassage = p.getPassageName();
+                switch (p.getPassageStatus()) {
+                    case DELETED_LINK:
+                        throw new heccCeptions.DeletedLinkPresentException(thePassage);
+                    case EMPTY_CONTENT:
+                        throw new heccCeptions.EmptyPassageException(thePassage);
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return true;
+
+
     }
 
 

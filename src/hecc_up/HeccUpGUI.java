@@ -188,7 +188,8 @@ public class HeccUpGUI implements LoggerInterface {
         theFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //exits when closed
         theFrame.setTitle("HECC Ultra Parser"); //verbose title
 
-        theFrame.setIconImage(ImageManager.getImage("HECC-UP icon"));
+        //theFrame.setIconImage(ImageManager.getImage("HECC-UP icon"));
+        theFrame.setIconImages(ImageManager.getHeccUpIcons());
 
         //A lowered etched border
         Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);

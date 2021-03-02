@@ -495,7 +495,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     public static void main(String[] args){
         EditableMetadata theTestMetadata = new EditableMetadata("sample title","an author");
 
-        GameDataObject gdo = new GameDataObject(theTestMetadata,Paths.get("k"));
+        GameDataObject gdo = new GameDataObject(theTestMetadata, Paths.get("Z://samplePath/ok.hecc"));
 
         System.out.println(theTestMetadata.toString());
 

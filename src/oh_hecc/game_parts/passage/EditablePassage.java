@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Like Passage but this time it's actually Editable!
  */
-public class EditablePassage extends AbstractPassage implements PassageEditingInterface, PassageReadingInterface {
+public class EditablePassage extends AbstractPassage implements PassageEditingInterface, PassageReadingInterface, SharedPassage {
 
     /**
      * The passageUUID of this particular passage.
@@ -459,6 +459,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     /**
      * Is this passage a 'point of no return'?
      * (it's a point of no return if it has a 'noreturn' tag)
+     *
      * @return true if yes, false if not.
      */
     @Override
@@ -467,13 +468,24 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     }
 
     /**
+     * Work out whether or not this passage is valid, via the 'isValid()' method of this passage's PassageStatus enum.
+     *
+     * @return true if this passage is valid, false if not.
+     */
+    @Override
+    public boolean isThisValid() {
+        return getPassageStatus().isValid();
+    }
+
+    /**
      * Method that can be used to remove a passage from another passage's linked passages
+     *
      * @param removeThisPassageName the passage to remove
      * @param removeThisPassageUUID the UUID of the passage to remove
      * @return true if it got yote
      */
     @Override
-    public boolean removeLinkedPassage(String removeThisPassageName, UUID removeThisPassageUUID){
+    public boolean removeLinkedPassage(String removeThisPassageName, UUID removeThisPassageUUID) {
         boolean a = linkedPassages.remove(removeThisPassageName);
         boolean b = linkedUUIDs.remove(removeThisPassageUUID);
         return (a && b);

@@ -190,9 +190,17 @@ public interface PassageEditingInterface extends SharedPassage {
     /**
      * Is this passage a 'point of no return'?
      * (it's a point of no return if it has a 'noreturn' tag)
+     *
      * @return true if yes, false if not.
      */
     boolean isThisAPointOfNoReturn();
+
+    /**
+     * Work out whether or not this passage is valid, via the 'isValid()' method of this passage's PassageStatus enum.
+     *
+     * @return true if this passage is valid, false if not.
+     */
+    boolean isThisValid();
 
 
 }

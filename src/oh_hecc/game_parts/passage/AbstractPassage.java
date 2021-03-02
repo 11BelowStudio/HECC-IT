@@ -34,7 +34,10 @@ public abstract class AbstractPassage implements PassageReadingInterface {
      */
     PassageStatus status;
 
-    AbstractPassage(){
+    /**
+     * Generic constructor with all default values.
+     */
+    AbstractPassage() {
         passageName = UUID.randomUUID().toString();
         linkedPassages = new HashSet<>();
         passageTags = new ArrayList<>();
@@ -42,19 +45,37 @@ public abstract class AbstractPassage implements PassageReadingInterface {
         updatePassageStatus();
     }
 
-    AbstractPassage(String passageName){
+    /**
+     * Constructor with given passage name
+     *
+     * @param passageName the given passage name
+     */
+    AbstractPassage(String passageName) {
         this();
         this.passageName = passageName.trim();
         updatePassageStatus();
     }
 
-    AbstractPassage(String passageName, String unparsedContent){
+    /**
+     * Constructor with given passage name and unparsed content
+     *
+     * @param passageName     a default passage name
+     * @param unparsedContent some unparsed content
+     */
+    AbstractPassage(String passageName, String unparsedContent) {
         this(passageName);
         this.passageContent = unparsedContent.trim();
         updatePassageStatus();
     }
 
-    AbstractPassage(String passageName, String unparsedContent, String lineEndMetadata){
+    /**
+     * Constructor with given passage name, unparsed content, and line end metadata
+     *
+     * @param passageName     a default passage name
+     * @param unparsedContent some unparsed content
+     * @param lineEndMetadata some raw metadata that hasn't been parsed yet.
+     */
+    AbstractPassage(String passageName, String unparsedContent, String lineEndMetadata) {
         this(passageName, unparsedContent);
         passageTags.addAll(PassageReadingInterface.readTagMetadata(lineEndMetadata));
         linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
