@@ -184,21 +184,24 @@ function Checcer(){
 
         //TODO: maybe it would be better to change this stuff in the hecc->hecced converter thing?
 
-        let statement = statementToCheck.replace(/pAny\(/g,"theHeccer.checcer.pAny(");
-        statement = statement.replace(/pAll\(/g,"theHeccer.checcer.pAll(");
+        let statement = statementToCheck.replace(/pAny\(/g, "theHeccer.checcer.pAny(");
+        statement = statement.replace(/pAll\(/g, "theHeccer.checcer.pAll(");
 
-        statement = statement.replace(/tAny\(/g,"theHeccer.checcer.tAny(");
-        statement = statement.replace(/tAll\(/g,"theHeccer.checcer.tAll(");
+        statement = statement.replace(/tAny\(/g, "theHeccer.checcer.tAny(");
+        statement = statement.replace(/tAll\(/g, "theHeccer.checcer.tAll(");
 
-        statement = statement.replace(/and\(/g,"theHeccer.checcer.and(");
-        statement = statement.replace(/or\(/g,"theHeccer.checcer.or(");
-        statement = statement.replace(/not\(/g,"theHeccer.checcer.not(");
+        statement = statement.replace(/and\(/g, "theHeccer.checcer.and(");
+        statement = statement.replace(/or\(/g, "theHeccer.checcer.or(");
+        statement = statement.replace(/not\(/g, "theHeccer.checcer.not(");
+
+        statement = statement.replace(/tCount\(/g, "theHeccer.checcer.tCount(");
+        statement = statement.replace(/pCount\(/g, "theHeccer.checcer.pCount(");
 
         console.log(statement);
 
-        try{
+        try {
             return !!eval(statement);
-        } catch(e){
+        } catch (e) {
             return false;
         }
     }
@@ -346,8 +349,34 @@ function Checcer(){
      * @param statement the statement to check
      * @returns {boolean} the reverse of its result
      */
-    this.not = function(statement){
-        return(!eval(statement));
+    this.not = function (statement) {
+        return (!eval(statement));
+    }
+
+    /**
+     * Returns count of times that passages with the given tag have been visited.
+     * @param tagName the tag that is being looked for
+     * @returns {Number} the number of times a passage with that tag has been visited. 0 if unvisited.
+     */
+    this.tCount = function (tagName) {
+        if (theHeccer.stateStack.seenTags.has(tagName)) {
+            return theHeccer.stateStack.seenTags.get(tagName);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns count of times that a given passage has been visited.
+     * @param passageName the passage that is being looked at
+     * @returns {Number} the number of times which that particular passage has been visited. 0 if unvisited.
+     */
+    this.pCount = function (passageName) {
+        if (theHeccer.stateStack.visitedPassages.has(passageName)) {
+            return theHeccer.stateStack.visitedPassages.get(passageName);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -396,41 +425,75 @@ function GameStateStack(startPassageName){
     this.popState = function(){
         //called when trying to go back
         //first makes very sure that there's a state after this one that the user can go back to
-        if (this.areTherePriorStates){
+        if (this.areTherePriorStates) {
             //if there is a state which it can go back to, it just pops the top state off the stack
             this.states.pop();
             this.refreshVisitedStuff();
-        } else{
+        } else {
             //complains (very loudly!) if the player attempts to go back when they aren't allowed to go back
             window.alert("why are you trying to go back? theres no prior states to go back to! >:(");
         }
     };
 
-    this.seenTags = new Set();
+    /**
+     * A map holding all the visited tags, and the counts of how many times a passage with that tag has been visited.
+     * @type {Map<String, Number>}
+     */
+    this.seenTags = new Map();
 
-    this.visitedPassages = new Set();
+    /**
+     * A map holding all the visited passages, and the counts of how many times a given passage has been visited.
+     * @type {Map<String, Number>}
+     */
+    this.visitedPassages = new Map();
 
-    this.refreshVisitedStuff = function(){
+    /**
+     * Refreshes info about visited tags/passages whenever a new passage is navigated to/from
+     */
+    this.refreshVisitedStuff = function () {
 
-        const tags = new Set();
-        const passages = new Set();
+        /**
+         * map of visited passage names and the count of times they were visited
+         * @type {Map<String, Number>}
+         */
+        const passages = new Map();
 
-        if (this.areTherePriorStates){
+        /**
+         * map of encountered passage tags and the count of times they were visited
+         * @type {Map<String, Number>}
+         */
+        const tags = new Map();
 
-            const prior = this.states.slice(0, this.states.length-1);
+
+        if (this.areTherePriorStates) {
+
+            const prior = this.states.slice(0, this.states.length - 1);
             prior.forEach(
-                state => passages.add(state.getPassageName())
+                state => {
+                    let pname = state.getPassageName();
+                    if (passages.has(pname)) {
+                        let count = passages.get(pname);
+                        count += 1;
+                        passages.set(pname, count);
+                    } else {
+                        passages.set(pname, 1);
+                    }
+                    theHeccer.passageMap.get(pname).getTags().forEach(
+                        tag => {
+                            if (tags.has(tag)) {
+                                let count = tags.get(tag);
+                                count += 1;
+                                tags.set(tag, count);
+                            } else {
+                                tags.set(tag, 1);
+                            }
+                        }
+                    );
+                }
             );
-            passages.forEach(
-                passage => theHeccer.passageMap.get(passage).getTags().forEach(
-                    tag => tags.add(tag)
-                )
-            );
-
         }
         this.seenTags = tags;
         this.visitedPassages = passages;
-
     }
 
     /**

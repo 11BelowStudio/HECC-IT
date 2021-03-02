@@ -425,9 +425,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * This method will be called whenever an editing window is closed.
      */
     void editingWindowClosed(WindowEvent e) {
+        this.requestFocusInWindow();
         revalidate();
         activity = CurrentActivity.DOING_NOTHING;
-        this.repaint();
+        repaint();
     }
 
 

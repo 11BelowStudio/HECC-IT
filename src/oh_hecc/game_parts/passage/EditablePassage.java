@@ -156,8 +156,6 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
 
         String content = sanitizeContent(newContent); //sanitization.
 
-        System.out.println(content);
-
         passageContent = content; //replaces the content
         linkedPassages.clear();
         linkedPassages.addAll(SharedPassage.findLinks(content)); //updates the linked passages appropriately

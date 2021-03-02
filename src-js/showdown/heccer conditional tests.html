@@ -244,7 +244,75 @@
             );
             theHeccer.goToPassage(temp);
 
-            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:tCount('a') == 1}{ok}", function (assert) {
+
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tCount('a') == 1}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:pCount('1') == 1}{ok}", function (assert) {
+
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pCount('1') == 1}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:tCount('b') == 0}{ok}", function (assert) {
+
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tCount('b') == 0}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:pCount('2') == 0}{ok}", function (assert) {
+
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pCount('2') == 0}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
 
             theHeccer.goBack();
         });
@@ -302,7 +370,115 @@
             );
             theHeccer.goToPassage(temp);
 
-            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>","Should be \<\p>ok\<\/p>");
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+    });
+
+    QUnit.module("some passage count things", {
+        before: function () {
+            theHeccer.goToPassage('1');
+            theHeccer.goToPassage('1');
+            theHeccer.goToPassage('2');
+        }
+    }, function () {
+
+        QUnit.test("{if:pCount('1')==2}{ok}", function (assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pCount('1')==2}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:pCount('2')==1}{ok}", function (assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pCount('2')==1}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+
+        QUnit.test("{if:pCount('3')==0}{ok}", function (assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:pCount('3')==0}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:tCount('a')==2}{ok}", function (assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tCount('a')==2}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+        QUnit.test("{if:tCount('b')==1}{ok}", function (assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tCount('b')==1}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
+
+            theHeccer.goBack();
+        });
+
+
+        QUnit.test("{if:tCount('c')==0}{ok}", function (assert) {
+            const temp = Date.now().toString() + Math.random().toString();
+            theHeccer.addPassageToMap(
+                new Passage(
+                    temp,
+                    "{if:tCount('c')==0}{ok}",
+                    []
+                )
+            );
+            theHeccer.goToPassage(temp);
+
+            assert.equal(document.getElementById("divWhatHoldsPassageContent").innerHTML, "<p>ok</p>", "Should be \<\p>ok\<\/p>");
 
             theHeccer.goBack();
         });
