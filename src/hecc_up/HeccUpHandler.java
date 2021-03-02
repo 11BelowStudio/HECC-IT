@@ -133,7 +133,7 @@ public class HeccUpHandler {
         //first, check that the output folder actually exists
         if (outputter.doesOutputFolderExist()) {
             //if the output folder exists, attempt to construct the passage objects
-            logger.logInfo("output folder exists");
+            logger.logInfo("Output folder has been made");
 
             //if the output folder exists, attempt to construct the passage objects
             if (parser.constructThePassageObjects()) {

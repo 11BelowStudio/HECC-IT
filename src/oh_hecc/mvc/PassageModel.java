@@ -1,6 +1,7 @@
 package oh_hecc.mvc;
 
 
+import hecc_up.HeccUpGUI;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
@@ -53,7 +54,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
     final ModelButtonObject saveButton;
 
-    final ModelButtonObject saveAndQuitButton;
+    final ModelButtonObject heccUpButton;
 
     final ModelButtonObject editMetadataObjectButton;
 
@@ -157,14 +158,14 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         saveButton = new ModelButtonObject(this, 0, 0.25f, "Save");
 
-        saveAndQuitButton = new ModelButtonObject(this, 0.25f, 0.5f, "Save and quit"); //TODO: option to launch OH-HECC
+        heccUpButton = new ModelButtonObject(this, 0.25f, 0.5f, "Export with HECC-UP");
 
         editMetadataObjectButton = new ModelButtonObject(this,0.5f,0.75f,"Edit metadata");
 
         addPassageButton = new ModelButtonObject(this,0.75f,1f,"Add passage");
 
         buttons.add(saveButton);
-        buttons.add(saveAndQuitButton);
+        buttons.add(heccUpButton);
         buttons.add(editMetadataObjectButton);
         buttons.add(addPassageButton);
 
@@ -286,43 +287,29 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         activity = CurrentActivity.DOING_NOTHING;
         clearSelection();
 
-        /*
-        for (ModelButtonObject b: buttons) {
-            if (b.wasClicked(mLocation)){
-                System.out.println(b.getPosition());
-                return;
-            }
-        }*/
+
         if (editMetadataObjectButton.wasClicked(mLocation)) {
             activity = CurrentActivity.DIALOG_OPEN;
             String lastStart = theMetadata.getStartPassage();
-            //EditorWindowInterface w = theMetadata.openEditingWindow();
             EditorWindowInterface w = theData.openMetadataEditWindow();
             w.addWindowClosedListener(this::editingWindowClosed);
-                    /*
-                    e -> {
-                        //System.out.println("previous start: " + lastStart);
-                        actuallyValidateStuff();
-                        activity = CurrentActivity.DOING_NOTHING;
-                        this.repaint();
-                    }
-                    );
-                     */
 
-        } else if (addPassageButton.wasClicked(mLocation)){
+        } else if (addPassageButton.wasClicked(mLocation)) {
             //System.out.println("passage button clicked");
-            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner,getWidth()/2.0,getHeight()/2.0));
+            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner, getWidth() / 2.0, getHeight() / 2.0));
             passageMap.put(newPassage.getPassageUUID(), newPassage);
             revalidate();
-        } else if (saveAndQuitButton.wasClicked(mLocation)){
-            //TODO: actually launch OH-HECC instead.
+        } else if (heccUpButton.wasClicked(mLocation)) {
             if (saveTheHecc()) {
-                System.exit(0);
+                activity = CurrentActivity.DIALOG_OPEN;
+                new HeccUpGUI(theData.getSavePath(), this::editingWindowClosed);
+
+                //System.exit(0);
             }
-        } else if (saveButton.wasClicked(mLocation)){
+        } else if (saveButton.wasClicked(mLocation)) {
             saveTheHecc();
         } else {
-            //move the mouse so it's scrolled by the screen scroll amount
+
             Point scrolledMouse = moveMouseByScroll(mLocation);
             //this will hold the clicked passageObject if it was clicked
             Optional<PassageObject> clicked =
@@ -771,26 +758,29 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         if(currentAction.checkForInput()){
             if (currentAction.checkLeftHold()){
                 activity = CurrentActivity.LC_MOVING_OBJECTS;
-            } else if (currentAction.checkRightHold()){
+            } else if (currentAction.checkRightHold()) {
                 deselectObjects();
                 activity = CurrentActivity.RC_MOVING_VIEW;
-            } else if (currentAction.checkLeftClick()){
+            } else if (currentAction.checkLeftClick()) {
                 deselectObjects();
                 activity = CurrentActivity.DOING_NOTHING;
             }
         }
     }
 
-    private void deselectObjects(){
-        for (PassageObject o: selectedObjects) {
+    /**
+     * Deselects all currently-selected objects.
+     */
+    private void deselectObjects() {
+        for (PassageObject o : selectedObjects) {
             o.deselected();
         }
         selectedObjects.clear();
     }
 
     @Deprecated
-    private void movingObjectsActivity(ActionViewer currentAction){
-        if (currentAction.checkForInput()){
+    private void movingObjectsActivity(ActionViewer currentAction) {
+        if (currentAction.checkForInput()) {
             if (currentAction.checkLeftHold()){
                 for (PassageObject o: selectedObjects){
                     o.move(currentAction.getCurrentLeftDrag());
@@ -848,15 +838,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         drawablePassageObjects.clear();
         drawablePassageObjects.addAll(objectMap.values());
-
-
-        //ScrollableModelObject.SET_SCROLL(drawingTopRight);
-        /*
-        for (PassageObject p: drawablePassageObjects) {
-            p.scroll(topRightCorner);
-        }
-
-         */
 
         drawableModelButtons.clear();
         drawableModelButtons.addAll(buttons);
@@ -927,8 +908,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         topRightCorner.x += xDist;
         revalidate();
         repaint();
-        //repaint();
-        //revalidate();
     }
 
     /**
@@ -940,8 +919,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         topRightCorner.y += yDist;
         revalidate();
         repaint();
-        //repaint();
-        //revalidate();
     }
 
     /**
@@ -983,14 +960,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         return passageMap.values().stream().filter(
                 p -> getThesePassages.contains(p.getPassageUUID())
         ).collect(Collectors.toSet());
-        /*
-        Set<PassageEditingInterface> thePassages = new HashSet<>();
-        if (!getThesePassages.isEmpty()){
-            for(UUID u: getThesePassages){
-                thePassages.add(passageMap.get(u));
-            }
-        }
-        return thePassages;*/
     }
 
     /**
@@ -1002,24 +971,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject){
         return theData.getPassageEditingInterfaceObjectsConnectedToGivenObject(uuidOfSourceObject);
-        /*
-        Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
-        passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs().forEach(
-                u -> theLinkedPassages.add(passageMap.get(u))
-        );
-        return theLinkedPassages;
-
-         */
-        /*
-        Set<UUID> linkedUUIDs = passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs();
-        if (!linkedUUIDs.isEmpty()){
-            for (UUID u: linkedUUIDs) {
-                theLinkedPassages.add(passageMap.get(u));
-            }
-        }
-        return theLinkedPassages;
-
-         */
     }
 
     @Override
@@ -1036,12 +987,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
         return theData.getThePassageObjectsWhichLinkToGivenPassageFromUUID(destination);
-        /*
-        return passageMap.keySet().stream().filter(
-                p -> passageMap.get(p).getLinkedPassageUUIDs().contains(destination)
-        ).collect(Collectors.toSet());
-
-         */
     }
 
     /**
@@ -1068,10 +1013,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         }
         revalidate();
         repaint();
-        //repaint();
     }
-
-    //public String getHecced(){ return theData.toHecc(); }
 
 
     /**

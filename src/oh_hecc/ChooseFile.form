@@ -36,7 +36,7 @@
               <font size="18" style="1"/>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="11"/>
-              <text value="&lt;html&gt;&lt;h1&gt;OH-HECC!&lt;/h1&gt;&lt;html&gt;"/>
+              <text value="&lt;html&gt;&lt;h1&gt;HECC-IT!&lt;/h1&gt;&lt;html&gt;"/>
             </properties>
           </component>
           <component id="48fb" class="javax.swing.JLabel">
@@ -46,12 +46,12 @@
             <properties>
               <font style="2"/>
               <horizontalAlignment value="0"/>
-              <text value="Optional Help for HECC"/>
+              <text value="HECC Integrated Toolkit"/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="c84b4" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="c84b4" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="true" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
         <properties>
@@ -158,14 +158,14 @@
           <grid id="8a332" binding="openContainer" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="256" height="-1"/>
               </grid>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="f207c" binding="openPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="f207c" binding="openPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="5" left="5" bottom="5" right="5"/>
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -220,7 +220,16 @@
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Start Editing"/>
+                      <text value="Edit with OH-HECC"/>
+                      <visible value="false"/>
+                    </properties>
+                  </component>
+                  <component id="28d3e" class="javax.swing.JButton" binding="exportButton">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Export with HECC-UP"/>
                       <visible value="false"/>
                     </properties>
                   </component>
@@ -233,14 +242,6 @@
               </vspacer>
             </children>
           </grid>
-          <component id="94feb" class="javax.swing.JSeparator">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <orientation value="1"/>
-            </properties>
-          </component>
         </children>
       </grid>
     </children>

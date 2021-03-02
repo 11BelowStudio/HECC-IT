@@ -1,5 +1,6 @@
 package oh_hecc;
 
+import hecc_up.HeccUpGUI;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.mvc.OhHeccNetworkFrame;
@@ -17,7 +18,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 
-public class OhHeccRunner {
+/**
+ * The main class/entry point for the program.
+ * User can pick an existing .hecc file to open, or make a new .hecc file.
+ * If they opt to make a new one, OH-HECC will open to allow them to edit it.
+ * If they opt to open an existing .hecc file, they have a choice between opening it in OH-HECC for editing or HECC-UP for exporting.
+ */
+public class HeccItRunner {
 
     private final JFrame theFrame;
 
@@ -35,17 +42,25 @@ public class OhHeccRunner {
 
     private final ChooseFile chooseFile;
 
-    public OhHeccRunner() {
 
-        //TODO: make this. Asks user for a hecc file to open/create a new hecc file. Then opens the hecc file via MVC stuff (and runs it)
-        theFrame = new JFrame("OH-HECC!");
+    /**
+     * This is the constructor for the HECC-IT runner.
+     * It'll ask the user to either make a new HECC file, or pick an existing .hecc file.
+     * If the user wants to make a new HECC file, they can then edit it with OH-HECC.
+     * If the user selects an existing HECC file, they can choose to edit it with OH-HECC, or export it with HECC-UP.
+     */
+    public HeccItRunner() {
+
+
+        theFrame = new JFrame("HECC-IT!");
         theFrame.setLayout(new BorderLayout());
 
-        theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
+        theFrame.setIconImage(ImageManager.getImage("HECC-IT icon"));
 
         chooseFile = new ChooseFile(
-                this::openFileAtLocation,
-                this::makeNewHeccFileAtLocation
+                this::openAndStartEditingFileAtLocation,
+                this::makeNewHeccFileAtLocation,
+                this::openAndHeccUpFileAtLocation
         );
         theFrame.add(chooseFile.getThePanel(), BorderLayout.CENTER);
 
@@ -60,25 +75,43 @@ public class OhHeccRunner {
 
 
     /**
-     * Opens a hecc file at a given location for editing
+     * Opens a hecc file at a given location for editing in OH-HECC
+     *
      * @param heccFilePath the Path leading to the file that needs to be opened for editing
      * @return true if it was opened successfully
      */
-    boolean openFileAtLocation(Path heccFilePath){
+    boolean openAndStartEditingFileAtLocation(Path heccFilePath) {
         boolean success = false;
-        try{
+        try {
             heccParser = new OhHeccParser(
-                    String.join("\n",Files.readAllLines(heccFilePath))
+                    String.join("\n", Files.readAllLines(heccFilePath))
             );
-            theGameData = new GameDataObject(heccParser.getHeccMap(),heccParser.getMetadata(),heccFilePath);
+            theGameData = new GameDataObject(heccParser.getHeccMap(), heccParser.getMetadata(), heccFilePath);
 
-            //TODO: open model, yeet file chooser panel
 
             startEditingTheGameData();
 
             success = true;
             System.out.println("nice");
-        } catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
+    /**
+     * Opens a hecc file at a given location for exporting in HECC-UP
+     *
+     * @param heccFilePath the Path leading to the file that needs to be opened for exporting
+     * @return true if it was opened successfully
+     */
+    boolean openAndHeccUpFileAtLocation(Path heccFilePath) {
+        boolean success = false;
+        try {
+            new HeccUpGUI(heccFilePath, theFrame);
+            success = true;
+            System.out.println("nice");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return success;
@@ -103,50 +136,22 @@ public class OhHeccRunner {
 
             success = true;
             System.out.println("oh hecc that's a new file");
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return success;
     }
 
 
-    void startEditingTheGameData(){
+    /**
+     * This is called if the user chooses to
+     */
+    void startEditingTheGameData() {
         editModel = new PassageModel(theGameData);
         editorView = new View(editModel);
         editFrame = new OhHeccNetworkFrame(theFrame, editorView);
 
-        System.out.println("no listeners");
         editFrame.addTheListeners();
-        System.out.println("listeners");
         editFrame.theFrame.invalidate();
-
-        /*
-        Timer repaintTimer = new Timer(
-                1000,
-                e -> editorView.repaint()
-        );
-
-        repaintTimer.start();
-
-         */
-
-        editFrame.theFrame.addWindowListener(
-                new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-
-                        //repaintTimer.stop();
-
-                        //TODO: better save thing
-                        /*
-                        try {
-                            Files.write(theGameData.getSavePath(), Collections.singleton(theGameData.toHecc()));
-                        } catch (IOException ignored) {
-                        }
-
-                         */
-                    }
-                }
-        );
-
     }
 
     /**
@@ -214,8 +219,7 @@ public class OhHeccRunner {
 
     }
 
-    public static void main(String[] args) throws Exception{
-        OhHeccRunner heccRunner = new OhHeccRunner();
-        //heccRunner.yknowWhatItsTimeToTestThisOut();
+    public static void main(String[] args) throws Exception {
+        HeccItRunner heccRunner = new HeccItRunner();
     }
 }

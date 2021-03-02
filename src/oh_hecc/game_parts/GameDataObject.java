@@ -64,6 +64,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
         startUUID = Optional.empty();
         getStartUUID(true);
         updateLinkedUUIDs();
+
     }
 
     /**
@@ -419,4 +420,6 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
         }
         return sb.toString();
     }
+
+
 }

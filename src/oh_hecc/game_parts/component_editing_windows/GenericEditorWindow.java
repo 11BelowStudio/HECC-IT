@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.function.Consumer;
 
 public abstract class GenericEditorWindow implements EditorWindowInterface {
 
@@ -107,11 +108,12 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     /**
      * Adding a WindowClosed event listener via a Consumer<\WindowEvent\> functional interface
+     *
      * @param closeEvent the functional interface holding the function that needs to be called when this window is closed.
      * @see java.util.function.Consumer
      */
     @Override
-    public void addWindowClosedListener(java.util.function.Consumer<WindowEvent> closeEvent){
+    public void addWindowClosedListener(Consumer<WindowEvent> closeEvent) {
         theFrame.addWindowListener(
                 new WindowAdapter() {
                     @Override
@@ -134,7 +136,7 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
      * If the current text for them isn't a valid passage name (doesn't satisfy PASSAGE_NAME_REGEX), the text will be red.
      * Otherwise, the text will be same as default.
      * The text colour will only change if the validity of the JTextComponent's contents changes.
-     * @param passageNameComponent the JTextComponent that
+     * @param passageNameComponent the JTextComponent that will be holding the text that might be a passage name.
      */
     private void isPassageNameRegexValid(JTextComponent passageNameComponent) {
         boolean stillValid = (passageNameComponent.getText().trim().matches(Parseable.PASSAGE_NAME_REGEX));

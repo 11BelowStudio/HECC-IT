@@ -1,5 +1,7 @@
 package oh_hecc.mvc;
 
+import utilities.ImageManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,15 +24,18 @@ public class OhHeccNetworkFrame {
      * <p>
      * Yes, I know, it's *really* exciting.
      */
-    public OhHeccNetworkFrame(){
+    public OhHeccNetworkFrame() {
         theFrame = new JFrame("OH-HECC!");
-        //TODO: add a WindowListener to theFrame via OhHeccRunner, so that, when the user tries to close the window, they may save their work before it closes.
+        theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
+        //TODO: add a WindowListener to theFrame via HeccItRunner, so that, when the user tries to close the window, they may save their work before it closes.
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         theFrame.setLayout(new BorderLayout());
     }
 
-    public OhHeccNetworkFrame(JFrame f){
+    public OhHeccNetworkFrame(JFrame f) {
         theFrame = f;
+        theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
+        theFrame.setTitle("OH-HECC!");
         theFrame.getContentPane().removeAll();
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         theFrame.setLayout(new BorderLayout());
@@ -41,11 +46,12 @@ public class OhHeccNetworkFrame {
      * @param f the existing JFrame
      * @param v the existing View
      */
-    public OhHeccNetworkFrame(JFrame f, View v){
-        theFrame = f;
-        theFrame.getContentPane().removeAll();
-        theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        theFrame.setLayout(new BorderLayout());
+    public OhHeccNetworkFrame(JFrame f, View v) {
+        this(f);
+        //theFrame = f;
+        //theFrame.getContentPane().removeAll();
+        //theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        //theFrame.setLayout(new BorderLayout());
         addTheView(v);
     }
 

@@ -233,15 +233,32 @@ public class EditablePassageTest {
         //passages.get(referenceUUID).updateLinkedUUIDs(passages);
 
         System.out.println("after adding the new passage:\n");
-        for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
+        for (Map.Entry<UUID, PassageEditingInterface> e : passages.entrySet()) {
             System.out.println(e.getKey());
             System.out.println(e.getValue().outputAsStringForDebuggingReasons());
         }
 
-        assertEquals(2,passages.size());
+        assertEquals(2, passages.size());
 
     }
 
+    @Test
+    void testEscaping() {
+        EditablePassage samplePassage = new EditablePassage();
+
+        String inputString = "::\n;;\ndeez nutz::\nso;;how's::life?\n;;k\n\n::q\n;;::\n::;;\n;\n:";
+
+        String expectedOutputString = "\\::\n\\;;\ndeez nutz::\nso;;how's::life?\n\\;;k\n\n\\::q\n\\;;::\n\\::;;\n;\n:";
+
+        samplePassage.setPassageContent(inputString);
+
+        samplePassage.setTrailingComment(inputString);
+
+        assertEquals(expectedOutputString, samplePassage.getPassageContent());
+
+        assertEquals(expectedOutputString, samplePassage.getTrailingComment());
+
+    }
 
 
 }

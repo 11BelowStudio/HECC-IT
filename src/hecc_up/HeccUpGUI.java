@@ -1,6 +1,7 @@
 package hecc_up;
 
 import utilities.AttributeString;
+import utilities.ImageManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -8,10 +9,13 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 /**
  * This class is basically a GUI for the HECC-UP stuff
@@ -49,7 +53,7 @@ public class HeccUpGUI implements LoggerInterface {
     /**
      * the frame that has the gui
      */
-    public JFrame theFrame;
+    private final JFrame theFrame;
 
     /**
      * The panel that will actually hold the GUI
@@ -88,24 +92,36 @@ public class HeccUpGUI implements LoggerInterface {
     private JTextArea logDisplay;
 
     /**
+     * Constructor with no arguments
+     * makes a new JFrame to hold all the other stuff.
+     */
+    public HeccUpGUI() {
+        this(new JFrame());
+    }
+
+    /**
      * Constructor
-     * Makes the GUI frame + shows it
+     * sets up GUI frame + shows it
      * Initialises/constructs some other properties of this class
      * including the HeccUpHandler
+     *
+     * @param frame the JFrame that will hold all the HECC-UP GUI stuff.
      */
-    public HeccUpGUI(){
+    private HeccUpGUI(JFrame frame) {
+        theFrame = frame;
+        theFrame.getContentPane().removeAll();
         //first it will actually, y'know, make the GUI
         makeTheGui();
 
         //then it'll make the GUI visible, revalidated, packed, etc
         theFrame.setVisible(true);
-        theFrame.setPreferredSize(new Dimension(800,600));
+        theFrame.setPreferredSize(new Dimension(800, 600));
         theFrame.revalidate();
         theFrame.pack();
 
         //setting up the AttributeStrings so they can be easily used later on
-        heccFileAttributeString = new AttributeString<>(".hecc file: ","");
-        gameLocationAttributeString = new AttributeString<>("Output folder: ","");
+        heccFileAttributeString = new AttributeString<>(".hecc file: ", "");
+        gameLocationAttributeString = new AttributeString<>("Output folder: ", "");
 
         //these are false by default
         heccFileChosen = false;
@@ -114,22 +130,70 @@ public class HeccUpGUI implements LoggerInterface {
         //outputter = new FolderOutputter();
 
         heccUpHandler = new HeccUpHandler(this);
+
+        theFrame.requestFocus();
+    }
+
+    /**
+     * This is the constructor for the heccUpGUI that will be called by HECC-IT if the 'export' button is pressed instead.
+     *
+     * @param heccFilePath  path of the .hecc file in to be exported
+     * @param existingFrame the existing frame that the HECC-UP stuff will be held in.
+     */
+    public HeccUpGUI(Path heccFilePath, JFrame existingFrame) {
+        this(existingFrame);
+        //pre-selects the .hecc file from OH-HECC.
+        selectedAHeccFile(heccFilePath);
+
+        Path fpath = heccFilePath.getFileName();
+
+        String fname = fpath.toString();
+        if (fname.endsWith(".hecc")) {
+            fname = fname.substring(0, fname.length() - 5);
+        }
+
+        Path heccfileDirectory = heccFilePath.getParent().resolve(fname);
+
+        selectedAnOutputFolder(heccfileDirectory);
+    }
+
+    /**
+     * This is the constructor for the heccUpGUI that will be called by OH-HECC when the 'HECC-UP' button is pressed.
+     *
+     * @param heccFilePath      path of the .hecc file in OH-HECC.
+     * @param windowClosedEvent the windowClosedEvent thing that will be added as a listener for this when it closes so OH-HECC knows that this has been closed.
+     */
+    public HeccUpGUI(Path heccFilePath, Consumer<WindowEvent> windowClosedEvent) {
+        this(heccFilePath, new JFrame());
+
+
+        theFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        theFrame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        windowClosedEvent.accept(e);
+                    }
+                }
+        );
     }
 
     /**
      * ok so basically this just makes the GUI
      */
-    private void makeTheGui(){
+    private void makeTheGui() {
 
-        //makes the frame
-        theFrame = new JFrame();
+        //sets stuff up with theFrame
         theFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //exits when closed
         theFrame.setTitle("HECC Ultra Parser"); //verbose title
+
+        theFrame.setIconImage(ImageManager.getImage("HECC-UP icon"));
 
         //A lowered etched border
         Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
-        theFrame.setLayout(new GridLayout(1,1));
+        theFrame.setLayout(new GridLayout(1, 1));
 
         //thePanel will have a BoxLayout
         thePanel = new JPanel();

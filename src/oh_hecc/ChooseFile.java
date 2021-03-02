@@ -56,6 +56,11 @@ public class ChooseFile {
      */
     private JButton startEditingButton;
 
+    /**
+     * The JButton which opens HECC-UP.
+     */
+    private JButton exportButton;
+
 
     private JPanel mainPanel;
     private JPanel makeContainer;
@@ -70,6 +75,7 @@ public class ChooseFile {
     private JPanel openInputs;
     private JPanel titlePanel;
     private JLabel title;
+
 
 
     /**
@@ -99,12 +105,15 @@ public class ChooseFile {
 
     /**
      * Constructs this object
-     * @param editFilePathGoesHere a Path Predicate function. This will be called if the user is trying to open an existing .hecc file.
+     *
+     * @param editFilePathGoesHere           a Path Predicate function. This will be called if the user is trying to open an existing .hecc file.
      * @param newFilePathAndMetadataGoesHere a Path, MetadataEditingInterface BiPredicate function. This will be called if the user is trying to make a new .hecc file
+     * @param heccUpThisPath                 given a Path, this will open this file in HECC-UP.
      */
-    public ChooseFile(Predicate<Path> editFilePathGoesHere, BiPredicate<Path, MetadataEditingInterface> newFilePathAndMetadataGoesHere) {
-
-
+    public ChooseFile(Predicate<Path> editFilePathGoesHere,
+                      BiPredicate<Path, MetadataEditingInterface> newFilePathAndMetadataGoesHere,
+                      Predicate<Path> heccUpThisPath
+    ) {
 
         makeFileButton.addActionListener(new ActionListener() {
             /**
@@ -232,6 +241,7 @@ public class ChooseFile {
                     chosenFile.setText("Please select a .hecc file to open");
                 }
                 startEditingButton.setVisible(fileHasBeenSelected);
+                exportButton.setVisible(fileHasBeenSelected);
             }
         });
 
@@ -271,13 +281,54 @@ public class ChooseFile {
             }
         });
 
+        exportButton.addActionListener(new ActionListener() {
+            /**
+             * If the export button is pressed, and the user had actually selected a .hecc file to open,
+             * it'll then attempt to launch HECC-UP, with that file passed to it.
+             * If it can't be opened, it'll let the user know.
+             *
+             * @param e oh look an ActionEvent
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (fileHasBeenSelected) {
+                    new SwingWorker<Boolean, Object>() {
+                        @Override
+                        protected Boolean doInBackground() throws Exception {
+                            return heccUpThisPath.test(selectedFileToOpen);
+                        }
+
+                        @Override
+                        protected void done() {
+                            boolean unsuccessful = true;
+                            try {
+                                unsuccessful = !get();
+                            } catch (Exception ignored) {
+                            }
+                            if (unsuccessful) {
+                                JOptionPane.showMessageDialog(
+                                        thePanel,
+                                        "Unable to open HECC-UP!",
+                                        "oh noes",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        }
+                    }.execute();
+                }
+            }
+        });
+
 
         /*
         TL;DR calls makeSureTitleIsValid() whenever the input in make_TitleInput changes
          */
         make_TitleInput.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) { makeSureTitleIsValid(); }
+            public void insertUpdate(DocumentEvent e) {
+                makeSureTitleIsValid();
+            }
+
             @Override
             public void removeUpdate(DocumentEvent e) { makeSureTitleIsValid(); }
             @Override
@@ -377,6 +428,11 @@ public class ChooseFile {
                 (c, m) -> {
                     System.out.println("make " + c);
                     System.out.println(m.toString());
+                    return true;
+                },
+                o -> {
+                    System.out.println("export " + o);
+                    System.out.println(o.toString());
                     return true;
                 }
         );

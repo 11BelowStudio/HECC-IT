@@ -7,6 +7,8 @@ import oh_hecc.Parseable;
 import utilities.Vector2D;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Like Passage but this time it's actually Editable!
@@ -150,12 +152,29 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @param newContent the new content that the passage now holds
      */
     @Override
-    public void setPassageContent(String newContent){
-        passageContent = newContent; //replaces the content
+    public void setPassageContent(String newContent) {
+
+        String content = sanitizeContent(newContent); //sanitization.
+
+        System.out.println(content);
+
+        passageContent = content; //replaces the content
         linkedPassages.clear();
-        linkedPassages.addAll(SharedPassage.findLinks(newContent)); //updates the linked passages appropriately
+        linkedPassages.addAll(SharedPassage.findLinks(content)); //updates the linked passages appropriately
 
         updatePassageStatus();
+    }
+
+    /**
+     * Santizes content by escaping protected HECC characters from it (lines starting with ;; or ::)
+     *
+     * @param content the content to be sanitized
+     * @return the content but sanitized.
+     */
+    private String sanitizeContent(String content) {
+        content = content.replaceAll("(?m)(^;;)", "\\\\;;");
+        content = content.replaceAll("(?m)(^::)", "\\\\::");
+        return content;
     }
 
     /**
@@ -165,8 +184,8 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * If the passage contains no links to other notes, this passage is an END_NODE
      * otherwise, it's NORMAL.
      */
-    void updatePassageStatus(){
-        if(this.getPassageContent().equals("")){
+    void updatePassageStatus() {
+        if (this.getPassageContent().equals("")) {
             status = PassageStatus.EMPTY_CONTENT;
         } else if(SharedPassage.doesPassageContentContainDeletedLinks(passageContent)){
             status = PassageStatus.DELETED_LINK;
@@ -187,7 +206,6 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     public Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
         this.setPassageContent(newContent);
 
-
         //gets all the linked passage names that aren't the names of passages that are in allPassages
         linkedPassages.stream()
                 .filter(
@@ -201,23 +219,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
                         allPassages.put(p.getPassageUUID(),p);
                     }
         );
-        /*
-        for(String s: linkedPassages){
-            boolean doesntExist = true;
-            for (PassageEditingInterface e: allPassages.values()) {
-                if (e.getPassageName().equals(s)){
-                    doesntExist = false;
-                    break;
-                }
-            }
-            if (doesntExist){
-                PassageEditingInterface newChild = new EditablePassage(s, this.getPosition());
-                allPassages.put(newChild.getPassageUUID(), newChild);
 
-            }
-        }
-
-         */
         updateLinkedUUIDs(allPassages);
 
         return allPassages;
@@ -249,37 +251,29 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
 
     /**
      * This method will be used when attempting to rename this passage.
-     * @param newName the new name that the user is trying to give this passage.
+     *
+     * @param newName     the new name that the user is trying to give this passage.
      * @param allPassages the map of all passages.
-     *        Any passages with links to this passage will have their links updated to point to the new name of this passage,
-     *        assuming that this passage is successfully renamed.
+     *                    Any passages with links to this passage will have their links updated to point to the new name of this passage,
+     *                    assuming that this passage is successfully renamed.
      * @return the updated copy of allPassages
-     * @throws InvalidPassageNameException if the passage name isn't a valid passage name
+     * @throws InvalidPassageNameException   if the passage name isn't a valid passage name
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
      */
     @Override
-    public Map<UUID, PassageEditingInterface> renameThisPassage(String newName, Map<UUID, PassageEditingInterface> allPassages) throws InvalidPassageNameException, DuplicatePassageNameException{
+    public Map<UUID, PassageEditingInterface> renameThisPassage(String newName, Map<UUID, PassageEditingInterface> allPassages)
+            throws InvalidPassageNameException, DuplicatePassageNameException {
         String oldName = passageName; //backup of old name
         String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
 
         //checks to see if the new passage name isn't a duplicate of an existing passage name
-        if(allPassages.values().stream()
-            .anyMatch(
-                p -> p.getPassageName().equals(trimmedValidatedName)
-            )
-        ){
+        if (allPassages.values().stream()
+                .anyMatch(
+                        p -> p.getPassageName().equals(trimmedValidatedName)
+                )
+        ) {
             throw new DuplicatePassageNameException(trimmedValidatedName);
         }
-
-        //checks to see if this isn't a duplicate passage name
-        /*
-        for (PassageEditingInterface e: allPassages.values()) {
-            if (e.getPassageName().equals(trimmedValidatedName)){
-                throw new DuplicatePassageNameException(trimmedValidatedName);
-            }
-        }
-
-         */
 
         //updates this passage name
         passageName = trimmedValidatedName;
@@ -296,36 +290,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
                         PassageEditingInterface.getPassageContentWithRenamedLinks(p.getPassageContent(),oldName,trimmedValidatedName)
                 )
         );
-        /*
-        Set<PassageEditingInterface> deadnamers =
-                allPassages.values().stream().filter(p -> p.getLinkedPassageUUIDs().contains(passageUUID)).collect(Collectors.toSet());
 
-        deadnamers.forEach(
-                (e) -> e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName))
-        );
-
-         */
-        /*
-        for (PassageEditingInterface e: allPassages.values()) {
-            if (e.getLinkedPassages().contains(oldName)){
-                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
-                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
-                e.updateLinkedUUIDs(allPassages);
-            }
-        }
-
-         */
-        /*
-        for (UUID u: allPassages.keySet()){
-            PassageEditingInterface e = allPassages.get(u);
-            if (e.getLinkedPassages().contains(oldName)){
-                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),oldName,trimmedValidatedName));
-                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
-                e.updateLinkedUUIDs(allPassages);
-                allPassages.put(u,e);
-            }
-        }
-        */
 
         //returns the modified map of all passages
         return allPassages;
@@ -362,34 +327,6 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
                     )
                 )
         );
-        /*
-
-        //deletes all traces of this passage from the existing passages
-        for (PassageEditingInterface e: allPassages.values()) {
-            if (e.getLinkedPassages().contains(this.passageName)){
-                //String deletedName = this.passageName + SharedPassage.DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX;
-                //e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName), Collections.unmodifiableMap(allPassages));//, allPassages);
-                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));//, allPassages);
-                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
-                e.removeLinkedPassage(deletedName, this.passageUUID);
-            }
-        }
-
-         */
-        /*
-        for (UUID u: allPassages.keySet()){
-            PassageEditingInterface e = allPassages.get(u);
-            if (e.getLinkedPassages().contains(this.passageName)){
-                String deletedName = this.passageName + " !WAS DELETED!";
-                //e.updatePassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName), Collections.unmodifiableMap(allPassages));//, allPassages);
-                e.setPassageContent(PassageEditingInterface.getPassageContentWithRenamedLinks(e.getPassageContent(),this.passageName,deletedName));//, allPassages);
-                //e.updateLinkedUUIDs(Collections.unmodifiableMap(allPassages));
-                e.removeLinkedPassage(deletedName, this.passageUUID);
-                allPassages.replace(u,e);
-            }
-        }
-
-         */
 
         //return the map of all passages (except this one)
         return allPassages;
@@ -512,12 +449,12 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
 
     /**
      * updates the trailing passage comment
+     *
      * @param newComment the new trailing comment for the passage
      */
     @Override
-    public void setTrailingComment(String newComment){
-        trailingComment = newComment;
-    }
+    public void setTrailingComment(String newComment) {
+        trailingComment = sanitizeContent(newComment); }
 
     /**
      * Is this passage a 'point of no return'?

@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: oh_hecc.OhHeccRunner
+Main-Class: oh_hecc.HeccItRunner
 

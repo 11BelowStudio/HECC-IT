@@ -36,6 +36,7 @@ public class FolderOutputter {
      * obsolete constructor
      * bottom text
      */
+    @Deprecated
     public FolderOutputter(){
         outputFolderExists = false;
         logger = new LoggerInterface(){};
@@ -47,6 +48,7 @@ public class FolderOutputter {
      * @param logger LoggerInterface object where this logs data to
      * @throws SecurityException if the output folder could not be made
      */
+    @Deprecated
     public FolderOutputter(String outputFolderPath, LoggerInterface logger) throws SecurityException {
         outputFolderExists = false;
         this.logger = logger;
@@ -75,6 +77,7 @@ public class FolderOutputter {
      * @return whether or not the folder was created successfully/now exists
      * @throws SecurityException if there's a security problem preventing it from being made
      */
+    @Deprecated
     public boolean setupOutputFolder(String folderPath) throws SecurityException {
 
         outputFolderPath = Paths.get(folderPath.concat("/")); //puts an extra / at the end of the filename
@@ -102,7 +105,6 @@ public class FolderOutputter {
 
         //outputFolderPath = folderPath.concat("/"); //puts an extra / at the end of the filename
         outputFolderPath = Files.createDirectories(folderPath);
-        outputFolderExists = false;
 
         //attempts to create the necessary folder(s) to output the game into
         //outputFolder.mkdirs();
@@ -122,7 +124,13 @@ public class FolderOutputter {
         return outputFolderExists;
     }
 
-    public void outputTheGame(List<String> heccedData){
+    /**
+     * Simply outputs the game from the heccedData
+     *
+     * @param heccedData the heccedData to output
+     */
+    @Deprecated
+    public void outputTheGame(List<String> heccedData) {
         try {
             if (outputFolderExists) {
 
@@ -457,8 +465,6 @@ public class FolderOutputter {
      */
     private void writeIFictionFile(FolderOutputterMetadataInterface metadata, Path thePath) throws SecurityException, IOException {
         BufferedWriter iFictionFileWriter = Files.newBufferedWriter(thePath);
-
-        //FileWriter iFictionFileWriter = new FileWriter(makeTheFile("metadata.iFiction"));
         iFictionFileWriter.write(metadata.getIFictionMetadata());
         iFictionFileWriter.close();
     }

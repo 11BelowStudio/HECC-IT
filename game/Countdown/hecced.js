@@ -224,15 +224,15 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"StartMandelaEffect",
-			"The guest on the radio show is talking about how people may misremember things, or remember things happening that didn't happen. For example, remembering the funeral of Nelson Mandela after he supposedly 'died in prison', when he didn't. Or remembering seeing a cornucopia on the labels for a certain fruit-related brand of clothing, when there never was one. They claim that the reason for this is something to do with people somehow travelling between parallel universes, from one where the thing that didn't happen did happen, to 'our' universe (where it didn't happen).\n\nYou quickly lose interest in the conversation, because it sounds like a very contrived excuse to defend one's pride when misremembering a minor detail. Anyway, the conversation's ended, and it's now the ad break.\n\nYou may as well [[see what that noise was|Start2]].",
+			"BriefingRoom1-2",
+			"You sit down and look towards the projection.\n\nThe text is replaced by a title screen of sorts for something that looks like a rather old, sepia-toned, edutainment film, on the subject of *Understanding What May Happen and Ensuring The Right Things Happen*, accompanied by the sort of cheesy badly-preserved orchestral score you'd expect to hear alongside an old cartoon.\n\nThe scene quickly shifts to a cartoon of some bikers riding their bikes across a road.\n\nA somewhat tinny voiceover, with an american newsreader-y accent, started speaking.\n\n*\"Suppose there was a group of 100 bikers, travelling together, as they normally would, down a highway. When, suddenly...\"*\n\nThe cartoon bikers suddenly ground to a halt, with a very exaggerated braking motion.\n\n*\"...they reached a fork in the road!\"*\n\nThe viewpoint suddenly shifted to the bikers' collective perspective, offering a view of a junction in the road, with a road sign pointing to the left saying 'This-a-way', and another road sign pointing to the right saying 'That-a-way'\n\n*\"Now, being a tight knit group, the bikers figured it would be best to work out as a group whether they wanted to go this-a-way, or that-a-way. After all, they wanted to stick together, and they could only do that if they all took the same route as each other.\"*\n\nIn time with the voiceover, the camera went back to the initial perspective, depicting all the bikers suddenly getting off their bikes and then having a civil discussion with each other.\n\n*\"Eventually, they all decided to go this-a-way, and then they hopped back onto their bikes, and were on their merry way, going this-a-way.\"*\n\nJust like before, they hopped back onto the bikes and resumed biking along, down the left route. [[The camera didn't follow them|BriefingRoom1-3]].",
 			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"BriefingRoom1-2",
-			"You sit down and look towards the projection.\n\nThe text is replaced by a title screen of sorts for something that looks like a rather old, sepia-toned, edutainment film, on the subject of *Understanding What May Happen and Ensuring The Right Things Happen*, accompanied by the sort of cheesy badly-preserved orchestral score you'd expect to hear alongside an old cartoon.\n\nThe scene quickly shifts to a cartoon of some bikers riding their bikes across a road.\n\nA somewhat tinny voiceover, with an american newsreader-y accent, started speaking.\n\n*\"Suppose there was a group of 100 bikers, travelling together, as they normally would, down a highway. When, suddenly...\"*\n\nThe cartoon bikers suddenly ground to a halt, with a very exaggerated braking motion.\n\n*\"...they reached a fork in the road!\"*\n\nThe viewpoint suddenly shifted to the bikers' collective perspective, offering a view of a junction in the road, with a road sign pointing to the left saying 'This-a-way', and another road sign pointing to the right saying 'That-a-way'\n\n*\"Now, being a tight knit group, the bikers figured it would be best to work out as a group whether they wanted to go this-a-way, or that-a-way. After all, they wanted to stick together, and they could only do that if they all took the same route as each other.\"*\n\nIn time with the voiceover, the camera went back to the initial perspective, depicting all the bikers suddenly getting off their bikes and then having a civil discussion with each other.\n\n*\"Eventually, they all decided to go this-a-way, and then they hopped back onto their bikes, and were on their merry way, going this-a-way.\"*\n\nJust like before, they hopped back onto the bikes and resumed biking along, down the left route. [[The camera didn't follow them|BriefingRoom1-3]].",
+			"StartMandelaEffect",
+			"The guest on the radio show is talking about how people may misremember things, or remember things happening that didn't happen. For example, remembering the funeral of Nelson Mandela after he supposedly 'died in prison', when he didn't. Or remembering seeing a cornucopia on the labels for a certain fruit-related brand of clothing, when there never was one. They claim that the reason for this is something to do with people somehow travelling between parallel universes, from one where the thing that didn't happen did happen, to 'our' universe (where it didn't happen).\n\nYou quickly lose interest in the conversation, because it sounds like a very contrived excuse to defend one's pride when misremembering a minor detail. Anyway, the conversation's ended, and it's now the ad break.\n\nYou may as well [[see what that noise was|Start2]].",
 			[]
 		)
 	);
@@ -329,16 +329,16 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"Ending1-Hoax",
-			"You hear that, allegedly, many people have been receiving handwritten letters from some organization that doesn't exist, promising free money to recipients, akin to a bogus job offer scam. The police have released a formal statement, saying that they don't have any reason to believe that anything illegal has happened, but heavily discouraged replying to those letters.\n\nUnfortunately for you, you've already replied. But your reply was a 'no'.\n\nAs the ad break starts, you promptly put those worries to one side, as you [[investigate the noise at your front door|Ending1-2]].",
-			[]
+			"deja vu ambush",
+			"You hide in the blind spot from the door, waiting for Percival to open the door, so you can catch him off-guard.\n\n\"Subject C? Where are you?\"\n\nHe's entering the room.\n\nYou don't move a muscle.\n\nYou can see him walk past the door, looking for you within the main area of the room.\n\nHe doesn't know you're here. This is good.\n\nAll that's left is just creeping up behind him and [[kicking his high-vis behind into next Tuesday|deja vu ambush 2]].",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"deja vu ambush",
-			"You hide in the blind spot from the door, waiting for Percival to open the door, so you can catch him off-guard.\n\n\"Subject C? Where are you?\"\n\nHe's entering the room.\n\nYou don't move a muscle.\n\nYou can see him walk past the door, looking for you within the main area of the room.\n\nHe doesn't know you're here. This is good.\n\nAll that's left is just creeping up behind him and [[kicking his high-vis behind into next Tuesday|deja vu ambush 2]].",
-			["noreturn"]
+			"Ending1-Hoax",
+			"You hear that, allegedly, many people have been receiving handwritten letters from some organization that doesn't exist, promising free money to recipients, akin to a bogus job offer scam. The police have released a formal statement, saying that they don't have any reason to believe that anything illegal has happened, but heavily discouraged replying to those letters.\n\nUnfortunately for you, you've already replied. But your reply was a 'no'.\n\nAs the ad break starts, you promptly put those worries to one side, as you [[investigate the noise at your front door|Ending1-2]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -427,15 +427,15 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"Ending1-2",
-			"The noise was just the sound of some post getting shoved through your letterbox.\n\nToday, there's just one envelope, stuck in the flap of the letterbox.\n\nAn envelope with an entirely handwritten name and address.\n\nAnd it's handwriting you recognize.\n\n[[You cautiously pick up the envelope|Ending1-3]]",
+			"BriefingRoom2-whoops",
+			"He looks at you with a look of confusion\n\n\"Why would you be expected to throw that projector out of the window in the first place!?\"\n\nYou open your mouth to start trying to explain the last time to Percival. But then you realize that he'd just get even more confused. {if:pAny(\"deja vu been there already\")}{Besides, he didn't even show any signs of beginning to understand it the first time you tried to explain it to him.}\n\nBesides, why waste effort trying to explain it to him now, when you're clearly going to be expected to explain it at this other person's office anyway?\n\n\"[[Whatever, let's just get on with it|BriefingRoom2-departure]].\"",
 			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"BriefingRoom2-whoops",
-			"He looks at you with a look of confusion\n\n\"Why would you be expected to throw that projector out of the window in the first place!?\"\n\nYou open your mouth to start trying to explain the last time to Percival. But then you realize that he'd just get even more confused. {if:pAny(\"deja vu been there already\")}{Besides, he didn't even show any signs of beginning to understand it the first time you tried to explain it to him.}\n\nBesides, why waste effort trying to explain it to him now, when you're clearly going to be expected to explain it at this other person's office anyway?\n\n\"[[Whatever, let's just get on with it|BriefingRoom2-departure]].\"",
+			"Ending1-2",
+			"The noise was just the sound of some post getting shoved through your letterbox.\n\nToday, there's just one envelope, stuck in the flap of the letterbox.\n\nAn envelope with an entirely handwritten name and address.\n\nAnd it's handwriting you recognize.\n\n[[You cautiously pick up the envelope|Ending1-3]]",
 			[]
 		)
 	);
@@ -457,7 +457,7 @@ function getHECCED(){
 		new Passage(
 			"deja vu new hat",
 			"Of course! That's why something looked odd about Percival! He was wearing a white hard hat last time, not a yellow one!\n\nBut Percival looks at you with a look of confusion.\n\n\"New hat? What are you talking about? I've always worn this yellow hard hat. {if:tAny(\"pedant\")}{Did they use a picture of me in a different hat in Pedantic Weekly that one time?}{else:Then again, this *is* the first time I've met you, so I guess you probably wouldn't have seen me in this before}\".\n\nThis response merely poses more questions than it does answers. But it does make you think of that conversation you heard on the radio about the Mandela Effect. Could you have somehow found yourself in a different timeline where certain specific details are just slightly different? Not that you'll have an opportunity to ask of course, as Percival suddenly stops and remarks \"We're here!\"\n\nThe door he's stopped at is labelled very clearly with the words [[BRIEFING ROOM|BriefingRoom2 - entry]].",
-			["noreturn","hat"]
+			["noreturn", "hat"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -469,16 +469,16 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"deja vu maze 4",
-			"As you keep running, you eventually bump into someone, as they walk through a small side-hallway that you didn't quite notice.\n\nUnfortunately for you, it's Percival.\n\n\"Ah! There you are!\"\n\nHe doesn't seem particularly annoyed.\n\n\"Good thing I bumped into you here, I was afraid that you'd get completely lost, and never find your way back!\"\n\nYou shudder as you {if:pAny(\"deja vu endless give up\")}{remember something very familiar happening to you earlier on}{else:imagine quite how lost Percival considers to be 'lost'}.\n\n\"Well, it looks like you managed to find your own way here, so that's convenient.\"\n\nHe points towards a nearby door, with some words on it.\n\n[[BRIEFING ROOM|BriefingRoom2 - entry]]",
-			["noreturn"]
+			"BriefingRoom2-5",
+			"The projector flies through the window just as well as a brick would, breaking the glass with a satisfying **SMASH**, before falling all the way down to the floor of the warehouse, landing with a not-quite-as-satisfying-but-still-relieving **CRUNCH**.\n\nUnfortunately for you, Percival's worked out what you just did as well. And words cannot express just how confused and outraged he currently is, so much so that even he's struggling to actually say the words he's trying to say.\n\n\"W-w-what do you think you're playing at!? Why did you just throw the projector out of the window like that!? Projectors are expensive!? You were supposed to watch the briefing, not defenestrate it!?\"\n\nBefore you can even start trying to explain yourself, both of you are interrupted by the noise of an intercom system crackling, diverting your attention from the big hole in the window. Seeing as there's nothing else to do, you both [[listen to the announcement that's being made|BriefingRoom2-6]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"BriefingRoom2-5",
-			"The projector flies through the window just as well as a brick would, breaking the glass with a satisfying **SMASH**, before falling all the way down to the floor of the warehouse, landing with a not-quite-as-satisfying-but-still-relieving **CRUNCH**.\n\nUnfortunately for you, Percival's worked out what you just did as well. And words cannot express just how confused and outraged he currently is, so much so that even he's struggling to actually say the words he's trying to say.\n\n\"W-w-what do you think you're playing at!? Why did you just throw the projector out of the window like that!? Projectors are expensive!? You were supposed to watch the briefing, not defenestrate it!?\"\n\nBefore you can even start trying to explain yourself, both of you are interrupted by the noise of an intercom system crackling, diverting your attention from the big hole in the window. Seeing as there's nothing else to do, you both [[listen to the announcement that's being made|BriefingRoom2-6]].",
-			[]
+			"deja vu maze 4",
+			"As you keep running, you eventually bump into someone, as they walk through a small side-hallway that you didn't quite notice.\n\nUnfortunately for you, it's Percival.\n\n\"Ah! There you are!\"\n\nHe doesn't seem particularly annoyed.\n\n\"Good thing I bumped into you here, I was afraid that you'd get completely lost, and never find your way back!\"\n\nYou shudder as you {if:pAny(\"deja vu endless give up\")}{remember something very familiar happening to you earlier on}{else:imagine quite how lost Percival considers to be 'lost'}.\n\n\"Well, it looks like you managed to find your own way here, so that's convenient.\"\n\nHe points towards a nearby door, with some words on it.\n\n[[BRIEFING ROOM|BriefingRoom2 - entry]]",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -518,6 +518,13 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"deja vu maze 1",
+			"Guess what? Another junction!\n\n[[Left|deja vu maze 4]]\n[[Right|deja vu maze 2]]",
+			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"deja vu endless give up",
 			"You turn around.\n\nBut you can't help but notice that there isn't any light in the corridor behind you, instead, all you can see is an expanse of darkness, looking just as endless as the length of the corridor you still need to walk down.\n\nYou come to the realization that you aren't supposed to be here.\n\nDo you [[walk back, through the darkness|deja vu endless return]]?\nOr do you [[try to keep going down the corridor|deja vu endless corridor]], even though you can't see any end to it?",
 			["noreturn"]
@@ -525,9 +532,9 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"deja vu maze 1",
-			"Guess what? Another junction!\n\n[[Left|deja vu maze 4]]\n[[Right|deja vu maze 2]]",
-			["noreturn"]
+			"deja vu soundsLikePercival",
+			"\"Oh.\"\n\nYou can hear the disappointment in Percival's voice. He was probably expecting to hear something *slightly* more interesting.\n\nEither way, that seems to have answered that question, as he looks like he's about to [[get back to the task at hand|deja vu percival leave]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -542,13 +549,6 @@ function getHECCED(){
 			"deja vu maze 2",
 			"Another junction.\n\n[[Left|deja vu maze 4]]\n[[Right|deja vu maze end]]\n[[Forwards|deja vu maze 3]]",
 			["noreturn"]
-		)
-	);
-	theHeccer.addPassageToMap(
-		new Passage(
-			"deja vu soundsLikePercival",
-			"\"Oh.\"\n\nYou can hear the disappointment in Percival's voice. He was probably expecting to hear something *slightly* more interesting.\n\nEither way, that seems to have answered that question, as he looks like he's about to [[get back to the task at hand|deja vu percival leave]].",
-			[]
 		)
 	);
 	theHeccer.addPassageToMap(
