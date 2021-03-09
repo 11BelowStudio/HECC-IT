@@ -25,18 +25,17 @@ public class OhHeccNetworkFrame {
      * Yes, I know, it's *really* exciting.
      */
     public OhHeccNetworkFrame() {
-        theFrame = new JFrame("OH-HECC!");
-        theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
-        //TODO: add a WindowListener to theFrame via HeccItRunner, so that, when the user tries to close the window, they may save their work before it closes.
-        theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        theFrame.setLayout(new BorderLayout());
+        this(new JFrame());
     }
 
+    /**
+     * A version of the constructor that uses a predefined JFrame instead (that it'll basically claim ownership of)
+     * @param f a pre-declared JFrame that this object will basically claim ownership of.
+     */
     public OhHeccNetworkFrame(JFrame f) {
         theFrame = f;
-        //theFrame.setIconImage(ImageManager.getImage("OH-HECC icon"));
         theFrame.setIconImages(ImageManager.getOhHeccIcons());
-        theFrame.setTitle("OH-HECC!");
+        theFrame.setTitle("OH-HECC! (Optional Help for HECC)");
         theFrame.getContentPane().removeAll();
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         theFrame.setLayout(new BorderLayout());
@@ -44,15 +43,11 @@ public class OhHeccNetworkFrame {
 
     /**
      * Constructor that utilizes an existing JFrame and View instead
-     * @param f the existing JFrame
-     * @param v the existing View
+     * @param f the existing JFrame, which this object will commandeer and put the View object into
+     * @param v the existing View object to put into that JFrame.
      */
     public OhHeccNetworkFrame(JFrame f, View v) {
         this(f);
-        //theFrame = f;
-        //theFrame.getContentPane().removeAll();
-        //theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        //theFrame.setLayout(new BorderLayout());
         addTheView(v);
     }
 
@@ -87,6 +82,9 @@ public class OhHeccNetworkFrame {
 
     }
 
+    /**
+     * Adds the listeners that need to be added to theFrame.
+     */
     public void addTheListeners(){
 
         //adds the resizing ComponentListener to theFrame
@@ -113,36 +111,6 @@ public class OhHeccNetworkFrame {
                     }
                 }
         );
-
-        /*
-        theFrame.addKeyListener(
-                new KeyAdapter() {
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                        switch (e.getKeyCode()){
-                            case KeyEvent.VK_LEFT:
-                                theView.theModelThatsBeingViewed.xMove(false);
-                                System.out.println("l");
-                                break;
-                            case KeyEvent.VK_RIGHT:
-                                theView.theModelThatsBeingViewed.xMove(true);
-                                System.out.println("r");
-                                break;
-                            case KeyEvent.VK_UP:
-                                theView.theModelThatsBeingViewed.yMove(false);
-                                System.out.println("u");
-                                break;
-                            case KeyEvent.VK_DOWN:
-                                theView.theModelThatsBeingViewed.yMove(true);
-                                System.out.println("d");
-                                break;
-                        }
-                        theFrame.repaint();
-                    }
-                }
-        );
-
-         */
 
 
         ModelController mc = new ModelController(theView.theModelThatsBeingViewed, theFrame);

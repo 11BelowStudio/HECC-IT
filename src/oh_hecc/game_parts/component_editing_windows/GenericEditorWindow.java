@@ -2,6 +2,7 @@ package oh_hecc.game_parts.component_editing_windows;
 
 import oh_hecc.Parseable;
 import oh_hecc.game_parts.EditWindowGameDataInterface;
+import utilities.ImageManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,10 +33,16 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     final EditWindowGameDataInterface gameData;
 
+    /**
+     * Constructs the GenericEditorWindow object, and has the given gameData (via EditWindowGameDataInterface)
+     * @param data the EditWindowGameDataInterface object that will work as an interface for the GameDataObject.
+     *             yay dependency inversion principle.
+     */
     public GenericEditorWindow(EditWindowGameDataInterface data){
         gameData = data;
         theFrame = new JFrame();
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        theFrame.setIconImages(ImageManager.getOhHeccIcons());
 
         //This basically allows a quit prompt to appear when the user tries to press the 'x' button on the window
         //If the user confirms that they want to close this window, this window closes.

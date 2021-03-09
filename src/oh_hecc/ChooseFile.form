@@ -46,7 +46,7 @@
             <properties>
               <font style="2"/>
               <horizontalAlignment value="0"/>
-              <text value="HECC Integrated Toolkit"/>
+              <text value="Hypertext Editing and Creation Code Integrated Toolkit"/>
             </properties>
           </component>
         </children>

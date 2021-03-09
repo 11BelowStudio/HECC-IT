@@ -49,9 +49,10 @@ public abstract class Model extends JComponent implements ControllableModelInter
     //final ControllerInterface theController;
 
     /**
-     * oh look, some synchronization for multithreaded stuff
+     * oh look, some synchronization for multithreaded stuff. This is mostly here so I don't get problems with the
+     * drawables being edited whilst they're being drawn.
      */
-    final Object SYNC_OBJECT = new Object();
+    private final Object SYNC_OBJECT = new Object();
 
     /**
      * Background colour for this model
@@ -84,12 +85,12 @@ public abstract class Model extends JComponent implements ControllableModelInter
         return MODEL_HEIGHT;
     }
 
+    /**
+     * No-argument constructor.
+     *
+     * Just sets up the top-right corner such that 0,0 is in the middle of the viewable area.
+     */
     public Model() {
-        //theController = c;
-        //setBackground(backgroundColour);
-        //setPreferredSize(new Dimension(DEFAULT_MODEL_WIDTH,DEFAULT_MODEL_HEIGHT));
-
-
         topRightCorner = new Vector2D(-getWidth() / 2, -getHeight() / 2);
 
     }
@@ -127,28 +128,6 @@ public abstract class Model extends JComponent implements ControllableModelInter
         return new Dimension(MODEL_WIDTH, MODEL_HEIGHT);
     }
 
-
-
-
-    /*
-    public void update(Graphics g){
-        update();
-        super.update(g);
-    }
-
-     */
-    /*
-    public void update(){
-        //updateModel();
-        synchronized (SYNC_OBJECT) {
-            refreshDrawables();
-        }
-    }
-     */
-
-
-    abstract void updateModel();
-
     /**
      * Use this to refresh the drawable items for the model.
      */
@@ -156,42 +135,8 @@ public abstract class Model extends JComponent implements ControllableModelInter
 
 
     /**
-     * Actually, y'know, paints this canvas.
-     * Calls drawModel(g).
-     * @param g0 the Graphics context that's being used for the repainting.
-     * @see #drawModel(Graphics2D)
-     */
-    public void paint(Graphics g0){
-        super.paint(g0);
-        //update();
-        //refreshDrawables();
-        System.out.println("paint time");
-        Graphics2D g = (Graphics2D) g0;
-
-        g.setColor(backgroundColour);
-        g.fillRect(0,0,getWidth(),getHeight());
-
-
-
-        g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
-        );
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        );
-
-
-        AffineTransform initialTransform = g.getTransform();
-        synchronized (SYNC_OBJECT) {
-            drawModel(g);
-        }
-        g.setTransform(initialTransform);
-
-
-    }
-
-    /**
-     * Literally just calls drawModel(g)
+     * Fills in the background, enables anti-aliasing, gets a backup of the current affine transform, and then it'll
+     * call drawModel(g)
      * @param g Graphics2D being used to draw this
      */
     public void draw(Graphics2D g) {
@@ -212,14 +157,24 @@ public abstract class Model extends JComponent implements ControllableModelInter
     }
 
     /**
+     * Calls the refreshDrawables method (refreshing the drawable things, synchronized so it won't interfere with any
+     * currently-executing draw operations), and then calls the revalidate method of the JComponent superclass.
+     */
+    @Override
+    public void revalidate(){
+        synchronized(SYNC_OBJECT){
+            refreshDrawables();
+        }
+        super.revalidate();
+    }
+
+    /**
      * This method actually draws the model itself.
      * <p>
      * Subclass should override this method to hold the actual drawing code
      * @param g the Graphics2D context being used for the drawing of the model
      */
     public abstract void drawModel(Graphics2D g);
-
-    //public abstract String getHecced();
 
 
     /**
@@ -233,22 +188,6 @@ public abstract class Model extends JComponent implements ControllableModelInter
      * @param positive whether it should be moved in positive Y or in negative Y
      */
     public abstract void yMove(boolean positive);
-
-
-    /**
-     * Calls refreshDrawables then attempts to repaint.
-     * @see #refreshDrawables()
-     *
-     */
-    @Override
-    public void repaint() {
-
-        //synchronized (SYNC_OBJECT) {
-        //    refreshDrawables();
-        //}
-        super.repaint();
-
-    }
 
 
 }

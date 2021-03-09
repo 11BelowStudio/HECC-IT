@@ -2,6 +2,7 @@ package oh_hecc.game_parts.component_editing_windows;
 
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.game_parts.EditWindowGameDataInterface;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
@@ -67,7 +68,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Creates the MetadataEditorWindow. This is where the magic happens.
      * @param gameData the gameData itself
      */
-    public MetadataEditorWindow(GameDataObject gameData){
+    public MetadataEditorWindow(EditWindowGameDataInterface gameData){
         super(gameData);
         theMetadata = gameData.getTheMetadata();
         currentTitle = new AttributeString<>("Title:\n", theMetadata.getTitle());

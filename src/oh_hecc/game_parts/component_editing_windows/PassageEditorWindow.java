@@ -3,6 +3,7 @@ package oh_hecc.game_parts.component_editing_windows;
 import heccCeptions.DuplicatePassageNameException;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
+import oh_hecc.game_parts.EditWindowGameDataInterface;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
@@ -62,7 +63,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param passageBeingEdited the passage which is being edited
      * @param gameData           the data about the rest of the heccin' game.
      */
-    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, GameDataObject gameData) {
+    public PassageEditorWindow(PassageEditingInterface passageBeingEdited, EditWindowGameDataInterface gameData) {
         super(gameData);
         metadata = gameData.getTheMetadata();
         thePassage = passageBeingEdited;
@@ -146,7 +147,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         inlineEditPanel.setBorder(
                 new TitledBorder(
                         loweredEtchedBorder,
-                        "Edit inline comment (readers won't see this)"
+                        "Edit inline comment (players won't see this)"
                 )
         );
 
@@ -166,7 +167,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         contentEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
-                        "Edit passage content (the bits the reader will actually read)"
+                        "Edit passage content (the stuff the player will actually read)"
                 )
         ); //border
 
@@ -185,7 +186,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
         contentEditingPanel.add(contentScroll,BorderLayout.CENTER);
-        JButton contentUpdateButton = new JButton("Update content (yes, readers will read this. hopefully.)");
+        JButton contentUpdateButton = new JButton("Update content (yes, players will read this. hopefully.)");
         contentUpdateButton.addActionListener(this::updateContent);
         contentEditingPanel.add(contentUpdateButton, BorderLayout.SOUTH);
 
@@ -197,7 +198,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         commentEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
-                        "Edit trailing comment (note: readers won't see this)"
+                        "Edit multiline comment (players won't see this)"
                 )
         ); //border
 
