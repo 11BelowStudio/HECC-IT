@@ -2,10 +2,10 @@
   <artifact type="jar" name="HECC-IT">
     <output-path>$PROJECT_DIR$/out/artifacts/HECC_IT</output-path>
     <root id="archive" name="HECC-IT.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
       <element id="module-output" name="CE301 project folder" />
-      <element id="library" level="module" name="JUnit4" module-name="CE301 project folder" />
-      <element id="library" level="module" name="JUnit5.4" module-name="CE301 project folder" />
-      <element id="library" level="project" name="org.junit.jupiter:junit-jupiter:5.4.2" />
     </root>
   </artifact>
 </component>

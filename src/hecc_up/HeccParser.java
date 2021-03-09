@@ -1,6 +1,6 @@
 package hecc_up;
 
-import gameParts.Metadata;
+import hecc_up.gameParts.Metadata;
 import heccCeptions.*;
 import oh_hecc.game_parts.passage.OutputtablePassage;
 import oh_hecc.game_parts.passage.PassageOutputtingInterface;

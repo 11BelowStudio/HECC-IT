@@ -1,6 +1,6 @@
 package oh_hecc.game_parts.metadata;
 
-import gameParts.Variable;
+import hecc_up.gameParts.Variable;
 import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import heccCeptions.NoMatchException;
