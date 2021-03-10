@@ -10,12 +10,8 @@ import utilities.ImageManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 
 /**
@@ -40,8 +36,6 @@ public class HeccItRunner {
 
     private GameDataObject theGameData;
 
-    private final ChooseFile chooseFile;
-
 
     /**
      * This is the constructor for the HECC-IT runner.
@@ -58,7 +52,7 @@ public class HeccItRunner {
         //theFrame.setIconImage(ImageManager.getImage("HECC-IT icon"));
         theFrame.setIconImages(ImageManager.getHeccItIcons());
 
-        chooseFile = new ChooseFile(
+        ChooseFile chooseFile = new ChooseFile(
                 this::openAndStartEditingFileAtLocation,
                 this::makeNewHeccFileAtLocation,
                 this::openAndHeccUpFileAtLocation
@@ -136,15 +130,16 @@ public class HeccItRunner {
             startEditingTheGameData();
 
             success = true;
-            System.out.println("oh hecc that's a new file");
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return success;
     }
 
 
     /**
-     * This is called if the user chooses to
+     * This is called to basically load OH-HECC once some game data has been loaded, allowing the user to start
+     * editing their .HECC file.
      */
     void startEditingTheGameData() {
         editModel = new PassageModel(theGameData);
@@ -155,72 +150,7 @@ public class HeccItRunner {
         editFrame.theFrame.invalidate();
     }
 
-    /**
-     * Dummy method for testing stuff out.
-     *
-     * yeet this asap.
-     * @deprecated
-     */
-    private void yknowWhatItsTimeToTestThisOut() throws Exception{
-        Path heccPath = Paths.get("src/assets/textAssets/HeccSample2.hecc");
-        /*
-        heccFilePath = "src/assets/textAssets/HeccSample2.hecc";
-        heccParser = new OhHeccParser(
-                TextAssetReader.fileToString(heccFilePath)
-        );
-
-         */
-        heccParser = new OhHeccParser(
-                String.join("\n",Files.readAllLines(heccPath))
-        );
-        theGameData = new GameDataObject(heccParser.getHeccMap(), heccParser.getMetadata(), heccPath);
-
-        editModel = new PassageModel(theGameData);
-        editorView = new View(editModel);
-        //editFrame = new OhHeccNetworkFrame();
-        //editFrame.addTheView(editorView);
-
-        editFrame = new OhHeccNetworkFrame();
-        //editFrame.addTheView(editModel);
-        editFrame.addTheView(editorView);
-        editFrame.addTheListeners();
-
-        editFrame.theFrame.invalidate();
-
-        Timer repaintTimer = new Timer(
-                1000,
-                e -> editorView.repaint()
-        );
-
-        repaintTimer.start();
-
-        editFrame.theFrame.addWindowListener(
-                new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-
-                        repaintTimer.stop();
-
-                        //TODO: better save thing
-                        try {
-                            Files.write(theGameData.getSavePath(), Collections.singleton(theGameData.toHecc()));
-                        } catch (IOException ignored) {
-                        }
-                    }
-                }
-        );
-
-
-
-        //Model m = new PassageModel(new EditableMetadata("sample name","a.n.onymous"), new HashMap<>());
-        //View v = new View(m);
-        //OhHeccNetworkFrame f = new OhHeccNetworkFrame();
-        //f.addTheView(v);
-        //f.addTheListeners();
-
-    }
-
-    public static void main(String[] args) throws Exception {
-        HeccItRunner heccRunner = new HeccItRunner();
+    public static void main(String[] args){
+        new HeccItRunner();
     }
 }
