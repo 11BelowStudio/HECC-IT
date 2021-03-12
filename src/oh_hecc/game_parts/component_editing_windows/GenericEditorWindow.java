@@ -31,7 +31,16 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
 
     final Color errorTextFieldColor = Color.RED;
 
+    /**
+     * the GameDataObject with the data for the full game.
+     */
     final EditWindowGameDataInterface gameData;
+
+    /**
+     * Both subclasses of this have a field involving a passage name.
+     * This is a persistent record of whether or not it's currently valid.
+     */
+    boolean isPassageNameValid = true;
 
     /**
      * Constructs the GenericEditorWindow object, and has the given gameData (via EditWindowGameDataInterface)
@@ -67,9 +76,15 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
         theFrame.revalidate();
     }
 
-
+    /**
+     * This function is responsible for actually putting the important stuff in the JFrame.
+     */
     abstract void makeTheFrame();
 
+    /**
+     * This function is responsible for making the 'save and exit'/'im done' panel.
+     * @return a JPanel that works as an 'I'm done' panel.
+     */
     JPanel donePanel() {
         //button to say 'right thats it im done'
         JPanel donePanel = new JPanel(new GridLayout(1, 1));
@@ -132,11 +147,7 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
     }
 
 
-    /**
-     * Both subclasses of this have a field involving a passage name.
-     * This is a persistent record of whether or not it's currently valid.
-     */
-    boolean isPassageNameValid = true;
+
 
     /**
      * This can be called for either of the JTextComponents that are used for passage names (start passage/current passage name).

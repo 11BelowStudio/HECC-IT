@@ -21,20 +21,6 @@ public interface EditModelInterface {
      */
     PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet);
 
-    PassageObject getPassageObjectFromUUID(UUID uuidOfPassageObjectToGet);
-
-    Set<UUID> getUUIDsOfPassagesLinkedToParticularPassageFromUUID(UUID sourcePassageUUID);
-
-    Set<PassageEditingInterface> getPassagesFromSetOfUUIDs(Set<UUID> getThesePassages);
-
-    Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject);
-
-    /**
-     * Gets the passageMap object from the implementing class
-     * @return the passageMap from the implementing class
-     */
-    Map<UUID, PassageEditingInterface> getThePassageMap();
-
 
     /**
      * Obtains the UUIDs of the passages that link to the destination passage

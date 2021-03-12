@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * A single class that can encapsulate all the game data stuff
  */
-public class GameDataObject implements Heccable, EditWindowGameDataInterface {
+public class GameDataObject implements Heccable, EditWindowGameDataInterface, MVCGameDataInterface {
 
     /**
      * Map of all passages, mapped to their UUIDs
@@ -104,6 +104,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * Obtains the UUID of the start passage. Will not forcibly create a start passage.
      * @return an Optional holding the UUID of the start passage (if it exists)
      */
+    @Override
     public Optional<UUID> getStartUUID(){
         return getStartUUID(false);
     }
@@ -112,15 +113,20 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * Attempts to update the 'startPassage' field of the metadata,
      * along with the startUUID field of this object, and also renaming the existing start passage if needed
      * @param newStartPassage the name of the new intended start passage
-     * @return true if the start passage was updated successfully
+     * @return true if the start passage was updated successfully (or if the current start passage was given as an argument)
      * @throws InvalidPassageNameException if the new start passage isn't valid
      */
     @Override
     public boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException {
-        boolean result;
+        boolean result = false;
         String currentStartPassage = theMetadata.getStartPassage();
-        //Optional<PassageEditingInterface> pWithOldName = passageMap.values().stream().filter(p -> p.getPassageName().equals(currentStartPassage)).findAny();
-        Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get)); //(startUUID.isPresent()? Optional.of(passageMap.get(startUUID.get())) : Optional.empty());
+
+        if (newStartPassage.equals(currentStartPassage)){
+            // if the start passage isn't changing, we just let it change.
+            return true;
+        }
+
+        Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get));
         Optional<PassageEditingInterface> pWithNewName = passageMap.values().stream().filter(p -> p.getPassageName().equals(newStartPassage)).findAny();
         if (pWithOldName.isPresent()){
             if (pWithNewName.isPresent()){
@@ -231,6 +237,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      *
      * @return the passage map
      */
+    @Override
     public Map<UUID, PassageEditingInterface> getPassageMap() {
         return passageMap;
     }
@@ -240,6 +247,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      *
      * @return the the metadata
      */
+    @Override
     public MetadataEditingInterface getTheMetadata() {
         return theMetadata;
     }
@@ -248,6 +256,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * Gets the path to where this object is saved
      * @return savePath
      */
+    @Override
     public Path getSavePath(){
         return savePath;
     }
@@ -257,6 +266,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * @param passage the UUID of the passage in question which is having its PassageEditorWindow opened
      * @return a {@link PassageEditorWindow} which allows a user to edit the passage in question
      */
+    @Override
     public EditorWindowInterface openPassageEditWindow(UUID passage){
         EditorWindowInterface pw = new PassageEditorWindow(passageMap.get(passage),this);
         addClosedListener(pw);
@@ -267,6 +277,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * Creates a MetadataEditorWindow for this game
      * @return the MetadataEditorWindow allowing the user to edit the metadata
      */
+    @Override
     public EditorWindowInterface openMetadataEditWindow(){
         EditorWindowInterface ew = new MetadataEditorWindow(this);
         addClosedListener(ew);
@@ -288,6 +299,25 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
         return w;
     }
 
+    /**
+     * Puts the specified PassageEditingInterface object onto the PassageMap.
+     * @param p the passage to put on the map.
+     */
+    @Override
+    public void putPassageOntoMap(PassageEditingInterface p) {
+        passageMap.put(p.getPassageUUID(), p);
+    }
+
+    /**
+     * Obtains the PassageEditingInterface object for the passage with the given UUID
+     * @param uuidOfPassageToGet the UUID of the PassageEditingInterface object which is needed.
+     * @return the appropriate PassageEditingInterface object.
+     */
+    @Override
+    public PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet){
+        return passageMap.get(uuidOfPassageToGet);
+    }
+
 
     /**
      * Obtains the PassageEditingInterface objects of all the passages which the given passage links to
@@ -295,6 +325,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * @param uuidOfSourceObject the UUID of the passage that we're trying to find the 'child' passages of
      * @return the UUIDs of all the 'child' passages
      */
+    @Override
     public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject) {
         Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
         passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs().forEach(
@@ -309,6 +340,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
      * @return the UUIDs of all the 'parent' passages
      */
+    @Override
     public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
         return passageMap.keySet().stream().filter(
                 p -> passageMap.get(p).getLinkedPassageUUIDs().contains(destination)
@@ -330,16 +362,12 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * @throws IOException if there's an IO problem preventing it from being saved.
      * @throws HeccCeption if there's a problem with the .hecc file that renders it invalid.
      */
+    @Override
     public void saveTheHeccCheckingValidity() throws IOException, HeccCeption {
         Files.write(savePath, Collections.singleton(toHecc()));
-
-        //try{
         if (checkForValidity()) {
             Files.write(lastValidPath, Collections.singleton(toHecc()));
         }
-        //} catch(HeccCeption e){
-        //throw e;
-        //}
     }
 
     /**
@@ -363,6 +391,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * But the passages aren't in any particular order.
      * @return a string containing all the .hecc code.
      */
+    @Deprecated
     private String quickAndDirtyHecc(){
         return theMetadata.toHecc().concat("\n").concat(
                 passageMap.values().stream().map(Heccable::toHecc)
@@ -373,6 +402,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface {
      * An iterative method for building the .hecc code for the passages, (breadth first)
      * @return a string containing all the .hecc code for the passages
      */
+    @Deprecated
     private String breadthFirstHeccBuilder(){
         StringBuilder sb = new StringBuilder();
         Set<UUID> keys = new HashSet<>(passageMap.keySet());

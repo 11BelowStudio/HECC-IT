@@ -18,6 +18,7 @@ public class StringObject extends AbstractObject {
 
     private Font theFont;
 
+
     public static final int LEFT_ALIGN = 0;
     public static final int RIGHT_ALIGN = 1;
     public static final int MIDDLE_ALIGN = 2;
@@ -25,13 +26,7 @@ public class StringObject extends AbstractObject {
 
 
 
-    //le ebic font has arrived no bamboozle
-    /**
-     * <b>megalovania starts playing in the distance</b>
-     */
-    public static final Font SANS = new Font("Comic Sans MS",  Font.PLAIN , 20);
-    public static final Font MEDIUM_SANS = new Font("Comic sans MS", Font.PLAIN,40);
-    public static final Font BIG_SANS = new Font("Comic sans MS", Font.PLAIN,50);
+
 
 
     /**
@@ -108,7 +103,6 @@ public class StringObject extends AbstractObject {
         alignment = LEFT_ALIGN;
         theString = "";
         objectColour = Color.WHITE;
-        //theFont = SANS;
     }
 
 
@@ -131,39 +125,31 @@ public class StringObject extends AbstractObject {
 
     @Override
     public void individualDraw(Graphics2D g) {
-        //if (visible) {
-            Font tempFont = g.getFont();
-            //g.setFont(theFont);
-            g.setFont(tempFont.deriveFont(Font.BOLD));
-            g.setColor(Color.black);
-            FontMetrics metrics = g.getFontMetrics(g.getFont());
-            int w = metrics.stringWidth(theString);
-            int h = metrics.getHeight();
-            int heightOffset = -h/2;
-            int widthOffset;
-            switch (alignment){
-                default:
-                    widthOffset = alignment;
-                    break;
-                case 0:
-                    widthOffset = 0;
-                    break;
-                case 1:
-                    widthOffset = -w;
-                    break;
-                case 2:
-                    widthOffset = -(w/2);
-                    break;
-            }
-            g.drawString(theString,widthOffset+1,+1);
-            g.drawString(theString,widthOffset-1,+1);
-            g.drawString(theString,widthOffset-1,-1);
-            g.drawString(theString,widthOffset+1,-1);
-            g.setColor(objectColour);
-            g.drawString(theString,widthOffset,0);
-            g.setFont(tempFont);
-            areaRectangle = new Rectangle((int)position.x - (w/2), (int)position.y + heightOffset,w,h);
-        //}
+        Font tempFont = g.getFont();
+        g.setFont(tempFont.deriveFont(Font.BOLD));
+        g.setColor(Color.black);
+        FontMetrics metrics = g.getFontMetrics(g.getFont());
+        int w = metrics.stringWidth(theString);
+        int h = metrics.getHeight();
+        int heightOffset = -h/2;
+        int widthOffset = switch (alignment) {
+            default ->
+                    alignment;
+            case StringObject.LEFT_ALIGN ->
+                    0;
+            case StringObject.RIGHT_ALIGN ->
+                    -w;
+            case StringObject.MIDDLE_ALIGN ->
+                    -(w / 2);
+        };
+        g.drawString(theString,widthOffset+1,+1);
+        g.drawString(theString,widthOffset-1,+1);
+        g.drawString(theString,widthOffset-1,-1);
+        g.drawString(theString,widthOffset+1,-1);
+        g.setColor(objectColour);
+        g.drawString(theString,widthOffset,0);
+        g.setFont(tempFont);
+        areaRectangle = new Rectangle((int)position.x - (w/2), (int)position.y + heightOffset,w,h);
     }
 
     public StringObject setText(String s){ theString = s; return this;}

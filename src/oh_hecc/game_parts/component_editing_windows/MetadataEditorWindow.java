@@ -42,15 +42,9 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
 
-    //some shit what hasn't been used
     private final AttributeString<String> currentTitle;
-    private final AttributeString<String> currentAuthor;
-    private final AttributeString<String> currentStartPassage;
-    private final AttributeString<String> currentIFID;
 
     private JTextArea titleText;
-    private JTextArea authorText;
-    private JTextArea startText;
 
     //the good shit what has been used
     private JLabel titleLabel;
@@ -72,9 +66,6 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         super(gameData);
         theMetadata = gameData.getTheMetadata();
         currentTitle = new AttributeString<>("Title:\n", theMetadata.getTitle());
-        currentAuthor = new AttributeString<>("Author:\n", theMetadata.getAuthor());
-        currentStartPassage = new AttributeString<>("Start passage:\n", theMetadata.getStartPassage());
-        currentIFID = new AttributeString<>("IFID:\n",theMetadata.getIfid());
 
 
         makeTheFrame();
@@ -90,8 +81,8 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Or at least where the actual editor window itself is made.
      * Same thing, basically.
      */
+    @Override
     void makeTheFrame(){
-        //super.makeTheFrame();
 
         theFrame.setTitle("Metadata Editor Window");
 
@@ -106,12 +97,6 @@ public class MetadataEditorWindow extends GenericEditorWindow {
                 )
         ); //border
 
-
-
-
-        //JFormattedTextField.AbstractFormatterFactory formatterFactory = new DefaultFormatterFactory();
-
-        //showing current data
 
         //title
         titleText = new JTextArea(theMetadata.getTitle(),0,0);

@@ -4,11 +4,11 @@ package oh_hecc.mvc;
 import heccCeptions.HeccCeption;
 import hecc_up.HeccUpGUI;
 import oh_hecc.game_parts.GameDataObject;
+import oh_hecc.game_parts.MVCGameDataInterface;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import oh_hecc.mvc.controller.ActionViewer;
 import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
 import oh_hecc.mvc.model_bits.StartHighlightObject;
@@ -31,7 +31,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     /**
      * The actual GameDataObject
      */
-    private final GameDataObject theData;
+    private final MVCGameDataInterface theData;
 
     /**
      * The Metadata for the game that this model represents
@@ -104,16 +104,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     private Area selectionArea;
 
     /**
-     * Any currently-opened EditorWindowInterface object
-     */
-    private final EditorWindowInterface editWindow;
-
-    /**
-     * does it need to add listener to editwindow
-     */
-    private boolean needToAddListenerToEditWindow;
-
-    /**
      * Mouse position during this left-click drag frame
      */
     private final Vector2D currentLeftDragPos;
@@ -129,7 +119,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * Constructs the PassageModel object
      * @param data the GameDataObject containing all the data for the game.
      */
-    public PassageModel(GameDataObject data){
+    public PassageModel(MVCGameDataInterface data){
         super();
 
         theData = data;
@@ -189,11 +179,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         selectionArea = new Area();
 
         selectedObjects = new HashSet<>();
-
-        needToAddListenerToEditWindow = true;
-
-        //dont mind me, just trying to avoid compiler problems.
-        editWindow = closeEvent -> { };
 
         drawingTopRight = new Vector2D();
 
@@ -255,20 +240,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         System.out.println("and imma invalidate myself");
         super.revalidate();
-
-        //repaint();
-
-        /*
-        repaint();
-        try {
-            Thread.sleep(100);
-        } catch (Exception e){}
-
-         */
-        //TODO: call the repaint method of the frame instead I guess?
-        //System.out.println("painted");
-        //revalidate();
-        //update(this.getGraphics());
     }
 
 
@@ -289,7 +260,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         if (editMetadataObjectButton.wasClicked(mLocation)) {
             activity = CurrentActivity.DIALOG_OPEN;
-            String lastStart = theMetadata.getStartPassage();
             EditorWindowInterface w = theData.openMetadataEditWindow();
             w.addWindowClosedListener(this::editingWindowClosed);
 
@@ -317,44 +287,13 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 ).findAny(); //basically tries to find the first one where the 'wasClicked' method evaluates to true
 
             if (clicked.isPresent()){
-                //if something was clicked
+                //if a passage object was clicked, we start editing it.
                 activity = CurrentActivity.DIALOG_OPEN;
 
                 EditorWindowInterface w = theData.openPassageEditWindow(clicked.get().getTheUUID());
-                //if it's the start passage
-                /*
-                if (theMetadata.getStartPassage().equals(p.getPassageName())){
-                    //open the passage editor window with a reference to the metadata object
-                    w = PassageEditingInterface.openEditorWindow(p,passageMap,theMetadata);
-                } else {
-                    //if this isn't the start passage, we don't give a damn about the metadata object
-                    w = PassageEditingInterface.openEditorWindow(p,passageMap);
-                }
 
-                 */
                 w.addWindowClosedListener(this::editingWindowClosed);
-                        /*
-                        e -> {
-                            actuallyValidateStuff();
-                            activity = CurrentActivity.DOING_NOTHING;
-                        }
-                );
-                         */
-                //TODO: other bits to do with opening the stuff
             }
-            /*
-            for (PassageObject o : drawablePassageObjects ) { //objectMap.values()
-                if (o.wasClicked(scrolledMouse)) {
-                    EditorWindowInterface w = o.openEditingWindow();
-                    w.addWindowClosedListener(
-                            e -> this.actuallyValidateStuff()
-                    );
-                    //TODO: other bits to do with opening the stuff
-                    break;
-                }
-            }
-
-             */
         }
         revalidate();
     }
@@ -370,7 +309,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private boolean saveTheHecc() {
         try {
-            //theData.saveTheHecc();
+            //we attempt to save the hecc.
             theData.saveTheHeccCheckingValidity();
             JOptionPane.showMessageDialog(
                     this,
@@ -380,7 +319,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             );
             return true;
         } catch (HeccCeption h) {
-
+            // if the hecc wasn't exactly valid, we let the author know what the problem was.
             JOptionPane.showMessageDialog(
                     this,
                     "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
@@ -389,6 +328,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             );
 
         } catch (IOException ioe) {
+            // and if it couldn't be saved at all, we panic.
+
             JOptionPane.showMessageDialog(
                     this,
                     "Could not save the .hecc file!",
@@ -451,35 +392,37 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         currentLeftDragPos.set(mLocation);
         switch (activity){
-            case DOING_NOTHING:
+            case DOING_NOTHING -> {
 
                 Optional<PassageObject> pressed =
                         objectMap.values().stream().filter(p -> p.wasClicked(mLocation)).findAny();
-                if (pressed.isPresent()){
+                if (pressed.isPresent()) {
                     PassageObject p = pressed.get();
                     p.nowSelected();
                     selectedObjects.add(p);
                     activity = CurrentActivity.LC_MOVING_OBJECTS;
-                    break;
-                } else{
+
+                } else {
                     //TODO: START DRAGGING SELECTION AREA
                     activity = CurrentActivity.LC_DRAGGING_SELECTION_BOX;
-                    break;
+
                 }
+            }
                 //break;
-            case LC_OBJECTS_SELECTED:
+            case LC_OBJECTS_SELECTED -> {
                 //TODO: any other things I need to do when left-clicking whilst done selecting the things?
 
                 //If mouse down on a selected object
-                if (selectedObjects.stream().anyMatch( p-> p.wasClicked(mLocation))){
+                if (selectedObjects.stream().anyMatch(p -> p.wasClicked(mLocation))) {
                     //start moving them
-                   activity = CurrentActivity.LC_MOVING_OBJECTS;
+                    activity = CurrentActivity.LC_MOVING_OBJECTS;
                 } else {
                     //if mouse down anywhere else, they're now unselected.
                     clearSelection();
                     activity = CurrentActivity.DOING_NOTHING;
                 }
-                break;
+
+            }
         }
 
     }
@@ -514,25 +457,26 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     public void leftRelease(Point mLocation) {
         moveMouseByScroll(mLocation);
         super.leftRelease(mLocation);
-        switch (activity){
-            case LC_DRAGGING_SELECTION_BOX: //if was dragging selection box, finalize selection
+        switch (activity) {
+            case LC_DRAGGING_SELECTION_BOX -> {
+                //if we were dragging selection box, finalize selection
 
                 clearSelection();
                 //adds all objects which intersect with selectionArea to selectObjects
                 selectedObjects.addAll(
-                    objectMap.values().stream().filter(
-                            o -> o.checkIntersectWithArea(selectionArea)
-                    ).collect(Collectors.toSet())
+                        objectMap.values().stream().filter(
+                                o -> o.checkIntersectWithArea(selectionArea)
+                        ).collect(Collectors.toSet())
                 );
                 activity = CurrentActivity.LC_OBJECTS_SELECTED;
 
                 //TODO: clear selection area
-                break;
-
-            case LC_MOVING_OBJECTS: //if was moving objects, stop moving them
+            }
+            case LC_MOVING_OBJECTS -> {
+                //if we were moving objects, stop moving them
                 clearSelection();
                 activity = CurrentActivity.DOING_NOTHING;
-                break;
+            }
         }
 
     }
@@ -557,21 +501,19 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     public void leftDrag(Point mLocation) {
         moveMouseByScroll(mLocation);
         super.leftDrag(mLocation);
-        //lastLeftDrag is set to last frame's currentLeftDragPos.
         Vector2D lastLeftDrag = new Vector2D(currentLeftDragPos);
-        //updates currentLeftDragPos to current mouse position
         currentLeftDragPos.set(mLocation);
-        switch (activity){
-            case LC_DRAGGING_SELECTION_BOX: //if dragging selection box
+        switch (activity) {
+            case LC_DRAGGING_SELECTION_BOX -> {//if dragging selection box
                 //TODO: drag selection box
-                break;
-            case LC_MOVING_OBJECTS: //if moving objects
-                Vector2D movement = Vector2D.subtract(currentLeftDragPos,lastLeftDrag);
+
+            }
+            case LC_MOVING_OBJECTS -> { //if moving objects, we move them.
+                Vector2D movement = Vector2D.subtract(currentLeftDragPos, lastLeftDrag);
                 selectedObjects.forEach(
                         o -> o.move(movement)
                 );
-
-                break;
+            }
 
         }
     }
@@ -725,42 +667,14 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         yMove((positive? 100: -100));
     }
 
-    @Override
-    public PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet){
-        return passageMap.get(uuidOfPassageToGet);
-    }
-
-    @Override
-    public PassageObject getPassageObjectFromUUID(UUID uuidOfPassageObjectToGet){
-        return objectMap.get(uuidOfPassageObjectToGet);
-    }
-
-    @Override
-    public Set<UUID> getUUIDsOfPassagesLinkedToParticularPassageFromUUID(UUID sourcePassageUUID){
-        return passageMap.get(sourcePassageUUID).getLinkedPassageUUIDs();
-    }
-
-    @Override
-    public Set<PassageEditingInterface> getPassagesFromSetOfUUIDs(Set<UUID> getThesePassages){
-        return passageMap.values().stream().filter(
-                p -> getThesePassages.contains(p.getPassageUUID())
-        ).collect(Collectors.toSet());
-    }
-
     /**
-     * Obtains the PassageEditingInterface objects of all the passages which the given passage links to
-     *
-     * @param uuidOfSourceObject the UUID of the passage that we're trying to find the 'child' passages of
-     * @return the UUIDs of all the 'child' passages
+     * Obtains a PassageEditingInterface object from the passageMap of theData from UUID
+     * @param uuidOfPassageToGet the UUID of the passage to get
+     * @return that passage
      */
     @Override
-    public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject){
-        return theData.getPassageEditingInterfaceObjectsConnectedToGivenObject(uuidOfSourceObject);
-    }
-
-    @Override
-    public Map<UUID, PassageEditingInterface> getThePassageMap(){
-        return passageMap;
+    public PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet){
+        return theData.getPassageFromUUID(uuidOfPassageToGet);
     }
 
     /**
