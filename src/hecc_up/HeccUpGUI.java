@@ -355,21 +355,14 @@ public class HeccUpGUI implements LoggerInterface {
      */
     private void selectHeccFileHandler(ActionEvent e) {
         //opens the selectHeccFileChooser filechooser
+        if (heccFileChosen){
+            selectHeccFileChooser.setCurrentDirectory(heccFileLocation.toFile());
+        }
+
         int fcReturnValue = selectHeccFileChooser.showOpenDialog(theFrame);
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a .hecc file was chosen
-
             Path thePath = selectHeccFileChooser.getSelectedFile().toPath().toAbsolutePath();
-
             selectedAHeccFile(thePath);
-            //finds the path of the selected .hecc file
-            //heccFileLocation = selectHeccFileChooser.getSelectedFile().getAbsolutePath();
-            //updates the display to show the new hecc file location
-            //heccFileAttributeString.showValue(heccFileLocation);
-            //heccFileLocationDisplay.setText(heccFileAttributeString.toString());
-            //marks it as being chosen
-            //heccFileChosen = true;
-            //revalidate();
-            //logInfo("hecc file has been chosen!");
         }
     }
 
@@ -405,20 +398,17 @@ public class HeccUpGUI implements LoggerInterface {
      */
     private void selectOutputFileHandler(ActionEvent e) {
         //opens the selectGameLocationChooser fileChooser
+
+        if (outputFolderChosen){
+            selectGameLocationChooser.setCurrentDirectory(outputFolderLocation.toFile());
+        }
+
         int fcReturnValue = selectGameLocationChooser.showDialog(theFrame, "Select");
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a directory was chosen
 
             Path thePath = selectGameLocationChooser.getSelectedFile().toPath().toAbsolutePath();
             selectedAnOutputFolder(thePath);
-            //records the path of it
-            //outputFolderLocation = selectGameLocationChooser.getSelectedFile().getAbsolutePath();
-            //updates the display to show the path of it
-            //gameLocationAttributeString.showValue(outputFolderLocation);
-            //gameLocationDisplay.setText(gameLocationAttributeString.toString());
-            //marks it as being chosen
-            //outputFolderChosen = true;
-            //revalidate();
-            //logInfo("Output folder has been chosen!");
+
         }
     }
 

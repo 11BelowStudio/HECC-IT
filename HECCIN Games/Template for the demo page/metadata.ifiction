@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+	<!-- Bibliographic data generated via HECC-UP -->
+	<story>
+		<identification>
+			<ifid>DB55D9B5-84D1-4527-8FA8-2E0DC726467E</ifid>
+			<format>html</format>
+		</identification>
+		<bibliographic>
+			<title>Template for the demo page</title>
+			<author>Rachel Lowe</author>
+		</bibliographic>
+	</story>
+</ifindex>

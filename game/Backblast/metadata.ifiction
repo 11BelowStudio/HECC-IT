@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+	<!-- Bibliographic data generated via HECC-UP -->
+	<story>
+		<identification>
+			<ifid>123F032A-953F-496B-9251-7DBF3B320074</ifid>
+			<format>html</format>
+		</identification>
+		<bibliographic>
+			<title>Backblast</title>
+			<author>Rachel Lowe</author>
+		</bibliographic>
+	</story>
+</ifindex>

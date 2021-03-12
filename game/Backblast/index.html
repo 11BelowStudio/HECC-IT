@@ -3,7 +3,7 @@
 <!-- this is the index.html page for the HECCIN Game (12/03/2021)-->
 <head>
     <meta charset="utf-8" />
-    <title>HECCIN Game</title>
+    <title>Backblast</title>
     <style>
         p{
             font-size: 20px;
@@ -14,14 +14,16 @@
             top: 50%;
             padding: 20px;
             width: 90%;
+            /*border: 5px black;
+            background-color: lightblue;*/
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: sans-serif;
         }
         .innerDiv {
             width: 100%;
+            /*background-color: red;*/
         }
         #divWhatHoldsPassageContent{
             margin: auto;
@@ -33,11 +35,16 @@
             background-color: white;
         }
         .backDiv{
+            /*
+            tbh imma probably attempt to get this div to stay where it is, even if the div holding passage content changessize, to make it easier to go back.
+            might just make it go above/to the side of the passage content div or something idk
+            but I guess it's still perfecly functional where it is, y'know?
+            */
             margin: auto;
             width: 90%;
             border: 1px solid black;
             text-align: center;
-            background-color: white;
+            /*background-color: yellow;*/
         }
         .passageLink{
             text-decoration: underline;
@@ -51,7 +58,7 @@
 </head>
 <body>
 
-<!-- METADATA GOES HERE -->
+<!-- UUID://123F032A-953F-496B-9251-7DBF3B320074// -->
 
 <div class = "outerDiv">
     <div class="innerDiv">
@@ -75,10 +82,16 @@
 <script src="heccer.js"></script>
 <script src="showdown.min.js"></script>
 <script>
+    //this stuff has to be inline here otherwise it doesn't work
+
     showdown.extension('heccstension', heccstension);
     showdown.setOption('simpleLineBreaks', true);
+
     const converter = new showdown.Converter({ extensions: ['heccstension']});
+
     window.onload = getHECCED;
+    //when the window loads, it will call the getHECCED() method defined in HECCED.js (setting up theHeccer and making it start working)
+
 </script>
 </body>
 </html>

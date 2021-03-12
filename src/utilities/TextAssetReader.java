@@ -23,10 +23,21 @@ public class TextAssetReader {
      * heccer.js as an Arraylist of strings
      */
     private final static List<String> HECCER = fileToStaticStringList("heccer.js");
+
+    /**
+     * heccer.js as a string
+     */
+    public final static String HECCER_STRING = fileToStaticString("heccer.js");
+
     /**
      * index.html as an ArrayList of strings
      */
     private final static List<String> INDEX = fileToStaticStringList("index.html");
+
+    /**
+     * index.html as a String
+     */
+    public final static String INDEX_STRING = fileToStaticString("index.html");
 
     /**
      * iFictionTemplate.iFiction as an ArrayList of strings
@@ -41,7 +52,7 @@ public class TextAssetReader {
     /**
      * showdown.min.js as a string
      */
-    private final static List<String> SHOWDOWN_MIN_JS = fileToStaticStringList("showdown.min.js");
+    private final static String SHOWDOWN_MIN_JS = fileToStaticString("showdown.min.js");
 
     /**
      * This reads the files held in src/assets/textAssets, in a way which allows them to be included in a .jar file
@@ -130,6 +141,6 @@ public class TextAssetReader {
      * gets the showdown.min.js file contents
      * @return the showdown.min.js file contents
      */
-    public static List<String> getShowdownMinJs(){ return SHOWDOWN_MIN_JS; }
+    public static String getShowdownMinJs(){ return SHOWDOWN_MIN_JS; }
 
 }

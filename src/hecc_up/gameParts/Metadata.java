@@ -404,9 +404,9 @@ public class Metadata implements FolderOutputterMetadataInterface {
     @Override
     public String getIfidButHtmlFormatted(){
         if (isIfidDeclared) {
-            return "<!-- UUID://" + ifid + "// -->\n";
+            return "<!-- UUID://" + ifid + "// -->";
         } else{
-            return "<!-- no IFID declared! -->\n";
+            return "<!-- no IFID declared! -->";
         }
     }
 

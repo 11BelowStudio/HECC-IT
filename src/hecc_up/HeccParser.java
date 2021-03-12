@@ -364,7 +364,7 @@ public class HeccParser {
 
         heccedData.clear();
 
-        heccedData.add("//HECC UP output (as of 29/01/2021) (R. Lowe, 2021)\n\n");
+        heccedData.add("//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n\n");
 
         //declaration of starting passage name is added to heccedData
         heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\r\n\r");

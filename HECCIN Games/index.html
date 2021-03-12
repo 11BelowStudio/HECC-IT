@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>The HECC Examples</title>
+    <style>
+        p{
+            font-size: 20px;
+            font-family: sans-serif;
+        }
+        .outerDiv {
+            margin: auto;
+            top: 50%;
+            padding: 20px;
+            width: 90%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+        }
+        .innerDiv {
+            width: 100%;
+        }
+        #divWhatHoldsPassageContent{
+            margin: auto;
+            top: 50%;
+            width: 80%;
+            padding: 0 5%;
+            border: 1px solid black;
+            text-align: center;
+            background-color: white;
+        }
+        .backDiv{
+            margin: auto;
+            width: 70%;
+            padding: 0 10%;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class = "outerDiv">
+    <div class="innerDiv">
+        <div class = "backDiv">
+            <h1>Welcome to the HECC-IT demo!</h1>
+            <p>
+                Here is a sample of games produced using the <i>Hypertext Editing And Creation Code Integrated Toolkit</i>
+                <br>
+                so you can get an idea of the sort of stuff you can potentially make using this tool.
+            </p>
+        </div>
+        <div class= "passageDiv" id = "divWhatHoldsPassageContent">
+            <p><strong>HeccSample</strong><br>
+                <a href="HeccSample/HeccSample/index.html">Play it here!</a><br>
+                This was the first game I produced using HECC-IT, mostly as a proof-of-concept before building HECC-IT properly. It ain't much, but it works.</p>
+            <p><strong>A Conversation</strong><br>
+                <a href="A%20Conversation/A%20Conversation/index.html">Play it here!</a><br>
+                This was the first 'proper' game produced with HECC-IT, with something that bears a passing resemblence to a proper hypertext game.<br>
+                It's also a <strong>very</strong> poorly disguised shameless plug for this tool.</p>
+            <p><strong>Countdown</strong><br>
+                <a href="countdown/countdown/index.html">Play it here!</a><br>
+                This was a demonstration I made when I added conditional statements to HECC-IT, incorporating <a href="https://github.com/showdownjs/showdown/"><em>Showdown.js</em></a> into the output of the tool, both to provide markdown formatting, and also to assist in processing the guard conditions and changing the text of the passage displayed to the reader appropriately.</p>
+            <p><em>Further games will be added to this page when they're done!</em></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

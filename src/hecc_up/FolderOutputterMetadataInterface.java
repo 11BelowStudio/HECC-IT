@@ -16,4 +16,9 @@ public interface FolderOutputterMetadataInterface {
      * @return the metadata but in the form you'd expect in an iFiction file
      */
     String getIFictionMetadata();
+
+    /**
+     * @return the 'title' field of this object
+     */
+    String getTitle();
 }
