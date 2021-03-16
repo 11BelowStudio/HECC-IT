@@ -140,18 +140,10 @@ public class PassageObject extends EditModelObject {
      */
     private void whatColourShouldThisObjectBe() {
         switch (thePassage.getPassageStatus()) {
-            case NORMAL:
-                objectColour = NORMAL_COLOUR;
-                break;
-            case DELETED_LINK:
-                objectColour = ERROR_COLOUR;
-                break;
-            case END_NODE:
-                objectColour = END_COLOUR;
-                break;
-            case EMPTY_CONTENT:
-                objectColour = EMPTY_COLOUR;
-                break;
+            case NORMAL -> objectColour = NORMAL_COLOUR;
+            case DELETED_LINK -> objectColour = ERROR_COLOUR;
+            case END_NODE -> objectColour = END_COLOUR;
+            case EMPTY_CONTENT -> objectColour = EMPTY_COLOUR;
         }
         pointOfNoReturn = thePassage.isThisAPointOfNoReturn();
     }
@@ -267,25 +259,6 @@ public class PassageObject extends EditModelObject {
         passageNameObject.draw(g);
         g.setTransform(backup);
     }
-
-
-    /*
-    @Override
-    public void draw(Graphics2D g){
-        super.draw(g);
-        g.setColor(Color.GREEN);
-        g.fill(areaRectangle);
-    }
-
-     */
-
-
-    /*
-    public void scroll(Vector2D scrollBy){
-        position.set(scrollBy);
-    }
-
-     */
 
 
     /**

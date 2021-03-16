@@ -13,13 +13,10 @@ import java.util.UUID;
 public class PassageLinkObject extends EditModelObject {
 
 
-    private final UUID fromUUID;
     private final UUID toUUID;
 
     private final PassageObject fromObject;
     //private PassageObject toObject;
-
-    private final Vector2D pointToPosition;
 
     private final Vector2D vectorFromSourceToDestination;
 
@@ -40,10 +37,10 @@ public class PassageLinkObject extends EditModelObject {
 
         fromObject = sourceObject;
 
-        fromUUID = fromObject.getTheUUID();
+        //UUID fromUUID = fromObject.getTheUUID();
         toUUID = destinationUUID;
 
-        pointToPosition = theModel.getPassageFromUUID(toUUID).getPosition();
+        //Vector2D pointToPosition = theModel.getPassageFromUUID(toUUID).getPosition();
 
 
         vectorFromSourceToDestination = Vector2D.subtract(theModel.getPassageFromUUID(toUUID).getPosition(), getPosition());
