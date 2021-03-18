@@ -7,10 +7,10 @@ and used whilst HECC-IT is running.
 
 This is what each of the subfolders contain:
 
-* [Image Assets](/imageAssets/)
+* [Image Assets](./imageAssets/)
     * Holds the images used as the application icons etc. for HECC-IT (and HECC-UP, and OH-HECC).
         * Not critical to the performance of HECC-IT (but they certainly help to make it look a lot less unpolished)
-* [Text Assets](/textAssets/)
+* [Text Assets](./textAssets/)
     * Holds the premade .js and index.html files which are replicated in the output HECCIN' Game produced by HECC-UP.
     * Specifically
         * heccer.js
