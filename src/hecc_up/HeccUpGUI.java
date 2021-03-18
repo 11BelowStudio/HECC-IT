@@ -23,7 +23,6 @@ import java.util.function.Consumer;
  */
 public class HeccUpGUI implements LoggerInterface {
 
-    //TODO: incorporate into OH-HECC
 
     /**
      * the heccUpHandler object that handles the process of heccing things up
@@ -54,11 +53,6 @@ public class HeccUpGUI implements LoggerInterface {
      * the frame that has the gui
      */
     private final JFrame theFrame;
-
-    /**
-     * The panel that will actually hold the GUI
-     */
-    private JPanel thePanel;
 
     /**
      * JTextArea stating the location of the chosen hecc file
@@ -196,8 +190,10 @@ public class HeccUpGUI implements LoggerInterface {
 
         theFrame.setLayout(new GridLayout(1, 1));
 
-        //thePanel will have a BoxLayout
-        thePanel = new JPanel();
+
+        JPanel thePanel = new JPanel(); // The panel that will actually hold the GUI
+
+        // it will have a BoxLayout
         thePanel.setLayout(new BoxLayout(thePanel, BoxLayout.Y_AXIS));
 
         //guiFrame will use a BoxLayout.

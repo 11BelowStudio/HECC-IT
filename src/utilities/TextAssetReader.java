@@ -106,7 +106,6 @@ public class TextAssetReader {
      * @return the file contents as a single string
      * @throws IOException if the file couldn't be read
      */
-    @Deprecated
     public static String fileToString(String fileLocation) throws IOException{
         return String.join("\n", Files.readAllLines(Paths.get(fileLocation)));
     }

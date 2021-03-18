@@ -15,7 +15,7 @@ import static oh_hecc.game_parts.metadata.MetadataReadingInterface.*;
 /**
  * This object basically represents the metadata for the HECCIN' Game
  */
-public class Metadata implements FolderOutputterMetadataInterface {
+public class Metadata implements FolderOutputterMetadataInterface, MetadataReadingInterface {
 
     //TODO: maybe encapsulate HECC-UP specific functions in a seperate object to OH-HECC specific functions?
 
@@ -64,7 +64,9 @@ public class Metadata implements FolderOutputterMetadataInterface {
     private String ifid; //holds the IFID if it is declared
 
     /**
-     * All the variable definitions
+     * All the variable definitions.
+     *
+     * STILL UNUSED!
      */
     private final ArrayList<Variable> variables;
 
@@ -304,6 +306,18 @@ public class Metadata implements FolderOutputterMetadataInterface {
     public String getStartPassage() { return startPassage; }
 
     /**
+     * obtains the comment
+     *
+     * @return the comment
+     *
+     * UNUSED!
+     */
+    @Override
+    public String getComment() {
+        return "";
+    }
+
+    /**
      * Returns whether or not the IFID was declared
      * @return isIfidDeclared
      */
@@ -377,8 +391,6 @@ public class Metadata implements FolderOutputterMetadataInterface {
      */
     public String getAuthor(){ return author; }
 
-    //TODO: iFiction metadata export stuff
-    //public String getiFictionMetadata(){}
 
     /**
      * This is here for debugging reasons
@@ -449,5 +461,17 @@ public class Metadata implements FolderOutputterMetadataInterface {
                 "</ifindex>"
         );
         return iFictionBuilder.toString();
+    }
+
+    /**
+     * Method to obtain the .hecc representation of this object
+     *
+     * @return a string containing this object in .hecc code format
+     *
+     * UNUSED!
+     */
+    @Override
+    public String toHecc() {
+        return "";
     }
 }
