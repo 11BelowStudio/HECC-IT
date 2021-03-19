@@ -33,10 +33,12 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
     @Override
     public void mouseClicked(MouseEvent e) {
         switch (e.getButton()) {
-            case MouseEvent.BUTTON1 ->
-                    controlledModel.leftClick(e.getPoint());
-            case MouseEvent.BUTTON3 ->
-                    controlledModel.rightClick(e.getPoint());
+            case MouseEvent.BUTTON1:
+                controlledModel.leftClick(e.getPoint());
+                break;
+            case MouseEvent.BUTTON3:
+                controlledModel.rightClick(e.getPoint());
+                break;
         }
         theFrame.repaint();
     }
@@ -44,10 +46,12 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
     @Override
     public void mousePressed(MouseEvent e) {
         switch (e.getButton()) {
-            case MouseEvent.BUTTON1 ->
+            case MouseEvent.BUTTON1:
                     controlledModel.leftPress(e.getPoint());
-            case MouseEvent.BUTTON3 ->
+                    break;
+            case MouseEvent.BUTTON3:
                     controlledModel.rightPress(e.getPoint());
+                    break;
         }
         theFrame.repaint();
     }
@@ -55,10 +59,12 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
     @Override
     public void mouseReleased(MouseEvent e) {
         switch (e.getButton()) {
-            case MouseEvent.BUTTON1 ->
+            case MouseEvent.BUTTON1:
                     controlledModel.leftRelease(e.getPoint());
-            case MouseEvent.BUTTON3 ->
+                    break;
+            case MouseEvent.BUTTON3:
                     controlledModel.rightRelease(e.getPoint());
+                    break;
         }
         theFrame.repaint();
     }
@@ -99,22 +105,22 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
     public void keyPressed(KeyEvent e) {
         System.out.println("pressed");
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT -> {
+            case KeyEvent.VK_LEFT:
                 controlledModel.xMove(false);
                 System.out.println("l");
-            }
-            case KeyEvent.VK_RIGHT -> {
+                break;
+            case KeyEvent.VK_RIGHT:
                 controlledModel.xMove(true);
                 System.out.println("r");
-            }
-            case KeyEvent.VK_UP -> {
+                break;
+            case KeyEvent.VK_UP:
                 controlledModel.yMove(false);
                 System.out.println("u");
-            }
-            case KeyEvent.VK_DOWN -> {
+                break;
+            case KeyEvent.VK_DOWN:
                 controlledModel.yMove(true);
                 System.out.println("d");
-            }
+                break;
         }
         theFrame.repaint();
     }

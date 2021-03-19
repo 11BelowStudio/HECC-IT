@@ -12,6 +12,10 @@ import java.awt.*;
  * A 2D Cartesian vector.
  * Also somewhat compatible with java.awt.Point.
  *
+ * Based on some sample code provided by Dr. Dimitri Ognibene as part of the
+ * CE218 Computer Games Programming module I took last year.
+ *
+ * @author Rachel Lowe
  */
 public final class Vector2D {
 
@@ -90,8 +94,8 @@ public final class Vector2D {
 
     /**
      * set coordinates based on argument vector
-     * @param v where
-     * @return
+     * @param v the vector to copy.
+     * @return this
      */
     public Vector2D set(Vector2D v) {
         this.x = v.x;
@@ -101,8 +105,8 @@ public final class Vector2D {
 
     /**
      * set coordinates based on argument point
-     * @param p
-     * @return
+     * @param p the point to copy.
+     * @return this
      */
     public Vector2D set(Point p){
         this.x = p.x;
@@ -136,11 +140,11 @@ public final class Vector2D {
     }
 
     /**
-     * String for displaying vector as text
+     * String version of this vector.
+     * @return a string showing this vector in the form (x, y)
      */
     public String toString() {
         return "("+x + ", "  + y+")";
-
     }
 
     /**
@@ -153,16 +157,16 @@ public final class Vector2D {
 
     /**
      * angle between vector and horizontal axis (polar x=1,y=0) in radians in range [-PI,PI]
-     * @return
+     * @return angle from horizontal in radians.
      */
     public double angle() {
         return Math.atan2(y,x);
     }
 
     /**
-     * angle between this vector and another vector in range [-PI,PI]
-     * @param other
-     * @return
+     * Signed angle between this vector and another vector in range [-PI,PI]
+     * @param other the other vector
+     * @return angle between this vector and the other. Signed angle.
      */
     public double angle(Vector2D other) {
         //finding difference between the angles
@@ -180,8 +184,8 @@ public final class Vector2D {
 
     /**
      * add argument vector
-     * @param v
-     * @return
+     * @param v other vector to add to this one.
+     * @return this vector.
      */
     public Vector2D add(Vector2D v) {
         this.x += v.x;
@@ -190,10 +194,10 @@ public final class Vector2D {
     }
 
     /**
-     * add vectors to each other
-     * @param v1
-     * @param v2
-     * @return
+     * add vectors to each other, without modifying the originals.
+     * @param v1 the first argument vector
+     * @param v2 the second argument vector
+     * @return a copy of v1 with v2 added to it.
      */
     public static Vector2D add(Vector2D v1, Vector2D v2){
         Vector2D result = new Vector2D(v1);
@@ -202,9 +206,9 @@ public final class Vector2D {
 
     /**
      * add coordinate values to vector
-     * @param x
-     * @param y
-     * @return
+     * @param x x value to add to vector.
+     * @param y y value to add to vector
+     * @return this modified vector.
      */
     public Vector2D add(double x, double y) {
         this.x += x;
@@ -214,10 +218,10 @@ public final class Vector2D {
 
     /**
      * add coordinate values to vector
-     * @param v
-     * @param x
-     * @param y
-     * @return
+     * @param v the vector that's having the stuff added to a copy of it
+     * @param x x value to add to vector
+     * @param y y value to add to vector
+     * @return a copy of v but with (x,y) added to it
      */
     public static Vector2D add(Vector2D v, double x, double y){
         Vector2D result = new Vector2D(v);
@@ -226,9 +230,9 @@ public final class Vector2D {
 
     /**
      * weighted add (adds v but multiplied by the factor)
-     * @param v
-     * @param fac
-     * @return
+     * @param v the vector that's being added to this
+     * @param fac the 'weight' of the add (1.0: adds v as-is. 0.5: adds half of v. 2.0: adds 2*v)
+     * @return this.
      */
     public Vector2D addScaled(Vector2D v, double fac) {
         this.x += (v.x*fac);
@@ -237,10 +241,10 @@ public final class Vector2D {
     }
     /**
      * weighted add (v1 + (v2 multiplied by fac))
-     * @param v1
-     * @param v2
-     * @param fac
-     * @return
+     * @param v1 the first vector
+     * @param v2 the second vector
+     * @param fac weight for the second vector
+     * @return modified copy of v1
      */
     public static Vector2D addScaled(Vector2D v1, Vector2D v2, double fac){
         Vector2D result = new Vector2D(v1);
@@ -249,8 +253,8 @@ public final class Vector2D {
 
     /**
      * subtract argument vector (subtracts that vector from this)
-     * @param v
-     * @return
+     * @param v the other vector
+     * @return this minus v
      */
     public Vector2D subtract(Vector2D v) {
         this.x -= v.x;
@@ -809,9 +813,9 @@ public final class Vector2D {
 
     /**
      * returns true if x and y are 0
-     * @return
+     * @return true if x and y are 0
      */
-    public boolean isNull(){
+    public boolean isZero(){
         return (x == 0 && y == 0);
     }
 

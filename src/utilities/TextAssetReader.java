@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * A utility class that can read text stuff
+ *
+ * @author Rachel Lowe
  */
 public class TextAssetReader {
 
@@ -20,14 +22,14 @@ public class TextAssetReader {
     private final static String path = "/assets/textAssets/";
 
     /**
-     * heccer.js as an Arraylist of strings
+     * heccer.js as a List of strings
      */
-    private final static List<String> HECCER = fileToStaticStringList("heccer.js");
+    private final static List<String> HECCER_LIST = fileToStaticStringList("heccer.js");
 
     /**
      * heccer.js as a string
      */
-    public final static String HECCER_STRING = fileToStaticString("heccer.js");
+    private final static String HECCER = fileToStaticString("heccer.js");
 
     /**
      * index.html as an ArrayList of strings
@@ -119,19 +121,19 @@ public class TextAssetReader {
     public static String getHeccString(){ return STATIC_HECC_STRING; }
 
     /**
-     * gets the static ArrayList<String> representation of the heccer.js file
-     * @return the static ArrayList<String> representation of the heccer.js file
+     * gets the static String representation of the heccer.js file
+     * @return the static String representation of the heccer.js file
      */
-    public static List<String> getHECCER() {return HECCER;}
+    public static String getHECCER() {return HECCER;}
     /**
-     * gets the static ArrayList<String> representation of the index.html file
-     * @return the static ArrayList<String> representation of the index.html file
+     * gets the static List<String> representation of the index.html file
+     * @return the static List<String> representation of the index.html file
      */
     public static List<String> getIndex() {return INDEX;}
 
     /**
-     * gets the static ArrayList<String> representation of the iFictionTemplate.iFiction file
-     * @return the static ArrayList<String> representation of the iFictionTemplate.iFiction file
+     * gets the static List<String> representation of the iFictionTemplate.iFiction file
+     * @return the static List<String> representation of the iFictionTemplate.iFiction file
      */
     public static List<String> getIFictionTemplate(){ return IFICTION_TEMPLATE; }
 

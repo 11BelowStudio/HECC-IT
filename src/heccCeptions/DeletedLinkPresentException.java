@@ -8,7 +8,7 @@ public class DeletedLinkPresentException extends HeccCeption {
     /**
      * YEET
      *
-     * @param p the problematic passage
+     * @param p the name of the passage which still links to a deleted passage
      */
     public DeletedLinkPresentException(String p) {
         super("The passage called " + p + " *still* has a link to a deleted passage! pls remove that link k thx.");

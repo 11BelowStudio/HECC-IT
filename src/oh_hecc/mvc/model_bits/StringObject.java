@@ -132,16 +132,18 @@ public class StringObject extends AbstractObject {
         int w = metrics.stringWidth(theString);
         int h = metrics.getHeight();
         int heightOffset = -h/2;
-        int widthOffset = switch (alignment) {
-            default ->
-                    alignment;
-            case StringObject.LEFT_ALIGN ->
-                    0;
-            case StringObject.RIGHT_ALIGN ->
-                    -w;
-            case StringObject.MIDDLE_ALIGN ->
-                    -(w / 2);
-        };
+        int widthOffset = 0;
+        switch (alignment) {
+            case StringObject.LEFT_ALIGN:
+                widthOffset = 0;
+                break;
+            case StringObject.RIGHT_ALIGN:
+                widthOffset = -w;
+                break;
+            case StringObject.MIDDLE_ALIGN:
+                widthOffset = -(w / 2);
+                break;
+        }
         g.drawString(theString,widthOffset+1,+1);
         g.drawString(theString,widthOffset-1,+1);
         g.drawString(theString,widthOffset-1,-1);

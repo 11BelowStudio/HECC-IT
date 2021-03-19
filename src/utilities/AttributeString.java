@@ -5,6 +5,8 @@ package utilities;
  * bit easier than trying to include methods to completely rewrite every individual string
  * whenever the value associated with that string is updated by any amount, y'know?
  * @param <T> whatever the type of the value needs to be
+ *
+ * @author Rachel Lowe
  */
 public class AttributeString<T>{
 
@@ -13,26 +15,22 @@ public class AttributeString<T>{
      * the words before the value
      */
     private String attributeName;
-    //holds the name of the attribute that this AttributeString is keeping track of
 
     /**
      * the generic value held by this object
      */
     private T value;
-    //holds the value of the attribute that this AttributeString is keeping track of
 
 
     /**
      * the words after the value
      */
     private String suffix;
-    //text what goes after the value
 
     /**
      * basically the attributeName, the value, and the suffix put together in one string
      */
     private String theString;
-    //the final string itself with the attribute and the value
 
     /**
      * Sets the attributeName, value, and suffix, updating the text of this respectively
@@ -56,8 +54,6 @@ public class AttributeString<T>{
      * @param value whatever the value is meant to be
      */
     public AttributeString(String attributeName, T value){
-        //sets attributeName and value, before updating the text of it respectively
-        //suffix blank
         this(attributeName,value,"");
     }
 
@@ -68,8 +64,6 @@ public class AttributeString<T>{
      * @param value the value you want this attributeString to store
      */
     public AttributeString(T value){
-        //sets value
-        //name and suffix blank
         this("",value,"");
     }
 
@@ -82,7 +76,7 @@ public class AttributeString<T>{
     public String showValue(T value){
         this.value = value;
         return updateText();
-    }//updates the value attribute, updates theString to have this new value, then returns theString.
+    }
 
     /**
      * Renames the attributeName of this AttributeString
@@ -92,7 +86,7 @@ public class AttributeString<T>{
     public String rename(String attributeName){
         this.attributeName = attributeName;
         return updateText();
-    } //ditto but changing the attributeName instead
+    }
 
     /**
      * Renames the suffix of this AttributeString
@@ -117,26 +111,24 @@ public class AttributeString<T>{
      * @return the value
      */
     public T getValue(){ return value; }
-    //returns the 'value' attribute of this object
 
     /**
      * returns the attributeName of this AttributeString
      * @return attributeName
      */
     public String getAttributeName(){ return attributeName; }
-    //ditto but for 'attributeName' instead
 
     /**
      * returns the suffix of this AttributeString
      * @return suffix
      */
     public String getSuffix(){ return suffix; }
-    //ditto but for suffix instead
 
     /**
      * returns the string representation of this AttributeString
      * @return the string representation of this AttributeString
      */
+    @Override
     public String toString(){ return theString; }
 
 

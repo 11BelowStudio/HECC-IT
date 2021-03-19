@@ -5,6 +5,7 @@ import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import utilities.TextAssetReader;
+import utilities.Vector2D;
 
 import javax.swing.*;
 import java.util.*;
@@ -229,7 +230,7 @@ public class OhHeccParser {
         //This matches the line that indicates the start/end of a multiline comment at the end of a passage (containing only ;;)
         Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 
-        //Matcher commentLineMatcher = Pattern.compile("^//",Pattern.MULTILINE).matcher(""); //TODO: maybe edit the comment stuff so it needs to start with // after the ;; line
+        //Matcher commentLineMatcher = Pattern.compile("^//",Pattern.MULTILINE).matcher("");
 
         String currentPassageName;
         String nextPassageName = "";
@@ -344,33 +345,12 @@ public class OhHeccParser {
                 contentBuilder.append(temp);
             }
 
-            /*
-            if (contentFound) {
-                //System.out.println("Everything after declaration:");
-                //System.out.println(currentContent);
-                currentContent = currentContent.trim();
-                //System.out.println("Trimmed everything after declaration:");
-                //System.out.println(currentContent);
-                //if content was found, add it to the passage content map
-                if (passageMetadataFound){
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentComment,currentPassageMetadata));
-                } else{
-                    pMap.put(currentPassageName,new Passage(currentPassageName,currentContent,currentComment));
-                }
-
-            } else{
-                //System.out.println("No content found for passage " + currentPassageName);
-                //logger.logInfo("No content found for passage " + currentPassageName);
-                //throw new EmptyPassageException(currentPassageName);
-            }
-             */
             PassageEditingInterface thePassage = new EditablePassage(
                     currentPassageName.trim(),
                     contentBuilder.toString().trim(),
                     commentBuilder.toString().trim(),
                     currentPassageMetadata
             );
-            //PassageEditingInterface thePassage = new EditablePassage(currentPassageName.trim(),currentContent.trim(),currentComment,currentPassageMetadata);
             pMap.put(thePassage.getPassageUUID(),thePassage);
         } while(notDone);
 
@@ -381,98 +361,36 @@ public class OhHeccParser {
             e.updateLinkedUUIDs(pMap);
         }
 
+        // if any passages have the default position of (0,0), HECC-IT will attempt to displace them from their parent,
+        // so they're not all on top of each other. It does look ugly, but that's an occupational hazard.
+        for (PassageEditingInterface e: pMap.values()){
+            if (e.getPosition().isZero()){
+
+                if (theMetadata.getStartPassage().equals(e.getPassageName())){
+                    continue; // the start passage won't get displaced.
+                }
+
+                UUID currentUUID = e.getPassageUUID();
+
+                // attempts to find any parent passage (containing a link to this passage).
+                Optional<PassageEditingInterface> parent = pMap.values().stream().filter(
+                        p1 -> p1.getLinkedPassageUUIDs().contains(currentUUID)
+                ).findAny();
+
+                // if it does have a parent, the position of this vector is displaced by
+                // a random vector at a random angle from the parent object's position
+                if (parent.isPresent()){
+                    e.updatePosition(
+                        Vector2D.randomVectorFromOrigin(parent.get().getPosition(), 128, 128)
+                    );
+                }
+
+            }
+        }
+
 
         return pMap;
     }
-
-
-    /*
-     * A method that can be used to ensure that the passage names are all valid and such
-     * @return true if all passages are valid, false if there's a problem
-     * @throws UndefinedPassageException if a passage has a link to a passage which doesn't exist
-     * @throws MissingStartingPassageException if the defined starting passage doesn't exist
-     *//*
-    public boolean validatePassages() throws UndefinedPassageException, MissingStartingPassageException {
-        if ((metadata.doesStartPassageExist(passageNames))){
-            //ensure that every single linked passage is valid
-            for (Map.Entry<String, Passage> e: passageMap.entrySet()){
-                Passage current = e.getValue();
-                current.validateLinkedPassagesThrowingException(passageNames);
-                //exception is thrown if an undefined passage is being linked
-                e.setValue(current);
-            }
-            return true;
-        } else{
-            throw new MissingStartingPassageException(metadata.getStartPassage());
-            //throw exception if no such starting passage exists
-        }
-    }
-
-     */
-
-    /*
-     * This prepares the heccedData ArrayList, using the Metadata object and the passageMap map
-     * @return true if this was performed successfully
-     * @throws UndefinedPassageException if there's an undefined passage somewhere
-     * @throws MissingStartingPassageException if the specified starting passage doesn't exist
-     *//*
-    public boolean prepareHeccedData() throws UndefinedPassageException, MissingStartingPassageException {
-
-        if (!validatePassages()){
-            return false;
-        }
-        //this prepares the heccedData
-
-        heccedData.clear();
-
-        heccedData.add("//HECC UP output (as of 15/10/2020) (R. Lowe, 2020)\n\n");
-
-        //declaration of starting passage name is added to heccedData
-        heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\r\n\r");
-
-        //starts the declaration of the getHECCED function in heccedData
-        heccedData.add("function getHECCED(){\n\r");
-
-
-        //parses each passage, and ensure that the links are all valid and such
-        for (Map.Entry<String, Passage> e: passageMap.entrySet()){
-            Passage current = e.getValue();
-
-            current.parseContent();
-
-            //ensure that the passages they link to are valid
-            if (current.validateLinkedPassages(passageNames)){
-                heccedData.add(current.getHeccedRepresentation());
-                e.setValue(current);
-            } else {
-                //stop everything if an invalid link is found
-                return false;
-            }
-        }
-
-        heccedData.add("\n\ttheHeccer.printPassages();\n");
-
-        heccedData.add("\n\ttheHeccer.loadCurrentPassage();\n\n");
-
-        heccedData.add("}\n");
-
-        heccedData.add("\n//that's all, folks!\n\n");
-
-        for(String h: heccedData){
-            System.out.println(h);
-        }
-
-        //outputs any info the user might need regarding any missing metadata in the Metadata object
-        logger.logInfo(metadata.outputMetadataDefinitionInstructions());
-
-        metadata.printDebugData();
-
-        //printPassageObjects();
-
-        return true;
-    }
-    */
-
 
 
     /**
@@ -505,11 +423,6 @@ public class OhHeccParser {
             System.out.println(e.getKey());
             System.out.println(e.getValue().outputAsStringForDebuggingReasons());
         }
-        /*
-        for (PassageEditingInterface e: heccMap.values()){
-            System.out.println(e.outputAsStringForDebuggingReasons());
-            System.out.println("");
-        }*/
         System.out.println("\nyep thats everything printed");
 
     }

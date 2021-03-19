@@ -11,7 +11,7 @@ public abstract class EditModelObject extends AbstractObject {
 
 
     /**
-     * The overarching PassageModel object that holds this object
+     * The overarching EditModelInterface object that this object interacts with.
      */
     final EditModelInterface theModel;
 

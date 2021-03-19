@@ -116,18 +116,7 @@ public class PassageObject extends EditModelObject {
         linkMap = new HashMap<>();
 
         linkedUUIDs.forEach(u -> linkMap.put(u,new PassageLinkObject(model,this,u)));
-        /*
-        if (!linkedUUIDs.isEmpty()){
-            System.out.println("linked UUIDS from " + passage.getPassageName());
-            for (UUID u: linkedUUIDs){
-                System.out.println(u);
-                linkMap.put(u, new PassageLinkObject(model, this, u));
-            }
-        } else{
-            System.out.println("no UUIDs for " + passage.getPassageName());
-        }
 
-         */
 
         //orang
         //this.objectColour = SAFETY_ORANGE;
@@ -140,10 +129,18 @@ public class PassageObject extends EditModelObject {
      */
     private void whatColourShouldThisObjectBe() {
         switch (thePassage.getPassageStatus()) {
-            case NORMAL -> objectColour = NORMAL_COLOUR;
-            case DELETED_LINK -> objectColour = ERROR_COLOUR;
-            case END_NODE -> objectColour = END_COLOUR;
-            case EMPTY_CONTENT -> objectColour = EMPTY_COLOUR;
+            case NORMAL:
+                objectColour = NORMAL_COLOUR;
+                break;
+            case DELETED_LINK:
+                objectColour = ERROR_COLOUR;
+                break;
+            case END_NODE:
+                objectColour = END_COLOUR;
+                break;
+            case EMPTY_CONTENT:
+                objectColour = EMPTY_COLOUR;
+                break;
         }
         pointOfNoReturn = thePassage.isThisAPointOfNoReturn();
     }

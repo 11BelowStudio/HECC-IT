@@ -392,7 +392,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         currentLeftDragPos.set(mLocation);
         switch (activity){
-            case DOING_NOTHING -> {
+            case DOING_NOTHING:
 
                 Optional<PassageObject> pressed =
                         objectMap.values().stream().filter(p -> p.wasClicked(mLocation)).findAny();
@@ -407,9 +407,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                     activity = CurrentActivity.LC_DRAGGING_SELECTION_BOX;
 
                 }
-            }
-                //break;
-            case LC_OBJECTS_SELECTED -> {
+                break;
+            case LC_OBJECTS_SELECTED:
                 //TODO: any other things I need to do when left-clicking whilst done selecting the things?
 
                 //If mouse down on a selected object
@@ -421,8 +420,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                     clearSelection();
                     activity = CurrentActivity.DOING_NOTHING;
                 }
-
-            }
+                break;
         }
 
     }
@@ -458,7 +456,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         moveMouseByScroll(mLocation);
         super.leftRelease(mLocation);
         switch (activity) {
-            case LC_DRAGGING_SELECTION_BOX -> {
+            case LC_DRAGGING_SELECTION_BOX:
                 //if we were dragging selection box, finalize selection
 
                 clearSelection();
@@ -471,12 +469,14 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 activity = CurrentActivity.LC_OBJECTS_SELECTED;
 
                 //TODO: clear selection area
-            }
-            case LC_MOVING_OBJECTS -> {
+                break;
+
+            case LC_MOVING_OBJECTS:
                 //if we were moving objects, stop moving them
                 clearSelection();
                 activity = CurrentActivity.DOING_NOTHING;
-            }
+                break;
+
         }
 
     }
@@ -504,17 +504,16 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         Vector2D lastLeftDrag = new Vector2D(currentLeftDragPos);
         currentLeftDragPos.set(mLocation);
         switch (activity) {
-            case LC_DRAGGING_SELECTION_BOX -> {//if dragging selection box
+            case LC_DRAGGING_SELECTION_BOX:
                 //TODO: drag selection box
+                break;
 
-            }
-            case LC_MOVING_OBJECTS -> { //if moving objects, we move them.
+            case LC_MOVING_OBJECTS:
                 Vector2D movement = Vector2D.subtract(currentLeftDragPos, lastLeftDrag);
                 selectedObjects.forEach(
                         o -> o.move(movement)
                 );
-            }
-
+                break;
         }
     }
 

@@ -4,6 +4,7 @@ import hecc_up.gameParts.Metadata;
 import heccCeptions.*;
 import oh_hecc.game_parts.passage.OutputtablePassage;
 import oh_hecc.game_parts.passage.PassageOutputtingInterface;
+import oh_hecc.game_parts.passage.SharedPassage;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -83,8 +84,9 @@ public class HeccParser {
      * @throws NoPassagesException if there are no passages defined
      * @throws DuplicatePassageNameException if two passages have the same name
      * @throws EmptyPassageException if there's an empty passage
+     * @throws DeletedLinkPresentException if the passage contains a link to a deleted passage
      */
-    public boolean constructThePassageObjects() throws NoPassagesException, DuplicatePassageNameException, EmptyPassageException{
+    public boolean constructThePassageObjects() throws NoPassagesException, DuplicatePassageNameException, EmptyPassageException, DeletedLinkPresentException{
 
         //trims metadata stuff from dataToParse, and creates the Metadata object
         String dataToParse = makeMetadataObject(this.dataToParse);
@@ -176,8 +178,9 @@ public class HeccParser {
      * @param dataToParse the raw hecc data being parsed
      * @return A map of the passage objects declared in the raw data
      * @throws EmptyPassageException if a passage is empty
+     * @throws DeletedLinkPresentException if the passage contains a link to a deleted passage
      */
-    private Map<String, PassageOutputtingInterface> constructPassageMap(String dataToParse) throws EmptyPassageException{
+    private Map<String, PassageOutputtingInterface> constructPassageMap(String dataToParse) throws EmptyPassageException, DeletedLinkPresentException{
         //creating the map
         Map<String, PassageOutputtingInterface> pMap = new HashMap<>();
 
@@ -312,6 +315,12 @@ public class HeccParser {
                 //System.out.println("Trimmed everything after declaration:");
                 //System.out.println(currentContent);
                 //if content was found, add it to the passage content map
+
+                if (SharedPassage.doesPassageContentContainDeletedLinks(currentContent)){
+                    // complains if there's a link to an obviously deleted passage
+                    throw new DeletedLinkPresentException(currentPassageName);
+                }
+
                 if (passageMetadataFound){
                     pMap.put(currentPassageName,new OutputtablePassage(currentPassageName,currentContent,currentPassageMetadata));
                 } else{
@@ -397,9 +406,7 @@ public class HeccParser {
 
         heccedData.add("\n//that's all, folks!\n\n");
 
-        for(String h: heccedData){
-            //System.out.println(h);
-        }
+
 
         //outputs any info the user might need regarding any missing metadata in the Metadata object
         logger.logInfo(metadata.outputMetadataDefinitionInstructions());

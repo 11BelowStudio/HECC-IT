@@ -12,12 +12,23 @@ import java.util.Map;
 
 /**
  * This basically reads the image assets from the assets/imageAssets folder so they can be included in the jar.
+ *
+ * Partially based on sample code provided by Dr. Dimitri Ognibene as part of the
+ * CE218 Computer Games Programming module I took last year.
+ *
+ * @author Rachel Lowe
  */
 public class ImageManager {
 
 
-    public final static String path = "/assets/imageAssets/";
-    public final static String ext = ".png";
+    /**
+     * The location of the directory holding the images within /src.
+     */
+    private final static String path = "/assets/imageAssets/";
+    /**
+     * We're using .png files.
+     */
+    private final static String ext = ".png";
 
     /**
      * A map holding all the images, by name.
