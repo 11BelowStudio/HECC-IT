@@ -6,8 +6,8 @@
     </constraints>
     <properties>
       <enabled value="true"/>
-      <minimumSize width="600" height="300"/>
-      <preferredSize width="600" height="300"/>
+      <minimumSize width="600" height="325"/>
+      <preferredSize width="600" height="325"/>
     </properties>
     <border type="none"/>
     <children>

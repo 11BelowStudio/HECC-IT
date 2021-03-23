@@ -26,6 +26,20 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"breaktime alone",
+			"You realize that you have no interest in playing {if:tAny(\"f\")}{with the skipping rope}{else:football}, so you just wait for breaktime to end.\n\nEventually, you hear the bell ring for the end of break.\n\nBut, as you are heading back in, you can already hear everyone else in the class calling you \"*weird*\".\n\n[[Hopefully nothing bad will happen as a result|placeholder]].",
+			["noreturn","weird"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"football",
+			"You ask if you can join in.\n\n{if:tAny(\"m\")}{Of course you can, Liam!\n\nWhy would a boy like you not be allowed to join in with the football? After all, everyone knows that boys always enjoy football, don't they?\n\nAnd so, you spend the break playing football with all the other boys, feeling like you're doing what you're supposed to be doing.\n\nEventually, [[break time ends|placeholder]].}{else:Of course not, Emma!\n\nGirls aren't supposed to play football. And you are a girl, not a boy. The boys remind you of this, as they continue their game of football.\n\nMaybe you should just [[play with the girls|skipping]] instead.\n\nOr you could just find somewhere to sit down, where you can wait for the end of break, [[all alone|breaktime alone]].}",
+			["noreturn","m1"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"JustBorn m",
 			"{if:tAny(\"i\")}{The problem has been resolved.}{else:Everything is as expected.}\n\nA form is filled in. Boxes are checked off. Choices are filled in.\n\nLiam, this is your life.\n\n[[And you must follow along|early life]].",
 			["m","noreturn"]
@@ -54,6 +68,13 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"placeholder",
+			"Sample Content",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"dolly",
 			"{if:tAny(\"m\")}{Your parents are less than enthusiastic.\n\n\"*Liam, you silly boy, that's a girl's toy! You aren't a pretty little girl, you're a big, strong, boy! Why don't we get you this cool monster truck instead?*\"\n\nYou can't help but feel disappointed in this outcome. You wanted the dolly, not the monster truck!\n\nBut you're still a small child, so there's nothing you can really do, as your parents [[buy the monster truck|monster truck 2]] for you instead.\n}{else:Your parents are pleased with your decision.\n\nThey chuckle to each other, with a \"*girls will be girls*\", gladly [[buying the dolly|dolly 2]] for you.}",
 			["noreturn","f1"]
@@ -64,6 +85,13 @@ var startingPassageName = "Start";
 			"monster truck",
 			"You decide that this monster truck toy looks rather fun, so, you ask your parents if you can have it.\n\n{if:tAny(\"f\")}{Your parents are less than enthusiastic.\n\n\"*Emma, you silly girl, that's a boy toy! You aren't a stinky, nasty, boy, you're a beautiful girl! Why don't we get you this pretty little dolly instead?*\"\n\nYou can't help but feel disappointed in this outcome. You wanted the monster truck, not the dolly!\n\nBut you're still a small child, so there's nothing you can really do, as your parents [[buy the dolly|dolly 2]] for you instead.\n}{else:Your parents are pleased with your decision.\n\nThey chuckle to each other, with a \"*Boys will be boys*\", gladly [[buying the monster truck|monster truck 2]] for you.}",
 			["noreturn","m1"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"skipping",
+			"You ask if you can join in.\n\n{if:tAny(\"f\")}{Of course you can, Emma!\n\nWhy would a girl like you not be allowed to join in playing with this skipping rope? After all, everyone knows that girls always enjoy these sorts of things, don't they?\n\nAnd so, you spend the break playing with the skipping rope, with all the other girls, feeling like you're doing what you're supposed to be doing.\n\nEventually, [[break time ends|placeholder]].}{else:Of course not, Liam!\n\nBoys aren't supposed to play with skipping ropes. And you are a boy, not a girl. The girls remind you of this, as they continue playing their game.\n\nMaybe you should just [[play with the boys|football]] instead.\n\nOr you could just find somewhere to sit down, where you can wait for the end of break, [[all alone|breaktime alone]].}",
+			["noreturn","f1"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -90,7 +118,7 @@ var startingPassageName = "Start";
 	theHeccer.addPassageToMap(
 		new Passage(
 			"school 3",
-			"You respond, confirming that you are, in fact, present, and that you actually are called {if:tAny(\"m\")}{Liam}{else:Emma}.",
+			"You respond, confirming that you are, in fact, present, and that you actually are called {if:tAny(\"m\")}{Liam}{else:Emma}.\n\nNothing particularly unexpected happens.\n\nEventually, it gets to breaktime.\n\nSome of the boys in your class are playing football. And the girls are playing with a skipping rope.\n\nMaybe you should ask one of those groups if you can join in. But which one?\n\nWill you ask if you can join in with the [[football|football]] or with the [[skipping|skipping]]?",
 			[]
 		)
 	);
