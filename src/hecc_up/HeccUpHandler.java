@@ -74,10 +74,7 @@ public class HeccUpHandler {
                 logger
         );
 
-        FolderOutputter outputter = new FolderOutputter(
-                outputFolderPath,
-                logger
-        );
+        FolderOutputter outputter = new FolderOutputter(outputFolderPath);
         //first, check that the output folder actually exists
         if (outputter.doesOutputFolderExist()) {
             logger.logInfo("Output folder has been made");
@@ -85,6 +82,7 @@ public class HeccUpHandler {
 
             //if the output folder exists, attempt to construct the passage objects
             if (attemptToParseTheGame(parser)){
+
                 logger.logInfo("Proceeding to output");
                 //uses heccedData and metadata to from passageParser to output the HECCIN Game
                 outputter.outputTheGameWithMetadata(parser.getHeccedData(), parser.getMetadata());
@@ -92,23 +90,6 @@ public class HeccUpHandler {
                 //confirm it's done
                 return true;
             }
-
-            /*
-            if (parser.constructThePassageObjects()) {
-                //then, attempt to prepare the hecced data
-                logger.logInfo("Passage objects constructed");
-                if (parser.prepareHeccedData()) {
-                    //finally, if everything worked, output the game
-                    logger.logInfo("Proceeding to output");
-                    //uses heccedData and metadata to from passageParser to output the HECCIN Game
-                    outputter.outputTheGameWithMetadata(parser.getHeccedData(), parser.getMetadata());
-
-                    //confirm it's done
-                    return true;
-                }
-            }
-
-             */
         } else {
             //log an error message if the output folder vanishes
             logger.logInfo("The game cannot be parsed and output, as there is no output folder for it");

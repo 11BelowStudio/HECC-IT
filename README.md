@@ -1,4 +1,4 @@
-# HECC-IT (Hypertext Editing And Creation Code Integrated Toolkit)
+# **HECC-IT (Hypertext Editing And Creation Code Integrated Toolkit)**
 
 By Rachel Lowe
 
@@ -10,11 +10,16 @@ readme last updated 09/12/2020
 
 This is a toolkit that you can use to produce hypertext games.
 
-You are looking at the MVP version of HECC-IT.
 You can convert .hecc files into playable hypertext games with HECC-UP.
 And you can get some help making and editing your .hecc files using OH-HECC.
 
 So let's cut to the chase.
+
+
+# Table of Contents for the Technical Documentation
+
+* Introduction
+    * This README has the 
 
 ## What the HECC does this do?
 

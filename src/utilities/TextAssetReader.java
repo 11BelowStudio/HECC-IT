@@ -42,16 +42,6 @@ public class TextAssetReader {
     public final static String INDEX_STRING = fileToStaticString("index.html");
 
     /**
-     * iFictionTemplate.iFiction as an ArrayList of strings
-     */
-    private final static List<String> IFICTION_TEMPLATE = fileToStaticStringList("iFictionTemplate.iFiction");
-
-    /**
-     * HeccSample.hecc as a string
-     */
-    private final static String STATIC_HECC_STRING = fileToStaticString("HeccSample.hecc");
-
-    /**
      * showdown.min.js as a string
      */
     private final static String SHOWDOWN_MIN_JS = fileToStaticString("showdown.min.js");
@@ -114,12 +104,6 @@ public class TextAssetReader {
 
 
 
-
-    /**
-     * @return the STATIC_HECC_STRING
-     */
-    public static String getHeccString(){ return STATIC_HECC_STRING; }
-
     /**
      * gets the static String representation of the heccer.js file
      * @return the static String representation of the heccer.js file
@@ -130,12 +114,6 @@ public class TextAssetReader {
      * @return the static List<String> representation of the index.html file
      */
     public static List<String> getIndex() {return INDEX;}
-
-    /**
-     * gets the static List<String> representation of the iFictionTemplate.iFiction file
-     * @return the static List<String> representation of the iFictionTemplate.iFiction file
-     */
-    public static List<String> getIFictionTemplate(){ return IFICTION_TEMPLATE; }
 
 
     /**

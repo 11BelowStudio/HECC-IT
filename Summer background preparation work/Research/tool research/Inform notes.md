@@ -1,7 +1,8 @@
 # inform
 
 * Text adventure, not hypertext game
-    * imma probably cut my losses and not bother looking much further into it, seeing as it's not entirely relevant to the task at hand
+    * imma probably cut my losses and not bother looking much further into it,
+      seeing as it's not entirely relevant to the task at hand
 
 ## how it works
 *

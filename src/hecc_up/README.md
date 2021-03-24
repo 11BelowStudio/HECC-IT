@@ -87,3 +87,6 @@ Basically, the bits that read in a .hecc file, and convert them into a playable 
 
 * [gameParts](./gameParts/)
     * Some of the classes and such representing the game data, used in HECC-UP.
+    
+* [HeccUpTests](./HeccUpTests.java)
+    * Some unit tests for HECC-UP, to demonstrate that it does, in fact, work.

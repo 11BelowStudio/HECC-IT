@@ -36,8 +36,8 @@ public class OldHeccUpMain implements LoggerInterface {
     public void heccUpTheGame(){
 
         heccUpHandler.attemptToHeccUpTheGame(
-                Paths.get("src/assets/textAssets/HeccSample.hecc"),
-                Paths.get("outputs/hecc_up_testing_v3/heccin_game")
+                Paths.get("src/assets/textAssets/HeccSample2.hecc"),
+                Paths.get("old outputs/hecc_up_testing_v3/heccin_game")
         );
 
     }

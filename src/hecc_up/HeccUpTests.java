@@ -1,11 +1,11 @@
 package hecc_up;
 
-import org.junit.jupiter.api.Assertions;
+import heccCeptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static oh_hecc.game_parts.passage.PassageEditingInterface.getPassageContentWithRenamedLinks;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -38,19 +38,388 @@ public class HeccUpTests {
         );
 
 
-
-        System.out.println(String.join("", heccSampleParser.getHeccedData()).trim());
-
-        System.out.println("");
-
-        System.out.println(String.join("",HeccUpTestConstants.HECCSAMPLE_OUTPUT).trim());
-
         assertEquals(
                 String.join("", heccSampleParser.getHeccedData()),
                 String.join("",HeccUpTestConstants.HECCSAMPLE_OUTPUT)
         );
 
     }
+
+    /**
+     * making sure it complains when the hecc file has no passages
+     */
+    @Test
+    void testForEmptyFileComplaint(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccParser nothingParser = new HeccParser("", log);
+
+        NoPassagesException e = assertThrows(
+                NoPassagesException.class,
+                nothingParser::constructThePassageObjects
+        );
+
+        System.out.println(e.getMessage());
+
+        log = new HeccUpTestLogger();
+
+        HeccParser onlyMetadataParser = new HeccParser(
+                "!title: no passages here lol\n" +
+                        "!author: joe mamma",
+                log
+        );
+
+        e = assertThrows(
+                NoPassagesException.class,
+                onlyMetadataParser::constructThePassageObjects
+        );
+
+        System.out.println(e.getMessage());
+
+    }
+
+    @Test
+    void testForDuplicatePassageException(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccParser dupeParser = new HeccParser(
+                "!title: dupe time\n" +
+                "!author: joe mamma\n" +
+                "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                "this is the start passage\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::bob\n" +
+                "hi im bob\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::bob\n" +
+                "hi im also bob\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        DuplicatePassageNameException e = assertThrows(
+                DuplicatePassageNameException.class,
+                dupeParser::constructThePassageObjects
+        );
+
+        System.out.println(e.getMessage());
+
+        log = new HeccUpTestLogger();
+
+        HeccParser anotherDupe = new HeccParser(
+                "!title: dupe time 2\n" +
+                "!author: joe mamma\n" +
+                "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                "this is the start passage\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::Start\n" +
+                "this is also the start passage?\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::Start\n" +
+                "how\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::dave\n" +
+                "im dave\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log
+        );
+
+        e = assertThrows(
+                DuplicatePassageNameException.class,
+                anotherDupe::constructThePassageObjects
+        );
+
+        System.out.println(e.getMessage());
+
+    }
+
+    /**
+     * Testing for when there's no start passage
+     */
+    @Test
+    void testForNoStart(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccUpHandler theHandler = new HeccUpHandler(log);
+
+        HeccParser noExplicitStart = new HeccParser(
+                "!title: no start\n" +
+                "!author: joe mamma\n" +
+                "!start: Dave\n" +
+                "\n" +
+                "::a\n" +
+                "aaa\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::b\n" +
+                "bbbb\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::c\n" +
+                "see\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::d\n" +
+                "ddd\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+
+        MissingStartingPassageException e = assertThrows(
+                MissingStartingPassageException.class,
+                () -> theHandler.attemptToParseTheGame(noExplicitStart)
+        );
+
+        System.out.println(e.getMessage());
+
+
+        HeccParser noImplictStart = new HeccParser(
+                "!title: no start\n" +
+                "!author: joe mamma\n" +
+                "\n" +
+                "::a\n" +
+                "aaa\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::b\n" +
+                "bbbb\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::c\n" +
+                "see\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "\n" +
+                "::d\n" +
+                "ddd\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        e = assertThrows(
+                MissingStartingPassageException.class,
+                () -> theHandler.attemptToParseTheGame(noImplictStart)
+        );
+
+        System.out.println(e.getMessage());
+
+    }
+
+    /**
+     * empty passage
+     */
+    @Test
+    void testForEmptyPassage(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccParser emptyPassageParser = new HeccParser(
+                "!title: empty passage\n" +
+                "!author: joe mamma\n" +
+                "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                ";;\n" +
+                "\n"+
+                ";;\n" +
+                "\n" +
+                "::ok\n" +
+                "yes\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        HeccUpHandler theHandler = new HeccUpHandler(log);
+
+
+        EmptyPassageException e = assertThrows(
+                EmptyPassageException.class,
+                () ->theHandler.attemptToParseTheGame(emptyPassageParser)
+        );
+
+        System.out.println(e.getMessage());
+
+    }
+
+    /**
+     * not detecting passage with invalid name
+     */
+    @Test
+    void invalidPassageTest(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccParser invalidPassageParser = new HeccParser(
+                "!title: ok\n" +
+                "!author: joe mamma\n" +
+                "!start: !THIS IS EPIC! WOO!\n" +
+                "\n" +
+                "::!THIS IS EPIC! WOO!\n" +
+                "deez nutz\n" +
+                ";;\n" +
+                ";;\n", log);
+
+        HeccUpHandler theHandler = new HeccUpHandler(log);
+
+        NoPassagesException e = assertThrows(
+                NoPassagesException.class,
+                () -> theHandler.attemptToParseTheGame(invalidPassageParser)
+        );
+
+        System.out.println(e.getMessage());
+    }
+
+    /**
+     * Link to a passage which doesn't exist
+     */
+    @Test
+    void undefinedPassageTest(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccUpHandler theHandler = new HeccUpHandler(log);
+
+        HeccParser undefinedParser = new HeccParser(
+                "!title: davent\n" +
+                "!author: joe mamma\n" +
+                "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                "[[dave]]\n" +
+                ";;\n" +
+                ";;\n" +
+                "\n" +
+                "::im not dave\n" +
+                "hi im not dave\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        UndefinedPassageException e = assertThrows(
+                UndefinedPassageException.class,
+                () -> theHandler.attemptToParseTheGame(undefinedParser)
+        );
+
+        System.out.println(e.getMessage());
+
+        HeccParser undefinedIndirectParser = new HeccParser(
+        "!title: davent\n" +
+                "!author: joe mamma\n" +
+                "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                "[[some text|dave]]\n" +
+                ";;\n" +
+                ";;\n" +
+                "\n" +
+                "::im not dave\n" +
+                "hi im not dave\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        e = assertThrows(
+                UndefinedPassageException.class,
+                () -> theHandler.attemptToParseTheGame(undefinedIndirectParser)
+        );
+
+        System.out.println(e.getMessage());
+
+    }
+
+    /**
+     * check for a link to a deleted passage (deleted via OH-HECC and marked as deleted via OH-HECC)
+     */
+    @Test
+    void testForDeletedPassageLinks(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccUpHandler theHandler = new HeccUpHandler(log);
+
+        HeccParser deletedParser = new HeccParser(
+                "!title: davent\n" +
+                "!author: joe mamma\n" +
+                "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                "[[dave ! WAS DELETED !]]\n" +
+                ";;\n" +
+                ";;\n" +
+                "\n" +
+                "::im not dave\n" +
+                "hi im not dave\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        DeletedLinkPresentException e = assertThrows(
+                DeletedLinkPresentException.class,
+                () -> theHandler.attemptToParseTheGame(deletedParser)
+        );
+
+        System.out.println(e.getMessage());
+
+        HeccParser indirectDeletedParser = new HeccParser(
+                "!title: davent\n" +
+                        "!author: joe mamma\n" +
+                        "!start: Start\n" +
+                        "\n" +
+                        "::Start\n" +
+                        "[[this is dave|dave ! WAS DELETED !]]\n" +
+                        ";;\n" +
+                        ";;\n" +
+                        "\n" +
+                        "::im not dave\n" +
+                        "hi im not dave\n" +
+                        ";;\n" +
+                        "\n" +
+                        ";;", log);
+
+        e = assertThrows(
+                DeletedLinkPresentException.class,
+                () -> theHandler.attemptToParseTheGame(indirectDeletedParser)
+        );
+
+        System.out.println(e.getMessage());
+
+    }
+
 
     /**
      * Basically a LoggerInterface class that records the logged stuff.

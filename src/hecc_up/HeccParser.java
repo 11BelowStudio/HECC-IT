@@ -307,6 +307,11 @@ public class HeccParser {
                 currentContent = currentContent.trim();
                 //if content was found, add it to the passage content map
 
+                if (currentContent.equals("") || currentContent.equals(";;")){
+                    // if a passage is empty (or just has the start of the trailing comment), we complain.
+                    throw new EmptyPassageException(currentPassageName);
+                }
+
                 if (SharedPassage.doesPassageContentContainDeletedLinks(currentContent)){
                     // complains if there's a link to an obviously deleted passage
                     throw new DeletedLinkPresentException(currentPassageName);

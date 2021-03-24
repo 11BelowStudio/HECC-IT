@@ -1,4 +1,4 @@
-# Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v1: minimal yet viable)
+# Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v2: )
 
 ## The specification
 * Defining passages
@@ -38,7 +38,7 @@
         * All whitespace before/after the passage content will be omitted in the output.
         * Two consecutive newlines will be treated as a paragraph break.
         * A single newline will be converted into a `<br>`
-    * All `<`, `>`, `'`, `"`, and `&` characters in the .hecc file will be escaped in the HTML output.
+    * All `<`, `>`, `'`, `"`, and `&` characters in the .hecc file will be escaped in the output.
 * Links to passages
     * Within passage content
     * Two types of links
@@ -58,30 +58,13 @@
         * `!Title: Name of Story` Allows the title of a story to be declared
             * Must start and end with non-whitespace characters.
         * `!Author: Author name goes here` Allows the author (you) to be credited for your work.
-            * Must start and end with letters, may contain full stops (for initials), commas (for multiple authors), and spaces
+            * Must start and end with letters, may contain full stops (for initials), commas (for multiple authors),
+              and spaces
         * `//comment line`
-            * Any line prefixed with a `//` will be treated as a comment which exists by OH-HECC, and won't get deleted by it.
+            * Any line prefixed with a `//` will be treated as a comment which exists by OH-HECC,
+              and won't get deleted by it.
             * If a comment is not prefixed with `//`, OH-HECC will delete it.
-        * Variables
-            * `!var: variableName = value //optional comment`
-                * Allows a variable with the specified name, with a default value of `value`,
-                    may also have a comment.
-                * Rules for these
-                    * Variable name (mandatory)
-                        * Only alphanumeric characters/underscores allowed
-                        * Must have a unique name
-                            * If multiple variables share the same name, things will end badly
-                    * Initial value (optional)
-                        * Preceded by `=`, ends at end of line/start of comment
-                        * If numeric, treated as a number
-                            * May define it as a string by putting speechmarks around it
-                        * If not numeric, treated as a String
-                        * If not declared
-                            * defaults to 0
-                    * Comment (optional)
-                        * Preceded by an `//`, ends at end of line
-                        * May write whatever you want here to remind you about what the variable does
-
+        
 
 ## Example HECC code
 ```
@@ -108,23 +91,26 @@ The following line contains a link to "Another passage".
 
 congrats you clicked that link to get here, Another passage.
 why not [[click this|Yet Another Passage]] as well?
-
+;;
+;;
 ::Yet Another Passage //oh look another passage
 
 woah you clicked that so you're now at Yet Another Passage.
 
 Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
-
+;;
+;;
 ::Left
 
 You go to the left, but the path leads you back to [[dave]].
 ;;
 run from it, hide from it, dave still arrives
-
+;;
 ::Right
 
 You went to the right, but the path leads you back to [[dave]].
-
+;;
+;;
 ::dave
 
 This passage is called dave.

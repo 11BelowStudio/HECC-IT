@@ -427,7 +427,10 @@ public class OhHeccParser {
 
     }
 
-
+    /**
+     * Turns the read data back to a .hecc string
+     * @return the .hecc version of the data which has been read.
+     */
     public String toHecc(){
         StringBuilder heccBuilder = new StringBuilder();
 
@@ -443,6 +446,12 @@ public class OhHeccParser {
     }
 
 
+    /**
+     * A deprecated main function, intended for validation and such
+     * @param args
+     * @throws Exception
+     */
+    @Deprecated
     public static void main(String[] args) throws Exception{
         String sample = TextAssetReader.fileToString("src/assets/textAssets/HeccSample.hecc");
         System.out.println("SAMPLE HECC CODE:\n----------------------------");

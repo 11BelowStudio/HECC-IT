@@ -7,7 +7,7 @@ This is basically a prototype of HECCER, which I mainly made right now because I
 The game data stuff is in hecced.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in hecced.js gives the passage info to the HECCER.
 
-by R. Lowe, 02/02/2021
+by Rachel Lowe, 02/02/2021
 
 (this version has been fed into the Hecc Up Parser!)
 */
@@ -63,9 +63,9 @@ var theHeccer = {
      * Will be called by the 'back' button when attempting to go back.
      * And it will only go back if the 'back' button allows it (there is something to go back to, and the back button isn't disabled)
      */
-    goBack: function() {
+    goBack: function(){
         //The 'back' button will call this method in an attempt to go back
-        if (theHeccer.allowedToGoBack && theHeccer.stateStack.areTherePriorStates()) {
+        if(theHeccer.allowedToGoBack && theHeccer.stateStack.areTherePriorStates()){
             //will only go back if the reader is allowed to go back, and if there are prior states to go back to.
             theHeccer.stateStack.popState(); //pops the top state from stateStack
             theHeccer.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
@@ -100,7 +100,7 @@ var theHeccer = {
 
             window.alert("uh oh, there's no passage called " + pName + "!");
 
-        } else {
+        } else{
 
             const passageContent = currentPassage.getParsedContent(); //obtains passage content from the currentPassage
             //console.log(passageContent);
@@ -111,18 +111,19 @@ var theHeccer = {
             const pointOfNoReturn = currentPassage.containsSpecifiedTag("noreturn");
 
             //if the back button currently is enabled
-            if (theHeccer.allowedToGoBack) {
+            if (theHeccer.allowedToGoBack){
                 //and if this passage is a point of no return
-                if (pointOfNoReturn) {
+                if (pointOfNoReturn){
                     //the back button gets disabled.
                     document.getElementById("backButton").innerHTML = theHeccer.noReturnText;
                     theHeccer.allowedToGoBack = false;
                 }
-            } else if (!pointOfNoReturn) {
+            } else if (!pointOfNoReturn){
                 //but, if the back button was enabled, and this passage isn't a point of no return, the back button is re-enabled.
                 document.getElementById("backButton").innerHTML = theHeccer.defaultBackText;
                 theHeccer.allowedToGoBack = true;
             }
+
 
 
             //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
@@ -152,7 +153,7 @@ var theHeccer = {
     /**
      * Logs the passageMap to the console for debugging reasons
      */
-    printPassages: function () {
+    printPassages: function(){
         console.log(this.passageMap);
     },
 
@@ -183,21 +184,24 @@ function Checcer(){
 
         //TODO: maybe it would be better to change this stuff in the hecc->hecced converter thing?
 
-        let statement = statementToCheck.replace(/pAny\(/g,"theHeccer.checcer.pAny(");
-        statement = statement.replace(/pAll\(/g,"theHeccer.checcer.pAll(");
+        let statement = statementToCheck.replace(/pAny\(/g, "theHeccer.checcer.pAny(");
+        statement = statement.replace(/pAll\(/g, "theHeccer.checcer.pAll(");
 
-        statement = statement.replace(/tAny\(/g,"theHeccer.checcer.tAny(");
-        statement = statement.replace(/tAll\(/g,"theHeccer.checcer.tAll(");
+        statement = statement.replace(/tAny\(/g, "theHeccer.checcer.tAny(");
+        statement = statement.replace(/tAll\(/g, "theHeccer.checcer.tAll(");
 
-        statement = statement.replace(/and\(/g,"theHeccer.checcer.and(");
-        statement = statement.replace(/or\(/g,"theHeccer.checcer.or(");
-        statement = statement.replace(/not\(/g,"theHeccer.checcer.not(");
+        statement = statement.replace(/and\(/g, "theHeccer.checcer.and(");
+        statement = statement.replace(/or\(/g, "theHeccer.checcer.or(");
+        statement = statement.replace(/not\(/g, "theHeccer.checcer.not(");
+
+        statement = statement.replace(/tCount\(/g, "theHeccer.checcer.tCount(");
+        statement = statement.replace(/pCount\(/g, "theHeccer.checcer.pCount(");
 
         console.log(statement);
 
-        try{
+        try {
             return !!eval(statement);
-        } catch(e){
+        } catch (e) {
             return false;
         }
     }
@@ -345,8 +349,34 @@ function Checcer(){
      * @param statement the statement to check
      * @returns {boolean} the reverse of its result
      */
-    this.not = function(statement){
-        return(!eval(statement));
+    this.not = function (statement) {
+        return (!eval(statement));
+    }
+
+    /**
+     * Returns count of times that passages with the given tag have been visited.
+     * @param tagName the tag that is being looked for
+     * @returns {Number} the number of times a passage with that tag has been visited. 0 if unvisited.
+     */
+    this.tCount = function (tagName) {
+        if (theHeccer.stateStack.seenTags.has(tagName)) {
+            return theHeccer.stateStack.seenTags.get(tagName);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns count of times that a given passage has been visited.
+     * @param passageName the passage that is being looked at
+     * @returns {Number} the number of times which that particular passage has been visited. 0 if unvisited.
+     */
+    this.pCount = function (passageName) {
+        if (theHeccer.stateStack.visitedPassages.has(passageName)) {
+            return theHeccer.stateStack.visitedPassages.get(passageName);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -395,41 +425,75 @@ function GameStateStack(startPassageName){
     this.popState = function(){
         //called when trying to go back
         //first makes very sure that there's a state after this one that the user can go back to
-        if (this.areTherePriorStates){
+        if (this.areTherePriorStates) {
             //if there is a state which it can go back to, it just pops the top state off the stack
             this.states.pop();
             this.refreshVisitedStuff();
-        } else{
+        } else {
             //complains (very loudly!) if the player attempts to go back when they aren't allowed to go back
             window.alert("why are you trying to go back? theres no prior states to go back to! >:(");
         }
     };
 
-    this.seenTags = new Set();
+    /**
+     * A map holding all the visited tags, and the counts of how many times a passage with that tag has been visited.
+     * @type {Map<String, Number>}
+     */
+    this.seenTags = new Map();
 
-    this.visitedPassages = new Set();
+    /**
+     * A map holding all the visited passages, and the counts of how many times a given passage has been visited.
+     * @type {Map<String, Number>}
+     */
+    this.visitedPassages = new Map();
 
-    this.refreshVisitedStuff = function(){
+    /**
+     * Refreshes info about visited tags/passages whenever a new passage is navigated to/from
+     */
+    this.refreshVisitedStuff = function () {
 
-        const tags = new Set();
-        const passages = new Set();
+        /**
+         * map of visited passage names and the count of times they were visited
+         * @type {Map<String, Number>}
+         */
+        const passages = new Map();
 
-        if (this.areTherePriorStates){
+        /**
+         * map of encountered passage tags and the count of times they were visited
+         * @type {Map<String, Number>}
+         */
+        const tags = new Map();
 
-            const prior = this.states.slice(0, this.states.length-1);
+
+        if (this.areTherePriorStates) {
+
+            const prior = this.states.slice(0, this.states.length - 1);
             prior.forEach(
-                state => passages.add(state.getPassageName())
+                state => {
+                    let pname = state.getPassageName();
+                    if (passages.has(pname)) {
+                        let count = passages.get(pname);
+                        count += 1;
+                        passages.set(pname, count);
+                    } else {
+                        passages.set(pname, 1);
+                    }
+                    theHeccer.passageMap.get(pname).getTags().forEach(
+                        tag => {
+                            if (tags.has(tag)) {
+                                let count = tags.get(tag);
+                                count += 1;
+                                tags.set(tag, count);
+                            } else {
+                                tags.set(tag, 1);
+                            }
+                        }
+                    );
+                }
             );
-            passages.forEach(
-                passage => theHeccer.passageMap.get(passage).getTags().forEach(
-                    tag => tags.add(tag)
-                )
-            );
-
         }
         this.seenTags = tags;
         this.visitedPassages = passages;
-
     }
 
     /**
@@ -519,7 +583,7 @@ function Passage(passageName, passageContent, passageTags){
      * @param specifiedTag the tag being looked for in the tags
      * @returns {boolean} true if the specifiedTag is present, false otherwise
      */
-    this.containsSpecifiedTag = function(specifiedTag) {
+    this.containsSpecifiedTag = function(specifiedTag){
         //returns whether or not this.tags contains the specifiedTag
         //does this by checking tags.includes(specifiedTag).
         //true if present, false otherwise.
@@ -663,14 +727,15 @@ var heccstension = function(){
             }
             //console.log("unescaped replacement string: " + replacementString);
 
-            replacementString = replacementString.replace(/\/}/g, "}"); //unescaping any escaped /}s in the if statement
+            replacementString = replacementString.replace(/\/}/g,"}"); //unescaping any escaped /}s in the if statement
 
             //console.log("escaped replacement string: " + replacementString);
 
             replacementString = conditionals.filter(replacementString, converter); //process the output of this conditional (for nested conditionals)
 
 
-            let prefixString = text.substring(0, ifElseStart); //everything before this conditional
+
+            let prefixString = text.substring(0,ifElseStart); //everything before this conditional
 
             let suffixString = text.substring(ifElseEnd); //everything after this conditional
 
