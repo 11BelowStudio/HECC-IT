@@ -145,7 +145,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
                 "(?<=^!StartPassageName:)\\h*[\\w]+[\\w- ]*[\\w]+(?=\\h*$)",
                 rawData
             );
-            System.out.println(start);
         } catch (NoMatchException e){
             //start = "Start";
         }
@@ -200,7 +199,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
             title = "An Interactive Fiction";
             isTitleDeclared = false;
         }
-        System.out.println(title);
     }
 
     /**

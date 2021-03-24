@@ -86,7 +86,8 @@ public class HeccParser {
      * @throws EmptyPassageException if there's an empty passage
      * @throws DeletedLinkPresentException if the passage contains a link to a deleted passage
      */
-    public boolean constructThePassageObjects() throws NoPassagesException, DuplicatePassageNameException, EmptyPassageException, DeletedLinkPresentException{
+    public boolean constructThePassageObjects() throws
+            NoPassagesException, DuplicatePassageNameException, EmptyPassageException, DeletedLinkPresentException {
 
         //trims metadata stuff from dataToParse, and creates the Metadata object
         String dataToParse = makeMetadataObject(this.dataToParse);
@@ -146,7 +147,8 @@ public class HeccParser {
      * @throws DuplicatePassageNameException if multiple passages share the same name
      * @throws NoPassagesException if no passages exist
      */
-    private Set<String> findPassageNames(String dataToParse) throws DuplicatePassageNameException, NoPassagesException{
+    private Set<String> findPassageNames(String dataToParse) throws
+            DuplicatePassageNameException, NoPassagesException{
 
         Set<String> pNames = new TreeSet<>();
 
@@ -166,7 +168,6 @@ public class HeccParser {
         }
 
         if (pNames.size() == 0){
-            //System.out.println("no passages found!");
             throw new NoPassagesException();
             //complains if there are no passages
         }
@@ -180,21 +181,34 @@ public class HeccParser {
      * @throws EmptyPassageException if a passage is empty
      * @throws DeletedLinkPresentException if the passage contains a link to a deleted passage
      */
-    private Map<String, PassageOutputtingInterface> constructPassageMap(String dataToParse) throws EmptyPassageException, DeletedLinkPresentException{
+    private Map<String, PassageOutputtingInterface> constructPassageMap(String dataToParse) throws
+            EmptyPassageException, DeletedLinkPresentException{
         //creating the map
         Map<String, PassageOutputtingInterface> pMap = new HashMap<>();
 
         boolean notDone;
 
         //matches declarations
-        Matcher declarationMatcher = Pattern.compile("(?<declarations>^::([\\w]+[\\w- ]*)?[\\w]+)", Pattern.MULTILINE).matcher(dataToParse);
+        Matcher declarationMatcher = Pattern.compile(
+                "(?<declarations>^::([\\w]+[\\w- ]*)?[\\w]+)",
+                Pattern.MULTILINE
+        ).matcher(dataToParse);
+
         //will give this the everythingAfterDeclaration (the content)
-        Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
-        //Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\R)(?!^::).*\\R(?!^::).+)", Pattern.MULTILINE).matcher("");
+        Matcher passageContentMatcher = Pattern.compile(
+                "(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)",
+                Pattern.MULTILINE
+        ).matcher("");
+
         //will use this to crop leading whitespace lines
-        Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\h*$", Pattern.MULTILINE).matcher("");
+        Matcher entirelyWhitespaceMatcher = Pattern.compile(
+                "^\\h*$",
+                Pattern.MULTILINE
+        ).matcher("");
+
         //matches whitespace at the end of the line
         Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
+
         //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
         Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 
@@ -202,14 +216,11 @@ public class HeccParser {
         String nextPassageName = "";
         String everythingAfterDeclaration;
         String currentContent;
-        String currentComment;
 
         String currentPassageMetadata;
-        //int currentPassageMetadataStart;
 
         int nextDeclarationStart = 0;
         int thisDeclarationStart;
-        //int thisContentStart = 0;
 
         boolean foundFirst = false;
         boolean contentFound;
@@ -273,21 +284,8 @@ public class HeccParser {
             while(passageContentMatcher.find()){
                 temp = passageContentMatcher.group(0);
 
-                //System.out.println(temp);
-
-
-                /*
-                if (commentStarted){
-                    if (commentStartEndMatcher.reset(temp).matches()) { //if the current line matches the comment start/end line
-                        break;
-                    }
-                    //currentComment = currentComment.concat(temp);
-                    continue;
-                } else {*/
                 if (contentFound) { //if content has been found
                     if (commentStartEndMatcher.reset(temp).matches()) { //if the current line matches the comment start/end line
-                        //commentStarted = true; //the comment has started
-                        //continue; //skip this line
                         break;
                     }
                 } else { //if no content has been found yet
@@ -300,20 +298,13 @@ public class HeccParser {
                         //content has been found once first not-entirely-whitespace line has been reached
                     }
                 }
-                //}
-                //lineEndWhitespaceMatcher.reset(temp);
-                //temp = lineEndWhitespaceMatcher.replaceAll("</br>");
                 //adds the current line of content to the currentContent
                 currentContent = currentContent.concat(temp);
             }
 
 
             if (contentFound) {
-                //System.out.println("Everything after declaration:");
-                //System.out.println(currentContent);
                 currentContent = currentContent.trim();
-                //System.out.println("Trimmed everything after declaration:");
-                //System.out.println(currentContent);
                 //if content was found, add it to the passage content map
 
                 if (SharedPassage.doesPassageContentContainDeletedLinks(currentContent)){
@@ -327,8 +318,6 @@ public class HeccParser {
                     pMap.put(currentPassageName,new OutputtablePassage(currentPassageName,currentContent));
                 }
             } else{
-                //System.out.println("No content found for passage " + currentPassageName);
-                //logger.logInfo("No content found for passage " + currentPassageName);
                 throw new EmptyPassageException(currentPassageName);
             }
         } while(notDone);
@@ -376,17 +365,15 @@ public class HeccParser {
         heccedData.add("//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n\n");
 
         //declaration of starting passage name is added to heccedData
-        heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\r\n\r");
+        heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\n");
 
         //starts the declaration of the getHECCED function in heccedData
-        heccedData.add("function getHECCED(){\n\r");
+        heccedData.add("function getHECCED(){\n\n");
 
 
         //parses each passage, and ensure that the links are all valid and such
         for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
             PassageOutputtingInterface current = e.getValue();
-
-            //current.parseContent();
 
             //ensure that the passages they link to are valid
             if (current.validateLinkedPassages(passageNames)){
@@ -411,9 +398,6 @@ public class HeccParser {
         //outputs any info the user might need regarding any missing metadata in the Metadata object
         logger.logInfo(metadata.outputMetadataDefinitionInstructions());
 
-        //metadata.printDebugData();
-
-        //printPassageObjects();
 
         return true;
     }

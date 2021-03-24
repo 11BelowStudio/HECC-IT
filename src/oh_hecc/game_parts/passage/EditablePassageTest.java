@@ -15,7 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class EditablePassageTest {
 
-    //testing to see if the setup stuff works
+    /**
+     * testing to see if I can set up a sample passage
+     */
     @Test
     void testASamplePassage(){
         String name = "Another passage";
@@ -242,6 +244,9 @@ public class EditablePassageTest {
 
     }
 
+    /**
+     * Testing the automatic escaping of :: lines and ;; lines (and ensuring there's no unintended escaping)
+     */
     @Test
     void testEscaping() {
         EditablePassage samplePassage = new EditablePassage();

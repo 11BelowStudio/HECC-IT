@@ -121,8 +121,6 @@ public class HeccUpGUI implements LoggerInterface {
         heccFileChosen = false;
         outputFolderChosen = false;
 
-        //outputter = new FolderOutputter();
-
         heccUpHandler = new HeccUpHandler(this);
 
         theFrame.requestFocus();
@@ -195,9 +193,6 @@ public class HeccUpGUI implements LoggerInterface {
 
         // it will have a BoxLayout
         thePanel.setLayout(new BoxLayout(thePanel, BoxLayout.Y_AXIS));
-
-        //guiFrame will use a BoxLayout.
-        //theFrame.setLayout(new BoxLayout(theFrame.getContentPane(), BoxLayout.Y_AXIS));
 
 
         //Creating the title panel to hold the title label
