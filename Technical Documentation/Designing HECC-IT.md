@@ -191,7 +191,7 @@ and partially because every other system effectively worked like that as well), 
 file, containing the game data as the 'states' for the aforementioned finite state machine, which also gives these
 states to the FSM. This approach made sense, would lead to minimal re-use of boilerplate code, and didn't have too
 many files. I could have put the pre-written JavaScript within the pre-written html file, however, I wanted them
-to be seperate files, mostly for ease of maintainability when writing them.
+to be separate files, mostly for ease of maintainability when writing them.
 
 
 Eventually, I produced this overcomplicated diagram,
@@ -305,4 +305,28 @@ one optional method of note-taking, and one intentionally undocumented, heavily-
     * Adding a new passage to the game, unconnected to any other passages, which exists for the sole purpose
       of being used to take notes.
         * This will need to be taken into account when creating the parser(s) for .hecc, so any 'orphan' passages such
-          as these won't 
+          as these won't actually be visible in the outputs (because they aren't intended to be reached anyway).
+          
+* The intentionally undocumented commenting method
+    * Any lines before the first passage declaration which are not metadata definitions or explicitly marked as being
+      a comment line **will** be ignored by HECC-UP and OH-HECC. If a user wanted to leave comments in their .hecc file
+      like that, they can, and HECC-UP won't reject the .hecc code as being invalid. However, if they were to open their
+      .hecc file in OH-HECC, these lines would also get ignored by the parser, meaning that, when they save their .hecc
+      file, those comments will be lost.
+        * Because I don't want authors to lose their comments due to that, I shall actively discourage authors from
+          doing this.
+          
+
+## Designing the inner workings of each part of HECC-IT
+
+Again, I started with the outputs first, and worked my way back from there.
+The design itself was jotted down rather crudely on a markdown file, which can be read [here](../Summer%20background%20preparation%20work/Planning/How%20the%20HECCER%20module%20will%20work.md).
+This was promptly followed by the production of a prototype version of the output game, which can be looked at (and 
+downloaded from) [here](../Summer%20background%20preparation%20work/Planning/testing%20etc/HECCER%20prototyping/index%20but%20everything's%20inline%20instead.html).
+The overall logic within the produced games hasn't really changed much since then. It worked, so I decided to work on
+the rest of the logic instead.
+
+However, I will admit that I didn't get around to sorting out the planned saving/loading games functionality,
+or implementing the initially planned support for variables.
+
+TODO: DIAGRAM

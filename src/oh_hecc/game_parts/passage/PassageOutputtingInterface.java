@@ -1,10 +1,11 @@
 package oh_hecc.game_parts.passage;
 
 import heccCeptions.UndefinedPassageException;
+import oh_hecc.Heccable;
 
 import java.util.Set;
 
-public interface PassageOutputtingInterface {
+public interface PassageOutputtingInterface extends Heccable, PassageOutputtingLinkCheckingInterface {
 
 
     /**
@@ -35,12 +36,6 @@ public interface PassageOutputtingInterface {
      */
     void printPassageInfoForDebuggingReasons();
 
-
-    /**
-     * Obtains the name of this passage
-     * @return the name of this passage
-     */
-    String getPassageName();
 
     /**
      * gets the set of linked passages

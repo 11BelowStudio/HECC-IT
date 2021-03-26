@@ -4,6 +4,7 @@ import hecc_up.gameParts.Metadata;
 import heccCeptions.*;
 import oh_hecc.game_parts.passage.OutputtablePassage;
 import oh_hecc.game_parts.passage.PassageOutputtingInterface;
+import oh_hecc.game_parts.passage.PassageOutputtingLinkCheckingInterface;
 import oh_hecc.game_parts.passage.SharedPassage;
 
 import java.util.*;
@@ -381,7 +382,7 @@ public class HeccParser {
         try {
             // we attempt to find the passages that are actually linked to something else, and only output them.
 
-            Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), passageMap.get(theStart));
+            Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), theStart);
 
             for (String passageName : nonOrphanPassageNames) {
                 heccedData.add(passageMap.get(passageName).toHecc());
@@ -426,8 +427,8 @@ public class HeccParser {
     /**
      * This method is used to get the names of all non-orphan passages, recursively.
      * @param knownLinked a set with the names of all known passages that are linked together.
-     * @param currentPassage the current passageOutputtingInterface object that is being looked at.
-     *                       If a passage with this name is already in knownLinked, it's skipped.
+     * @param currentPassageName the name of the current passageOutputtingInterface object that is being looked at.
+     *                       If this passage name is already in knownLinked, it's skipped.
      *                       If it links to a passage which is already in knownLinked, that passage is skipped
      *                       (so we don't get any overflows).
      * @return a set with the names of all passages that are linked together.
@@ -436,38 +437,43 @@ public class HeccParser {
      */
     private Set<String> getNamesOfAllNonOrphanPassages(
             Set<String> knownLinked,
-            PassageOutputtingInterface currentPassage
+            String currentPassageName
     ) throws UndefinedPassageException, StackOverflowError {
 
-        String currentName = currentPassage.getPassageName();
-
-        if (knownLinked.contains(currentName)){
-            return knownLinked;
+        if (knownLinked.contains(currentPassageName)){
+            return knownLinked; // if this one is already known, we just skip it
         }
 
+        // we get the actual passage we need for this situation
+        PassageOutputtingLinkCheckingInterface currentPassage = passageMap.get(currentPassageName);
 
+
+        // if the contents of the passage are bad, this gets thrown.
         currentPassage.validateLinkedPassagesThrowingException(passageNames);
 
-        knownLinked.add(currentName);
+        // this passage is known and is added to the set
+        knownLinked.add(currentPassageName);
 
+        // we take a copy of the set of the passages which this passage is linked to
         Set<String> linkedPassageNames = new HashSet<>(currentPassage.getLinkedPassages());
 
-        if (!linkedPassageNames.isEmpty()){
+        if (!linkedPassageNames.isEmpty()){ // if it has any links
 
-            linkedPassageNames.removeAll(knownLinked); //we try to not recurse multiple times
+            //we don't want to accidentally infinite loop ourselves, so any already-found passages are ignored.
+            linkedPassageNames.removeAll(knownLinked);
 
-            for (String passageName: linkedPassageNames){
+            for (String passageName: linkedPassageNames){ //we loop through the remainer
 
                 if (knownLinked.contains(passageName)){
                     continue;
+                    // if we were looking through a previous child and this current one was already found, it's skipped.
                 }
 
-                getNamesOfAllNonOrphanPassages(knownLinked, passageMap.get(passageName));
+                getNamesOfAllNonOrphanPassages(knownLinked, passageName); // we attempt to do the same for this child
             }
         }
 
-
-        return knownLinked;
+        return knownLinked; // boom thats all the child passages that this passage is linked to.
 
     }
 

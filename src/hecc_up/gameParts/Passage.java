@@ -487,11 +487,6 @@ public class Passage implements PassageOutputtingInterface {
     }
 
     @Override
-    public String getPassageName() {
-        return passageName;
-    }
-
-    @Override
     public Set<String> getLinkedPassages(){
         return linkedPassages;
     }
