@@ -112,7 +112,7 @@ HECC-IT is intended to fill this niche.
   presenting it as a network of connected passages.
   
 * The games produced should be 100% clientside, playable via any modern web browser, requiring no unnecessary faff
-  from the author or the player in order to actually share/play the games produced with this tool.
+  from the author, or the player, in order to actually share/play the games produced with this tool.
   
 * The tool should work on any PC, regardless of operating system.
 
@@ -171,7 +171,30 @@ Here are all the names I considered at one point in pre-development:
 
 As mentioned earlier on, I was planning on producing this as a set of components.
 Now that I had a name I could use as a starting point for naming these components, I was able to start to properly
-define what the interactions between the components would be. Eventually, I produced this overcomplicated diagram,
+define what the interactions between the components would be.
+
+The first thing I thought of was actually how the outputs would be structured.
+At first, before starting on any of the research work for this project,
+I was thinking of having the output games structured as a folder of .html files, with each passage being its own
+.html file, with the links between each passage being conventional .html links (like how basic websites
+are structured), and passing any variables/a stack of the 'visited passage' history as it goes along, via the
+(ab)use of HTTP GET or POST requests. I quickly realized that this approach would be stupid, due to the potentially
+ludicrous number of .html files that would need to be produced, the inevitable mass-duplication of
+boilerplate code, and the massive overhead from all the GET/POST requests that would be happening.
+That, and none of the existing systems attempted this approach either, with good reason.
+
+The next idea was to just have it as a single pre-written .html page, with a pre-written JavaScript file that
+essentially works  as a finite state machine (partially because CE313 was listed as a co-requisite for this project,
+but that module  wasn't on the module directory, so I pointed that out to Dr Bartle and asked him what part of that
+module was the  important bit, and he mentioned that the stuff about state machines was relevant;
+and partially because every other system effectively worked like that as well), accompanied by another JavaScript
+file, containing the game data as the 'states' for the aforementioned finite state machine, which also gives these
+states to the FSM. This approach made sense, would lead to minimal re-use of boilerplate code, and didn't have too
+many files. I could have put the pre-written JavaScript within the pre-written html file, however, I wanted them
+to be seperate files, mostly for ease of maintainability when writing them.
+
+
+Eventually, I produced this overcomplicated diagram,
 as a plan for how this system would work, with all the names in it as well:
 
 ![HECC-IT component interactions verbose](./design%20images/HECC-IT%20component%20interactions%20overview%20verbose.png)
@@ -209,6 +232,77 @@ This what everything would need to do:
 This question is actually deeper than something like 'what is the syntax'. This is also a question about how the
 games produced with HECC-IT would be structured.
 
-Firstly, the links: There are severa
+Firstly, the links: I have noticed several approaches being used by existing systems. These were:
 
+* Having the links in a fixed position at the end of the passages (*Choose-your-own-adventure* book-style)
+    * This was how *Quest*, *Inklewriter*, and *eHyperTool* handled the 'links'.
+        * To a lesser extent, the 'jump'-based system used by *Ren'Py* and *ChoiceScript* also fall
+          under this category.
+    * The advantages to this would have been making it easier to handle links in general, as they would all be
+      in their own specially-designated parts of the passage content, which in turn would have made guard conditions,
+      keeping track of which passages are linked, and other such features easier to implement
+    * I opted against this approach, mostly due to the lack of flexibility offered to the writer in terms of
+      game structure inherent to this style of link.
 
+* Having the links be their own objects, just like the passages, within the game (unlike links on a website)
+    * This is how *Storyspace* handled links.
+    * The advantage to this would have been offering the author greater control over the links.
+    * I opted against this, because it would have been incredibly complex both to implement,
+      and for the author to use (Especially if the author would have wanted to write the .hecc code manually, as
+      they would probably need to manually define each link object). Additionally, this could have also lead to
+      an unnecessary amount of computational overhead, both in the editor, and in the output games.
+
+* Having the links declared inline within the passage content (like links on a website)
+    * This was how *Squiffy*, *Twine*, and *Undum* handled the 'links'.
+    * The advantages of this were the flexibility it would give to the author in terms of how they want to handle
+      the presentation of the links in their game. Additionally, it would allow the links to be embedded in
+      a more natural way in the passage content, making it easier for the user to declare them in the .hecc code.
+    * However, it did mean that there would be less control over the links themselves, as they would effectively just
+      be part of the normal text.
+    * I opted for this approach, as the ease of use and the flexibility they allow appeared to be worthy tradeoffs for
+      the lack of control over the links themselves.
+      
+Then there was the question of the syntax for the .hecc format. This was heavily influenced by the syntaxes of
+*Twine*/*Twee2* and *Squiffy*. I was operating under the theory of 'if it ain't broke, don't fix it', and I wanted
+to have some familiarity for users of the other tools. However, I did make a few improvements of my own.
+
+I liked the passage declaration syntax of *Twee2*, so that was effectively borrowed as-is. Additionally, I felt that
+the linking syntax of *Twine* was also rather nice, so the method of linking to a passage directly (via
+`[[Passage name]]`, showing the name of the passage being linked to) was copied as is, but only the `|` method of
+indirectly linking to a passage was linked, not the `->` or `<-` methods, for a consistent code structure (so, entering
+`[[Link text|Passage name]]` is the only way of linking to the named passage whilst showing 'link text').
+
+The game metadata declaration syntax for .hecc resembles that of *Squiffy*, but it was changed to make it more
+explict. In *Squiffy*, you can declare a game's title via `@title game title goes here`, at any point in the game's
+content. But that means the system must be prepared to encounter that metadata at any point in the file, and there's
+no explicit point where the type of metadata ends and the declaration begins. I adapted this for .hecc so it would
+be declared in the form `!title: game title goes here` instead, and all such metadata declarations must be made
+before the first passage is declared. The colon makes it clear where the boundary between the metadata type and the
+actual metadata is, The `!` prefix was used instead mostly out of personal preference, but also because it looks more
+immediately important than a `@`.
+
+However, .hecc differs substantially in terms of the commenting syntax. It officially offers 3 varieties of comments,
+one optional method of note-taking, and one intentionally undocumented, heavily-discouraged, form of commenting.
+
+* The official commenting methods
+    * Metadata multi-line comments.
+        * You can put comments in the metadata area of the .hecc file, before the first passage is declared,
+          but you should put a `//` on any comment lines. However, `OH-HECC` will treat any metadata comment lines as
+          one extended multi-line comment, and will output them as such after editing the .hecc file.
+          
+    * Inline passage declaration comments
+        * On a passage declaration line, after declaring the passage's name and (optional) metadata,
+          a user can put a `//` at the end of that stuff, and everything after the `//` on that line is treated as an
+          inline comment.
+          
+    * Trailing passage comments
+        * After declaring some passage content, a user may enter a line containing only a `;;`.
+          Everything on the following lines will be treated as a comment associated with that passage.
+        * Initially, these were implicitly 'closed' by the next passage declaration, however, this was revised,
+          so the comment needs to be explicitly closed by another `;;` line.
+          
+* The unoffical note-taking method
+    * Adding a new passage to the game, unconnected to any other passages, which exists for the sole purpose
+      of being used to take notes.
+        * This will need to be taken into account when creating the parser(s) for .hecc, so any 'orphan' passages such
+          as these won't 

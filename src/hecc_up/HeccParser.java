@@ -369,26 +369,42 @@ public class HeccParser {
 
         heccedData.add("//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n\n");
 
+        String theStart = metadata.getStartPassage();
+
         //declaration of starting passage name is added to heccedData
-        heccedData.add("var startingPassageName = \""+metadata.getStartPassage()+"\";\n\n");
+        heccedData.add("var startingPassageName = \""+theStart+"\";\n\n");
 
         //starts the declaration of the getHECCED function in heccedData
         heccedData.add("function getHECCED(){\n\n");
 
 
-        //parses each passage, and ensure that the links are all valid and such
-        for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
-            PassageOutputtingInterface current = e.getValue();
+        try {
+            // we attempt to find the passages that are actually linked to something else, and only output them.
 
-            //ensure that the passages they link to are valid
-            if (current.validateLinkedPassages(passageNames)){
-                heccedData.add(current.getHeccedRepresentation());
-                e.setValue(current);
-            } else {
-                //stop everything if an invalid link is found
-                return false;
+            Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), passageMap.get(theStart));
+
+            for (String passageName : nonOrphanPassageNames) {
+                heccedData.add(passageMap.get(passageName).toHecc());
+            }
+
+        } catch (StackOverflowError soe){
+
+            // if recursion screws us over, we just output all the passages.
+
+            for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
+                PassageOutputtingInterface current = e.getValue();
+
+                //ensure that the passages they link to are valid
+                if (current.validateLinkedPassages(passageNames)){
+                    heccedData.add(current.toHecc());
+                    e.setValue(current);
+                } else {
+                    //stop everything if an invalid link is found
+                    return false;
+                }
             }
         }
+
 
         heccedData.add("\n\ttheHeccer.printPassages();\n");
 
@@ -405,6 +421,54 @@ public class HeccParser {
 
 
         return true;
+    }
+
+    /**
+     * This method is used to get the names of all non-orphan passages, recursively.
+     * @param knownLinked a set with the names of all known passages that are linked together.
+     * @param currentPassage the current passageOutputtingInterface object that is being looked at.
+     *                       If a passage with this name is already in knownLinked, it's skipped.
+     *                       If it links to a passage which is already in knownLinked, that passage is skipped
+     *                       (so we don't get any overflows).
+     * @return a set with the names of all passages that are linked together.
+     * @throws UndefinedPassageException if there's a problem with the current passage.
+     * @throws StackOverflowError because recursion do be like that sometimes
+     */
+    private Set<String> getNamesOfAllNonOrphanPassages(
+            Set<String> knownLinked,
+            PassageOutputtingInterface currentPassage
+    ) throws UndefinedPassageException, StackOverflowError {
+
+        String currentName = currentPassage.getPassageName();
+
+        if (knownLinked.contains(currentName)){
+            return knownLinked;
+        }
+
+
+        currentPassage.validateLinkedPassagesThrowingException(passageNames);
+
+        knownLinked.add(currentName);
+
+        Set<String> linkedPassageNames = new HashSet<>(currentPassage.getLinkedPassages());
+
+        if (!linkedPassageNames.isEmpty()){
+
+            linkedPassageNames.removeAll(knownLinked); //we try to not recurse multiple times
+
+            for (String passageName: linkedPassageNames){
+
+                if (knownLinked.contains(passageName)){
+                    continue;
+                }
+
+                getNamesOfAllNonOrphanPassages(knownLinked, passageMap.get(passageName));
+            }
+        }
+
+
+        return knownLinked;
+
     }
 
 

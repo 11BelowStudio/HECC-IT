@@ -122,34 +122,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
         }
     }
 
-    /**
-     * A method that wraps the start passage finding stuff
-     * @param rawData the raw metadata
-     * @return the name of the defined starting passage ("Start" if it wasn't defined)
-     * @deprecated by oh_hecc.game_parts.metadata.MetadataReadingInterface.findStartPassage(String)
-     * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findStartPassage(String)
-     */
-    @Deprecated
-    private String findStartPassage(String rawData){
-        /*
-        finds the declaration for the starting passage,
-            in a string defined as starting with '!StartPassageName:',
-            allowing some whitespace, then the starting passage name,
-            then allowing trailing whitespace.
-        This first matcher will find the passage name, along with any leading whitespace
-        line must be of the form '!StartPassageName: starting passage name'
-         */
-        String start = "Start";
-        try{
-            start = metadataRegexHandler(
-                "(?<=^!StartPassageName:)\\h*[\\w]+[\\w- ]*[\\w]+(?=\\h*$)",
-                rawData
-            );
-        } catch (NoMatchException e){
-            //start = "Start";
-        }
-        return start;
-    }
 
     /**
      * Finds IFID declaration.
@@ -162,13 +134,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
          */
         try{
             ifid = MetadataReadingInterface.findIfid(rawMetadata);
-            /*
-            ifid = metadataRegexHandler(
-                "(?<=^!IFID:)\\h*[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}(?=\\h*$)",
-                rawMetadata
-            ).toUpperCase(); //converts the match to uppercase
-
-             */
             isIfidDeclared = true;
         } catch (NoMatchException e){
             isIfidDeclared = false;
@@ -187,12 +152,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
             between the start/end non-whitespace characters.
          */
         try{
-            /*
-            title = metadataRegexHandler(
-                "(?<=^!StoryTitle:)\\h*[\\S]+[\\S ]*[\\S]+(?=\\h*$)",
-                rawMetadata
-            );
-             */
             title = MetadataReadingInterface.findTitle(rawMetadata);
             isTitleDeclared = true;
         } catch (NoMatchException e){
@@ -213,12 +172,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
          */
         try{
             author = MetadataReadingInterface.findAuthor(rawMetadata);
-            /*
-            author = metadataRegexHandler(
-                "(?<=^!Author:)\\h*[A-Za-z]+[a-zA-Z., ]*[a-zA-Z]+(?=\\h*$)",
-                rawMetadata
-            );
-             */
             isAuthorDeclared = true;
         } catch (NoMatchException e){
             author = "Anonymous";

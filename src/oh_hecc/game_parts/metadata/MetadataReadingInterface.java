@@ -15,16 +15,34 @@ import java.util.regex.Pattern;
  */
 public interface MetadataReadingInterface extends SharedMetadata {
 
+    /**
+     * Author declaration must be prefixed as `!author:`
+     */
     String AUTHOR_PREFIX = "!author:";
 
+    /**
+     * Title declaration must be prefixed as `!title:`
+     */
     String TITLE_PREFIX = "!title:";
 
+    /**
+     * Start declaration must be prefixed as `!start:`
+     */
     String START_PREFIX = "!start:";
 
+    /**
+     * IFID declaration must be prefixed as `!ifid:`
+     */
     String IFID_PREFIX = "!ifid:";
 
+    /**
+     * variable declarations must be prefixed as `!var:`
+     */
     String VARIABLE_PREFIX = "!var:";
 
+    /**
+     * Comment lines (at least, the comments you want to keep) must be prefixed with `//`
+     */
     String COMMENT_PREFIX = "//";
 
     /**
@@ -39,15 +57,10 @@ public interface MetadataReadingInterface extends SharedMetadata {
             allowing some whitespace, then the starting passage name,
             then allowing trailing whitespace.
         This first matcher will find the passage name, along with any leading whitespace
-        line must be of the form '!StartPassageName: starting passage name'
+        line must be of the form '!start: starting passage name'
          */
         String start = "Start";
         try{
-            /*
-            start = metadataRegexHandler(
-                    "(?<=^!StartPassageName:)\\s*[\\w]+[\\w- ]*[\\w]+(?=\\s*$)",
-                    rawData
-            );*/
             start = SharedMetadata.metadataRegexHandler(
                     "(?<=^"+START_PREFIX+")" + Parseable.STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE,
                     rawData

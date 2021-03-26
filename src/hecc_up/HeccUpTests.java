@@ -37,11 +37,14 @@ public class HeccUpTests {
                 HeccUpTestConstants.HECCSAMPLE_LOGS
         );
 
+        String singleStringHeccedData = String.join("", heccSampleParser.getHeccedData());
 
         assertEquals(
-                String.join("", heccSampleParser.getHeccedData()),
+                singleStringHeccedData,
                 String.join("",HeccUpTestConstants.HECCSAMPLE_OUTPUT)
         );
+
+        System.out.println(singleStringHeccedData);
 
     }
 
@@ -522,7 +525,13 @@ public class HeccUpTests {
                 ";;\n" +
                 "yep it's the end\n" +
                 "\n" +
-                "wack").trim();
+                "wack\n"+
+                ";;\n" +
+                "::unlinked\n"+
+                "you wont see this\n"+
+                ";;\n"+
+                "no comment."
+                ).trim();
 
         /**
          * The expected output from HECCSAMPLE as an ArrayList of strings.

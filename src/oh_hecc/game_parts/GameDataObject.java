@@ -381,7 +381,13 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         StringBuilder heccBuilder = new StringBuilder();
         heccBuilder.append(theMetadata.toHecc());
         heccBuilder.append("\n");
-        heccBuilder.append(startDepthFirstHeccBuilder());
+
+        try {
+            heccBuilder.append(startDepthFirstHeccBuilder());
+        } catch (StackOverflowError e){
+            // if recursion screws us over, we just do the ugly method instead.
+            heccBuilder.append(quickAndDirtyHecc());
+        }
         return heccBuilder.toString();
     }
 
@@ -389,9 +395,9 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     /**
      * Returns the entire GameDataObject in .hecc form using streams.
      * But the passages aren't in any particular order.
+     * It's ugly but it works.
      * @return a string containing all the .hecc code.
      */
-    @Deprecated
     private String quickAndDirtyHecc(){
         return theMetadata.toHecc().concat("\n").concat(
                 passageMap.values().stream().map(Heccable::toHecc)
@@ -438,8 +444,9 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     /**
      * A method which starts to build the .hecc file recursively (depth first, prefix traversal)
      * @return a string containing all the .hecc code for the passages
+     *  @throws StackOverflowError because recursion do be like that sometimes
      */
-    private String startDepthFirstHeccBuilder(){
+    private String startDepthFirstHeccBuilder() throws StackOverflowError{
         StringBuilder sb = new StringBuilder();
         Set<UUID> keys = new HashSet<>(passageMap.keySet());
         if (!keys.isEmpty()){
@@ -462,8 +469,9 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      * @param allKeys set of all the keys which haven't been found yet
      * @param current UUID of the current key being looked at
      * @return a string containing the .hecc code for the current passage and all its children, constructed depth-first.
+     * @throws StackOverflowError because recursion do be like that sometimes
      */
-    private String depthFirstHeccBuilder(Set<UUID> allKeys, UUID current) {
+    private String depthFirstHeccBuilder(Set<UUID> allKeys, UUID current) throws StackOverflowError {
         StringBuilder sb = new StringBuilder();
         SharedPassage sp = passageMap.get(current);
         sb.append(sp.toHecc());

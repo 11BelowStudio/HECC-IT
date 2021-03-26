@@ -440,7 +440,7 @@ public class Passage implements PassageOutputtingInterface {
      * 
      * @return A string with the necessary JavaScript code to construct this passage
      */
-    public String getHeccedRepresentation(){
+    public String toHecc(){
         //making a StringBuilder
         StringBuilder heccedBuilder = new StringBuilder();
         
@@ -486,7 +486,15 @@ public class Passage implements PassageOutputtingInterface {
 
     }
 
+    @Override
+    public String getPassageName() {
+        return passageName;
+    }
 
+    @Override
+    public Set<String> getLinkedPassages(){
+        return linkedPassages;
+    }
 
 
 }

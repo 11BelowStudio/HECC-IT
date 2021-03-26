@@ -22,7 +22,6 @@ public interface SharedMetadata extends Heccable, Parseable {
      * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
      */
     String VALID_AUTHOR_REGEX = "\\h*([A-Za-z]+[a-zA-Z., ]*)?[a-zA-Z]+(?=\\h*$)";
-    //final String VALID_AUTHOR_REGEX = "\\h*([A-Za-z]+(\\.?) )?)?[A-Za-z]+";
 
     /**
      * The regex which titles must satisfy.
@@ -35,7 +34,7 @@ public interface SharedMetadata extends Heccable, Parseable {
 
 
     /**
-     * A method which does the metadata regex matching things
+     * A method which does the metadata regex matching things. Yep, it's case-insensitive.
      *
      * @param regex the regular expression being looked for in the input
      * @param input the string that the regex is being applied to

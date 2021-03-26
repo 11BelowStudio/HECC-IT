@@ -104,7 +104,7 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
      *
      * @return A string with the necessary JavaScript code to construct this passage
      */
-    public String getHeccedRepresentation(){
+    public String toHecc(){
         //making a StringBuilder
         StringBuilder heccedBuilder = new StringBuilder();
 
@@ -133,11 +133,17 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
         return heccedBuilder.toString();
     }
 
-
+    /**
+     * gets the set of linked passages
+     * @return a copy of linkedPassages
+     */
     @Override
-    public String toHecc() {
-        return "";
+    public Set<String> getLinkedPassages(){
+        return new HashSet<>(linkedPassages);
+        //return linkedPassages;
     }
+
+
 
     @Override
     public UUID getPassageUUID() {
@@ -184,4 +190,6 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
                 "\nend passage data";
 
     }
+
+
 }

@@ -28,13 +28,25 @@ public interface PassageOutputtingInterface {
      *
      * @return A string with the necessary JavaScript code to construct this passage
      */
-    String getHeccedRepresentation();
+    String toHecc();
 
     /**
      * This just prints the passage info, for debugging reasons.
      */
     void printPassageInfoForDebuggingReasons();
 
+
+    /**
+     * Obtains the name of this passage
+     * @return the name of this passage
+     */
+    String getPassageName();
+
+    /**
+     * gets the set of linked passages
+     * @return linkedPassages
+     */
+    Set<String> getLinkedPassages();
 
 
 
