@@ -319,6 +319,8 @@ one optional method of note-taking, and one intentionally undocumented, heavily-
 
 ## Designing the inner workings of each part of HECC-IT
 
+### The outputs
+
 Again, I started with the outputs first, and worked my way back from there.
 The design itself was jotted down rather crudely on a markdown file, which can be read [here](../Summer%20background%20preparation%20work/Planning/How%20the%20HECCER%20module%20will%20work.md).
 This was promptly followed by the production of a prototype version of the output game, which can be looked at (and 
@@ -329,4 +331,100 @@ the rest of the logic instead.
 However, I will admit that I didn't get around to sorting out the planned saving/loading games functionality,
 or implementing the initially planned support for variables.
 
-TODO: DIAGRAM
+Here is a diagram of the inner workings of the first version of the heccin' game:
+
+![Class diagram of the first version of the heccin' game](./design%20images/heccin%20game%20v1.png)
+
+Here's how it loads passages
+
+![Loading passages in the first version of the heccin' game](./design%20images/heccin%20game%20v1%20passage%20loading%20process.png)
+
+### HECC-UP
+
+This seemed like the best part of the tool to start working from.
+
+There was a rather simple process which HECC-UP would need to complete, which went as follows:
+
+![HECC-UP workflow process](./design%20images/hecc%20up%20process.png)
+
+Most of the thought process I had whilst working out how to implement HECC-UP was, once again,
+crudely jotted down on a markdown file, which, again, can be read [here](../Summer%20background%20preparation%20work/Planning/how%20HECC-UP%20will%20work.md),
+with the source code for a very crude prototype jotted down on another markdown file, [here](../Summer%20background%20preparation%20work/Planning/testing%20etc/regex%20stuff/regex%20planning.md).
+The .java version of the early prototype is no longer present within the src/ folder
+(due to it having some dependencies on things which I wanted to deprecate/remove from the source code),
+however, a version of it can still be seen on some of the archive branches, [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/all_the_summer_prep_work_archived/src/misc_testing_and_such/hecc_up_testing/HeccUpParserTest.java).
+
+However, this was still merely a prototype, and needed significant improvements, not only to make it
+fully functional, but also to be possible to maintain. After all, that version was basically
+procedural, had no encapsulation, was very disorganized, and was generally not good. Therefore, I needed
+to significantly refactor it before I could justify releasing it as a MVP.
+
+Eventually, I chose to refactor it to have a structure like the structure in the following class diagram:
+
+![HECC-UP refactored class diagram](./design%20images/hecc%20up%20v1%20classes.png)
+
+The HeccUpGUI class in the above diagram is simplified a bit (omitting the GUI-related parts), and
+the HeccCeptions package has also been omitted (they're basically just thrown if parts of the .hecc
+file are invalid).
+
+This has since been re-refactored to have a seperate `HeccUpHandler` class, acting as an intermediary
+between the LoggerInterface class (the GUI) and the FolderOutputter/PassageParser classes.
+Additionally, the outputtable Passage and Metadata classes have been coupled somewhat to OH-HECC's
+interfaces for Metadata/Passages. Yes, whilst coupling is, in general, bad (and I acknowledge that),
+I felt as if it would be justifiable in this instance, because both OH-HECC and HECC-UP need to share
+some common regexes and such for parsing existing .hecc files, and ensuring that the data they hold
+would be valid in the context of a .hecc file. Therefore, by coupling the two, it would mean that both
+could have access to the same regexes as each other, therefore, making them easier to maintain in the
+long term, as they would have less code duplication. Additionally, any overhead with unnecessary
+inherited are being circumvented via the use of interfaces, ensuring that only the necessary method
+signatures are being made visible. This will be covered more in the section of the technical
+documentation covering the development of HECC-UP.
+
+On that note, I should probably cover OH-HECC.
+
+### OH-HECC
+
+The first thing I considered was how OH-HECC would look like to a user. I decided to base the overall
+appearance off the appearance of Twine, with a network of connected passages, clearly showing which
+passages were connected to which other passages. A very crude picture of this initial idea can be
+seen below:
+
+![oh-hecc basic idea](./design%20images/oh%20hecc%20basic%20idea.png)
+
+The rectangles with the words 'bob' and 'dylan' in them are supposed to be passages (called 'bob' and
+'dylan'). 'Bob' has 1 parent passage (the leftmost outline one), and links to two other passages (the
+rightmost outline one, and 'dylan'). 'Dylan' doesn't link to any other passages. The topmost
+rectangles are also passages, but are just outlines, to easily illustrate that the triangles (which
+illustrate linked passages) point from/to the midpoints of the passages. The rectangles with words in
+them at the bottom of the image were supposed to be buttons, and, when pressed, they would all do the
+thing that the text on them says (such as saving the .hecc file, adding a new passage, etc.)
+Additionally, I decided that, when a passage would be clicked, an 'editor window' would appear,
+which the user could use to edit the passage. The network of passages would be uninteractable until the
+editor window was closed again, so, any changes made in the window would need to be finalized or
+discarded before any further changes to the game could be made. A similar thing would happen, but for
+the metadata instead, if a user were to click on the 'edit metadata' button.
+I didn't start to properly consider how OH-HECC would work until I was done with the Challenge Week
+version of HECC-UP, as HECC-UP was intended to be the minimum-MVP, and, if there was no HECC-UP to
+do something useful with the .hecc files, there wouldn't be any reason for an application to produce
+the .hecc files to exist in the first place.
+
+Eventually, I came up with a first idea for how OH-HECC could work, and it had a structure along the
+lines of this:
+
+![oh_hecc initial idea](./design%20images/initial%20idea%20for%20OH-HECC.png)
+
+The main thing of note here would be the Model-View-Controller (MVC) architecture for OH-HECC. This
+was partially based on the architecture I used for my CE218 coursework (which I had since adapted
+for use in some other games I made for some game jams over the summer break). I chose to base it on
+that because I knew that the architecture worked, I had experience with using it, and it would mean
+that I could focus more on implementing the specific parts I would need to implement for this
+particular use case. However, the final product's architecture didn't really resemble this, due to
+a few significant changes in methodology (and several things not working as well as first intended).
+
+The first notable difference was in how the data for the game itself would be stored within OH-HECC.
+In the above diagram, I hadn't considered the requirement for the windows that would be usable to edit
+the various components of the game. Additionally, a lot of things that shouldn't have been directly
+bound together, without an interface or something like that in the way, were bound directly together.
+
+However, I shall be discussing this further in the document covering the development
+of OH-HECC.

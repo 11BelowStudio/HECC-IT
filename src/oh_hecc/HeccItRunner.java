@@ -2,6 +2,7 @@ package oh_hecc;
 
 import hecc_up.HeccUpGUI;
 import oh_hecc.game_parts.GameDataObject;
+import oh_hecc.game_parts.MVCGameDataInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.mvc.OhHeccNetworkFrame;
 import oh_hecc.mvc.PassageModel;
@@ -34,7 +35,7 @@ public class HeccItRunner {
     private OhHeccParser heccParser;
 
 
-    private GameDataObject theGameData;
+    private MVCGameDataInterface theGameData;
 
 
     /**
