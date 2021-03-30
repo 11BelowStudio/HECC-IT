@@ -116,6 +116,11 @@ HECC-IT is intended to fill this niche.
   
 * The tool should work on any PC, regardless of operating system.
 
+* It should comply with the 'Treaty of Babel' standard for interactive fiction bibliography.
+    * I knew that there would be nearly 0 chance of HECC-IT ever formally becoming a signatory to it,
+      as I know that there is still very little chance of most users deciding to use HECC-IT anyway,
+      however, I wanted to make it as simple as possible for HECC-IT to become compliant with it.
+
 GUI editor (if the user wants to use it) <-> intermediate code -> playable game
 
 ### The name
@@ -225,6 +230,8 @@ This what everything would need to do:
     * However, the usage of *OH-HECC* must **not** be a requisite for creating a game via *HECC-IT*.
         * It's intended to be ***Optional*** *Help*. This means that users who do not want to use *OH-HECC* must
           have the option to reject the optional help, and write the .hecc code manually.
+          
+
     
 
 ## 'But how will the .hecc format work?'
@@ -316,6 +323,9 @@ one optional method of note-taking, and one intentionally undocumented, heavily-
         * Because I don't want authors to lose their comments due to that, I shall actively discourage authors from
           doing this.
           
+I also decided that specification for the HECC language was to be called the '*HECC-SPECC*' (or, the
+*HECC Super Precise Explanation For Creating Code*), partially because I wanted to be extra, and also
+to remain on-brand and such with the rest of *HECC-IT*.
 
 ## Designing the inner workings of each part of HECC-IT
 
