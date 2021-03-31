@@ -16,41 +16,11 @@ public class StringObject extends AbstractObject {
 
     private int alignment;
 
-    private Font theFont;
-
 
     public static final int LEFT_ALIGN = 0;
     public static final int RIGHT_ALIGN = 1;
     public static final int MIDDLE_ALIGN = 2;
 
-
-
-
-
-
-
-    /**
-     * Constructor given initial text, alignment, and font
-     * @param s starting text
-     * @param a alignment
-     * @param f font for the text
-     */
-    public StringObject(String s, int a, Font f){
-        this(new Vector2D(),s,a,f);
-    }
-
-
-    /**
-     * Constructor given initial position, string, alignment, and font
-     * @param p initial position
-     * @param s initial text
-     * @param a alignment
-     * @param f font for the string
-     */
-    public StringObject(Vector2D p, String s, int a, Font f){
-        this(p,s,a);
-        theFont = f;
-    }
 
     /**
      * Constructor given initial string, and alignment
@@ -116,10 +86,6 @@ public class StringObject extends AbstractObject {
 
     public boolean isClicked(Point clickLocation){
         return false;
-    }
-
-    void setTheFont(Font f){
-        theFont = f;
     }
 
 

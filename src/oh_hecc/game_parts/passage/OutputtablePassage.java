@@ -104,7 +104,7 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
      *
      * @return A string with the necessary JavaScript code to construct this passage
      */
-    public String toHecc(){
+    public String getHecced(){
         //making a StringBuilder
         StringBuilder heccedBuilder = new StringBuilder();
 
@@ -143,7 +143,19 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
         //return linkedPassages;
     }
 
+    /**
+     * Gets the passage as a string for debugging reasons
+     * @return String version of this passage (for debugging reasons)
+     */
+    @Override
+    public String getAsStringForDebuggingReasons() {
+        return "Passage name: " + passageName +
+                "\nPassage content:\n" + passageContent +
+                "\nParsed tags: " + parsedTags +
+                "\nLinked passages: " + linkedPassages +
+                "\nend passage data";
 
+    }
 
     @Override
     public UUID getPassageUUID() {
@@ -170,26 +182,7 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
         return "";
     }
 
-    /**
-     * This just prints the passage info, for debugging reasons.
-     */
-    public void printPassageInfoForDebuggingReasons(){
-        System.out.println("Passage name: " + passageName);
-        System.out.println("Passage content:\n" + passageContent);
-        System.out.println("Parsed tags: " + parsedTags);
-        System.out.println("Linked passages: " + linkedPassages);
-        System.out.println("end passage data");
-    }
-
     @Override
-    public String outputAsStringForDebuggingReasons() {
-        return "Passage name: " + passageName +
-                "\nPassage content:\n" + passageContent +
-                "\nParsed tags: " + parsedTags +
-                "\nLinked passages: " + linkedPassages +
-                "\nend passage data";
-
-    }
-
+    public String toHecc() { return ""; }
 
 }

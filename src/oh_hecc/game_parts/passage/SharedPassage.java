@@ -182,10 +182,10 @@ public interface SharedPassage extends Parseable, Heccable {
     String getTrailingComment();
 
     /**
-     * Outputs the passage as a string for debugging reasons
+     * Gets the passage as a string for debugging reasons
      * @return a string representing this passage for debugging reasons
      */
-    String outputAsStringForDebuggingReasons();
+    String getAsStringForDebuggingReasons();
 
     /**
      * Obtain an enum representing the current status of the passage

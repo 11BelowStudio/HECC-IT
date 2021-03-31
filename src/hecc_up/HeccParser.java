@@ -385,7 +385,7 @@ public class HeccParser {
             Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), theStart);
 
             for (String passageName : nonOrphanPassageNames) {
-                heccedData.add(passageMap.get(passageName).toHecc());
+                heccedData.add(passageMap.get(passageName).getHecced());
             }
 
         } catch (StackOverflowError soe){
@@ -397,7 +397,7 @@ public class HeccParser {
 
                 //ensure that the passages they link to are valid
                 if (current.validateLinkedPassages(passageNames)){
-                    heccedData.add(current.toHecc());
+                    heccedData.add(current.getHecced());
                     e.setValue(current);
                 } else {
                     //stop everything if an invalid link is found
@@ -500,7 +500,7 @@ public class HeccParser {
     public void printPassageObjects(){
         //prints the passage objects for debugging reasons
         for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
-            e.getValue().printPassageInfoForDebuggingReasons();
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
             System.out.println("\n");
         }
 

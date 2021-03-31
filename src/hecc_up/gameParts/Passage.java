@@ -440,7 +440,7 @@ public class Passage implements PassageOutputtingInterface {
      * 
      * @return A string with the necessary JavaScript code to construct this passage
      */
-    public String toHecc(){
+    public String getHecced(){
         //making a StringBuilder
         StringBuilder heccedBuilder = new StringBuilder();
         
@@ -470,20 +470,18 @@ public class Passage implements PassageOutputtingInterface {
     }
 
     /**
-     * This just prints the passage info, for debugging reasons.
+     * This gets the passage info as a string, for debugging reasons.
      */
-    public void printPassageInfoForDebuggingReasons(){
-
-        System.out.println("Passage name: " + passageName);
-        System.out.println("Unparsed passage content:\n" + unparsedContent);
-        System.out.println("Parsed passage content:\n"+ parsedContent);
-        System.out.println("Position: " + position);
-        System.out.println("Parsed tags: " + tags);
-        System.out.println("Inline comment: " + inlineComment);
-        System.out.println("Linked passages: " + linkedPassages);
-        System.out.println("Trailing comment:\n" + trailingComment);
-        System.out.println("end passage data");
-
+    public String getAsStringForDebuggingReasons(){
+        return "Passage name: " + passageName
+            + "Unparsed passage content:\n" + unparsedContent
+            + "Parsed passage content:\n"+ parsedContent
+            + "Position: " + position
+            + "Parsed tags: " + tags
+            + "Inline comment: " + inlineComment
+            + "Linked passages: " + linkedPassages
+            + "Trailing comment:\n" + trailingComment
+            + "end passage data";
     }
 
     @Override

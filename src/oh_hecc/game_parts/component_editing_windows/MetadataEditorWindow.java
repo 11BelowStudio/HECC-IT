@@ -442,7 +442,6 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         String newComment = theMetadata.getComment();
         commentInput.setText(newComment);
         refresh();
-        System.out.println(newComment);
     }
 
 

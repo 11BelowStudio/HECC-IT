@@ -5,7 +5,7 @@ import oh_hecc.Heccable;
 
 import java.util.Set;
 
-public interface PassageOutputtingInterface extends Heccable, PassageOutputtingLinkCheckingInterface {
+public interface PassageOutputtingInterface extends PassageOutputtingLinkCheckingInterface {
 
 
     /**
@@ -29,12 +29,13 @@ public interface PassageOutputtingInterface extends Heccable, PassageOutputtingL
      *
      * @return A string with the necessary JavaScript code to construct this passage
      */
-    String toHecc();
+    String getHecced();
 
     /**
-     * This just prints the passage info, for debugging reasons.
+     * Gets the passage as a string for debugging reasons
+     * @return a string representing this passage for debugging reasons
      */
-    void printPassageInfoForDebuggingReasons();
+    String getAsStringForDebuggingReasons();
 
 
     /**

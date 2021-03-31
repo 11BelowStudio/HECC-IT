@@ -74,7 +74,7 @@ public class EditablePassageTest {
 
     @Test
     void validRenamePassageTest(){
-        Set<String> otherPassages = new TreeSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
+        Set<String> otherPassages = new HashSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
         String[] valid = {"p1","dave","Another Passage","Deez-Nutz","_ayy-lmao_"};
 
@@ -96,7 +96,7 @@ public class EditablePassageTest {
 
     @Test
     public void testInvalidNamesThrowException(){
-        Set<String> otherPassages = new TreeSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
+        Set<String> otherPassages = new HashSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
         String[] invalidPassages = {"","-xd-","nice meme!","0w0~"};
 
@@ -146,7 +146,7 @@ public class EditablePassageTest {
         }
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         PassageEditingInterface editThis = passages.get(samples[0].getPassageUUID());
@@ -155,14 +155,14 @@ public class EditablePassageTest {
 
         assertDoesNotThrow( () -> editThis.renameThisPassage("nice name", passages));
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         System.out.println("test 2");
 
         assertDoesNotThrow( () -> editThis.renameThisPassage("deez nutz", passages));
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         System.out.println("test 3");
@@ -173,7 +173,7 @@ public class EditablePassageTest {
         } catch (Exception e){ e.printStackTrace();}*/
         assertThrows(DuplicatePassageNameException.class, () -> editThis.renameThisPassage("lmao gottem",passages) );
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
     }
@@ -193,7 +193,7 @@ public class EditablePassageTest {
 
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         System.out.println("\nyeet time\n");
@@ -203,7 +203,7 @@ public class EditablePassageTest {
 
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
         PassageEditingInterface testThis = passages.get(samples[1].getPassageUUID());
         assertNotEquals(testThis.getPassageContent(),"[[deez nutz]]");
@@ -227,7 +227,7 @@ public class EditablePassageTest {
         System.out.println("before adding the new passage:\n");
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         passages.get(referenceUUID).updatePassageContent("[[dave]]", passages);
@@ -237,7 +237,7 @@ public class EditablePassageTest {
         System.out.println("after adding the new passage:\n");
         for (Map.Entry<UUID, PassageEditingInterface> e : passages.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         assertEquals(2, passages.size());

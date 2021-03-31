@@ -37,7 +37,7 @@ why not [[click this|Yet Another Passage]] as well?
 
 
 
-::Left [dave] <-174.0,73.0> //the left option
+::Left <-174.0,73.0> [dave] //the left option
 You go to the left, but the path leads you back to [[dave]].
 ;;
 

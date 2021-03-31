@@ -33,7 +33,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * Accessed via PassageEditingInterface because efficiency or something
      */
     private final PassageEditingInterface thePassage;
-    //JFrame theFrame;
+
     /**
      * the map of all the passages.
      * 'no PassageEditingInterface is an island' and all that
@@ -41,15 +41,10 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     private final Map<UUID, PassageEditingInterface> allPassages;
 
-    private final PassageEditWindowMetadataInterface metadata;
-
-    private JLabel titleLabel;
-
     private JTextField nameField;
 
 
     private JTextField tagField;
-    private final boolean areTagsValid = true;
 
     private JTextField inlineCommentField;
 
@@ -65,7 +60,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     public PassageEditorWindow(PassageEditingInterface passageBeingEdited, EditWindowGameDataInterface gameData) {
         super(gameData);
-        metadata = gameData.getTheMetadata();
         thePassage = passageBeingEdited;
         allPassages = gameData.getPassageMap();
 
@@ -296,7 +290,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
             if (!isPassageNameValid) {
                 throw new InvalidPassageNameException(newName);
             }
-            String oldName = thePassage.getPassageName();
             thePassage.renameThisPassage(newName, allPassages);
             nameField.setText(thePassage.getPassageName());
             gameData.checkForStartRename();
@@ -326,6 +319,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+        nameField.setText(thePassage.getPassageName());
         return false;
     }
 
@@ -483,13 +477,10 @@ public class PassageEditorWindow extends GenericEditorWindow {
         System.out.println("Initial state of the passages:\n");
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
             System.out.println();
         }
 
-        //PassageEditingInterface editThis = passages.get(samples[0].getPassageUUID());
-
-        //PassageEditorWindow w = PassageEditingInterface.openEditorWindow(editThis,passages);
 
         GameDataObject gdo = new GameDataObject(
                 passages,
@@ -497,45 +488,19 @@ public class PassageEditorWindow extends GenericEditorWindow {
                 Paths.get("Z://samplePath/ok.hecc")
         );
 
-        //PassageEditorWindow w = editThis.openEditorWindow(passages);
+        //using this for testing and such, printing everything in passages once the user is done editing and such
         EditorWindowInterface w = gdo.openPassageEditWindow(samples[0].getPassageUUID());
 
+        //making sure that the window updated everything, by seeing the printout of its internal state when closed
         w.addWindowClosedListener(
                 new Consumer<WindowEvent>() {
                     @Override
                     public void accept(WindowEvent e) {
                         System.out.println("\nFinal state of the passages\n");
                         System.out.println(gdo.toHecc());
-                        /*
-                        for (Map.Entry<UUID, PassageEditingInterface> entry: passages.entrySet()) {
-                            System.out.println(entry.getKey());
-                            System.out.println(entry.getValue().outputAsStringForDebuggingReasons());
-                            System.out.println("");
-                        }
-
-                         */
                     }
                 }
         );
-
-        /*
-        //using this for testing and such, printing everything in passages once the user is done editing and such
-        w.theFrame.addWindowListener(
-                new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        //making sure that the window updated everything, by seeing the printout of its internal state
-                        System.out.println("\nFinal state of the passages\n");
-                        for (Map.Entry<UUID, PassageEditingInterface> entry: passages.entrySet()) {
-                            System.out.println(entry.getKey());
-                            System.out.println(entry.getValue().outputAsStringForDebuggingReasons());
-                            System.out.println("");
-                        }
-                    }
-                }
-        );
-
-         */
 
 
     }

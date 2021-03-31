@@ -1,9 +1,9 @@
 # Development of the Challenge Week MVP
 
-The minimal viable product for HECC-IT technically was the challenge week deliverable, not the term 1
-deliverable. Yes, I know, the structure for the project was that the minimal viable product was supposed
+The minimum viable product for HECC-IT technically was the challenge week deliverable, not the term 1
+deliverable. Yes, I know, the structure for the project was that the minimum viable product was supposed
 to be the term 1 deliverable, however, due to the design of the tool, HECC-UP, by itself, could be a
-'viable product', despite it being very much 'minimal'.
+'minimum viable product', with emphasis on the 'minimum'.
 
 Overall, this deliverable consisted of the following components:
 

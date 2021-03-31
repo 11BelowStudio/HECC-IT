@@ -421,7 +421,7 @@ public class OhHeccParser {
         System.out.println("Passages:");
         for (Map.Entry<UUID, PassageEditingInterface> e: heccMap.entrySet()) {
             System.out.println(e.getKey());
-            System.out.println(e.getValue().outputAsStringForDebuggingReasons());
+            System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
         System.out.println("\nyep thats everything printed");
 

@@ -612,7 +612,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @return a string version of this passage.
      */
     @Override
-    public String outputAsStringForDebuggingReasons(){
+    public String getAsStringForDebuggingReasons(){
         StringBuilder sb = new StringBuilder();
         sb.append("UUID: ");
         sb.append(passageUUID.toString());
