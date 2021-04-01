@@ -1,6 +1,5 @@
 package oh_hecc.mvc.model_bits;
 
-import utilities.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.Area;
@@ -16,12 +15,16 @@ public class StartHighlightObject extends AbstractObject {
      */
     private boolean visible = false;
 
-    private AbstractObject startObject;
+    /**
+     * The model object with a position that this object will be highlighting as the start
+     */
+    private ObjectWithAPosition startObject;
 
     /**
      * Creates this object
      */
     public StartHighlightObject(){
+        super();
         this.objectColour = SAFETY_BLUE.brighter();
         this.width = 72;
         this.height = 40;
@@ -33,7 +36,7 @@ public class StartHighlightObject extends AbstractObject {
      * Updates the start object reference to refer to the specified object instead
      * @param obj the object which this should appear behind
      */
-    public void setStartObject(AbstractObject obj){
+    public void setStartObject(ObjectWithAPosition obj){
         startObject = obj;
         visible = true;
     }

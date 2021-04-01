@@ -9,6 +9,7 @@ import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
+import oh_hecc.mvc.model_bits.DrawableObject;
 import oh_hecc.mvc.model_bits.ModelButtonObject;
 import oh_hecc.mvc.model_bits.PassageObject;
 import oh_hecc.mvc.model_bits.StartHighlightObject;
@@ -603,7 +604,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         }
 
         //then the passage objects themselves are drawn
-        for (PassageObject p: drawablePassageObjects){
+        for (DrawableObject p: drawablePassageObjects){
             p.draw(g);
         }
 
@@ -619,7 +620,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         //AbstractObject.SCROLL_OFFSET.set(0,0);
 
         g.setClip(0, 0, getWidth(), getHeight());
-        for (ModelButtonObject b : drawableModelButtons) {
+        for (DrawableObject b : drawableModelButtons) {
             b.draw(g);
         }
     }

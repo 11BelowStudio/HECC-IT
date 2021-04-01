@@ -15,7 +15,7 @@ public class PassageLinkObject extends EditModelObject {
 
     private final UUID toUUID;
 
-    private final PassageObject fromObject;
+    private final ObjectWithAPosition fromObject;
     //private PassageObject toObject;
 
     private final Vector2D vectorFromSourceToDestination;
@@ -77,7 +77,7 @@ public class PassageLinkObject extends EditModelObject {
      */
     void updatePosition(){
         //updates this position to be the same as the fromObject position
-        this.position.set(fromObject.position);
+        this.position.set(fromObject.getPosition());
         //updates the vector that points from the source to the destination
         vectorFromSourceToDestination.set(Vector2D.subtract(theModel.getPassageFromUUID(toUUID).getPosition(), getPosition()));
 

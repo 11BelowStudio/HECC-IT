@@ -133,12 +133,12 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     public EditablePassage(String passageName, String unparsedContent, String comment, String lineEndMetadata){
         this();
         this.passageName = passageName.trim();
-        passageContent = unparsedContent;
+        setPassageContent(unparsedContent);
         trailingComment = comment;
         passageTags.addAll(PassageReadingInterface.readTagMetadata(lineEndMetadata));
         position.set(PassageReadingInterface.readVectorMetadata(lineEndMetadata));
         inlinePassageComment = PassageReadingInterface.getInlineComment(lineEndMetadata);
-        linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
+        //linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
 
         updatePassageStatus();
     }
@@ -182,6 +182,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * If the passage contains no links to other notes, this passage is an END_NODE
      * otherwise, it's NORMAL.
      */
+    @Override
     void updatePassageStatus() {
         if (this.getPassageContent().equals("")) {
             status = PassageStatus.EMPTY_CONTENT;
@@ -201,26 +202,38 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
      */
+    @Override
     public Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
         this.setPassageContent(newContent);
 
+        return this.resolvePassageLinks(allPassages);
+    }
+
+    /**
+     * Basically handles adding passages to the list of all passages if this passage's content has links to passages
+     * which don't actually exist
+     * @param allPassages the map of all passages
+     * @return the map of all passages, updated if necessary (for any links to undeclared passages)
+     */
+    public Map<UUID, PassageEditingInterface> resolvePassageLinks(Map<UUID, PassageEditingInterface> allPassages){
         //gets all the linked passage names that aren't the names of passages that are in allPassages
         linkedPassages.stream()
                 .filter(
-                    s -> allPassages.values().stream().noneMatch( p -> p.getPassageName().equals(s))
+                        s -> allPassages.values().stream().noneMatch( p -> p.getPassageName().equals(s))
                 )
                 .forEach(
-                //then, for all of those not-yet-present passages, they're made and added to the map of all passages.
-                    s ->
-                    {
-                        PassageEditingInterface p = new EditablePassage(s, this.position);
-                        allPassages.put(p.getPassageUUID(),p);
-                    }
-        );
+                        //then, for all of those not-yet-present passages, they're made and added to the map of all passages.
+                        s ->
+                        {
+                            PassageEditingInterface p = new EditablePassage(s, this.position);
+                            allPassages.put(p.getPassageUUID(),p);
+                        }
+                );
 
         updateLinkedUUIDs(allPassages);
 
         return allPassages;
+
     }
 
 

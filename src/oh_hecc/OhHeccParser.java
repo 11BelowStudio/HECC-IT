@@ -31,23 +31,10 @@ public class OhHeccParser {
     //TODO: parse the HECC file into the heccMap and theMetadata
 
 
-
-    /**
-     * a set of all the passage names
-     */
-    private final Set<String> passageNames;
-
     /**
      * The raw .hecc metadata code
      */
     private final String rawMetadata;
-
-    /**
-     * the raw .hecc passage code
-     */
-    private final String rawPassages;
-
-
 
 
     /**
@@ -62,8 +49,6 @@ public class OhHeccParser {
 
         heccMap = new HashMap<>();
 
-        passageNames = new TreeSet<>();
-
         String[] splitData = splitRawDataToMetadataAndPassageString(rawHeccData.trim().concat("\n"));
 
         /*
@@ -75,7 +60,9 @@ public class OhHeccParser {
 
         rawMetadata = splitData[0];
 
-        rawPassages = splitData[1];
+
+        //the raw .hecc passage code
+        //String rawPassages = splitData[1];
 
         theMetadata = new EditableMetadata(splitData[0]);
 
@@ -98,44 +85,13 @@ public class OhHeccParser {
 
     }
 
-    //this is responsible for setting up the passage objects and such
-
     /**
-     * This is responsible for setting up the metadata, passageNames, and passageMap objects
-     * @return true if this is executed successfully
+     * Splits the full hecc code into a string with the metadata and a string with everything afterwards
+     * @param rawData the raw hecc data
+     * @return an array with 2 indexes.
+     *          index 0 holds the metadata string (everything before 1st passage declaration).
+     *          index 1 holds everything from the 1st passage declaration onwards.
      */
-    public boolean constructThePassageObjects(){
-
-        //trims metadata stuff from dataToParse, and creates the Metadata object
-        //theMetadata = makeMetadataObject();
-
-
-        // KEEPING TRACK OF ALL THE PASSAGE NAMES
-        //passageNames.clear();
-        //passageNames.addAll(findPassageNames(dataToParse));
-
-
-        //CONSTRUCTING THE PASSAGE MAP
-        heccMap.clear();
-        heccMap.putAll(constructPassageMap(rawPassages));
-
-        /*
-        for (UUID u: heccMap.keySet()) {
-            PassageEditingInterface p = heccMap.get(u);
-            p.updateLinkedUUIDs(heccMap);
-            heccMap.put(u,p);
-        }
-        */
-
-        //passageMap.clear();
-        //passageMap.putAll(constructPassageMap(dataToParse));
-
-
-
-        return true;
-
-    }
-
     private String[] splitRawDataToMetadataAndPassageString(String rawData){
         String metadataString = "";
         String everythingAfterTheMetadata = "";
@@ -174,39 +130,6 @@ public class OhHeccParser {
         return new EditableMetadata(rawMetadata);
     }
 
-    /*
-     * Attempts to find the names of all the passages in the raw hecc data
-     * @param dataToParse the raw hecc data being parsed
-     * @return a Set of all the String passage names
-     *//*
-    private Set<String> findPassageNames(String dataToParse) {
-
-        Set<String> pNames = new TreeSet<>();
-
-        //attempts to find passage declarations
-        Matcher passageNameMatcher = Pattern.compile(
-                "(?<names>(?<=^::)"+Parseable.PASSAGE_NAME_REGEX_WITH_WHITESPACE+")"
-                , Pattern.MULTILINE
-        ).matcher(dataToParse);
-
-
-        while (passageNameMatcher.find()){
-            String currentName = passageNameMatcher.group(0);
-            if (!pNames.add(currentName)){
-                //throw new DuplicatePassageNameException(currentName);
-                //complains if there are multiple passages with the same name
-            }
-        }
-
-        if (pNames.size() == 0){
-            System.out.println("no passages found!");
-            //throw new NoPassagesException();
-            //complains if there are no passages
-        }
-        return pNames;
-    }
-    */
-
     /**
      * This method constructs the passage map
      * @param dataToParse the raw hecc data being parsed
@@ -216,21 +139,42 @@ public class OhHeccParser {
         //creating the map
         Map<UUID, PassageEditingInterface> pMap = new HashMap<>();
 
+        // this will keep track of all the names that have been used for passages, so duplicates can be avoided.
+        Set<String> passageNames = new HashSet<>();
+
         boolean notDone;
 
         //matches declarations
-        Matcher declarationMatcher = Pattern.compile("(^::("+ Parseable.PASSAGE_NAME_REGEX_WITH_WHITESPACE + "))", Pattern.MULTILINE).matcher(dataToParse);
-        //will give this the everythingAfterDeclaration (the content)
-        Matcher passageContentMatcher = Pattern.compile("((?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)", Pattern.MULTILINE).matcher("");
-        //Matcher passageContentMatcher = Pattern.compile("(?<content>(?<=\\R)(?!^::).*\\R(?!^::).+)", Pattern.MULTILINE).matcher("");
-        //will use this to crop leading whitespace lines
-        Matcher entirelyWhitespaceMatcher = Pattern.compile("^\\h*$", Pattern.MULTILINE).matcher("");
-        //matches whitespace at the end of the line
-        Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
-        //This matches the line that indicates the start/end of a multiline comment at the end of a passage (containing only ;;)
-        Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
+        Matcher declarationMatcher = Pattern.compile(
+                "(^::("+ Parseable.PASSAGE_NAME_REGEX_WITH_WHITESPACE + "))",
+                Pattern.MULTILINE
+        ).matcher(dataToParse);
 
-        //Matcher commentLineMatcher = Pattern.compile("^//",Pattern.MULTILINE).matcher("");
+        //will give this the everythingAfterDeclaration (the content)
+        Matcher passageContentMatcher = Pattern.compile(
+                "((?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)",
+                Pattern.MULTILINE
+        ).matcher("");
+
+        //will use this to crop leading whitespace lines
+        Matcher entirelyWhitespaceMatcher = Pattern.compile(
+                "^\\h*$",
+                Pattern.MULTILINE
+        ).matcher("");
+
+        //matches whitespace at the end of the line
+        Matcher lineEndWhitespaceMatcher = Pattern.compile(
+                "\\h*\\R$",
+                Pattern.MULTILINE
+        ).matcher("");
+
+        //This matches the line that indicates the start/end of a multiline comment at the end of a passage (containing only ;;)
+        Matcher commentStartEndMatcher = Pattern.compile(
+                "^;;\\R$",
+                Pattern.MULTILINE
+        ).matcher("");
+
+
 
         String currentPassageName;
         String nextPassageName = "";
@@ -345,8 +289,22 @@ public class OhHeccParser {
                 contentBuilder.append(temp);
             }
 
+            String trimmedName = currentPassageName.trim(); // we obtain the trimmed version of the passage name
+
+            if (!passageNames.add(trimmedName)){ // we attempt to add it to the set of passage names, but, if it fails...
+
+                int duplicateCounter = 1; // yep, we're going to be appending a counter to it until it works
+
+                String newName = trimmedName + "_" + duplicateCounter; // appends _1, sees if it's unique
+                while (!passageNames.add(newName)){ // keeps incrementing x in the _x suffix until it is unique enough
+                    duplicateCounter += 1;
+                    newName = trimmedName + "_" + duplicateCounter;
+                }
+                trimmedName = newName; // overwrites the duplicate name with one that's unique enough
+            }
+
             PassageEditingInterface thePassage = new EditablePassage(
-                    currentPassageName.trim(),
+                    trimmedName,
                     contentBuilder.toString().trim(),
                     commentBuilder.toString().trim(),
                     currentPassageMetadata
@@ -355,11 +313,25 @@ public class OhHeccParser {
         } while(notDone);
 
 
+        // this holds passages from the .hecc that may have links to undefined passages
+        Set<PassageEditingInterface> thePassagesWithUnresolvedLinks = new HashSet<>();
 
         //And now, time to actually update the UUIDs.
         for (PassageEditingInterface e: pMap.values()){
             e.updateLinkedUUIDs(pMap);
+            // we also look for passages with links to undefined passages
+            if (e.getLinkedPassages().size() != e.getLinkedPassageUUIDs().size()){
+                // we'll know it's unresolved because their linked UUIDs wont match their linked names
+                thePassagesWithUnresolvedLinks.add(e);
+            }
         }
+
+        // and we resolve the problems with the unresolved links
+        for (PassageEditingInterface unresolved: thePassagesWithUnresolvedLinks) {
+            unresolved.resolvePassageLinks(pMap);
+        }
+
+
 
         // if any passages have the default position of (0,0), HECC-IT will attempt to displace them from their parent,
         // so they're not all on top of each other. It does look ugly, but that's an occupational hazard.

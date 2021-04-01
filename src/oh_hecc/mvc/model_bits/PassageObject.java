@@ -184,9 +184,7 @@ public class PassageObject extends EditModelObject {
      * @param g the Graphics2D thing responsible for the actual drawing stuff
      */
     public void drawLinks(Graphics2D g) {
-
-
-        for (PassageLinkObject l : linkMap.values()) {
+        for (DrawableObject l : linkMap.values()) {
             l.draw(g);
         }
     }

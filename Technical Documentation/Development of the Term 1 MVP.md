@@ -117,6 +117,100 @@ developing the OH-HECC tool itself.
 
 ## Part 2: Developing the Optional Help for HECC
 
+### 2.A: The basis for OH-HECC's architecture
+
 As mentioned in the design section, I was planning on giving OH-HECC a model-view-controller
 architecture, similar to the one I have used in the past for a few other personal projects.
-That 
+That architecture can be seen below:
+
+![general MVC architecture](./MVP%20development/oh-hecc%20development/general%20MVC%20architecture.png)
+
+Everything would basically be in the same 'Packij' package (descriptive name, I know). The `GameFrame`
+would be responsible for a JFrame which would hold the `View`. The `View` would be a `JComponent`,
+and would hold a `Model`, given to it by the `GameRunner`, allowing it to be rendered. The
+`GameRunner` would hold the aforementioned `GameFrame`, `View`, and would generally hold multiple
+`Model` objects, only one of which would be considered 'active' at a time. The `Model` effectively
+only held methods which could be used as an update loop and as a render loop (a public, concrete,
+'wrapper' method, handling any synchronization which needed to be done, with abstract methods for
+the actual update/draw methods to be performed in), sometimes also holding certain collections of
+`GameObjects` which all of the subclasses of `Model` for that particular game used. The `Model`
+would always have a `Game` subclass, holding all of the collections of `GameObjects` needed for
+the particular game, with the implemented version of the abstract update method handling all of
+the interactions between the `GameObject`s, and the implemented draw method drawing all of the
+drawable `GameObject`s appropriately. The games would also have a `TitleScreen` subclass of
+`Model`, but that would not be applicable to this use case. The models would be controlled via
+a `Controller` object (specifically, by obtaining an `Action` from the `Controller` to see the inputs
+for that particular update frame). The `GameObject` subclasses would be in their own package, and
+their positions/velocities/directions would be represented by 2D vectors (in a `Vector2D` class).
+Finally, running the update/draw loops, as well as swapping between active `Model`s/resetting them
+would be managed by the `GameRunner` class.
+
+Why am I telling you about this? Because I was planning on generifying this further to produce OH-HECC.
+Instead of running a game and reading from/writing to a high scores file, it would just be running a
+model editor, and reading the model's current state from/writing the current state to a .hecc file.
+
+On the topic of reading the state from/writing the state to a .hecc file...
+
+### 2.B: The OhHeccParser.
+
+I would need to first work out how I would turn the .hecc file into the map of `PassageEditingInterface`
+objects and the `MetadataEditingInterface` object.
+
+I was still planning on eventually merging the HECC-UP components with the OH-HECC components, but I
+also didn't want to break anything with HECC-UP, so I chose to copy the code present in HECC-UP,
+and change a few parts of it to work for OH-HECC instead. The main difference between the HECC-UP
+parser and the OH-HECC parser was that whilst the HECC-UP parser was strict (expecting perfect .hecc
+code), the OH-HECC parser was more lenient. If there's an issue which would lead to the HECC-UP parser
+to throw an exception, the OH-HECC parser won't care, and will just continue parsing as normal. The
+idea was that OH-HECC would fix any of the problems encountered in file as it parsed it (such as
+passages with duplicate names, unresolved passage links, a start passage which doesn't exist, etc),
+however, quite a few of these error detection measures were completely overlooked, and were only
+retroactively implemented at the last minute for the final deliverable.
+
+Because OH-HECC needed all the passages to have a set of the UUIDs of the passages they're linked to,
+one notable change in the OH-HECC parser was the addition of an extra iteration through the values in
+the passage map for the sole purpose of initialising these UUID sets. The linked name sets are still
+created in the same way as in HECC-UP (within the passage itself), but the OH-HECC parser cannot
+predict what UUID will be assigned to each passage until they have all had a UUID assigned to them;
+therefore, this has to be sorted out for every passage (by finding the passages in the map with the
+names that are in the linked passage name set).
+
+Just like the HECC-UP parser, I couldn't really predict what the outputs of this parser would be,
+due to the somewhat non-deterministic nature of the UUIDs which would be assigned to every single
+`EditablePassage`. So, I used the cop-out method of testing it via a main method in the class itself,
+looking at the console outputs, to see if they behaved as expected. I did add a few unit tests to this
+class later on though, which can be seen [here](../src/oh_hecc/OhHeccParserTest.java), although they
+aren't very exhaustive.
+
+However, with this parser in action, I could now put together the MVC stuff for the data it had parsed
+
+### 2.C The Actual MVC architecture
+
+The initial plan for OH-HECC's MVC architecture looked something like this:
+
+![model bits v1](./MVP%20development/oh-hecc%20development/oh%20hecc%20model%20bits%20iteration%201.png)
+
+The passage map and the editable metadata would be held within the `PassageModel`. The
+`AbstractObject` would be an abstract parent class for all the objects that will appear within the
+`Model`. The `StringObject` would simply hold a String, in white text with a black outline, which
+could be rendered in the model. The `EditModelObject` would basically hold a reference to the
+`PassageModel`, via an `EditModelInterface`, for the objects in the model which would need to hold
+a reference to the model itself in some form, such as getting some info about the model itself,
+or getting references to some passages within the model. The `ModelButtonObject` would be for the
+'buttons'/'toolbar' visible at the bottom of the editor view, and the text for each of them would
+be rendered as `StringObject`s. The `PassageObject`s would represent one passage in the network
+of passages. They would all have a reference to an `EditablePassage` object (which they would
+obtain the name, position vector, UUID, and set of linked UUIDs of), and, when clicked, they
+should open the passage editor window for that passage. Additionally, when the user holds their
+mouse on them, they should be able to drag them around the view. The `PassageObject`s would also
+have a `StringObject` (showing the name of the passage it's associated with) and a set of
+`PassageLinkObjects`, for each passage they're linked to. The `PassageLinkObject` would need to
+hold a reference to its parent `PassageObject` (to get the position of it), as well as the UUID
+of the passage that this represents a link to. I could then implement the 'triangle pointing to
+the linked object' via finding the difference between those two position Vector2Ds, rendering
+the triangle between them by initially offsetting it by the parent's position, so the midpoint of
+the base is at the midpoint of the parent `PassageObject`, and then basically rotating it/stretching
+it so that the tip of the triangle is at the relative (x,y) coordinate in the difference vector,
+at the midpoint of the `PassageObject` it links to.
+
+The model would 

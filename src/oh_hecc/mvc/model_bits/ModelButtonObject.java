@@ -73,7 +73,7 @@ public class ModelButtonObject extends EditModelObject {
     @Override
     public boolean wasClicked(Point clickLocation) {
         if (super.wasClicked(clickLocation)){
-            System.out.println(buttonLabel.getString());
+            //System.out.println(buttonLabel.getString());
             return true;
         }
         return false;

@@ -88,6 +88,15 @@ public interface PassageEditingInterface extends SharedPassage {
     Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
 
 
+    /**
+     * Basically handles adding passages to the list of all passages if this passage's content has links to passages
+     * which don't actually exist
+     * @param allPassages the map of all passages
+     * @return the map of all passages, updated if necessary (for any links to undeclared passages)
+     */
+    Map<UUID, PassageEditingInterface> resolvePassageLinks(Map<UUID, PassageEditingInterface> allPassages);
+
+
 
 
     /**

@@ -8,35 +8,12 @@ import java.awt.geom.AffineTransform;
 
 /**
  * A superclass for the 'Model' bit of 'MVC'.
- * Extends canvas.
+ * Extends JComponent.
  */
 public abstract class Model extends JComponent implements ControllableModelInterface {
 
-    //TODO: work out if it's actually a good idea to extend Canvas?
-    //TODO: clipping.
+    //TODO: clipping?
 
-
-    /**
-     * Sky blue: 94bfac
-     */
-    public static final Color SKYBLUE = new Color(48, 191, 172);
-    /**
-     * night: 282b2f
-     */
-    public static final Color NIGHT = new Color(40, 43, 47);
-    /**
-     * sunrise: cfb48a
-     */
-    public static final Color SUNRISE = new Color(207, 180, 138);
-    /**
-     * sunset pink: e3bbbd
-     */
-    public static final Color SUNSET = new Color(227, 187, 189);
-
-    /**
-     * w3schools camo grey: 9495a5
-     */
-    public static final Color W3_CAMO_GREY = new Color(148, 149, 165);
     /**
      * w3schools BS 381 (381 642) night: #282b2f
      */
@@ -46,7 +23,6 @@ public abstract class Model extends JComponent implements ControllableModelInter
      */
     public static final Color W3_MIDNIGHT = new Color(41, 55, 75);
 
-    //final ControllerInterface theController;
 
     /**
      * oh look, some synchronization for multithreaded stuff. This is mostly here so I don't get problems with the
@@ -75,15 +51,6 @@ public abstract class Model extends JComponent implements ControllableModelInter
      * A Vector2D that indicates where the top-right corner of the viewable area is
      */
     final Vector2D topRightCorner;
-
-
-    public static int GET_MODEL_WIDTH() {
-        return MODEL_WIDTH;
-    }
-
-    public static int GET_MODEL_HEIGHT() {
-        return MODEL_HEIGHT;
-    }
 
     /**
      * No-argument constructor.
@@ -124,6 +91,11 @@ public abstract class Model extends JComponent implements ControllableModelInter
         MODEL_HEIGHT = d.height;
     }
 
+    /**
+     * Returns the size of the model
+     *
+     * @return the dimension representing the size of the model
+     */
     public Dimension getSize() {
         return new Dimension(MODEL_WIDTH, MODEL_HEIGHT);
     }
@@ -135,12 +107,13 @@ public abstract class Model extends JComponent implements ControllableModelInter
 
 
     /**
-     * Fills in the background, enables anti-aliasing, gets a backup of the current affine transform, and then it'll
-     * call drawModel(g)
+     * Fills in the background, enables anti-aliasing, gets a backup of the current affine transform,
+     * and then it'll call drawModel(g).
+     * This method is effectively a wrapper for refreshDrawables, and is intentionally NOT overridable.
      * @param g Graphics2D being used to draw this
      */
-    public void draw(Graphics2D g) {
-        System.out.println("draw");
+    public final void draw(Graphics2D g) {
+        //System.out.println("draw");
         g.setColor(backgroundColour);
         g.fillRect(0, 0, MODEL_WIDTH, MODEL_HEIGHT);
         g.setRenderingHint(

@@ -9,7 +9,7 @@ import java.awt.geom.Area;
 /**
  * Superclass for all objects in the model.
  */
-public abstract class AbstractObject {
+public abstract class AbstractObject implements ObjectWithAPosition, DrawableObject {
 
     /**
      * The position of this object
@@ -130,7 +130,7 @@ public abstract class AbstractObject {
      * then resets the transform to how it was before it got translated.
      * @param g the graphics2D context being used to draw this object.
      */
-    public void draw(Graphics2D g){
+    public final void draw(Graphics2D g){
         AffineTransform initialTransform = g.getTransform();
         g.translate(position.x, position.y);
         individualDraw(g);
