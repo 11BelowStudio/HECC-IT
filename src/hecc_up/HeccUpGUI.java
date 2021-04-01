@@ -155,7 +155,7 @@ public class HeccUpGUI implements LoggerInterface {
      * @param heccFilePath      path of the .hecc file in OH-HECC.
      * @param windowClosedEvent the windowClosedEvent thing that will be added as a listener for this when it closes so OH-HECC knows that this has been closed.
      */
-    public HeccUpGUI(Path heccFilePath, Consumer<WindowEvent> windowClosedEvent) {
+    public HeccUpGUI(Path heccFilePath, Runnable windowClosedEvent) {
         this(heccFilePath, new JFrame());
 
 
@@ -165,7 +165,7 @@ public class HeccUpGUI implements LoggerInterface {
                 new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-                        windowClosedEvent.accept(e);
+                        windowClosedEvent.run();
                     }
                 }
         );

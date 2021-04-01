@@ -4,7 +4,7 @@ By Rachel Lowe
 
 Git repo for this project: https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m
 
-readme last updated 09/12/2020
+readme last updated 1/4/2020
 
 ## Welcome to HECC-IT!
 
@@ -16,10 +16,10 @@ And you can get some help making and editing your .hecc files using OH-HECC.
 So let's cut to the chase.
 
 
-# Table of Contents for the Technical Documentation
+## The technical documentation for CE301
 
-* Introduction
-    * This README has the 
+Please go to [./Technical Documentation/README.md](./Technical%20Documentation/README.md) for the
+table of contents for the technical documentation.
 
 ## What the HECC does this do?
 

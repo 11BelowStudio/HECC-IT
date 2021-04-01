@@ -34,13 +34,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     private final PassageEditingInterface thePassage;
 
-    /**
-     * the map of all the passages.
-     * 'no PassageEditingInterface is an island' and all that
-     *  (so do not ask for whom the PassageEditorWindow is editing: for it edits thee).
-     */
-    private final Map<UUID, PassageEditingInterface> allPassages;
-
     private JTextField nameField;
 
 
@@ -61,7 +54,6 @@ public class PassageEditorWindow extends GenericEditorWindow {
     public PassageEditorWindow(PassageEditingInterface passageBeingEdited, EditWindowGameDataInterface gameData) {
         super(gameData);
         thePassage = passageBeingEdited;
-        allPassages = gameData.getPassageMap();
 
         makeTheFrame();
 
@@ -290,7 +282,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
             if (!isPassageNameValid) {
                 throw new InvalidPassageNameException(newName);
             }
-            thePassage.renameThisPassage(newName, allPassages);
+            thePassage.renameThisPassage(newName, gameData.getPassageMap());
             nameField.setText(thePassage.getPassageName());
             gameData.checkForStartRename();
             refresh();
@@ -391,7 +383,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     private void updateContent() {
         String newContent = contentArea.getText().trim();
-        thePassage.updatePassageContent(newContent, allPassages);
+        thePassage.updatePassageContent(newContent, gameData.getPassageMap());
         contentArea.setText(thePassage.getPassageContent());
         refresh();
     }
@@ -449,7 +441,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                     JOptionPane.WARNING_MESSAGE
             ) == JOptionPane.YES_OPTION){
                 //YEET
-                thePassage.deleteThisPassage(allPassages);
+                thePassage.deleteThisPassage(gameData.getPassageMap());
                 JOptionPane.showMessageDialog(
                         theFrame,
                         "This passage has been deleted.",
@@ -493,13 +485,11 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         //making sure that the window updated everything, by seeing the printout of its internal state when closed
         w.addWindowClosedListener(
-                new Consumer<WindowEvent>() {
-                    @Override
-                    public void accept(WindowEvent e) {
-                        System.out.println("\nFinal state of the passages\n");
-                        System.out.println(gdo.toHecc());
-                    }
+                () -> {
+                    System.out.println("\nFinal state of the passages\n");
+                    System.out.println(gdo.toHecc());
                 }
+
         );
 
 

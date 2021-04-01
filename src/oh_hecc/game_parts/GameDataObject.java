@@ -3,13 +3,11 @@ package oh_hecc.game_parts;
 import heccCeptions.*;
 import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
-import oh_hecc.game_parts.component_editing_windows.GenericEditorWindow;
 import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
 import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import oh_hecc.game_parts.passage.PassageStatus;
 import oh_hecc.game_parts.passage.SharedPassage;
 
 import javax.swing.*;
@@ -18,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A single class that can encapsulate all the game data stuff
@@ -50,13 +47,6 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     private Optional<UUID> startUUID;
 
-    /**
-     * A singleton GenericEditorWindow
-     */
-    private final GenericEditorWindow editorWindow = null;
-
-
-    //public GameDataObject()
 
 
     /**
@@ -291,9 +281,9 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     private EditorWindowInterface addClosedListener(EditorWindowInterface w){
         w.addWindowClosedListener(
-                e -> {
-                    getStartUUID(true);
-                    updateLinkedUUIDs();
+                () -> {
+                    getStartUUID(true); // when it's closed, make sure that a start passage will exist.
+                    updateLinkedUUIDs(); // and update the linked UUIDs for all passages, just in case.
                 }
         );
         return w;

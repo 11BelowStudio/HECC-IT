@@ -409,7 +409,7 @@ illustrate linked passages) point from/to the midpoints of the passages. The rec
 them at the bottom of the image were supposed to be buttons, and, when pressed, they would all do the
 thing that the text on them says (such as saving the .hecc file, adding a new passage, etc.)
 Additionally, I decided that, when a passage would be clicked, an 'editor window' would appear,
-which the user could use to edit the passage. The network of passages would be uninteractable until the
+which the user could use to edit the passage. The network of passages would be un-interactable until the
 editor window was closed again, so, any changes made in the window would need to be finalized or
 discarded before any further changes to the game could be made. A similar thing would happen, but for
 the metadata instead, if a user were to click on the 'edit metadata' button.
@@ -428,7 +428,7 @@ was partially based on the architecture I used for my CE218 coursework (which I 
 for use in some other games I made for some game jams over the summer break). I chose to base it on
 that because I knew that the architecture worked, I had experience with using it, and it would mean
 that I could focus more on implementing the specific parts I would need to implement for this
-particular use case. However, the final product's architecture didn't really resemble this, due to
+particular use case. However, the final product's architecture didn't entirely resemble this, due to
 a few significant changes in methodology (and several things not working as well as first intended).
 
 The first notable difference was in how the data for the game itself would be stored within OH-HECC.

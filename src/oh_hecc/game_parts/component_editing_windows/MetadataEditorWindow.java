@@ -490,12 +490,9 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         EditorWindowInterface w = gdo.openMetadataEditWindow();
 
         w.addWindowClosedListener(
-                new Consumer<WindowEvent>() {
-                    @Override
-                    public void accept(WindowEvent e) {
+                () -> {
                         //making sure that the window updated theTestMetadata, by seeing the printout of its internal state
                         System.out.println(theTestMetadata.toString());
-                    }
                 }
         );
 

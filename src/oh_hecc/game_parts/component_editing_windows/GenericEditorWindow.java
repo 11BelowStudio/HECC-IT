@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.function.Consumer;
 
 public abstract class GenericEditorWindow implements EditorWindowInterface {
 
@@ -24,7 +23,7 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
     //A lowered etched border
     final Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
-    //the
+    //the default font but not bold.
     final Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
 
     final Color defaultTextFieldColor = new JTextField().getForeground();
@@ -135,12 +134,12 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
      * @see java.util.function.Consumer
      */
     @Override
-    public void addWindowClosedListener(Consumer<WindowEvent> closeEvent) {
+    public void addWindowClosedListener(Runnable closeEvent) {
         theFrame.addWindowListener(
                 new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-                        closeEvent.accept(e);
+                        closeEvent.run();
                     }
                 }
         );
