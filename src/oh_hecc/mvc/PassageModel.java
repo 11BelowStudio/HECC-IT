@@ -229,11 +229,11 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         Optional<UUID> startUUID = theData.getStartUUID();
         if (startUUID.isPresent()) {
             startHighlight.setStartObject(objectMap.get(startUUID.get()));
-            System.out.println(startUUID.get());
-            System.out.println(passageMap.get(startUUID.get()).getPassageName());
+            //System.out.println(startUUID.get());
+            //System.out.println(passageMap.get(startUUID.get()).getPassageName());
         } else {
             startHighlight.hide();
-            System.out.println("hide");
+            //System.out.println("hide");
         }
 
 

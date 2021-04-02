@@ -213,4 +213,30 @@ the base is at the midpoint of the parent `PassageObject`, and then basically ro
 it so that the tip of the triangle is at the relative (x,y) coordinate in the difference vector,
 at the midpoint of the `PassageObject` it links to.
 
-The model would 
+The model would store the `PassageObjects` in a map (associated with the UUIDs of the passages they
+represent), for ease of indexing, as well as the map of the `PassageEditingInterface` objects.
+Yes, doing it like this does mean that there is some redundant data. However, it also means that
+it'll be easier to remove any references to passages which have been deleted; if there are any
+keys from the `PassageObject` map which are not in the `PassageEditingInterface` map's keys (due to
+those passages being deleted), the corresponding `PassageObject`s can be discarded. Additionally,
+if a passage gets added, any keys which are only in the `PassageEditingInterface` map but not
+in the `PassageObject` map can be identified, so the corresponding `PassageObject`s can be created.
+
+The `Controller` would have a `ControllerAction` object, which would be viewed by the `PassageModel`
+in an update loop (via a read-only `ActionViewer` interface), the state of which would dictate the
+actions to be performed by the `PassageModel`. Finally, the update/repaint loops would be handled
+centrally by the `OhHeccRunner`.
+
+Then there was the implementation.
+
+The various classes in the `model_bits` package were implemented as intended. However, when I got
+to the `PassageModel`, and in particular, the `Controller`-related classes, I realized that this
+particular control implementation was a stupid idea. Unlike those prior game projects, where an
+update loop was a necessity, it would be completely overkill in this scenario, because, if an
+author isn't actively interacting with the model, the model's state wouldn't change, so any constant
+update loops or repaint loops would just be a waste of processor resources. Therefore, I took a
+closer look at Java's GUI libraries, working out how to make something only repaint if a user
+were to interact with it, at which point I realized I could just make the `Model` be a subclass
+of some variety of GUI component, which would let a `MouseListener` or `KeyListener` of some
+description simply call the `invalidate`/`repaint` methods of this GUI component, omitting the
+update loop entirely.
