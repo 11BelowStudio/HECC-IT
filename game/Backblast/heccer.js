@@ -99,6 +99,7 @@ var theHeccer = {
         if (currentPassage === undefined){
 
             window.alert("uh oh, there's no passage called " + pName + "!");
+            theHeccer.stateStack.popState();
 
         } else{
 

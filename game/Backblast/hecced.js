@@ -20,6 +20,13 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Cafeteria run deadend",
+			"You turn the corner.\n\nYou are greeted by a dead end.\n\nA dead end that someone appears to be using as an armoury of sorts, with an excessive amount of high explosives scattered around.\n\nYou notice a tripwire on the floor. Luckily for you, you haven't stepped on it.\n\nPercival hasn't quite caught up with you yet.\n\n[[Perhaps it would be a good idea to turn back.|Cafeteria run turn back]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"Start3",
 			"The envelope feels expensive. It feels like the sender really wanted to send you this, and get your attention.\n\nYou turn it around to try opening it.\n\nYou notice some handwritten text on the rear of the envelope saying '**PRIVATE AND CONFIDENTIAL**'. And where a bill would say where to return the envelope if it's undelivered, this instead says '**IF UNDELIVERED, PLEASE INCINERATE THIS ENVELOPE**'.\n\nYou turn it around again to make sure that it definitely *is* addressed to you.\n\nIt is.\n\nSomeone clearly wants you to receive this letter, and clearly doesn't want anyone else to read it.\n\nSo you [[open the envelope|Start4]], and see what all the fuss is about.",
 			[]
@@ -55,9 +62,23 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Cafeteria boom",
+			"Just as soon as you decided what you were going to do, you found out what the noise actually was.\n\nOnce again, you felt a warm, bright, flash, engulfing your body.\n\n[[And everything fades to white|MainLoopDeath]].",
+			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"elsewhere-4-MeetPercival",
 			"\"Hello, Subject C.\"\n\nThe very nasal voice of the person greeting you takes you aback. It didn't sound quite like that from the other side of the door.\n\nThey're dressed up in the sort of garb you'd expect some sort of stereotypical caricature of a health-and-safety inspector. A cheap-looking black suit, like the sort of suit worn by someone who takes themselves way too seriously, with overly-polished shiny black shoes, yet contrasted by a very bright high-vis vest. They appear to have an ID badge on their high-vis vest, but you can't read it from where you are. You can see a painstakingly manicured, yet somewhat subtle, moustache on their face, as well as a pair of browline glasses in front of their eyes. Those glasses could have given off an air of quiet sophistication, if it wasn't for the rest of their outfit, and that somewhat gratituous pair of cheap-looking safety spectacles that they're wearing over their glasses. They're also wearing a white hard hat on their head, with the letters 'IPP' written on the front of it. They're cradling a clipboard with their left arm, and they have a fountain pen in their right hand.\n\nThey clearly work here, and they're clearly here to take you to the briefing room mentioned in that letter from earlier.\n\nAnd they're clearly expecting you to say something.\n\n[[\"Who the hell are you?\"|MeetPercival-whois]]\n[[\"Where am I?\"|MeetPercival-whereis]]\n[[\"Hello? Room service?\"|MeetPercival-RoomService]]",
 			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria hallway",
+			"The two of you are back in the hallway from earlier.\n\nTo your left, you can faintly hear Cillian having a conversation with someone else, through that pager from earlier. You might be able to eavesdrop on the conversation if you can get a bit closer to him.\n\nThere doesn't appear to be anything of note to the right, but, you should have a decent chance of getting away from Cillian in that direction.\n\nSo, what are you going to do?\n\nWill you [[go left, to eavesdrop on the conversation|Cafeteria eavesdrop]], or will you [[go right, to run away|Cafeteria run away]]?",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -71,6 +92,20 @@ function getHECCED(){
 		new Passage(
 			"BriefingRoom2-savedYourLife",
 			"Percival looks at you as if you're speaking to him in a language he doesn't understand.\n\n\"What?\"\n\nIt appears as if he's got no idea what you're talking about. Then again, if someone were to do something completely stupid in front of you and then turn around and claim that they just saved your life, despite you being under the impression that nothing's endangering your life, you'd probably be feeling pretty confused as well.\n\n\"[[I got rid of the bomb before it could kill us. That makes me a hero!|BriefingRoom2-itsABomb]]\"",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria back",
+			"You and Percival decide to go back to the 'cafeteria', acting natural, like you didn't just overhear the details of the conversation you just heard.\n\nThe two of you re-enter the room, sitting back down as you were earlier on.\n\nAll that's left is [[to wait for Cillian to return|Cafeteria ohno bomb time]].",
+			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria run turn back",
+			"As you start to calmly walk away from the dead end, turning around the corner, Percival catches up with you.\n\nHe's also trying to go around the corner.\n\nYou only realize he's there when you feel him crashing into you.\n\nThe two of you [[fall down|Cafeteria run tripwire]] as a result.",
 			[]
 		)
 	);
@@ -90,6 +125,13 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"prank im going home",
+			"You walk off the stage.\n\nYou can hear some confused applause in the distance as you vacate the limelight.\n\n[[You may as well work out where your actual clothes went|prank ending change clothes]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"StartYes-2",
 			"It's an ordinary morning for you.\nNothing wacky and/or uncharacteristic, just the same stuff you usually experience.\n\nOver the radio, you can hear a discussion about some hoax letters people have been receiving.\n\nSuddenly, there's a noise at the door.\n\nDo you [[investigate it|StartYes-3]], or do you [[keep listening to the radio|StartYes-Hoax]]?",
 			["noreturn"]
@@ -100,6 +142,13 @@ function getHECCED(){
 			"StartYes-3",
 			"The noise was just the sound of some post getting shoved through your letterbox.\n\nExcept instead of the usual deluge of junk mail, there's a strange grey cylinder.\n\nAnd there's a lot of [[smoke|StartYes-4]] coming out of it",
 			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives boom",
+			"Before you can finish cursing Percival for his stupidity, you feel yourself engulfed by a bright, warm, flash.\n\n[[And everything fades to white|MainLoopDeath]].",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -118,9 +167,9 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"ResearchLabs",
-			"Sample Content",
-			[]
+			"the prank ending",
+			"You walk through the door.\n\nYou find yourself in front of a camera, and a live studio audience.\n\n***\"COOOOOONGRATULATIONS! YOU'VE JUST GOT PRANKED ON NATIONAL TELEVISION!\"***\n\nIt appears that you've just fallen victim to a television company with too much money to splurge on terrible ideas.\n\nThe presenter, who appears to be one of those supposedly famous people you have never heard of before, is walking towards you with a microphone.\n\n*\"Now, would you mind letting us know how  you feel about this?\"*\n\n\"[[What the hell|prank wth]]\"\n\"[[This makes literally zero sense|prank no sense]]\"\n\"[[Screw this, I'm going home|prank im going home]]\"",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -162,6 +211,13 @@ function getHECCED(){
 		new Passage(
 			"Cafeteria eat",
 			"After taking a look at the labels on the sandwich platters, and finding a sandwich that you're prepared to eat, you sit down and tuck in.\n\nThe sandwich doesn't taste particularly good or bad, it just tastes like a very middle-of-the-road sandwich.\n\nHowever, as soon as you're done eating, you notice that other person, who you tried to ignore, is walking up to you and Percival, and looks like they're about to talk to you.\n\nWhat's the plan now?\n\nContinue to [[act natural|Cafeteria meet Dr Spreewald]], and hope that they aren't going to delay you for too long.\n\"[[Say, Percival, where are we supposed to be headed off to next?|Cafeteria make excuses]]\"",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives summon Percival",
+			"You call Percival over.\n\nHe responds with a \"I shall be there momentarily! Just need to finish up here...\"\n\nThis is shortly followed by a [[shriek of fear from Percival|Archives percival dun goofed]].",
 			[]
 		)
 	);
@@ -258,6 +314,13 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Cafeteria ohno bomb time",
+			"You can hear some more beeping noises. Perhaps somebody left another pager behind.\n\nDo you [[take a look at where the noise is coming from|Cafeteria boom]] or do you just [[ignore it, it's probably nothing|Cafeteria boom]]?",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"deja vu silent treatment",
 			"The two of you continue walking in a somewhat awkward silence. You keep trying to look for anything that might help you to work out where you are, but, unfortunately for you, this rather long, straight, unsignposted corridor doesn't contain any information of any use to you.\n\nEventually, Percival stops, with a slightly triumphant \"Here we are!\".\n\nYou notice the words on the door he's stopped at.\n\n[[BRIEFING ROOM|BriefingRoom2 - entry]]",
 			["noreturn"]
@@ -272,8 +335,22 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Confront Albert",
+			"Sample Content",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"Cafeteria why bother",
-			"\"I'm guessing that Percival forgot to explain it to you. You may have guessed that I am one of the researchers here, and I needed some participants for some experiments; which is why you are here.\"\n\nHis story appears to check out.\n\n\"[[What sort of experiments are you talking about?|Cafeteria what experiments]]\"\n\"[[Would any of those experiments potentially involve any explosives?|Cafeteria is there boom]]\"",
+			"\"I'm guessing that Percival forgot to explain it to you. You may have guessed that I am one of the researchers here, and I needed some participants for some experiments; which is why you are here.\"\n\nHis story appears to check out.\n\nBefore you can press him for more information, you can hear a sudden beeping noise.\n\nCillian rummages around in his pockets, picking up a pager, pressing a button on it. The beeping stops.\n\n\"Wait here for a moment, I need to sort this out real quick.\"\n\nWith that, he leaves the room.\n\nWhat are you going to do now?\n\nAre you going to [[wait for him to return|Cafeteria wait]], or will you [[leave the room|Cafeteria depart]]?",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria depart",
+			"You tell Percival that the two of you are going to be leaving the room, as you start to walk to the door.\n\nFor once, you're not locked in.\n\n[[You exit the room|Cafeteria hallway]].",
 			[]
 		)
 	);
@@ -286,16 +363,16 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"Cafeteria what experiments",
-			"Sample Content",
-			[]
+			"deja vu maze 02",
+			"Percival's voice fades away as you start to run.\n\nYou reach another junction.\n\nWhere now?\n\n[[Left|deja vu maze 2]]\n[[Right|deja vu maze 3]]\n[[Forwards|deja vu maze 4]]",
+			["noreturn","maze"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"deja vu maze 02",
-			"Percival's voice fades away as you start to run.\n\nYou reach another junction.\n\nWhere now?\n\n[[Left|deja vu maze 2]]\n[[Right|deja vu maze end]]\n[[Forwards|deja vu maze 4]]",
-			["noreturn","maze"]
+			"Confront Spreewald",
+			"Sample Content",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -317,6 +394,13 @@ function getHECCED(){
 			"Cafeteria make excuses",
 			"Before Percival is able to look at the clipboard to find out what's next, the stranger answers your question for you, whether you wanted them to do that or not.\n\n\"No need to check, the next thing on the itinerary is for me to formally introduce myself to you\".\n\nPercival finishes looking at his clipboard, and tries to hide a slight bit of fear, as he's forced to agree.\n\n\"Ah. Yeah, that does check out.\"\n\nFrom your current position, seated at a table, it's not exactly easy for you to quickly get up and leave. And if you did at this point, it would definitely be rather suspicious.\n\nSo you may as well [[let this person introduce themselves|Cafeteria meet Dr Spreewald]].",
 			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria run tripwire",
+			"You feel yourself hit something as you fall.\n\nSomething which felt like a rather taut rope, quickly breaking under your body weight.\n\nAs you hit the ground, you feel yet another bright, warm, flash engulf you.\n\n[[And everything fades to white|MainLoopDeath]].",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -344,6 +428,13 @@ function getHECCED(){
 		new Passage(
 			"deja vu maze 4",
 			"As you keep running, you eventually bump into someone, as they walk through a small side-hallway that you didn't quite notice.\n\nUnfortunately for you, it's Percival.\n\n\"Ah! There you are!\"\n\nHe doesn't seem particularly annoyed.\n\n\"Good thing I bumped into you here, I was afraid that you'd get completely lost, and never find your way back!\"\n\nYou shudder as you {if:pAny(\"deja vu endless give up\")}{remember something very familiar happening to you earlier on}{else:imagine quite how lost Percival considers to be 'lost'}.\n\n\"Well, it looks like you managed to find your own way here, so that's convenient.\"\n\nHe points towards a nearby door, with some words on it.\n\n[[BRIEFING ROOM|BriefingRoom2 - entry]]",
+			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"prank ending whiteout",
+			"And everything fades to white.",
 			["noreturn"]
 		)
 	);
@@ -384,13 +475,6 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"deja vu endless return 3",
-			"No. You can't.\n\nThere is no floor. Never was.\n\nUnfortunately, you only realize this a bit too late, after you lost your footing.\n\nYou're falling.\n\nYou don't know how long you've been falling for.\n\nAll you know is that you feel like you're falling.\n\nFalling for a long time.\n\nSo long.\n\nIt feels like you've been falling for hours.\n\nYou're starting to get tired.\n\nYour body wants to sleep.\n\nPerhaps you should just [[get some sleep|BriefingRoom2-KO]].",
-			["noreturn","gotLost"]
-		)
-	);
-	theHeccer.addPassageToMap(
-		new Passage(
 			"StartYes-Hoax",
 			"You hear that, allegedly, many people have been receiving handwritten letters from some organization that doesn't exist, promising free money to recipients, akin to a bogus job offer scam. The police have released a formal statement, saying that they don't have any reason to believe that anything illegal has happened, but heavily discouraged replying to those letters.\n\nUnfortunately for you, you've already replied. And your reply was a 'yes'.\n\nHopefully nothing bad is going to happen, right?\n\nYou also can't help but notice [[some smoke|StartYes-4]] starting to fill the room, coming from the general direction of your front door.",
 			[]
@@ -406,8 +490,15 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"deja vu endless return 2",
-			"You keep going.\n\nEventually, your hands stop to feel the walls to either side of you.\n\nBut the floor's still there, right?\n\nThere's something you can walk on, right?\n\n[[So you can keep walking back, right?|deja vu endless return 3]]",
+			"You keep going.\n\nEvenutally, you see the light again.\n\nIt's illuminating another dead end.\n\n[[Except this one has a door|prank ending door]].",
 			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"prank no sense",
+			"***\"THAT'S HOW TELEVISION WORKS, FOLKS! EVERYONE, GIVE IT UP FOR THIS RANDOM PERSON!\"***\n\nThis is followed by a 'please clap' sign lighting up above the stage, and a totally not forced standing ovation.\n\nYou are ushered off the stage. This honestly comes as a relief, as you've had enough of this nonsense for a lifetime.\n\nNow that you think about it, [[you may as well work out where your actual clothes went|prank ending change clothes]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -426,16 +517,16 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"Ending1-4",
-			"There's just a single piece of A6 paper inside, bearing three handwritten lines.\n\n*Perhaps in another timeline. Such is the nature of our work.*\n\n*Farewell.*\n\n*- Dr A. Albert*\n\nHowever, as far as you are concerned, you get the impression that this is **the end** of this chain of events, and you can carry on with your life as usual.",
-			[]
+			"Cafeteria run away",
+			"The two of you start running down the hallway.\n\nYou can't help but notice the complete lack of any junctions in this particular hallway.\n\n[[Guess you'll just have to continue going onwards|Cafeteria run 2]]",
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"Cafeteria is there boom",
-			"{if:tCount(\"cafSus\")==1}{\"Not sure why you're asking about that but sure\"}",
-			["cafSus"]
+			"Ending1-4",
+			"There's just a single piece of A6 paper inside, bearing three handwritten lines.\n\n*Perhaps in another timeline. Such is the nature of our work.*\n\n*Farewell.*\n\n*- Dr A. Albert*\n\nHowever, as far as you are concerned, you get the impression that this is **the end** of this chain of events, and you can carry on with your life as usual.",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -454,9 +545,44 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Archives notebook 4",
+			"You keep reading.\n\n*I might need to keep tabs on Percival as well. He has been acting rather suspicious lately. It's giving me a rather bad feeling. Hopefully I can catch him in the act before he does anything particularly bad for everyone concerned...*\n\nAs if Percival knew that you were talking about something discussing him, you can [[hear him suddenly screaming in fear|Archives percival dun goofed]].",
+			["percivalSus"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives notebook 2",
+			"It's one of those dime-a-dozen guy-meets-girl, girl-meets-other-guy, other-guy-meets-another-guy, that-guy-meets-yet-another-girl, that-other-girl-meets-the-first-guy awkward love pentagon stories. It's certainly in need of a lot of polish, the plot is somewhat incoherent, but, it could be worse. It had potential though.\n\nUnfortunately, when the plot really started to get going, it stopped.\n\nBut it was replaced by [[something particularly intriguing|Archives notebook 3]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives notebook 3",
+			"Now, this is juicy!\n\nIt looks like Dr Albert really doesn't like {if:pAny(\"Cafeteria meet Dr Spreewald\")}{Cillian}{else:this Dr Spreewald person{if:tCount(\"spreewald\")==1/}{, whoever he is/}}.\n\n*If that renegade upstart keeps trying to render everything I have built my career on completely redundant, I swear I may need to take matters into my own hands. I could probably pin the blame on that Percival fellow in a worst case scenario, but I simply cannot let Spreewald carry on completely unhindered. I guess he probably won't be able to do much if he doesn't have any subjects to test on, though. I suppose I should do something about this.*\n\nMaybe Percival might also be interested in this.\n\nDo you want to [[call him over|Archives summon Percival]], or do you want to [[keep reading|Archives notebook 4]]?",
+			["albertSus","spreewald"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria what happen",
+			"\"To be completely honest, I'm not entirely sure either. Probably something to do with some paperwork he forgot to fill in.\"\n\n[[You wonder how long it's going to take for that to get sorted out|Cafeteria ohno bomb time]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"Start",
 			"It's an ordinary morning for you.\nNothing wacky and/or uncharacteristic, just the same stuff you usually experience.\n\nOver the radio, you can hear a discussion about the Mandela Effect.\n\nSuddenly, there's a noise at the door.\n\nDo you [[investigate it|Start2]], or do you [[keep listening to the radio|StartMandelaEffect]]?",
 			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives notebook 1",
+			"The notebook has the same handwriting in it as the letter you recieved at the start of this wild chain of events.\n\nThe first page has the title *Unnamed romantic comedy book draft*.\n\nIt looks like Dr Albert is a writer in his spare time.\n\nDo you want to [[give it a read|Archives notebook 2]], or would you rather [[take a look inside the folder instead|Archives folder 1]]?",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -475,9 +601,23 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Cafeteria wait",
+			"Against your better judgement, you and Percival decide to wait for Cillian to return.\n\nIt might be some time until he's back though. Maybe it might be worth asking if Percival has any ideas about what's happening.\n\n\"[[Any idea what's distracting him?|Cafeteria what happen]]\"\n\"[[Something seems off about him.|Cafeteria hes sus]]\"\nOr do you just [[want to bask in the silence|Cafeteria do nothing]]?",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"BriefingRoom1-tryTheDoor",
 			"You rush to the door.\n\nBut, just like the door you used to leave the bedroom, there doesn't appear to be any way for it to be opened from the inside.\n\nThere's no signs of anyone outside, and, try as you might, the door won't budge.\n\n[[But the film continues to play|BriefingRoom1-5]].",
 			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"prank ending change clothes",
+			"After some asking around backstage, you're given a box with your actual clothes in them. You take them to a dressing room, and get back into them, putting the 'Subject C' jumpsuit back into the box, handing it back to the person who was holding onto your clothes earlier.\n\nYou get given some cash to hire a cab to get yourself back home, as well as a bit of compensation for being the victim of an utterly nonsensical TV prank.\n\nIt's been a long day.\n\nYou leave the studio, and [[hire a cab to take you home|prank hire cab]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -489,9 +629,30 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"BriefingRoom2-callingBluff",
-			"Of course! Who else could be the culprit but Percival? He's obviously bluffing, so the look on his face is going to be priceless when he realizes that you know that it's him!\n\nAt least, that's what your train of thought was telling you. Which his expression, of genuine apathy and confusion, certainly isn't corroborating.\n\n\"No? You told me it was a bomb. And, considering the other recent explosions, I'm inclined to believe your claim that it's a bomb.\"\n\nPerhaps you should consider trying to make sure you actually know what you're saying when attempting to make an accusation instead of just throwing accusions out wildly.\n\n\"I know, I know, you're looking for someone to accuse right now, I get it. But I've never met you before, so why would I have any reason to kill you? And why would I be in the same room as the bomb as it would go off? And that's before we factor in that, if you were to die on my watch, the cleaning costs come out of my pay, and I get one step closer to getting fired!\"\n\nIt looks like we can safely mark Percival as not being a suspect. He might be a complete idiot, but he's probably not stupid enough to blow himself up or allow himself to get left with the cleaning bill. Perhaps you should explain to him how you actually knew it was a bomb.\n\n{if:pAny(\"deja vu been there already\", \"deja vu new hat\")}{\"[[Well, you remember that conversation we had earlier on, and you got confused about me remembering things?|BriefingRoom2-alreadyToldYou]]\"}{else:\"[[Because it already killed me.|BriefingRoom2-alreadyKilledMe]]\"}\n\"[[Because you just told me.|BriefingRoom2-callingBluff]]\"",
+			"Archives",
+			"Percival guides you through the nondescript hallways of the facility to a rather large room, full of filing cabinets containing what might just be the net sum of all of the potentially forbidden knowledge uncovered here.\n\n\"This is where everything should be filed correctly, you see. However, it does look a lot like some people haven't been filing things in the appropriate order. Chances are that the people who are trying to kill you won't attempt trying to destroy all of this, so, I think we should be safe for a bit.\"\n\nThis is a very big room, so, in a worst case scenario, it might be rather difficult for anyone who may be chasing you in here to find you.\n\nYou notice Percival taking a look inside one of the filing cabinets.\n\n\"This is completely disorganized... how can anyone find anything in here?\" he mutters to himself. It looks like he's trying to get busy trying to work out how to organize these files, obviously operating under the assumption that there isn't an existing system of organization hidden underneath this disorder. It might be best to stay out of his way for the time being.\n\nYou take a look around the room again, for anything to look at to pass the time.\n\n[[Eventually, you notice a desk, which looked like it had recently been vacated, with a lamp above it which somebody forgot to turn off|Archives desk]].",
 			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria run 2",
+			"The hallway continues through a sequence of corners.\n\nNone of the doors on the hallway appear to lead to anywhere else, with most of them either being locked, or leading to empty, dead-end rooms.\n\nYou hope that there's going to be something of use [[around the next corner|Cafeteria run deadend]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"BriefingRoom2-callingBluff",
+			"Of course! Who else could be the culprit but Percival? He's obviously bluffing, so the look on his face is going to be priceless when he realizes that you know that it's him!\n\nAt least, that's what your train of thought was telling you. Which his expression, of genuine apathy and confusion, certainly isn't corroborating.\n\n\"No? You told me it was a bomb. And, considering the other recent explosions, I'm inclined to believe your claim that it's a bomb.\"\n\nPerhaps you should consider trying to make sure you actually know what you're saying when attempting to make an accusation instead of just throwing accusions out wildly.\n\n\"I know, I know, you're looking for someone to accuse right now, I get it. But I've never met you before, so why would I have any reason to kill you? And why would I be in the same room as the bomb as it would go off? And that's before we factor in that, if you were to die on my watch, the cleaning costs come out of my pay, and I get one step closer to getting fired!\"\n\nIt looks like we can safely mark Percival as not being a suspect. He might be a complete idiot, but he's probably not stupid enough to blow himself up or allow himself to get left with the cleaning bill. Perhaps you should explain to him how you actually knew it was a bomb.\n\n{if:pAny(\"deja vu been there already\", \"deja vu new hat\")}{\"[[Well, you remember that conversation we had earlier on, and you got confused about me remembering things?|BriefingRoom2-alreadyToldYou]]\"}{else:\"[[Because it already killed me.|BriefingRoom2-alreadyKilledMe]]\"}",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives about you 1",
+			"Let's see what they've written about you...\n\nOkay, that was uncalled for.\n\nThey've got a scanned copy of the 'Yes' reply you sent back to them, accompanied with the word *Gullible*.\n\nIt also says here that you are here for some experiments to be conducted by {if:pAny(\"Cafeteria meet Dr Spreewald\")}{Cillian}{else:this Dr Spreewald person}, and that Percival has been assigned to usher you around the facility.\n\nBut that's odd. Percival's name is written over some correction fluid, and whilst the handwriting saying 'Percival' looks like the rest of the handwriting, something just looks... off... about it.\n\n[[Your train of throught is interrupted by the noise of Percival's voice|Archives percival dun goofed]]",
+			["spreewald","percivalSus"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -580,9 +741,23 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"prank ending door",
+			"Well, what else can you do here?\n\nYou may as well [[open the door|prank ending open door]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"BriefingRoom2-KO",
 			"You wake up slumped over a desk.\n\nLooks like, once again, you've been knocked out and moved elsewhere.\n\nIn front of you, in his signature cheap black suit, high-vis jacket, and yellow hard-hat combo, is Percival. You think that something looks a bit off about his clothing, but you're not entirely sure what. You take a look at his name badge, just to make sure that this person in front of you is Percival. He is.\n\nAnd he's very annoyed.\n\n\"Did you *really* need to do that? Do you have **any** idea how hard it is to carry people, especially carrying them from one end of this facility to the other?\"\n\nYou notice his red face, that expression of exhaustion, and all the sweat dripping down his forehead, so he's probably not lying. It's not a pretty sight, so you try to forget that you noticed it, whilst he sighs and continues.\n\n\"Anyway, I went to your room to escort you here, to the briefing room, so you can find out what you're supposed to be doing here. I'll just give you a moment to wake up properly before the briefing starts.\"\n\nAs he says this, he leans against a nearby wall and collapses a bit, still trying to recover from what was probably more physical exercise than he's had to do in years, muttering complaints to himself about why he was expected to carry you here, instead of being allowed to get someone else to take you here.\n\nYou [[take a look around the room|BriefingRoom2-1]], to get your bearings.",
 			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"prank wth",
+			"***\"PRECISELY! GIVE IT UP FOR THIS RANDOM PERSON!\"***\n\nThis is followed by a 'please clap' sign lighting up above the stage, and a totally not forced standing ovation.\n\nYou are ushered off the stage, as the presenter announces the next segment of the show, and introduces yet another one of those celebrities you've never heard of.\n\nNow that you think about it, [[you may as well work out where your actual clothes went|prank ending change clothes]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -615,6 +790,13 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Archives desk",
+			"You take a closer look at the desk, and sit yourself down on the chair that's right next to it.\n\nThe previous occupant of this desk left two things behind.\n\nOne of those things was a folder labelled with some embossing tape, bearing the words '4157 - SUBJECT C'.\n\nThe other thing they left behind was a rather nondescript-looking, ring-bound notebook, bearing no title, but with the letters 'A A' in the bottom-right of the cover page.\n\nYou don't have anything better to do right now, so are you going to [[look inside the folder|Archives folder 1]], or are you going to [[read the notebook|Archives notebook 1]]?",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"MeetPercival-RoomService",
 			"This mysterious individual clearly doesn't seem too happy about being asked if they're here for room service.\n\n\"***Room service!?*** Me!? Percival!? He who checks off the checklists!? Mistaken for a mere customer service tool!?\"\n\nThe nasal tone of his voice still takes you by surprise. But at least you now know who's at the door.\n\n[[\"So, Percival, why are you here if you're not here to take my breakfast order?\"|MeetPercival-Explained]]",
 			["noreturn"]
@@ -637,7 +819,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"MainLoopIntro-PickAPath",
-			"Percival takes a look at his clipboard.\n\n\"Lets see here... there might be something on here that's of some use... ah ha!\"\n\n\"On the intinerary, it says that I'm supposed to escort you to the cafeteria next. I'd prefer this option myself, because that's what I'm supposed to be doing.\"\n\n{if:pAny(\"Cafeteria\")}{You remember going there already. The food was decent, but the whole 'exploding' stuff did leave a sour taste in your mouth.}{else:It definitely sounds like it could be a trap, but there's definitely a good chance of finding some answers there.}\n\n\"Lets see what else there is... I guess I could bring you back to your room, where you could wait out the lockdown in relative comfort.\"\n\n{if:pAny(\"YourRoom\")}{You remember the complete-lack-of-care package that someone left in your room. Hiding definitely isn't an option for you. But it looked like the culprit didn't want to hide either.}{else:This option sounds like it could at least give you some time to process everything, and to actually get around to trying out that bed.}\n\n\"Or there are the research laboratories, and I highly doubt that anyone would be stupid enough to risk destroying all of that equiment.\"\n\n{if:pAny(\"ResearchLabs\")}{Unfortunately, they clearly were stupid enough to do that, and you were stupid enough to underestimate their stupidity.}{else:This sounds like a rational choice of a place to hide. If nothing else, you might be able to find out a bit more about any ulterior motives going on here}\n\n\"But if there's any other suggestions you have, I'd like to hear them.\"\n\n{if:pAll(\"CafeteriaDeath\",\"RoomDeath\",\"LabDeath\")}{\"[[Actually, yes, I have a plan|MainLoop-end]]\"}{else:You can't think of anything right now. Perhaps after you get some more information about everything going on, you might have a better idea of what to do.\n\nWith this in mind, where do you want to go?}\n\n{if:not(pAny(\"Cafeteria\"))}{\"[[I'm hungry, so let's go to the cafeteria|Cafeteria]]\"}\n{if:not(pAny(\"YourRoom\"))}{\"[[I guess that I may as well wait it out in that room I woke up in|YourRoom]]\"}\n{if:not(pAny(\"ResearchLabs\"))}{\"[[Chances are that those labs might be too important to destroy, so that sounds like a relatively safe bet to me.|ResearchLabs]]\"}",
+			"Percival takes a look at his clipboard.\n\n\"Lets see here... there might be something on here that's of some use... ah ha!\"\n\n\"On the intinerary, it says that I'm supposed to escort you to the cafeteria next. I'd prefer this option myself, because that's what I'm supposed to be doing.\"\n\n{if:pAny(\"Cafeteria\")}{You remember going there already. The food was decent, but the whole 'exploding' stuff did leave a sour taste in your mouth.}{else:It definitely sounds like it could be a trap, but there's definitely a good chance of finding some answers there.}\n\n\"Lets see what else there is... I guess I could bring you back to your room, where you could wait out the lockdown in relative comfort.\"\n\n{if:pAny(\"YourRoom\")}{You remember the complete-lack-of-care package that someone left in your room. Hiding definitely isn't an option for you. But it looked like the culprit didn't want to hide either.}{else:This option sounds like it could at least give you some time to process everything, and to actually get around to trying out that bed.}\n\n\"Or there are the research archives, and I highly doubt that anyone would be stupid enough to risk destroying all of those documents.\"\n\n{if:pAny(\"Archives\")}{Unfortunately, they clearly were stupid enough to do that, and you were stupid enough to underestimate their stupidity.}{else:This sounds like a rational choice of a place to hide. If nothing else, you might be able to find out a bit more about any ulterior motives going on here}\n\n\"But if there's any other suggestions you have, I'd like to hear them.\"\n\n{if:pCount(\"MainLoopDeath\")==3}{\"[[Actually, yes, I have a plan|MainLoop-end]]\"}{else:You can't think of anything right now. Perhaps after you get some more information about everything going on, you might have a better idea of what to do.\n\nWith this in mind, where do you want to go?}\n\n{if:not(pAny(\"Cafeteria\"))}{\"[[I'm hungry, so let's go to the cafeteria|Cafeteria]]\"}\n{if:not(pAny(\"YourRoom\"))}{\"[[I guess that I may as well wait it out in that room I woke up in|YourRoom]]\"}\n{if:not(pAny(\"Archives\"))}{\"[[Chances are that those archives might be too important to destroy, so that sounds like a relatively safe bet to me.|Archives]]\"}",
 			[]
 		)
 	);
@@ -650,9 +832,30 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"prank ending open door",
+			"The door opens.\n\n[[You enter the room|the prank ending]]",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"Cafeteria why boom",
 			"\"{if:pAny(\"Cafeteria what is your job\")}{}{else:Well, isn't that a doozy of a conversation-starter! }I'm not entirely sure what it is you're talking about.\"\n\n{if:tCount(\"spreewald\")==1}{You're not entirely sure if it's worth pressing him for more information, as this is the first time you're seeing him.}{else:You've probably said a bit too much. He's probably going to be a bit suspicious of you from here.}\n\n\n{if:pAny(\"Cafeteria whats your job\")}{}{else:\"[[Okay, forget that, do you know anything for sure about what you're doing here?|Cafeteria whats your job]]\"}\n\"[[You know what? Never mind. Why exactly did we start having this conversation?|Cafeteria why bother]]\"",
 			["cafSus"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives folder 1",
+			"You open the folder which is apparently about you.\n\nIt looks like it's been divided into sections.\n\nDo you want to start looking at what they know [['about the subject'|Archives about you 1]], or do you want to look at the [['utilization of the subject'|Archives about experiement 1]]?",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"prank hire cab",
+			"You don't feel like talking on the way back.\n\nNothing of note really happens.\n\nEventually, you make it home.\n\nYou pay the driver, and [[get back inside your home|prank the end]]",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -692,8 +895,15 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Archives percival dun goofed",
+			"You shout out into the room, asking Percival what happened.\n\n\"Someone booby-trapped this filing cabinet!\"\n\n[[Oh, for...|Archives boom]]",
+			["noreturn"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"MainLoop-end",
-			"Sample Content",
+			"You tell Percival that you think you know who is behind everything.\n\n\"[[It's obviously Spreewald, isn't it?|Confront Spreewald]]\"\n{if:tAny(\"albertSus\")}{\"[[It's clearly Dr Albert!|Confront Albert]]\"}",
 			[]
 		)
 	);
@@ -709,6 +919,20 @@ function getHECCED(){
 			"deja vu new hat",
 			"Of course! That's why something looked odd about Percival! He was wearing a white hard hat last time, not a yellow one!\n\nBut Percival looks at you with a look of confusion.\n\n\"New hat? What are you talking about? I've always worn this yellow hard hat. {if:tAny(\"pedant\")}{Did they use a picture of me in a different hat in Pedantic Weekly that one time?}{else:Then again, this *is* the first time I've met you, so I guess you probably wouldn't have seen me in this before}\".\n\nThis response merely poses more questions than it does answers. But it does make you think of that conversation you heard on the radio about the Mandela Effect. Could you have somehow found yourself in a different timeline where certain specific details are just slightly different? Not that you'll have an opportunity to ask of course, as Percival suddenly stops and remarks \"We're here!\"\n\nThe door he's stopped at is labelled very clearly with the words [[BRIEFING ROOM|BriefingRoom2 - entry]].",
 			["noreturn","hat"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Archives about experiement 1",
+			"It appears that this is what you're here to do:\n\n*Subject will recieve the experiemental serum which should allow them to tap into their memories from another timestream.* \n\n*Success for the serum will be assessed as follows:*\n\n*Subject will flip a coin.*\n\n*If heads, subject will be given some information to memorize. Viability of serum cannot happen in this timeline. ~~Subject will be sent to other timeline~~* ***No, that won't be happening.***\n\n*If tails, subject will be expected to recount that information. If recount could happen, the trial will be a success*.\n\nThat's odd. The thing that's closest to implying the presence of bombs has been crossed out. And you haven't flipped any coins yet. So this current chain of event definitely wasn't supposed to happen. But at least that serum might explain why everything's been happening the way it's been happening.\n\nAs you ponder this, you can't help but notice that [[Percival sounds like he's in a spot of bother|Archives percival dun goofed]].",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"prank the end",
+			"You're finally home, after a very long day.\n\nYou may as well get some sleep.\n\nYou get into [[bed|prank ending whiteout]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -755,6 +979,13 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Cafeteria eavesdrop",
+			"You sneak up to the room which Cillian is in.\n\nYou can't hear the person he's talking to, but at least you can faintly hear him.\n\n\"*Yes, C managed to arrive in one piece, which is a relief...*\"\n\n\"*...Excuse me, they did what with what?*\"\n\n\"*...I guess I'll have to talk about that with him later on.*\"\n\n\"*Well, yeah. What else was I supposed to do with them? Have this conversation in front of them?*\"\n\n\"*In that case, hurry up and tell me what you're trying to tell me, so I can get back to them!*\"\n\nIt sounds like this conversation is almost over. You might want to get going now, before Cillian catches you.\n\nWill you [[go back to the room, acting like nothing ever happened|Cafeteria back]], or would you rather just [[run away|Cafeteria run away]]?",
+			["percivalSus"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"deja vu endless give up",
 			"You turn around.\n\nBut you can't help but notice that there isn't any light in the corridor behind you, instead, all you can see is an expanse of darkness, looking just as endless as the length of the corridor you still need to walk down.\n\nYou come to the realization that you aren't supposed to be here.\n\nDo you [[walk back, through the darkness|deja vu endless return]]?\nOr do you [[try to keep going down the corridor|deja vu endless corridor]], even though you can't see any end to it?",
 			["noreturn"]
@@ -762,8 +993,22 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"Cafeteria hes sus",
+			"Percival agrees with you.\n\n\"I will admit that he's acting a bit weird. But, at the same time, everyone's acting weird nowadays, aren't they?\"\n\nThat probably is a good point he's raised.\n\n[[You take a moment to ponder that response|Cafeteria ohno bomb time]]",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"BriefingRoom2-notGotTheMemo",
 			"Percival stops muttering to himself and looks back at you.\n\n\"Well, there have been a few unexplained explosions recently, but, here's the thing; they're all unexplained. Only thing I've been told is 'don't go near anything that might be a bomb'. As you can tell, that's been some really helpful advice, seeing as that projector apparently was a bomb...\"\n\nHis voice trails off as he's saying this, as if he's gone off on his own train of thought.\n\nSuddenly, as if he's just noticed an elephant loitering in the corner that nobody else has, he snaps back to reality and asks you the really obvious question.\n\n\"Say, how *did* you know it was a bomb?\"\n\n{if:pAny(\"deja vu been there already\", \"deja vu new hat\")}{\"[[Well, you remember that conversation we had earlier on, and you got confused about me remembering things?|BriefingRoom2-alreadyToldYou]]\"}{else:\"[[Because it already killed me.|BriefingRoom2-alreadyKilledMe]]\"}\n\"[[Because you just told me.|BriefingRoom2-callingBluff]]\"",
+			[]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
+			"Cafeteria do nothing",
+			"The two of you just remain seated in silence.\n\nPercival looks like he's taking this as an opportunity to meditate.\n\n[[You sit back in your chair, getting comfortable|Cafeteria ohno bomb time]]",
 			[]
 		)
 	);
