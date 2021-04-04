@@ -14,7 +14,7 @@ import java.util.*;
  * but it's an GUI form instead.
  * bottom text
  */
-public class PassageObject extends EditModelObject {
+public class PassageObject extends EditModelObject implements DrawablePassageObject {
 
 
     /**
@@ -49,14 +49,14 @@ public class PassageObject extends EditModelObject {
     private Color outlineColour;
 
     private static final Color NORMAL_COLOUR = SAFETY_ORANGE;
-    private static final Color NORMAl_OUTLINE_COLOUR = OUTLINE_SAFETY_ORANGE;
+    //private static final Color NORMAl_OUTLINE_COLOUR = OUTLINE_SAFETY_ORANGE;
 
     private static final Color END_COLOUR = SAFETY_YELLOW;
-    private static final Color END_OUTLINE_COLOUR = OUTLINE_SAFETY_YELLOW;
+    //private static final Color END_OUTLINE_COLOUR = OUTLINE_SAFETY_YELLOW;
 
     private static final Color SELECTED_COLOUR = new Color(0,255,255,191);
 
-    private static final Color START_COLOUR = SAFETY_YELLOW;
+    //private static final Color START_COLOUR = SAFETY_YELLOW;
 
     private static final Color ERROR_COLOUR = SAFETY_RED;
 
@@ -72,7 +72,7 @@ public class PassageObject extends EditModelObject {
     /**
      * empty_colour but it's 57% lightness instead of 43%
      */
-    private static final Color EMPTY_OUTLINE_COLOUR = new Color(225, 105, 65);
+    //private static final Color EMPTY_OUTLINE_COLOUR = new Color(225, 105, 65);
 
 
     /**
@@ -118,8 +118,6 @@ public class PassageObject extends EditModelObject {
         linkedUUIDs.forEach(u -> linkMap.put(u,new PassageLinkObject(model,this,u)));
 
 
-        //orang
-        //this.objectColour = SAFETY_ORANGE;
         whatColourShouldThisObjectBe();
 
     }
@@ -145,29 +143,32 @@ public class PassageObject extends EditModelObject {
         pointOfNoReturn = thePassage.isThisAPointOfNoReturn();
     }
 
+    /**
+     * A method which returns the UUID of the passage which this PassageObject represents
+     * @return the UUID of the passage this PassageObject represents.
+     */
     public UUID getTheUUID(){
         return theUUID;
-    }
-
-    public void moveTo(Vector2D newPosition){
-        this.position.set(newPosition);
-        areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
-        thePassage.updatePosition(this.position);
-        updateLinkedObjectPositions();
     }
 
 
 
     @Override
-    public void individualUpdate() {
-        this.passageNameObject.setText(thePassage.getPassageName());
-        this.position.set(thePassage.getPosition());
+    void individualUpdate() {
+        this.passageNameObject.setText(thePassage.getPassageName()); // makes sure the passage name is correct
+        this.position.set(thePassage.getPosition()); // ensures that the position data is correct
 
-        Set<UUID> connectedSet = thePassage.getLinkedPassageUUIDs();
-        if (!linkMap.keySet().equals(connectedSet)){
-            linkMap.keySet().retainAll(connectedSet);
-            connectedSet.removeAll(linkMap.keySet());
-            for (UUID u: connectedSet) {
+        Set<UUID> setOfLinkedUUIDs = new HashSet<>(thePassage.getLinkedPassageUUIDs());
+        if (!linkMap.keySet().equals(setOfLinkedUUIDs)){
+            // if the keys of the linkMap aren't the same as the passage's linked UUIDs,
+            // we'll need to fix the linkMap so it has all the necessary links.
+
+            // first things first, we omit any links from the linkMap to passages which aren't linked to any more.
+            linkMap.keySet().retainAll(setOfLinkedUUIDs);
+
+            // then, we omit the present links from that set.
+            setOfLinkedUUIDs.removeAll(linkMap.keySet());
+            for (UUID u: setOfLinkedUUIDs) { // finally, if there's any links that need a linkObject, we construct it.
                 linkMap.put(u,new PassageLinkObject(theModel,this,u));
             }
         }
@@ -230,15 +231,6 @@ public class PassageObject extends EditModelObject {
             g.draw(fillArea);
         }
 
-        //and also does an outline of it.
-        //g.setColor(outlineColour);
-        //g.draw(fillArea);
-        //g.draw3DRect(-(width/2), -(height/2), width, height, true);
-
-
-        //draws the passageNameObject (on top of this object)
-        //passageNameObject.draw(g);
-
 
     }
 
@@ -248,7 +240,7 @@ public class PassageObject extends EditModelObject {
      * so they won't end up covered by another passageObject's rectangle.
      * @param g the Graphics2D object responsible for the actual drawing stuff
      */
-    public void drawPassageNameObject(Graphics2D g){
+    public void drawText(Graphics2D g){
         AffineTransform backup = g.getTransform();
         g.translate(position.x, position.y);
         passageNameObject.draw(g);
@@ -268,7 +260,7 @@ public class PassageObject extends EditModelObject {
     @Override
     public void move(Vector2D moveVector) {
         super.move(moveVector);
-        thePassage.updatePosition(position);
+        thePassage.updatePosition(position); // updates the position of the passage itself.
         updateLinkedObjectPositions();
         theModel.updatePassageObjectLinksWhichLinkToSpecifiedPassage(theUUID);
         areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
@@ -280,7 +272,7 @@ public class PassageObject extends EditModelObject {
      */
     public void updatePositionOfSpecificLink(UUID updateThisOne){
         if (linkMap.containsKey(updateThisOne)){
-            linkMap.get(updateThisOne).updatePosition();
+            linkMap.get(updateThisOne).update();
         }
     }
 
@@ -289,17 +281,9 @@ public class PassageObject extends EditModelObject {
      * This will ensure that all of the child passageLinkObjects belonging to this object will be moved.
      */
     public void updateLinkedObjectPositions(){
-        for (PassageLinkObject l: linkMap.values()) {
-            l.updatePosition();
+        for (UpdatableObject l: linkMap.values()) {
+            l.update();
         }
     }
 
-    /**
-     * Remove the passageLinkObject that points to the (now deleted) passage with the specified UUID
-     * from this passageObject's linkMap
-     * @param yeetThis the UUID that the link to yeet points to
-     */
-    public void yeetLinkToYotePassage(UUID yeetThis){
-        linkMap.remove(yeetThis);
-    }
 }

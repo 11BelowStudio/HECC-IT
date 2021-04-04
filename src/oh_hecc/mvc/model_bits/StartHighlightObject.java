@@ -49,7 +49,7 @@ public class StartHighlightObject extends AbstractObject {
     }
 
     @Override
-    public void individualUpdate() {
+    void individualUpdate() {
         if (visible) {
             this.position.set(startObject.getPosition());
         }

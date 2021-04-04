@@ -9,7 +9,7 @@ import java.awt.geom.Area;
 /**
  * Superclass for all objects in the model.
  */
-public abstract class AbstractObject implements ObjectWithAPosition, DrawableObject {
+public abstract class AbstractObject implements ObjectWithAPosition, DrawableObject, UpdatableObject {
 
     /**
      * The position of this object
@@ -58,7 +58,7 @@ public abstract class AbstractObject implements ObjectWithAPosition, DrawableObj
     /**
      * #ffd20a (safety yellow but 52% lightness instead of 48%)
      */
-    static final Color OUTLINE_SAFETY_YELLOW = new Color(255, 210, 10);
+    //static final Color OUTLINE_SAFETY_YELLOW = new Color(255, 210, 10);
     /**
      * safety orange: #e97600
      */
@@ -66,11 +66,11 @@ public abstract class AbstractObject implements ObjectWithAPosition, DrawableObj
     /**
      * #ff8a14 (safety orange but 54% lightness instead of 46)
      */
-    static final Color OUTLINE_SAFETY_ORANGE = new Color(255, 138, 20);
+    //static final Color OUTLINE_SAFETY_ORANGE = new Color(255, 138, 20);
     /**
      * safety green: #007256
      */
-    static final Color SAFETY_GREEN = new Color(0,114,86);
+    //static final Color SAFETY_GREEN = new Color(0,114,86);
     /**
      * safety blue: #0067a7
      */
@@ -113,7 +113,7 @@ public abstract class AbstractObject implements ObjectWithAPosition, DrawableObj
      * areaRectangle is moved to be centered around the position of this object.
      * Then it calls individualObject for the subclass-specific bits.
      */
-    public void update(){
+    public final void update(){
         areaRectangle = new Rectangle((int)(getPosition().x - (width/2)), (int)(getPosition().y - (height/2)), width, height);
         individualUpdate();
     }
@@ -122,7 +122,7 @@ public abstract class AbstractObject implements ObjectWithAPosition, DrawableObj
      * Subclass-specific update method.
      * Needs to be overridden.
      */
-    public abstract void individualUpdate();
+    abstract void individualUpdate();
 
     /**
      * A method to draw this object.

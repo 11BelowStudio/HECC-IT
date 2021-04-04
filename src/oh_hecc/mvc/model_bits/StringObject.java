@@ -79,7 +79,7 @@ public class StringObject extends AbstractObject {
     public String getString(){ return theString; }
 
     @Override
-    public void individualUpdate(){
+    void individualUpdate(){
 
     }
 

@@ -103,23 +103,23 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("pressed");
+        //System.out.println("pressed");
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
                 controlledModel.xMove(false);
-                System.out.println("l");
+                //System.out.println("l");
                 break;
             case KeyEvent.VK_RIGHT:
                 controlledModel.xMove(true);
-                System.out.println("r");
+                //System.out.println("r");
                 break;
             case KeyEvent.VK_UP:
                 controlledModel.yMove(false);
-                System.out.println("u");
+                //System.out.println("u");
                 break;
             case KeyEvent.VK_DOWN:
                 controlledModel.yMove(true);
-                System.out.println("d");
+                //System.out.println("d");
                 break;
         }
         theFrame.repaint();

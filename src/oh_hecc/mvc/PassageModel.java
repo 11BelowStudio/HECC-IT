@@ -3,21 +3,16 @@ package oh_hecc.mvc;
 
 import heccCeptions.HeccCeption;
 import hecc_up.HeccUpGUI;
-import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.MVCGameDataInterface;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
-import oh_hecc.mvc.model_bits.DrawableObject;
-import oh_hecc.mvc.model_bits.ModelButtonObject;
-import oh_hecc.mvc.model_bits.PassageObject;
-import oh_hecc.mvc.model_bits.StartHighlightObject;
+import oh_hecc.mvc.model_bits.*;
 import utilities.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
@@ -70,12 +65,12 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     /**
      * The set containing the copies of the PassageObjects that are actually rendered
      */
-    final Set<PassageObject> drawablePassageObjects;
+    final Set<DrawablePassageObject> drawablePassageObjects;
 
     /**
      * The set of the copies of the buttonObjects that are actually rendered
      */
-    final Set<ModelButtonObject> drawableModelButtons;
+    final Set<DrawableObjectWithText> drawableModelButtons;
 
     /**
      * A set of all currently-selected PassageObjects
@@ -135,8 +130,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
-        for(PassageObject p: objectMap.values()){
-            //p.updateLinkedObjectPositions();
+        for(UpdatableObject p: objectMap.values()){
             p.update();
         }
 
@@ -146,7 +140,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         buttons = new HashSet<>();
 
-        //TODO: make the buttons
 
         saveButton = new ModelButtonObject(this, 0, 0.25f, "Save");
 
@@ -187,40 +180,31 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         revalidate();
         repaint();
 
-        //ModelController m = new ModelController(this);
-        //this.addMouseListener(m);
-        //this.addMouseMotionListener(m);
-
     }
 
 
     /**
-     * invalidates itself
+     * Basically the update loop.
+     * Updates the objectMap so it's consistent with the passageMap.
+     * Updates the startHighlight if necessary.
+     * And finally calls the super.revalidate() method (so that can be handled)
      */
     @Override
     public void revalidate() {
-        System.out.println("invalid");
-
-
-
-        /*
-        for (PassageEditingInterface e: passageMap.values()) {
-            System.out.println(e.getPassageName());
-        }
-        */
-
-
         Set<UUID> allPossibleUUIDSet = new HashSet<>();
         allPossibleUUIDSet.addAll(objectMap.keySet());
         allPossibleUUIDSet.addAll(passageMap.keySet());
         for (UUID u: allPossibleUUIDSet){
             if (!passageMap.containsKey(u)){
-                System.out.println(u + " doesnt exist");
+                // we yeet any passageObjects for objects that don't exist any more
                 objectMap.remove(u);
             } else if (!objectMap.containsKey(u)) {
+                // we add a PassageObject if this PassageEditingInterface has just been created
                 objectMap.put(u, new PassageObject(this,passageMap.get(u)));
             } else {
+                // update the linked UUIDs for the existing passage
                 passageMap.get(u).updateLinkedUUIDs(passageMap);
+                // and we update the object itself.
                 objectMap.get(u).update();
             }
         }
@@ -229,18 +213,15 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         Optional<UUID> startUUID = theData.getStartUUID();
         if (startUUID.isPresent()) {
             startHighlight.setStartObject(objectMap.get(startUUID.get()));
-            //System.out.println(startUUID.get());
-            //System.out.println(passageMap.get(startUUID.get()).getPassageName());
         } else {
             startHighlight.hide();
-            //System.out.println("hide");
+            // if there is no start passage, we hide it.
         }
 
 
+        //System.out.println("and imma invalidate myself");
 
-
-        System.out.println("and imma invalidate myself");
-        super.revalidate();
+        super.revalidate(); //and so, we properly revalidate this.
     }
 
 
@@ -250,7 +231,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void leftClick(Point mLocation){
-        System.out.println("left click time");
+        //System.out.println("left click time");
         if (activity.equals(CurrentActivity.DIALOG_OPEN)){
             return;
         }
@@ -259,25 +240,25 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         clearSelection();
 
 
-        if (editMetadataObjectButton.wasClicked(mLocation)) {
+        if (editMetadataObjectButton.wasClicked(mLocation)) { // if edit metadata button was clicked, we edit metadata.
             activity = CurrentActivity.DIALOG_OPEN;
             EditorWindowInterface w = theData.openMetadataEditWindow();
             w.addWindowClosedListener(this::editingWindowClosed);
 
-        } else if (addPassageButton.wasClicked(mLocation)) {
-            //System.out.println("passage button clicked");
+        } else if (addPassageButton.wasClicked(mLocation)) { // if add button was clicked, we add the passage.
+
             PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner, getWidth() / 2.0, getHeight() / 2.0));
             passageMap.put(newPassage.getPassageUUID(), newPassage);
             revalidate();
-        } else if (heccUpButton.wasClicked(mLocation)) {
-            if (saveTheHecc()) {
+        } else if (heccUpButton.wasClicked(mLocation)) { // if hecc up button was clicked
+            if (saveTheHecc()) { // we attempt to save the .hecc file
+                // and then we open HECC-UP if successful.
                 activity = CurrentActivity.DIALOG_OPEN;
                 new HeccUpGUI(theData.getSavePath(), this::editingWindowClosed);
 
-                //System.exit(0);
             }
-        } else if (saveButton.wasClicked(mLocation)) {
-            saveTheHecc();
+        } else if (saveButton.wasClicked(mLocation)) { // if the save button was clicked
+            saveTheHecc(); // we save the hecc.
         } else {
 
             Point scrolledMouse = moveMouseByScroll(mLocation);
@@ -320,7 +301,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             );
             return true;
         } catch (HeccCeption h) {
-            // if the hecc wasn't exactly valid, we let the author know what the problem was.
+            // if the hecc wasn't exactly valid, we still save it, but we let the author know what the problem was.
             JOptionPane.showMessageDialog(
                     this,
                     "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
@@ -380,7 +361,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void rightClick(Point mLocation) {
         moveMouseByScroll(mLocation);
-        super.rightClick(mLocation);
     }
 
     /**
@@ -444,7 +424,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void rightPress(Point mLocation) {
         moveMouseByScroll(mLocation);
-        super.rightPress(mLocation);
     }
 
     /**
@@ -455,7 +434,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void leftRelease(Point mLocation) {
         moveMouseByScroll(mLocation);
-        super.leftRelease(mLocation);
         switch (activity) {
             case LC_DRAGGING_SELECTION_BOX:
                 //if we were dragging selection box, finalize selection
@@ -490,7 +468,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void rightRelease(Point mLocation) {
         moveMouseByScroll(mLocation);
-        super.rightRelease(mLocation);
     }
 
     /**
@@ -501,7 +478,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void leftDrag(Point mLocation) {
         moveMouseByScroll(mLocation);
-        super.leftDrag(mLocation);
         Vector2D lastLeftDrag = new Vector2D(currentLeftDragPos);
         currentLeftDragPos.set(mLocation);
         switch (activity) {
@@ -526,7 +502,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void rightDrag(Point mLocation) {
         moveMouseByScroll(mLocation);
-        super.rightDrag(mLocation);
     }
 
 
@@ -555,7 +530,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
     /**
-     * Refreshes the collections of 'drawable' objects basically so  they can be drawn.
+     * Refreshes the collections of 'drawable' objects basically so they can be drawn.
+     * Basically cloning the topRightCorner, objectMap, and buttons set, so, if those are modified mid-draw operation,
+     * it won't cause anything supernatural/untoward to happen.
      */
     void refreshDrawables(){
 
@@ -599,7 +576,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         startHighlight.draw(g);
 
         //the objects representing links between passages are drawn first, so they're underneath everything else.
-        for (PassageObject p: drawablePassageObjects) {
+        for (DrawablePassageObject p: drawablePassageObjects) {
             p.drawLinks(g);
         }
 
@@ -609,8 +586,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         }
 
         //and then the names of the passage objects are drawn, on top of all the passages.
-        for (PassageObject p: drawablePassageObjects){
-            p.drawPassageNameObject(g);
+        for (DrawableObjectWithText p: drawablePassageObjects){
+            p.drawText(g);
         }
 
         //now it goes back to where it was before it was scrolled
@@ -622,6 +599,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         g.setClip(0, 0, getWidth(), getHeight());
         for (DrawableObject b : drawableModelButtons) {
             b.draw(g);
+        }
+
+        for (DrawableObjectWithText b : drawableModelButtons) {
+            b.drawText(g);
         }
     }
 

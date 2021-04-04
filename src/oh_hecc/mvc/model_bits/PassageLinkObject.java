@@ -30,8 +30,8 @@ public class PassageLinkObject extends EditModelObject {
      * @param sourceObject the source PassageObject that this 'link' is 'from'.
      * @param destinationUUID the UUID of the PassageEditingInterface/PassageObject that this 'link' effectively 'links' to.
      */
-    PassageLinkObject(EditModelInterface model, PassageObject sourceObject, UUID destinationUUID) {
-        super(sourceObject.position, model);
+    PassageLinkObject(EditModelInterface model, ObjectWithAPosition sourceObject, UUID destinationUUID) {
+        super(sourceObject.getPosition(), model);
 
 
 
@@ -61,21 +61,12 @@ public class PassageLinkObject extends EditModelObject {
     }
 
     /**
-     * Returns the UUID of the passage that this points to
-     * @return the UUID of the passage that this points to
-     */
-    UUID getTheUUID(){
-        return toUUID;
-    }
-
-
-
-    /**
-     * Call this to update the position of where this object should point from/to,
+     * updates the position of where this object should point from/to,
      * as well as the length of the actual pointy arrow thing,
      * in response to either the object it points from or to moving.
      */
-    void updatePosition(){
+    @Override
+    void individualUpdate() {
         //updates this position to be the same as the fromObject position
         this.position.set(fromObject.getPosition());
         //updates the vector that points from the source to the destination
@@ -88,20 +79,11 @@ public class PassageLinkObject extends EditModelObject {
         pointTriangle.ypoints[1] = (int)vectorFromSourceToDestination.mag();
     }
 
-    @Override
-    public void individualUpdate() {
-
-    }
-
 
 
 
     @Override
     void individualDraw(Graphics2D g) {
-        //TODO: draw arrow from position pointing to pointToPosition
-
-        //rotates this according to the rotationAngle
-
 
 
         g.setColor(objectColour);

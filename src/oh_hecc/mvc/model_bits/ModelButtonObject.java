@@ -5,6 +5,7 @@ import oh_hecc.mvc.Model;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
 /**
@@ -14,7 +15,7 @@ import java.awt.geom.Area;
  * <p>
  * Y'know, the boring bits.
  */
-public class ModelButtonObject extends EditModelObject {
+public class ModelButtonObject extends EditModelObject implements DrawableObjectWithText {
 
     /**
      * The words that are on this button
@@ -66,7 +67,7 @@ public class ModelButtonObject extends EditModelObject {
     }
 
     @Override
-    public void individualUpdate() {
+    void individualUpdate() {
         // nothing.
     }
 
@@ -109,9 +110,17 @@ public class ModelButtonObject extends EditModelObject {
         g.setColor(Color.BLACK);
         g.draw(fillArea);
 
-        //draw the button label
-        buttonLabel.draw(g);
+    }
 
+    /**
+     * A method to draw the text of the object
+     * @param g the graphics2D context being used to draw the text of the object
+     */
+    public void drawText(Graphics2D g){
+        AffineTransform backup = g.getTransform();
+        g.translate(position.x, position.y);
+        buttonLabel.draw(g);
+        g.setTransform(backup);
     }
 
 
