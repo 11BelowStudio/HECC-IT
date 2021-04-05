@@ -261,7 +261,6 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
         StringBuilder heccedMultilineCommentBuilder = new StringBuilder();
         for (String s: segmentsOfTheComment) {
             heccedMultilineCommentBuilder.append(COMMENT_PREFIX);
-            heccedMultilineCommentBuilder.append(" ");
             heccedMultilineCommentBuilder.append(s);
             heccedMultilineCommentBuilder.append("\n");
         }

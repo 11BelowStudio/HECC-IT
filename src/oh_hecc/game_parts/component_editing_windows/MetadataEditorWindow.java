@@ -249,6 +249,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
+        commentInput.setText(theMetadata.getComment());
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
         JButton commentUpdateButton = new JButton("Update comment");
         commentUpdateButton.addActionListener(this::attemptCommentUpdate);
