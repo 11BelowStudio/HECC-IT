@@ -241,27 +241,18 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
         if (editMetadataObjectButton.wasClicked(mLocation)) { // if edit metadata button was clicked, we edit metadata.
-            activity = CurrentActivity.DIALOG_OPEN;
-            EditorWindowInterface w = theData.openMetadataEditWindow();
-            w.addWindowClosedListener(this::editingWindowClosed);
+            startEditingTheMetadata(); // we attempt to start editing the metadata.
 
         } else if (addPassageButton.wasClicked(mLocation)) { // if add button was clicked, we add the passage.
-
-            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner, getWidth() / 2.0, getHeight() / 2.0));
-            passageMap.put(newPassage.getPassageUUID(), newPassage);
-            revalidate();
+            addNewPassage(); // we attempt to add a new passage
         } else if (heccUpButton.wasClicked(mLocation)) { // if hecc up button was clicked
-            if (saveTheHecc()) { // we attempt to save the .hecc file
-                // and then we open HECC-UP if successful.
-                activity = CurrentActivity.DIALOG_OPEN;
-                new HeccUpGUI(theData.getSavePath(), this::editingWindowClosed);
-
-            }
+            launchHeccUp(); // we attempt to launch hecc-up
         } else if (saveButton.wasClicked(mLocation)) { // if the save button was clicked
             saveTheHecc(); // we save the hecc.
         } else {
 
-            Point scrolledMouse = moveMouseByScroll(mLocation);
+            Point scrolledMouse = moveMouseByScroll(mLocation); // factoring any offset from moving the viewport
+
             //this will hold the clicked passageObject if it was clicked
             Optional<PassageObject> clicked =
                 objectMap.values().stream().filter(
@@ -280,6 +271,42 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         revalidate();
     }
 
+    /**
+     * Opens the metadata editor window.
+     */
+    private void startEditingTheMetadata(){
+        if (activity != CurrentActivity.DIALOG_OPEN) { // we don't do this if there's already a dialog open.
+            activity = CurrentActivity.DIALOG_OPEN;
+            EditorWindowInterface w = theData.openMetadataEditWindow();
+            w.addWindowClosedListener(this::editingWindowClosed);
+        }
+    }
+
+    /**
+     * Adds a new passage to the map.
+     */
+    private void addNewPassage(){
+        if (activity != CurrentActivity.DIALOG_OPEN) {
+            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner, getWidth() / 2.0, getHeight() / 2.0));
+            passageMap.put(newPassage.getPassageUUID(), newPassage);
+            revalidate();
+        }
+    }
+
+    /**
+     * Attempts to open HECC-UP
+     */
+    private void launchHeccUp(){
+        if (activity != CurrentActivity.DIALOG_OPEN){
+            if (saveTheHecc()) { // we attempt to save the .hecc file
+                // and then we open HECC-UP if successful.
+                activity = CurrentActivity.DIALOG_OPEN;
+                new HeccUpGUI(theData.getSavePath(), this::editingWindowClosed);
+
+            }
+        }
+    }
+
 
     /**
      * This method attempts to save the .hecc file.
@@ -287,57 +314,59 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * If the .hecc file couldn't be saved successfully, it'll present the 'Emergency Save Method' dialog to the user,
      * allowing them to basically copy and paste the contents of their .hecc file and save it manually.
      *
-     * @return true if it could be saved. false if it failed.
+     * @return true if it could be saved. false if it failed. will not happen if an editing dialog is open.
      */
     private boolean saveTheHecc() {
-        try {
-            //we attempt to save the hecc.
-            theData.saveTheHeccCheckingValidity();
-            JOptionPane.showMessageDialog(
-                    this,
-                    ".hecc file saved successfully!",
-                    "that's pretty heccin' nice",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-            return true;
-        } catch (HeccCeption h) {
-            // if the hecc wasn't exactly valid, we still save it, but we let the author know what the problem was.
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
-                    "pls fix this",
-                    JOptionPane.WARNING_MESSAGE
-            );
+        if (activity != CurrentActivity.DIALOG_OPEN) {
+            try {
+                //we attempt to save the hecc.
+                theData.saveTheHeccCheckingValidity();
+                JOptionPane.showMessageDialog(
+                        this,
+                        ".hecc file saved successfully!",
+                        "that's pretty heccin' nice",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                return true;
+            } catch (HeccCeption h) {
+                // if the hecc wasn't exactly valid, we still save it, but we let the author know what the problem was.
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
+                        "pls fix this",
+                        JOptionPane.WARNING_MESSAGE
+                );
 
-        } catch (IOException ioe) {
-            // and if it couldn't be saved at all, we panic.
+            } catch (IOException ioe) {
+                // and if it couldn't be saved at all, we panic.
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Could not save the .hecc file!",
-                    "Something hecced up.",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            JFrame f = new JFrame("The emergency save method.");
-            f.setLayout(new BorderLayout());
-            JPanel topPanel = new JPanel();
-            topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-            topPanel.add(new JLabel("We couldn't save your .hecc file."));
-            topPanel.add(new JLabel("However, here's your .hecc code, for you to copy and paste into a new .hecc file"));
-            topPanel.add(new JLabel("We apologize for any inconvenience caused."));
-            f.add(topPanel, BorderLayout.NORTH);
-            JTextArea heccArea = new JTextArea(theData.toHecc());
-            heccArea.setLineWrap(true);
-            heccArea.setWrapStyleWord(true);
-            f.add(new JScrollPane(
-                    heccArea,
-                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-            ));
-            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            f.pack();
-            f.revalidate();
-            f.setVisible(true);
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Could not save the .hecc file!",
+                        "Something hecced up.",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                JFrame f = new JFrame("The emergency save method.");
+                f.setLayout(new BorderLayout());
+                JPanel topPanel = new JPanel();
+                topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+                topPanel.add(new JLabel("We couldn't save your .hecc file."));
+                topPanel.add(new JLabel("However, here's your .hecc code, for you to copy and paste into a new .hecc file"));
+                topPanel.add(new JLabel("We apologize for any inconvenience caused."));
+                f.add(topPanel, BorderLayout.NORTH);
+                JTextArea heccArea = new JTextArea(theData.toHecc());
+                heccArea.setLineWrap(true);
+                heccArea.setWrapStyleWord(true);
+                f.add(new JScrollPane(
+                        heccArea,
+                        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+                ));
+                f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                f.pack();
+                f.revalidate();
+                f.setVisible(true);
+            }
         }
         return false;
     }

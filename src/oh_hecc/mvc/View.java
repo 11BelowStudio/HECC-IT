@@ -49,28 +49,17 @@ public class View extends JComponent {
 
     }
 
+    /**
+     * We repaint this component, and, if we have a Model to draw, we draw it.
+     * @param g0 the Graphics context being used.
+     */
     @Override
     public void paintComponent(Graphics g0){
         super.paintComponent(g0);
-        //super.paint(g0);
-        //theModelThatsBeingViewed.revalidate();
         if (drawingModel){
             Graphics2D g = (Graphics2D) g0;
             theModelThatsBeingViewed.draw(g);
-            //theModelThatsBeingViewed.paint(g0);
         }
-        /*
-        Graphics2D g = (Graphics2D) g0;
-
-        AffineTransform initialTransform = g.getTransform();
-
-
-        //g.setColor(Color.RED);
-        //g.fillRect(0,0,getWidth(),getHeight());
-
-
-        g.setTransform(initialTransform);
-        */
 
     }
 
@@ -86,7 +75,6 @@ public class View extends JComponent {
     public void setSize(Dimension d){
         super.setSize(d);
         if (drawingModel) {
-            //Model.RESIZE_MODEL(getWidth(), getHeight());
             theModelThatsBeingViewed.setSize(d);
         }
     }

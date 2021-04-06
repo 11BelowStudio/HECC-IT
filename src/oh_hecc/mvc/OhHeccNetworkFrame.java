@@ -92,7 +92,7 @@ public class OhHeccNetworkFrame {
                 new ComponentAdapter() {
                     @Override
                     public void componentResized(ComponentEvent e) {
-                        System.out.println("Resize event");
+                        //System.out.println("Resize event");
                         Dimension newDimension = theFrame.getContentPane().getSize();
                         theView.setSize(newDimension);
                         theView.repaint();
@@ -106,7 +106,7 @@ public class OhHeccNetworkFrame {
                 new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        System.out.println("close event");
+                        //System.out.println("close event");
                         confirmWindowClose();
                     }
                 }

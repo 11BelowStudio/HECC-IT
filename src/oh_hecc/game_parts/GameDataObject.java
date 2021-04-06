@@ -108,18 +108,21 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Override
     public boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException {
-        boolean result = false;
         String currentStartPassage = theMetadata.getStartPassage();
 
         if (newStartPassage.equals(currentStartPassage)){
-            // if the start passage isn't changing, we just let it change.
+            // if the start passage isn't changing, we just let it (not) change.
             return true;
         }
+        boolean result = false; // will be returned by several of the following branches
 
-        Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get));
+        Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get)); // the current start passage
         Optional<PassageEditingInterface> pWithNewName = passageMap.values().stream().filter(p -> p.getPassageName().equals(newStartPassage)).findAny();
-        if (pWithOldName.isPresent()){
-            if (pWithNewName.isPresent()){
+        // this is the passage with the newly-input start passage name
+
+        if (pWithOldName.isPresent()){ // if the old start existed
+            if (pWithNewName.isPresent()){ // if the newly input start passage actually exists
+                // we ask the user if they wanted to change the start passage to that one.
                 if (JOptionPane.showConfirmDialog(
                         null,
                         "<html><p>Did you want your game to start from<br>"+
@@ -129,12 +132,16 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 ) != JOptionPane.YES_OPTION){
-                    return false;
+                    return false; // if not, we don't change it.
                 }
+                // if they wanted to change it, we change it
                 result = theMetadata.updateStartPassage(newStartPassage);
                 startUUID = Optional.of(pWithNewName.get().getPassageUUID());
             } else{
-                result = theMetadata.updateStartPassage(newStartPassage);
+                // if there is no passage with the new name
+                result = theMetadata.updateStartPassage(newStartPassage); // we try to change the reference
+
+                //and then we ask the user if they wanted to rename the current start passage
                 if (JOptionPane.showConfirmDialog(
                         null,
                         "<html><p>Did you want to rename your existing start passage<br>"+
@@ -144,18 +151,23 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 ) == JOptionPane.YES_OPTION){
+                    // if they wanted to rename it, we rename it.
                     try {
                         pWithOldName.get().renameThisPassage(newStartPassage,passageMap);
                     } catch (DuplicatePassageNameException ignored) {}
                 } else {
+                    // otherwise, we create a new start passage.
                     getStartUUID(true);
                 }
             }
         } else {
+            // if the current start didn't exist (somehow), we just change the start passage reference
             result = theMetadata.updateStartPassage(newStartPassage);
             if (pWithNewName.isPresent()){
+                // if a passage with the new name exists, we obtain the UUID of that passage.
                 startUUID = Optional.of(pWithNewName.get().getPassageUUID());
             } else {
+                // if a passage with the new start name doesn't exist, we forcibly create it.
                 getStartUUID(true);
             }
         }

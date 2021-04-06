@@ -88,7 +88,7 @@ public class HeccItRunner {
             startEditingTheGameData();
 
             success = true;
-            System.out.println("nice");
+            //System.out.println("nice");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,7 +106,7 @@ public class HeccItRunner {
         try {
             new HeccUpGUI(heccFilePath, theFrame);
             success = true;
-            System.out.println("nice");
+            //System.out.println("nice");
         } catch (Exception e) {
             e.printStackTrace();
         }
