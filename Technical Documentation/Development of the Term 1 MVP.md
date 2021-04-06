@@ -211,7 +211,8 @@ the linked object' via finding the difference between those two position Vector2
 the triangle between them by initially offsetting it by the parent's position, so the midpoint of
 the base is at the midpoint of the parent `PassageObject`, and then basically rotating it/stretching
 it so that the tip of the triangle is at the relative (x,y) coordinate in the difference vector,
-at the midpoint of the `PassageObject` it links to.
+at the midpoint of the `PassageObject` it links to. Finally, the GUI should be resizeable with the
+window, and, when pressing the arrow keys, the viewable area should scroll.
 
 The model would store the `PassageObjects` in a map (associated with the UUIDs of the passages they
 represent), for ease of indexing, as well as the map of the `PassageEditingInterface` objects.
@@ -238,5 +239,9 @@ update loops or repaint loops would just be a waste of processor resources. Ther
 closer look at Java's GUI libraries, working out how to make something only repaint if a user
 were to interact with it, at which point I realized I could just make the `Model` be a subclass
 of some variety of GUI component, which would let a `MouseListener` or `KeyListener` of some
-description simply call the `invalidate`/`repaint` methods of this GUI component, omitting the
-update loop entirely.
+description simply call the controlling methods, which in turn call the `invalidate`/`repaint`
+methods of this GUI component, omitting the update loop entirely.
+
+In the MVP iteration, I didn't do this in a very optimal way. I had a `MouseController` class which
+implemented `MouseListener` (as well as `MouseMotionListener`), to listen for mouse inputs, and then
+call the appropriate methods of the `PassageModel`, via a `MouseControlModelInterface`.
