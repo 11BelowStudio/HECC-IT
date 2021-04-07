@@ -423,6 +423,78 @@ public class HeccUpTests {
 
     }
 
+    /**
+     * And checking the weirdness with some passage content being mistaken for tags
+     */
+    @Test
+    void testForTheWeirdnessWithTheTagsAndLineEndStuff(){
+
+        HeccUpTestLogger log = new HeccUpTestLogger();
+
+        HeccParser tagParser = new HeccParser("::Start [] <a,b> //\n" +
+                "[[another passage]]\n" +
+                "<3400,1343>\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "::another passage [!$!] //\n" +
+                "[[Start]]\n" +
+                "<-1000,-1000>\n" +
+                ";;\n" +
+                "\n" +
+                ";;", log);
+
+        HeccUpHandler handler = new HeccUpHandler(log);
+
+        String expectedOutput = "//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n" +
+                "\n" +
+                "\n" +
+                "var startingPassageName = \"Start\";\n" +
+                "\n" +
+                "\n" +
+                "function getHECCED(){\n" +
+                "\n" +
+                "\n" +
+                "\ttheHeccer.addPassageToMap(\n" +
+                "\t\tnew Passage(\n" +
+                "\t\t\t\"Start\",\n" +
+                "\t\t\t\"[[another passage]]\\n<3400,1343>\",\n" +
+                "\t\t\t[]\n" +
+                "\t\t)\n" +
+                "\t);\n" +
+                "\n" +
+                "\ttheHeccer.addPassageToMap(\n" +
+                "\t\tnew Passage(\n" +
+                "\t\t\t\"another passage\",\n" +
+                "\t\t\t\"[[Start]]\\n<-1000,-1000>\",\n" +
+                "\t\t\t[]\n" +
+                "\t\t)\n" +
+                "\t);\n" +
+                "\n" +
+                "\n" +
+                "\ttheHeccer.printPassages();\n" +
+                "\n" +
+                "\n" +
+                "\ttheHeccer.loadCurrentPassage();\n" +
+                "\n" +
+                "\n" +
+                "}\n" +
+                "\n" +
+                "\n" +
+                "//that's all, folks!";
+
+        try {
+            handler.attemptToParseTheGame(tagParser);
+
+            assertEquals(expectedOutput, String.join("\n",tagParser.getHeccedData()));
+
+
+        } catch (Exception e){
+            fail("didn't expect that exception", e);
+        }
+
+    }
+
 
     /**
      * Basically a LoggerInterface class that records the logged stuff.
@@ -592,8 +664,7 @@ public class HeccUpTests {
                 "\n",
                 "}\n",
                 "\n",
-                "//that's all, folks!\n",
-                "\n"
+                "//that's all, folks!"
         ));
 
         /**

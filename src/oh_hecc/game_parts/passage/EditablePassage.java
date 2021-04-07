@@ -135,10 +135,15 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         this.passageName = passageName.trim();
         setPassageContent(unparsedContent);
         trailingComment = comment;
+
+        // making sure we stop the metadata at the first newline
+        String[] quickAndDirtyLineEndFix = lineEndMetadata.split("\\R",2);
+        lineEndMetadata = quickAndDirtyLineEndFix[0];
+
+        // now parsing the metadata
         passageTags.addAll(PassageReadingInterface.readTagMetadata(lineEndMetadata));
         position.set(PassageReadingInterface.readVectorMetadata(lineEndMetadata));
         inlinePassageComment = PassageReadingInterface.getInlineComment(lineEndMetadata);
-        //linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
 
         updatePassageStatus();
     }

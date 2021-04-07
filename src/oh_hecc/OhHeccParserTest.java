@@ -1,14 +1,14 @@
 package oh_hecc;
 
+import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.game_parts.passage.SharedPassage;
 import org.junit.jupiter.api.Test;
+import utilities.Vector2D;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Some tests for the OH-HECC parser.
@@ -288,6 +288,88 @@ public class OhHeccParserTest {
         Set<String> parsedNames = hp.getHeccMap().values().stream().map(SharedPassage::getPassageName).collect(Collectors.toSet());
 
         assertEquals(undeclaredHeccPassageNames, parsedNames);
+
+    }
+
+    /**
+     * Testing the thing where sometimes passage links end up in the passage tags
+     */
+    @Test
+    void testLineEndMetadataStaysInTheLine(){
+
+        String theHecc = "::Start [] <a,b> //\n" +
+                "[[another passage]]\n" +
+                "<3400,1343>\n" +
+                ";;\n" +
+                "\n" +
+                ";;\n" +
+                "::another passage //\n" +
+                "[[Start]]\n" +
+                "<-1000,-1000>\n" +
+                ";;\n" +
+                "\n" +
+                ";;";
+
+        OhHeccParser hp = new OhHeccParser(theHecc);
+
+        Map<UUID, PassageEditingInterface> theMap = hp.getHeccMap();
+
+        Optional<PassageEditingInterface> theOptionalStart = theMap.values().stream().filter(
+                p -> p.getPassageName().equals("Start")
+        ).findFirst();
+
+        Optional<PassageEditingInterface> theOptionalOther = theMap.values().stream().filter(
+                p2 -> p2.getPassageName().equals("another passage")
+        ).findFirst();
+
+        try {
+            PassageEditingInterface theStart = null;
+            if (theOptionalStart.isPresent()) {
+                theStart = theOptionalStart.get();
+            } else {
+                fail("start passage doesnt actually exist!");
+            }
+            PassageEditingInterface theOtherOne = null;
+            if (theOptionalOther.isPresent()) {
+                theOtherOne = theOptionalOther.get();
+            } else {
+                fail("other passage doesnt actually exist!");
+            }
+
+
+            System.out.println("Asserting pos of start is 0,0");
+            assertEquals(new Vector2D(0, 0), theStart.getPosition());
+            System.out.println(theStart.getPosition());
+
+            System.out.println("Asserting tags of start are empty");
+            assertEquals(new ArrayList<String>(), theStart.getPassageTags());
+            System.out.println(theStart.getPassageTags());
+
+            System.out.println("and making sure the content of start is as expected");
+            assertEquals("[[another passage]]\n<3400,1343>", theStart.getPassageContent());
+            System.out.println(theStart.getPassageContent());
+
+            System.out.println("---\n");
+
+            System.out.println("Asserting pos of 2nd isnt -1000, -1000");
+            assertNotEquals(new Vector2D(-1000, -1000), theOtherOne.getPosition());
+            System.out.println(theOtherOne.getPosition());
+
+            System.out.println("Asserting tags of the other one are empty");
+            assertEquals(new ArrayList<String>(), theOtherOne.getPassageTags());
+            System.out.println(theOtherOne.getPassageTags());
+
+            System.out.println("and making sure the content of other is as expected");
+            assertEquals("[[Start]]\n<-1000,-1000>", theOtherOne.getPassageContent());
+
+            System.out.println(theOtherOne.getPassageContent());
+            System.out.println("---\n");
+
+        } catch (NullPointerException e){
+            e.printStackTrace();
+            fail("uh oh, didn't work");
+        }
+
 
     }
 }

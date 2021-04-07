@@ -20,26 +20,19 @@ public interface PassageReadingInterface extends SharedPassage {
      */
     static ArrayList<String> readTagMetadata(String lineEndMetadata){
         ArrayList<String> tagList = new ArrayList<>();
-        String validTagList = "";
-        //this processes the list of tags (if they exist)
-        //tags may be alphanumeric with underscores, divided by spaces
-        //must be within []
-        //like '[List of tags divided by spaces and allows d1gits plus under_scores]'
-        //Matcher tagListMatcher = Pattern.compile("\\[([a-zA-Z0-9_]+ +)*[a-zA-Z0-9_]+]").matcher(lineEndMetadata);
-        //Matcher tagListMatcher = Pattern.compile("\\[([\\w]+[ ])*[\\w]+]").matcher(lineEndMetadata);
-        Matcher tagListMatcher = Pattern.compile("\\["+TAG_STRING_REGEX+"]").matcher(lineEndMetadata);
+        /*
+            this processes the list of tags (if they exist)
+            tags may be alphanumeric with underscores, divided by spaces, must be within []
+            like '[List of tags divided by spaces and allows d1gits plus under_scores]'
+
+            will also accept `[]` as a valid 'tag list' (but it'll be empty)
+         */
+        Matcher tagListMatcher = Pattern.compile("\\[("+TAG_STRING_REGEX+")?]").matcher(lineEndMetadata);
         //finds the tag list metadata
         if (tagListMatcher.find()){ //if found
             String tagListString = tagListMatcher.group(0); //gets it
             tagListString = tagListString.substring(1,tagListString.length()-1); //removes surrounding []
-            tagList = SharedPassage.actuallyPutValidTagListStringIntoArrayList(tagListString);
-            /*
-            String[] tagListArray = tagListString.split(" "); //splits it at spaces
-            for (String s: tagListArray){ //for each of the tags
-                if (!s.isEmpty()){
-                    tagList.add(s.trim()); //add it to the tagList
-                }
-            }*/
+            tagList = SharedPassage.actuallyPutValidTagListStringIntoArrayList(tagListString); // and makes it a list.
         }
         return tagList; //return the tagList
     }
@@ -52,9 +45,11 @@ public interface PassageReadingInterface extends SharedPassage {
      */
     static Vector2D readVectorMetadata(String lineEndMetadata){
         Vector2D readVector = new Vector2D();
-        //Searches for it in the form
-        //<x,y>
-        //x and y are double numbers, may be negative, may have decimal point, and can have leading/trailing whitespace
+        /*
+        Searches for it in the form
+            <x,y>
+        x and y are double numbers, may be negative, may have decimal point, and can have leading/trailing whitespace
+         */
         Matcher vectorCoordsMatcher = Pattern.compile(
                 "<\\h*-?\\h*\\d*\\.?\\d+\\h*,\\h*-?\\h*\\d*\\.?\\d+\\h*>"
         ).matcher(lineEndMetadata);

@@ -77,7 +77,14 @@ public abstract class AbstractPassage implements PassageReadingInterface {
      */
     AbstractPassage(String passageName, String unparsedContent, String lineEndMetadata) {
         this(passageName, unparsedContent);
+
+        // making sure we stop the metadata at the first newline
+        String[] quickAndDirtyLineEndFix = lineEndMetadata.split("\\R",2);
+        lineEndMetadata = quickAndDirtyLineEndFix[0];
+
+        // and now parsing the metadata
         passageTags.addAll(PassageReadingInterface.readTagMetadata(lineEndMetadata));
+
         linkedPassages.addAll(SharedPassage.findLinks(unparsedContent));
         updatePassageStatus();
     }

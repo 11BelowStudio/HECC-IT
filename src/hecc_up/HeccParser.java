@@ -413,7 +413,7 @@ public class HeccParser {
 
         heccedData.add("}\n");
 
-        heccedData.add("\n//that's all, folks!\n\n");
+        heccedData.add("\n//that's all, folks!");
 
 
 
