@@ -4,6 +4,7 @@ import hecc_up.HeccUpGUI;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.MVCGameDataInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
+import oh_hecc.mvc.ModelController;
 import oh_hecc.mvc.OhHeccNetworkFrame;
 import oh_hecc.mvc.PassageModel;
 import oh_hecc.mvc.View;
@@ -23,19 +24,10 @@ import java.util.Collections;
  */
 public class HeccItRunner {
 
+    /**
+     * The JFrame holding the main HECC-IT program
+     */
     private final JFrame theFrame;
-
-
-    private OhHeccNetworkFrame editFrame;
-
-    private PassageModel editModel;
-
-    private View editorView;
-
-    private OhHeccParser heccParser;
-
-
-    private MVCGameDataInterface theGameData;
 
 
     /**
@@ -50,7 +42,7 @@ public class HeccItRunner {
         theFrame = new JFrame("HECC-IT!");
         theFrame.setLayout(new BorderLayout());
 
-        //theFrame.setIconImage(ImageManager.getImage("HECC-IT icon"));
+        // gives it the HECC-IT logo(s)
         theFrame.setIconImages(ImageManager.getHeccItIcons());
 
         ChooseFile chooseFile = new ChooseFile(
@@ -66,7 +58,6 @@ public class HeccItRunner {
         theFrame.setVisible(true);
 
 
-
     }
 
 
@@ -79,13 +70,29 @@ public class HeccItRunner {
     boolean openAndStartEditingFileAtLocation(Path heccFilePath) {
         boolean success = false;
         try {
-            heccParser = new OhHeccParser(
+            /*
+            OhHeccParser heccParser = new OhHeccParser(
                     String.join("\n", Files.readAllLines(heccFilePath))
             );
-            theGameData = new GameDataObject(heccParser.getHeccMap(), heccParser.getMetadata(), heccFilePath);
+
+            MVCGameDataInterface theGameData = new GameDataObject(
+                    heccParser.getHeccMap(),
+                    heccParser.getMetadata(),
+                    heccFilePath
+            );
 
 
-            startEditingTheGameData();
+            startEditingTheGameData(theGameData);
+
+             */
+            startEditingTheGameData( // starts editing the gamedata
+                    new GameDataObject( // puts the parsed hecc into a gamedataobject (with save file location)
+                            new OhHeccParser( // parses the hecc
+                                    String.join("\n", Files.readAllLines(heccFilePath)) // reads the hecc
+                            ),
+                            heccFilePath
+                    )
+            );
 
             success = true;
             //System.out.println("nice");
@@ -123,12 +130,15 @@ public class HeccItRunner {
         boolean success = false;
         try{
             //makes game data
-            theGameData = new GameDataObject(meta, heccFilePath);
+            MVCGameDataInterface theGameData = new GameDataObject(
+                    meta,
+                    heccFilePath
+            );
             //makes the .hecc file
             Files.write(theGameData.getSavePath(), Collections.singleton(theGameData.toHecc()));
 
             //now it'll start editing
-            startEditingTheGameData();
+            startEditingTheGameData(theGameData);
 
             success = true;
         } catch (Exception e) {
@@ -142,13 +152,17 @@ public class HeccItRunner {
      * This is called to basically load OH-HECC once some game data has been loaded, allowing the user to start
      * editing their .HECC file.
      */
-    void startEditingTheGameData() {
-        editModel = new PassageModel(theGameData);
-        editorView = new View(editModel);
-        editFrame = new OhHeccNetworkFrame(theFrame, editorView);
+    void startEditingTheGameData(MVCGameDataInterface theGameData) {
+        // creates the PassageModel
+        PassageModel editModel = new PassageModel(theGameData);
 
-        editFrame.addTheListeners();
-        editFrame.theFrame.invalidate();
+        // basically repurposes theFrame for OH-HECC instead, also constructing a new View and ModelController en-route.
+        new OhHeccNetworkFrame(
+                theFrame,
+                new View(editModel),
+                new ModelController(editModel, theFrame)
+        );
+
     }
 
     public static void main(String[] args){

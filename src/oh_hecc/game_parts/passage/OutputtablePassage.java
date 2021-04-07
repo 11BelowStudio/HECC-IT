@@ -5,17 +5,33 @@ import utilities.Vector2D;
 
 import java.util.*;
 
+/**
+ * A version of the AbstractPassage used within HECC-UP.
+ */
 public class OutputtablePassage extends AbstractPassage implements PassageReadingInterface, PassageOutputtingInterface {
 
-
+    /**
+     * Basically the tag list (as an array of strings, followed by a comma)
+     */
     private final String parsedTags;
 
+    /**
+     * Constructor, given a name, and some unparsed content
+     * @param passageName the name of this passage
+     * @param unparsedContent the raw .hecc content of this passage
+     */
     public OutputtablePassage(String passageName, String unparsedContent){
         super(passageName, unparsedContent);
         parsedTags = parseTags(new ArrayList<>());
         cleanUpContent();
     }
 
+    /**
+     * Constructor, given a name, unparsed content, and some metadata for the passage.
+     * @param passageName the name of this passage
+     * @param unparsedContent the raw .hecc content of this passage
+     * @param lineEndMetadata the raw .hecc metadata of this passage
+     */
     public OutputtablePassage(String passageName, String unparsedContent, String lineEndMetadata){
         super(passageName,unparsedContent,lineEndMetadata);
         parsedTags = parseTags(passageTags);

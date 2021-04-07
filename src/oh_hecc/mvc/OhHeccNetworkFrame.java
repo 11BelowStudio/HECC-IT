@@ -14,9 +14,12 @@ public class OhHeccNetworkFrame {
     /**
      * The JFrame that shows theView (holding the View object) to the user
      */
-    public JFrame theFrame;
+    private final JFrame theFrame;
 
-    private View theView;
+    /**
+     * The View (as a JComponent) which this frame views
+     */
+    private JComponent theView;
 
 
     /**
@@ -39,54 +42,17 @@ public class OhHeccNetworkFrame {
         theFrame.getContentPane().removeAll();
         theFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         theFrame.setLayout(new BorderLayout());
-    }
 
-    /**
-     * Constructor that utilizes an existing JFrame and View instead
-     * @param f the existing JFrame, which this object will commandeer and put the View object into
-     * @param v the existing View object to put into that JFrame.
-     */
-    public OhHeccNetworkFrame(JFrame f, View v) {
-        this(f);
-        addTheView(v);
-    }
-
-    /**
-     * Adds theViewToAdd to TheFrame.
-     * <p>
-     * Also adds a ComponentListener that will notice if theFrame is resized,
-     * and will call the 'setSize' method of theView
-     * (resizing theView and the Model it holds to match the size of theFrame's content pane).
-     * <p>
-     * This method also makes theView actually visible.
-     * @param viewToAdd the View object that's being added to theFrame
-     */
-    public void addTheView(View viewToAdd){
-
-        //adds theView
-
-        theView = viewToAdd;
-        theFrame.getContentPane().add(BorderLayout.CENTER, theView);
-        //theFrame.add(BorderLayout.CENTER,theView);
-
-
-        //makes theFrame visible
-        theFrame.pack();
-        theFrame.invalidate();
-        theFrame.setVisible(true);
-
-        //theView.setSize(800,600);
-
-        theFrame.repaint();
-
-
-    }
-
-    /**
-     * Adds the listeners that need to be added to theFrame.
-     */
-    public void addTheListeners(){
-
+        // confirming window closed
+        theFrame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        //System.out.println("close event");
+                        confirmWindowClose();
+                    }
+                }
+        );
         //adds the resizing ComponentListener to theFrame
         theFrame.addComponentListener(
                 new ComponentAdapter() {
@@ -99,35 +65,55 @@ public class OhHeccNetworkFrame {
                     }
                 }
         );
-        theFrame.setSize(800,600);
+    }
 
+    /**
+     * Constructor that utilizes an existing JFrame and View instead, and calls all the setup stuff.
+     * @param f the existing JFrame, which this object will commandeer and put the View object into
+     * @param v the existing View object to put into that JFrame.
+     * @param mc the ModelController which has listeners that need to be added to the JFrame
+     */
+    public OhHeccNetworkFrame(JFrame f, View v, ModelController mc) {
+        this(f);
+        addTheView(v);
+        addTheModelController(mc);
+        finishSetup();
+    }
 
-        theFrame.addWindowListener(
-                new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        //System.out.println("close event");
-                        confirmWindowClose();
-                    }
-                }
-        );
+    /**
+     * Adds theViewToAdd to TheFrame. CENTER in TheFrame's content pane.
+     * @param viewToAdd the View object that's being added to theFrame
+     */
+    public void addTheView(View viewToAdd){
 
+        //adds theView
 
-        ModelController mc = new ModelController(theView.theModelThatsBeingViewed, theFrame);
-        theFrame.addKeyListener(mc);
+        theView = viewToAdd;
+        theFrame.getContentPane().add(BorderLayout.CENTER, theView);
 
-        theFrame.revalidate();
-
-        theFrame.getContentPane().addMouseListener(mc);
-        theFrame.getContentPane().addMouseMotionListener(mc);
-
-        theFrame.getContentPane().revalidate();
-        theFrame.repaint();
-
-        theFrame.requestFocus();
 
     }
 
+    /**
+     * Adds the ModelController to the frame
+     * (as a keylistener to the frame, and as mouse(motion)listener(s) to its content pane)
+     * @param mc the ModelController to be added
+     */
+    public void addTheModelController(ModelController mc){
+        theFrame.addKeyListener(mc);
+        theFrame.getContentPane().addMouseListener(mc);
+        theFrame.getContentPane().addMouseMotionListener(mc);
+    }
+
+    /**
+     * Finishes setting up the frame.
+     * Makes it 800*600, requests focus, and invalidates it (so it gets repainted)
+     */
+    public void finishSetup(){
+        theFrame.setSize(800,600);
+        theFrame.requestFocus();
+        theFrame.invalidate();
+    }
 
     /**
      * Brings up a JOptionPane ConfirmDialog to ask the user if they're sure they want to quit
@@ -135,7 +121,7 @@ public class OhHeccNetworkFrame {
      */
     void confirmWindowClose(){
         if (JOptionPane.showConfirmDialog(
-                null,
+                theFrame,
                 "<html><p>"
                         +"Do you want to close this window?<br>"
                         +"All unsaved changes will be lost!"

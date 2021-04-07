@@ -1,7 +1,6 @@
 package oh_hecc.game_parts.passage;
 
 import heccCeptions.UndefinedPassageException;
-import oh_hecc.Heccable;
 
 import java.util.Set;
 

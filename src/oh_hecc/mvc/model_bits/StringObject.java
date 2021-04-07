@@ -14,11 +14,22 @@ public class StringObject extends AbstractObject {
      */
     private String theString;
 
+    /**
+     * The alignment for the string
+     */
     private int alignment;
 
-
+    /**
+     * Makes the string display left-aligned (to the right of origin)
+     */
     public static final int LEFT_ALIGN = 0;
+    /**
+     * Makes the string display right-aligned (to the left of origin)
+     */
     public static final int RIGHT_ALIGN = 1;
+    /**
+     * Makes the string display center-aligned (midpoint is origin)
+     */
     public static final int MIDDLE_ALIGN = 2;
 
 
@@ -79,45 +90,47 @@ public class StringObject extends AbstractObject {
     public String getString(){ return theString; }
 
     @Override
-    void individualUpdate(){
-
-    }
+    void individualUpdate(){ } // no individual update
 
 
-    public boolean isClicked(Point clickLocation){
-        return false;
-    }
+    public boolean isClicked(Point clickLocation){ return false; } // not clickable
 
 
     @Override
     public void individualDraw(Graphics2D g) {
         Font tempFont = g.getFont();
-        g.setFont(tempFont.deriveFont(Font.BOLD));
+        g.setFont(tempFont.deriveFont(Font.BOLD)); // we're using bold text
         g.setColor(Color.black);
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         int w = metrics.stringWidth(theString);
         int h = metrics.getHeight();
         int heightOffset = -h/2;
         int widthOffset = 0;
+        // basically moves the horizontal position of the rendered text to make it appear 'aligned' a certain way
         switch (alignment) {
             case StringObject.LEFT_ALIGN:
-                widthOffset = 0;
+                widthOffset = 0; // it's left-aligned by default
                 break;
             case StringObject.RIGHT_ALIGN:
-                widthOffset = -w;
+                widthOffset = -w; // makes it basically go to the right
                 break;
             case StringObject.MIDDLE_ALIGN:
-                widthOffset = -(w / 2);
+                widthOffset = -(w / 2); // we move it halfway so the midpoint of the string is at the position
                 break;
         }
+        // we draw 4 slightly-offset copies of the string as a totes legit outline
         g.drawString(theString,widthOffset+1,+1);
         g.drawString(theString,widthOffset-1,+1);
         g.drawString(theString,widthOffset-1,-1);
         g.drawString(theString,widthOffset+1,-1);
+
+        // now we draw the actual string, not as an outline
         g.setColor(objectColour);
         g.drawString(theString,widthOffset,0);
         g.setFont(tempFont);
-        areaRectangle = new Rectangle((int)position.x - (w/2), (int)position.y + heightOffset,w,h);
+        // and yeah here's the area rectangle which we don't use.
+        // why was it updated in the draw operation? because we can only get the fontmetrics in the draw operation.
+        //areaRectangle = new Rectangle((int)position.x - (w/2), (int)position.y + heightOffset,w,h);
     }
 
     public StringObject setText(String s){ theString = s; return this;}

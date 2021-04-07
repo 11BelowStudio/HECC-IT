@@ -35,27 +35,5 @@ public interface EditModelInterface {
      */
     void updatePassageObjectLinksWhichLinkToSpecifiedPassage(UUID destination);
 
-    /**
-     * Returns the size of the model
-     *
-     * @return the dimension representing the size of the model
-     */
-    Dimension getSize();
-
-
-    /**
-     * returns the x size of the model
-     *
-     * @return x size
-     */
-    int getWidth();
-
-    /**
-     * returns the y size of the model
-     *
-     * @return y size
-     */
-    int getHeight();
-
 
 }

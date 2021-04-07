@@ -12,7 +12,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface PassageEditingInterface extends SharedPassage {
+/**
+ * An interface for the passages, intended for use with editing them.
+ */
+public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedUUIDsInterface {
 
 
 

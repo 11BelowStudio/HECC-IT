@@ -28,7 +28,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Albert end been 5 days",
-			"\"Recall the initial summons you responded to. It stated that this 'placement' here would last five days, did I not? Now, if you had truly died four times, that would imply that this is potentially the fifth iteration of this day you have lived through, does it not? You have additionally fulfilled the purpose which you were summoned here for. Therefore, I would say that you are done here.\"\n\n\"[[What do you mean by 'Im done here'?|Albert end done here]]\"",
+			"\"Recall the initial summons you responded to. It stated that this 'placement' here would last five days, did I not? Now, if you had truly died four times, that would imply that this is potentially the fifth iteration of this day you have lived through, does it not? You have additionally fulfilled the purpose which you were summoned here for. Therefore, I would say that you are done here.\"\n\n\"[[What do you mean by 'I'm done here'?|Albert end done here]]\"",
 			[]
 		)
 	);
@@ -833,7 +833,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"S its percival",
-			"Percival interjects\n\n\"What!? What makes you think it's me!?\"\n\nThat is a very good question he's asked you.\n\n\"[[Well, who else has been close enough to me in order to kill me in every timeline?|PEnd nope framed]]\"\n{if:pAny(\"Archives about you\")}{\"[[Why would your name be put onto my file in a way that looks like it was overwriting someone else's name?|PEnd overwritten]]\"}{else:{else:{if:pAny(\"Archives notebook 4\")/}{\"[[Well, what do you think Dr Albert meant when he wrote something about you 'acting rather suspicious'?|PEnd albert sus S]]\"/}}\n{if:pAny(\"Cafeteria eavesdrop\")}{\"[[Say, Cillian, shouldn't you be getting a call right about now about me and Percival?|PEnd S expecting call]]\"}",
+			"Percival interjects\n\n\"What!? What makes you think it's me!?\"\n\nThat is a very good question he's asked you.\n\n\"[[Well, who else has been close enough to me in order to kill me in every timeline?|PEnd nope framed]]\"\n{if:pAny(\"Archives about you\")}{\"[[Why would your name be put onto my file in a way that looks like it was overwriting someone else's name?|PEnd overwritten]]\"}{else:{if:pAny(\"Archives notebook 4\")/}{\"[[Well, what do you think Dr Albert meant when he wrote something about you 'acting rather suspicious'?|PEnd albert sus S]]\"/}}\n{if:pAny(\"Cafeteria eavesdrop\")}{\"[[Say, Cillian, shouldn't you be getting a call right about now about me and Percival?|PEnd S expecting call]]\"}",
 			["noreturn"]
 		)
 	);
@@ -973,7 +973,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"the prank ending",
-			"You walk through the door.\n\nYou find yourself in front of a camera, and a live studio audience.\n\n***\"COOOOOONGRATULATIONS! YOU'VE JUST GOT PRANKED ON NATIONAL TELEVISION!\"***\n\nIt appears that you've just fallen victim to a television company with too much money to splurge on terrible ideas.\n\nThe presenter, who appears to be one of those supposedly famous people you have never heard of before, is walking towards you with a microphone.\n\n*\"Now, would you mind letting us know how  you feel about this?\"*\n\n\"[[What the hell|prank wth]]\"\n\"[[This makes literally zero sense|prank no sense]]\"\n\"[[Screw this, I'm going home|prank im going home]]\"",
+			"You walk through the door.\n\nYou find yourself in front of a camera, and a live studio audience.\n\n***\"COOOOOONGRATULATIONS! YOU JUST GOT PRANKED ON NATIONAL TELEVISION!\"***\n\nIt appears that you've just fallen victim to a television company with too much money to splurge on terrible ideas.\n\nThe presenter, who appears to be one of those supposedly famous people you have never heard of before, is walking towards you with a microphone.\n\n*\"Now, would you mind letting us know how  you feel about this?\"*\n\n\"[[What the hell|prank wth]]\"\n\"[[This makes literally zero sense|prank no sense]]\"\n\"[[Screw this, I'm going home|prank im going home]]\"",
 			["noreturn"]
 		)
 	);
@@ -1825,4 +1825,3 @@ function getHECCED(){
 }
 
 //that's all, folks!
-

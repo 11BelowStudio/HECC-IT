@@ -515,13 +515,13 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
 
         //add the UUIDs of all the named linked passages to the set of linked UUIDs.
         allPassages.values().stream()
-                .filter(
-                    p -> this.linkedPassages.contains(p.getPassageName())
-                )
-                .limit(linkedPassages.size())
-                .forEach(
-                    p -> linkedUUIDs.add(p.getPassageUUID())
-        );
+            .filter(
+                p -> this.linkedPassages.contains(p.getPassageName())
+            )
+            .limit(linkedPassages.size())
+            .forEach(
+                p -> linkedUUIDs.add(p.getPassageUUID())
+            );
 
         /*
         //if the set of linkedPassages isn't empty

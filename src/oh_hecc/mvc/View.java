@@ -16,7 +16,7 @@ public class View extends JComponent {
     /**
      * Reference to the Model being viewed
      */
-    Model theModelThatsBeingViewed;
+    ViewableModelInterface theModelThatsBeingViewed;
 
 
 

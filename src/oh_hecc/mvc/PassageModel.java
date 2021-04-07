@@ -80,9 +80,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
     /**
-     * A copy of TopRightCorner used for the draw operation
+     * A copy of topLeftCorner used for the draw operation
      */
-    private final Vector2D drawingTopRight;
+    private final Vector2D drawingTopLeft;
 
     /**
      * A vector2D representing the current mouse drag action (from where the drag started to where the mouse is now)
@@ -141,13 +141,13 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         buttons = new HashSet<>();
 
 
-        saveButton = new ModelButtonObject(this, 0, 0.25f, "Save");
+        saveButton = new ModelButtonObject(0, 0.25f, "Save");
 
-        heccUpButton = new ModelButtonObject(this, 0.25f, 0.5f, "Export with HECC-UP");
+        heccUpButton = new ModelButtonObject( 0.25f, 0.5f, "Export with HECC-UP");
 
-        editMetadataObjectButton = new ModelButtonObject(this,0.5f,0.75f,"Edit metadata");
+        editMetadataObjectButton = new ModelButtonObject(0.5f,0.75f,"Edit metadata");
 
-        addPassageButton = new ModelButtonObject(this,0.75f,1f,"Add passage");
+        addPassageButton = new ModelButtonObject(0.75f,1f,"Add passage");
 
         buttons.add(saveButton);
         buttons.add(heccUpButton);
@@ -174,7 +174,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         selectedObjects = new HashSet<>();
 
-        drawingTopRight = new Vector2D();
+        drawingTopLeft = new Vector2D();
 
         refreshDrawables();
         revalidate();
@@ -287,7 +287,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private void addNewPassage(){
         if (activity != CurrentActivity.DIALOG_OPEN) {
-            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topRightCorner, getWidth() / 2.0, getHeight() / 2.0));
+            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topLeftCorner, getWidth() / 2.0, getHeight() / 2.0));
             passageMap.put(newPassage.getPassageUUID(), newPassage);
             revalidate();
         }
@@ -536,12 +536,12 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
     /**
-     * Moves a Point (usually the mouse location) by the topRightCorner vector
+     * Moves a Point (usually the mouse location) by the topLeftCorner vector
      * @param m the mouse location Point
-     * @return m but translated by topRightCorner
+     * @return m but translated by topLeftCorner
      */
     private Point moveMouseByScroll(Point m){
-        m.translate((int)topRightCorner.x,(int)topRightCorner.y);
+        m.translate((int) topLeftCorner.x,(int) topLeftCorner.y);
         return m;
     }
 
@@ -567,7 +567,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
 
-        drawingTopRight.set(topRightCorner);
+        drawingTopLeft.set(topLeftCorner);
 
         drawablePassageObjects.clear();
         drawablePassageObjects.addAll(objectMap.values());
@@ -589,9 +589,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         AffineTransform unscrolled = g.getTransform();
 
         //translates everything in the negative direction to where the top-right corner currently is
-        g.translate(-drawingTopRight.x,-drawingTopRight.y);
+        g.translate(-drawingTopLeft.x,-drawingTopLeft.y);
 
-        g.setClip((int)drawingTopRight.x,(int)drawingTopRight.y, getWidth(),getHeight());
+        g.setClip((int) drawingTopLeft.x,(int) drawingTopLeft.y, getWidth(),getHeight());
         //AbstractObject.SCROLL_OFFSET.set(drawingTopRight);
 
 
@@ -642,7 +642,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * @param xDist move it by this amount.
      */
     void xMove(float xDist) {
-        topRightCorner.x += xDist;
+        topLeftCorner.x += xDist;
         revalidate();
         repaint();
     }
@@ -653,7 +653,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * @param yDist move it by this amount.
      */
     void yMove(float yDist) {
-        topRightCorner.y += yDist;
+        topLeftCorner.y += yDist;
         revalidate();
         repaint();
     }

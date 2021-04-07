@@ -5,7 +5,7 @@ but they're useful enough for my purposes, so, they're here.
 
 ## What these classes are
 
-* [AttributeString](./AttributeString.java)
+* [`AttributeString`](./AttributeString.java)
     * A generic class, which is intended to simplify the process of making a string that has:
         * a string prefix
         * a value (generically typed, but represented as a string)
@@ -16,7 +16,7 @@ but they're useful enough for my purposes, so, they're here.
       at some point in early 2020.
         * This class has remained unchanged in HECC-IT (well, besides the addition of JavaDoc comments)
     
-* [ImageManager](./ImageManager.java)
+* [`ImageManager`](./ImageManager.java)
     * A class that can read image files as static resources; practically, this means the images will be included within
       the HECC-IT .jar file, without having to be read from an external folder when the program is running.
       
@@ -24,7 +24,7 @@ but they're useful enough for my purposes, so, they're here.
       module. The only change it has had since then was the addition of JavaDoc comments, and I changed some of the
       images it refers to.
       
-* [TextAssetReader](./TextAssetReader.java)
+* [`TextAssetReader`](./TextAssetReader.java)
     * A class that can read text files
         * as static resources
             * allowing the files to be baked into the HECC-IT .jar file
@@ -39,7 +39,7 @@ but they're useful enough for my purposes, so, they're here.
         * as a String
             * For the other prebaked files, where they can just be regurgitated out as-is.
     
-* [Vector2D](./Vector2D.java)
+* [`Vector2D`](./Vector2D.java)
     * A class that represents a vector in 2D space.
     
     * This class was based on a template provided by Dr. Dimitri Ognibene,
@@ -47,5 +47,6 @@ but they're useful enough for my purposes, so, they're here.
       many of which aren't actually used by HECC-IT specifically.
       
     * However, this is vital for OH-HECC, as this is used to keep track of where everything is in 2D space,
-      allowing all of the passages and such to have a position, and also allows the passageLinkObjects to have a 
-      direction and an angle for their particular arrows.
+      allowing all the passages and such to have a position, and also allows the passageLinkObjects to have a 
+      direction and an angle for their particular arrows. It's even used to keep track of where the viewport
+      currently is (allowing it to be scrolled and such).

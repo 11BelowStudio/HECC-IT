@@ -15,7 +15,7 @@ import java.awt.geom.Area;
  * <p>
  * Y'know, the boring bits.
  */
-public class ModelButtonObject extends EditModelObject implements DrawableObjectWithText {
+public class ModelButtonObject extends AbstractObject implements DrawableObjectWithText {
 
     /**
      * The words that are on this button
@@ -23,7 +23,7 @@ public class ModelButtonObject extends EditModelObject implements DrawableObject
     StringObject buttonLabel;
 
     /**
-     *
+     * whereabouts on the bottom 'toolbar' the
      */
     float scaledLeftSide;
     float scaledRightSide;
@@ -31,13 +31,12 @@ public class ModelButtonObject extends EditModelObject implements DrawableObject
 
     /**
      * The constructor for the ModelButtonObject
-     * @param model the PassageModel that this object refers to
      * @param relativeLeft 0-1. 0: the left side of this button will be at the far left of viewport. 1: left side of button at far right of viewport
      * @param relativeRight 0-1. 0: the right side of this button will be at the far left of viewport. 1: right side of button at far right of viewport
      * @param text text for the button
      */
-    public ModelButtonObject(EditModelInterface model, float relativeLeft , float relativeRight, String text){
-        super(new Vector2D(), model);
+    public ModelButtonObject(float relativeLeft , float relativeRight, String text){
+        super(new Vector2D());
 
         scaledLeftSide = relativeLeft;
         scaledRightSide = relativeRight;
@@ -47,8 +46,8 @@ public class ModelButtonObject extends EditModelObject implements DrawableObject
         height = 32;
 
         //Dimension modelDimension = model.getSize();
-        int mw = model.getWidth();
-        int mh = model.getHeight();
+        int mw = 800;
+        int mh = 600;
 
         //TODO: maybe set these to dummy values?
         width = (int) ((scaledRightSide - scaledLeftSide) * mw);

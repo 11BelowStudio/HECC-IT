@@ -1,6 +1,7 @@
 package oh_hecc.game_parts;
 
 import heccCeptions.*;
+import oh_hecc.GameDataGetterParserInterface;
 import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.component_editing_windows.MetadataEditorWindow;
@@ -9,6 +10,7 @@ import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.game_parts.passage.SharedPassage;
+import oh_hecc.game_parts.passage.UpdatableLinkedUUIDsInterface;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -76,6 +78,15 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     }
 
     /**
+     * Instantiates a new Game data object, based on data obtained from a GameDataGetterParserInterface
+     * @param parser the GameDataGetterParserInterface that can return the necessary passage map/metadata stuff
+     * @param saveLocation the path to where the .hecc file is saved
+     */
+    public GameDataObject(GameDataGetterParserInterface parser, Path saveLocation){
+        this(parser.getHeccMap(), parser.getMetadata(), saveLocation);
+    }
+
+    /**
      * Constructor used for creating a completely new gamedataobject (when making a new .hecc file)
      * @param meta the MetadataEditingInterface containing metadata for the new game
      * @param saveLocation the save file location for this new game
@@ -84,8 +95,11 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         this(new HashMap<>(), meta, saveLocation);
     }
 
+    /**
+     * Updates the linked UUIDs of every single passage in the passageMap
+     */
     public void updateLinkedUUIDs(){
-        for (PassageEditingInterface e: passageMap.values()){
+        for (UpdatableLinkedUUIDsInterface e: passageMap.values()){
             e.updateLinkedUUIDs(passageMap);
         }
     }

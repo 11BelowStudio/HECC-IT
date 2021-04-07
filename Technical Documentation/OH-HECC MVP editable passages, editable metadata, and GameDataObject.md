@@ -370,8 +370,9 @@ is likely to still be problematic), it'll just output it in an arbitrary order.
 
 Here is a full class diagram for all of these components, as they were when the MVP was submitted.
 Several tangentally related classes from other packages (the `HeccCeption`s, as well as the `Vector2D`
-and `AttributeString<T>` from the `Utilities` package) have been omitted, for purposes of making the
-relationships between these classes clearer.
+and `AttributeString<T>` from the `utilities` package) have been omitted, for purposes of making the
+relationships between these classes clearer. (for more information about the `utilities` package, please
+refer to the package-level documentation for it, which can be read [here](../src/utilities/README.md))
 
 ![full component diagram](./MVP%20development/data%20classes/The%20component%20editing%20classes%20dependencies.png)
 

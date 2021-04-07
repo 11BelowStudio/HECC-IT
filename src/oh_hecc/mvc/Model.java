@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
  * A superclass for the 'Model' bit of 'MVC'.
  * Extends JComponent.
  */
-public abstract class Model extends JComponent implements ControllableModelInterface {
+public abstract class Model extends JComponent implements ControllableModelInterface, ViewableModelInterface {
 
     //TODO: clipping?
 
@@ -35,69 +35,20 @@ public abstract class Model extends JComponent implements ControllableModelInter
      */
     final Color backgroundColour = W3_NIGHT;
 
-    /**
-     * default width/height stuff
-     */
-    static final int DEFAULT_MODEL_WIDTH = 800;
-    static final int DEFAULT_MODEL_HEIGHT = 600;
 
     /**
-     * The width/height of the model.
+     * A Vector2D that indicates where the top-left corner of the viewable area is
      */
-    static int MODEL_WIDTH = DEFAULT_MODEL_WIDTH;
-    static int MODEL_HEIGHT = DEFAULT_MODEL_HEIGHT;
-
-    /**
-     * A Vector2D that indicates where the top-right corner of the viewable area is
-     */
-    final Vector2D topRightCorner;
+    final Vector2D topLeftCorner;
 
     /**
      * No-argument constructor.
      *
-     * Just sets up the top-right corner such that 0,0 is in the middle of the viewable area.
+     * makes this 800*600, and sets the top-left corner such that 0,0 is in the middle of the viewable area.
      */
     public Model() {
-        topRightCorner = new Vector2D(-getWidth() / 2, -getHeight() / 2);
-
-    }
-
-    /**
-     * returns the x size of the model
-     *
-     * @return x size
-     */
-    public int getWidth() {
-        return MODEL_WIDTH;
-    }
-
-    /**
-     * returns the y size of the model
-     *
-     * @return y size
-     */
-    public int getHeight() {
-        return MODEL_HEIGHT;
-    }
-
-
-    /**
-     * Resizes the model to be the same size as the given dimension.
-     *
-     * @param d the given dimension
-     */
-    public void setSize(Dimension d) {
-        MODEL_WIDTH = d.width;
-        MODEL_HEIGHT = d.height;
-    }
-
-    /**
-     * Returns the size of the model
-     *
-     * @return the dimension representing the size of the model
-     */
-    public Dimension getSize() {
-        return new Dimension(MODEL_WIDTH, MODEL_HEIGHT);
+        setSize(800,600);
+        topLeftCorner = new Vector2D(-getWidth() / 2, -getHeight() / 2);
     }
 
     /**
@@ -113,9 +64,8 @@ public abstract class Model extends JComponent implements ControllableModelInter
      * @param g Graphics2D being used to draw this
      */
     public final void draw(Graphics2D g) {
-        //System.out.println("draw");
         g.setColor(backgroundColour);
-        g.fillRect(0, 0, MODEL_WIDTH, MODEL_HEIGHT);
+        g.fillRect(0, 0, getWidth(), getHeight());
         g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
         );

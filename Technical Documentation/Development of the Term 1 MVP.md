@@ -108,9 +108,9 @@ document (accessible via that link) contains the technical documentation on this
  
 I have discussed how these classes were developed, how they work, and the means by which they can be
 edited. I have also discussed the `GameDataObject` data structure which was employed later on in the
-development of the MVP to encapsulate all of the business logic for the game data. There are also some
+development of the MVP to encapsulate all the business logic for the game data. There are also some
 diagrams in the final section of that document to illustrate the state of these classes as they were
-when the MVP was finished. It's in a seperate document to this one because it is rather long.
+when the MVP was finished. It's in a separate document to this one because it is rather long.
 
 After `EditableMetadata` and `EditablePassage` classes were implemented, I proceeded to start
 developing the OH-HECC tool itself.
@@ -126,10 +126,11 @@ That architecture can be seen below:
 ![general MVC architecture](./MVP%20development/oh-hecc%20development/general%20MVC%20architecture.png)
 
 Everything would basically be in the same 'Packij' package (descriptive name, I know). The `GameFrame`
-would be responsible for a JFrame which would hold the `View`. The `View` would be a `JComponent`,
-and would hold a `Model`, given to it by the `GameRunner`, allowing it to be rendered. The
-`GameRunner` would hold the aforementioned `GameFrame`, `View`, and would generally hold multiple
-`Model` objects, only one of which would be considered 'active' at a time. The `Model` effectively
+would be responsible for a JFrame which would hold the `View`, filling its content pane.
+The `View` would be a `JComponent`, and would hold a `Model`, given to it by the `GameRunner`,
+allowing it to be rendered. The `GameRunner` would hold the aforementioned `GameFrame`, `View`,
+and would generally hold multiple `Model` objects, only one of which would be considered 'active'
+at a time (but that wouldn't be necessary for this particular use case). The `Model` effectively
 only held methods which could be used as an update loop and as a render loop (a public, concrete,
 'wrapper' method, handling any synchronization which needed to be done, with abstract methods for
 the actual update/draw methods to be performed in), sometimes also holding certain collections of
@@ -142,8 +143,11 @@ drawable `GameObject`s appropriately. The games would also have a `TitleScreen` 
 a `Controller` object (specifically, by obtaining an `Action` from the `Controller` to see the inputs
 for that particular update frame). The `GameObject` subclasses would be in their own package, and
 their positions/velocities/directions would be represented by 2D vectors (in a `Vector2D` class).
-Finally, running the update/draw loops, as well as swapping between active `Model`s/resetting them
-would be managed by the `GameRunner` class.
+To draw these objects, an `AffineTransform` would be used to offset the 'drawing' origin for the
+object in question to be at it's actual position, then the object would be drawn about that offset
+origin,after which, the `AffineTransform` would be reset to how it was beforehand, so the process
+can be repeated for every other object's draw operation. Finally, running the update/draw loops,
+as well as swapping between active `Model`s/resetting them, would be managed by the `GameRunner` class.
 
 Why am I telling you about this? Because I was planning on generifying this further to produce OH-HECC.
 Instead of running a game and reading from/writing to a high scores file, it would just be running a
@@ -184,7 +188,7 @@ aren't very exhaustive.
 
 However, with this parser in action, I could now put together the MVC stuff for the data it had parsed
 
-### 2.C The Actual MVC architecture
+### 2.C: The Actual MVC architecture
 
 The initial plan for OH-HECC's MVC architecture looked something like this:
 
@@ -212,7 +216,8 @@ the triangle between them by initially offsetting it by the parent's position, s
 the base is at the midpoint of the parent `PassageObject`, and then basically rotating it/stretching
 it so that the tip of the triangle is at the relative (x,y) coordinate in the difference vector,
 at the midpoint of the `PassageObject` it links to. Finally, the GUI should be resizeable with the
-window, and, when pressing the arrow keys, the viewable area should scroll.
+window, and, when pressing the arrow keys, the viewable area should scroll/the viewport/model should
+move.
 
 The model would store the `PassageObjects` in a map (associated with the UUIDs of the passages they
 represent), for ease of indexing, as well as the map of the `PassageEditingInterface` objects.
@@ -242,6 +247,154 @@ of some variety of GUI component, which would let a `MouseListener` or `KeyListe
 description simply call the controlling methods, which in turn call the `invalidate`/`repaint`
 methods of this GUI component, omitting the update loop entirely.
 
-In the MVP iteration, I didn't do this in a very optimal way. I had a `MouseController` class which
-implemented `MouseListener` (as well as `MouseMotionListener`), to listen for mouse inputs, and then
-call the appropriate methods of the `PassageModel`, via a `MouseControlModelInterface`.
+In the MVP iteration, I didn't do this in an entirely optimal way. I had a `MouseController` class
+which implemented `MouseListener` (as well as `MouseMotionListener`), to listen for mouse inputs,
+and then call the appropriate methods of the `PassageModel`, via a `MouseControlModelInterface`.
+This object would also have a reference to the `JFrame` which actually held the `View` (and the
+`Model`), so, after an input is performed, it could call the `repaint` method of the `JFrame` to
+ensure that the entire viewable area would be updated appropriately. An instance of this class would
+be added as a `MouseListener` and as a `MouseMotionListener` to the content pane of the frame, so,
+when obtaining the location of the mouse relative to the model (when clicked/dragged), it won't
+be offset due to the dimensions of the frame itself being different to the dimensions of its content
+pane. However, the part that listened for the keypresses, to scroll the window, was implemented in
+a rather terrible way. I stupidly implemented this in an anonymous class, within a method of the
+`OhHeccNetworkFrame` class, and would call the methods to move the model via the `View` object held
+within the `OhHeccNetworkFrame`. Eventually, after the MVP iteration, I recognized this stupidity,
+so I fixed it. I refactored the `MouseController` class to be a more general `ModelController` class
+(implementing `KeyListener` and moving the key-listening methods from that anonymous class to this
+class), extended the `MouseControlModelInterface` into a `ControllableModelInterface` (adding the
+scrolling methods to this interface, thereby allowing the improved controller to use those controls),
+and replaced the method call which added the anonymous `KeyListener` to the frame with one
+that added the `ModelController` to it (again, as a `KeyListener`).
+
+The viewport scrolling and the window resizing were both new challenges for me to overcome. In my
+previous games, I didn't really have these (besides one game which presented the illusion of
+scrolling, by moving certain game objects down whilst the player's avatar moved up, stopping the
+'scrolling' movement when the avatar reached a certain fixed Y position), so, I would need to
+implement these from scratch. The way I chose to implement the viewport scrolling was by
+having a `Vector2D` to hold the current 'top left corner' of the viewport. Although, for
+some reason, I called the variable `topRightCorner` when I made it, and I didn't realize this
+mistake (and rename it) until a few minutes ago, but it still was the top-left corner.
+When drawing the model, it would translate the `AffineTransform` of the `Graphics2D` context
+by the `x` and `y` of that `Vector2D`, so all of the subsequent `draw` operations on the
+`PassageObject`s would have that initial offset already applied to them, so, because
+they will have been moved, it looks like the viewport had been scrolled. This scrolling
+offset would be undone before displaying the 'buttons', so they would all remain in the
+fixed location at the bottom edge of the model.
+
+This wasn't the first approach for scrolling which I thought of.
+Initially, I considered having a static 'offset' `Vector2D` in the `AbstractObject`
+class, my thought process being that I could subtract (or add) that from the position
+in the draw thread (so the resulting draw position would be offset appropriately).
+I actually started to implement that, however, this approach was abandoned upon
+realizing that it was inefficient (requiring the offset to be individually applied
+in every draw operation), and, due to how I opted to render the `StringObject`s
+and the `PassageLinkObjects` (pre-offset by the position of a 'parent' object,
+so they're at the origin of that object), this approach lead to those objects
+having twice as much scrolling applied to them than was intended. The final nail in
+the coffin of the first approach was the problem of clicking the objects. In the title
+screen menus for my previous games, they would be interactable by the user clicking
+the model, and then the game would see if the `Point` location of the click
+intersected with an 'areaRectangle' `Rectangle` of some of the `GameObject`s which
+should do something when clicked; if they intersected, the update loop would then
+perform the appropriate action. However, with this approach, there wasn't an easy
+way to offset the 'areaRectangle's for the `PassageObject`s, to make them clickable
+after the scroll, without leaving these untouched for the `ModelButtonObject`s, so
+they would remain clickable.
+
+This issue with clicking was avoided entirely with the 'top right corner' approach.
+I stored each of the `ModelButtonObject`s as raw variables in the `PassageModel`,
+so, in the 'left click' method of the `PassageModel`, it could first use the raw,
+non-offset, `Point` mouse position, seeing if any of those buttons were pressed
+individually via a sequence of 'if-else if...' statements (to check if the point
+intersected with a given button, and, if one does intersect, it was pressed, so
+the action which was supposed to happen in response could happen). If none of
+those buttons were pressed, it would go to the 'else' branch, to see if it
+intersected with the areaRectangle of any of the `PassageObject`s. But, before
+attempting to find the clicked passage (if any), it translates the click location
+`Point` by the topLeftCorner `Vector2D`'s x and y values, then sees if this
+translated point intersects with a `PassageObject` (opening the appropriate
+`PassageEditorWindow` for the clicked `PassageObject`, if one was clicked).
+In other words, instead of moving all of the hitboxes, I'm just moving the
+single thing that is supposed to hit the hitboxes.
+
+This approach was also used for the 'dragging passage objects by holding
+the mouse down on them' functionality of the `PassageModel`. In the 'left
+press' function, I start off by translating the mouse press location by
+the scroll amount, but, I then store the translated press location in the
+`PassageModel`, as a 'currentLeftDragPos' `Vector2D`. Then, if this translated
+mouse position intersects with a `PassageObject`, I put that in a set of
+'selected' objects, and call a 'selected' method of that `PassageObject`,
+which gives it a blue overlay when drawn. Then, in the 'left mouse drag'
+function, I translate the mouse input by the scroll offset (again), convert
+it to a `Vector2D`, find the difference between the 'currentLeftDragPos'
+set in the most recent function call and the current one, and overwrite
+the 'currentLeftDragPos' with the current translated mouse position. Then,
+with the already-found difference, I can then move the selected passage
+object(s) by calling their 'move(Vector2D moveVector)' methods (updating
+their positions by the mouse movement vector), before then invalidating
+and repainting the model. The 'selected' set is cleared (also deselecting
+any 'selected' objects) within the 'left release' method of the
+`PassageModel`, called when the left mouse button is released. It also
+appears that the Java Virtual Machine can differentiate between mouse
+clicks and holding the mouse, so, at least from my experience, the dragging
+doesn't accidentally lead to an editor window being opened.
+
+Now the scrolling has been discussed, I should probably cover the resizing.
+There were two ways I could have done this (or three, if you count 'not
+letting the user resize the window'). I could have made the various
+viewable components in the passage model have a constant relative size,
+so, when the user resizes the window, I would need to apply a scaling
+operation to the affine transformation when drawing the window, so
+everything would be rendered at the same scale relative to the window.
+I decided against this approach, partially due to the potential problems
+with resizing the clickable areas for all the passage objects, but also
+because it would mean that the user's viewport of the passage map would
+always be restricted to a single, relatively small area of it, which
+could get frustrating, and it could lead to the view appearing too
+zoomed in. So, I opted for the other approach; extending the drawable
+area when the window is resized, allowing more of the passages to be
+rendered. When Java is rendering graphics, the top-left corner of the
+viewable area is considered to be the origin, so, regardless of how
+big/small the viewable area is, the offset from that will remain
+constant. I was able to just add a `ComponentListener` to the `JFrame`
+in the `OhHeccNetworkFrame` in order to listen for window resize
+events, and then get that to call the `setSize` method of the `View`,
+which it had inherited from the `JComponent` base class, in order
+to resize the drawable area of the `PassageModel`. However, there
+was one problem (technically four) which still needed to be addressed;
+the `ModelButttonObject`s.
+
+These needed to remain at the bottom of the viewable model, like a
+toolbar of sorts, and had to collectively fill the horizontal width
+of the viewable model, regardless of the current horizontal width
+of the model. I had already defined each button to start/end at a
+certain relative position on the 'toolbar' at the bottom of the
+model, expressed as a float, so all I needed to get now was the
+total width/total height of the model so it could be rendered at
+the appropriate position/width. The first solution I used for
+this problem was honestly terrible; I made the width and height
+of the model static, and accessed those via static references
+in a resize operation for the buttons, called by the
+`PassageModel`'s resize operation, whenever that gets called
+itself by the `View`'s resize operation. I then realized that
+this, again, was a stupid idea, because I could just pass the
+new size from that resize operation directly to the resize
+operation of the buttons, omitting the need for any reference-related
+tomfoolery. The positions of these are also set with the resize
+operation, such that the middle of the rectangles are at the
+fixed relative position at the bottom of the viewable model
+at all times, mostly so the `StringObject`s displayed over the buttons
+can be rendered there, just like with the `StringObject`s on the
+`PassageObject`s. Finally, as mentioned earlier, these 'button'
+objects are, in reality, mostly decorative. Yes, they have a
+method which can detect if they are clicked, and return true
+if they are clicked. However, the buttons themselves are not
+responsible for doing the action which is performed after
+they're pressed; that's done by the `PassageModel` itself,
+because trying to make the buttons themselves call a method
+reference to do a certain thing would just be overcomplicating
+matters.
+
+The `StringObject` simply renders a string in 
+

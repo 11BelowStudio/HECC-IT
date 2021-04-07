@@ -12,9 +12,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OhHeccParser {
-
-    String rawHeccCode;
+public class OhHeccParser implements GameDataGetterParserInterface {
 
 
     /**
@@ -26,9 +24,6 @@ public class OhHeccParser {
      * The metadata
      */
     private final MetadataEditingInterface theMetadata;
-
-
-    //TODO: parse the HECC file into the heccMap and theMetadata
 
 
     /**
