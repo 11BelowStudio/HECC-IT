@@ -7,16 +7,13 @@ import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.metadata.SharedMetadata;
-import utilities.AttributeString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
-import java.util.function.Consumer;
 
 /**
  * Basically this class is a dialog window to be used for editing EditableMetadata objects
@@ -40,11 +37,12 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      */
     private boolean isAuthorValid = true;
 
+    /**
+     * Displays the current title of the game
+     */
+    //private final AttributeString<String> currentTitle;
 
-
-    private final AttributeString<String> currentTitle;
-
-    private JTextArea titleText;
+    //private JTextArea titleText;
 
     //the good shit what has been used
     private JLabel titleLabel;
@@ -65,7 +63,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     public MetadataEditorWindow(EditWindowGameDataInterface gameData){
         super(gameData);
         theMetadata = gameData.getTheMetadata();
-        currentTitle = new AttributeString<>("Title:\n", theMetadata.getTitle());
+
 
 
         makeTheFrame();
@@ -98,14 +96,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         ); //border
 
 
-        //title
-        titleText = new JTextArea(theMetadata.getTitle(),0,0);
-        titleText.setLineWrap(true);
-        titleText.setWrapStyleWord(true);
-        titleText.setEditable(false);
-        //currentDataPanel.add(titleText);
-        //itleText.setRows(3);
-        //titleText.setText();
+
 
         //TODO: possibly replace the things that actually display the metadatas with JTextAreas, to allow word wrapping etc
         JPanel showTitlePanel = new JPanel(new GridLayout(2,1));
@@ -420,8 +411,6 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         String newTitle = theMetadata.getTitle();
         titleLabel.setText(newTitle);
         titleInput.setText(newTitle);
-        currentTitle.showValue(newTitle);
-        titleText.setText(currentTitle.toString());
         refresh();
     }
 

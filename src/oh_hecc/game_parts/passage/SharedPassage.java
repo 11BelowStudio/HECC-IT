@@ -92,7 +92,7 @@ public interface SharedPassage extends Parseable, Heccable {
      * @return the input passage text with the links converted into hecc links
      */
     static Set<String> actuallyParseThePassageLinks(String input, boolean direct){
-        Set<String> foundLinks = new HashSet<String>();
+        Set<String> foundLinks = new HashSet<>();
         String regex; //local variable for the regex being used
         if (direct){
             //direct link regex [[Passage name]]

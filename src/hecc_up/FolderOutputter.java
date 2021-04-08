@@ -1,11 +1,9 @@
 package hecc_up;
 
-import hecc_up.gameParts.Metadata;
 import utilities.TextAssetReader;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +21,7 @@ public class FolderOutputter {
     /**
      * whether or not the output folder exists
      */
-    private boolean outputFolderExists = false; //whether or not the output folder exists
+    private boolean outputFolderExists; //whether or not the output folder exists
 
     /**
      * This is the FolderOutputter constructor
@@ -164,7 +162,7 @@ public class FolderOutputter {
         //List<String> indexData = TextAssetReader.getIndex();
         BufferedWriter indexFileWriter = Files.newBufferedWriter(indexPath);
 
-        String theIndexString = TextAssetReader.INDEX_STRING;
+        String theIndexString = TextAssetReader.getIndex();
 
         //puts the IFID HTML stuff into the index string.
         theIndexString = theIndexString.replace(

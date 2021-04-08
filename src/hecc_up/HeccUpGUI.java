@@ -12,10 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 /**
  * This class is basically a GUI for the HECC-UP stuff

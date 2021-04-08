@@ -22,57 +22,25 @@ public class TextAssetReader {
     private final static String path = "/assets/textAssets/";
 
     /**
-     * heccer.js as a List of strings
-     */
-    private final static List<String> HECCER_LIST = fileToStaticStringList("heccer.js");
-
-    /**
      * heccer.js as a string
      */
     private final static String HECCER = fileToStaticString("heccer.js");
 
-    /**
-     * index.html as an ArrayList of strings
-     */
-    private final static List<String> INDEX = fileToStaticStringList("index.html");
 
     /**
      * index.html as a String
      */
-    public final static String INDEX_STRING = fileToStaticString("index.html");
+    private final static String INDEX = fileToStaticString("index.html");
 
     /**
      * showdown.min.js as a string
      */
     private final static String SHOWDOWN_MIN_JS = fileToStaticString("showdown.min.js");
 
-    /**
-     * This reads the files held in src/assets/textAssets, in a way which allows them to be included in a .jar file
-     * @param filename the name of the file
-     * @return the contents of the file, as an ArrayList of Strings
-     */
-    private static List<String> fileToStaticStringList(String filename){
-        List<String> output = new ArrayList<>();
-        try{
-            InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
-            //This allows the specified text asset file to be packaged within the .jar ;)
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String currentString;
-            //pretty much setting up the stuff for reading the file
-            //until the end of the file is reached, it will add the current string to the file (even the empty ones)
-            while ((currentString = br.readLine())!=null) {
-                output.add(currentString.concat("\n"));
-            }
-            br.close(); //closes the bufferedReader
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return output;
-    }
 
-    //this is/was used to read 'HeccSample.hecc' in src/assets/textAssets.
     /**
-     * Like fileToStaticStringArrayList, but returns the file as a single String instead
+     *  This reads the files held in src/assets/textAssets, in a way which allows them to be included in a .jar file,
+     *  in the form of a static string.
      * @param filename the name of the file to read
      * @return the contents of the file, as a string
      */
@@ -80,6 +48,7 @@ public class TextAssetReader {
         StringBuilder output = new StringBuilder();
         try{
             InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
+            assert in != null;
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String currentString;
             while ((currentString = br.readLine())!=null) {
@@ -113,7 +82,7 @@ public class TextAssetReader {
      * gets the static List<String> representation of the index.html file
      * @return the static List<String> representation of the index.html file
      */
-    public static List<String> getIndex() {return INDEX;}
+    public static String getIndex() {return INDEX;}
 
 
     /**

@@ -1,6 +1,5 @@
 package oh_hecc.mvc.model_bits;
 
-import oh_hecc.mvc.EditModelInterface;
 import oh_hecc.mvc.Model;
 import utilities.Vector2D;
 
@@ -20,13 +19,16 @@ public class ModelButtonObject extends AbstractObject implements DrawableObjectW
     /**
      * The words that are on this button
      */
-    StringObject buttonLabel;
+    private final StringObject buttonLabel;
 
     /**
-     * whereabouts on the bottom 'toolbar' the
+     * whereabouts on the bottom 'toolbar' the left side of this button is (0-1)
      */
-    float scaledLeftSide;
-    float scaledRightSide;
+    private final float scaledLeftSide;
+    /**
+     * whereabouts on the bottom 'toolbar' the right side of this button is (0-1)
+     */
+    private final float scaledRightSide;
 
 
     /**
@@ -72,11 +74,8 @@ public class ModelButtonObject extends AbstractObject implements DrawableObjectW
 
     @Override
     public boolean wasClicked(Point clickLocation) {
-        if (super.wasClicked(clickLocation)){
-            //System.out.println(buttonLabel.getString());
-            return true;
-        }
-        return false;
+        //System.out.println(buttonLabel.getString());
+        return super.wasClicked(clickLocation);
     }
 
     /**

@@ -1,7 +1,5 @@
 package oh_hecc.game_parts.passage;
 
-import utilities.Vector2D;
-
 import java.util.*;
 
 public abstract class AbstractPassage implements PassageReadingInterface {

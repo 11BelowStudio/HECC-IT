@@ -4,11 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This basically reads the image assets from the assets/imageAssets folder so they can be included in the jar.
@@ -77,7 +74,7 @@ public class ImageManager {
      */
     public static BufferedImage loadBufferedImage(String fname) throws IOException {
         //return ImageIO.read(new File(path + fname + ext));
-        return ImageIO.read(ImageManager.class.getResource(path + fname + ext));
+        return ImageIO.read(Objects.requireNonNull(ImageManager.class.getResource(path + fname + ext)));
     }
 
     /**

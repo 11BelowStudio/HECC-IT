@@ -13,7 +13,7 @@ public class StartHighlightObject extends AbstractObject {
     /**
      * Whether or not this object should be visible.
      */
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * The model object with a position that this object will be highlighting as the start

@@ -45,17 +45,30 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     final Map<UUID, PassageObject> objectMap;
 
     /**
-     * The map of all the ModelButtonObject buttons
+     * The set of all the ModelButtonObject buttons
      */
-    final Set<ModelButtonObject> buttons;
+    private final Set<ModelButtonObject> buttons;
 
-    final ModelButtonObject saveButton;
+    /**
+     * The button that, when pressed, should save the .hecc file
+     */
+    private final ModelButtonObject saveButton;
 
-    final ModelButtonObject heccUpButton;
+    /**
+     * The button that, when pressed, should save the .hecc file and launch HECC-UP
+     * (if there aren't any problems with the .hecc file ofc)
+     */
+    private final ModelButtonObject heccUpButton;
 
-    final ModelButtonObject editMetadataObjectButton;
+    /**
+     * The button that, when pressed, should open the metadata editor window
+     */
+    private final ModelButtonObject editMetadataObjectButton;
 
-    final ModelButtonObject addPassageButton;
+    /**
+     * The button that, when pressed, should add a new passage to the map
+     */
+    private final ModelButtonObject addPassageButton;
 
     /**
      * A StartHighlightObject. Will be positioned behind the starting passage object at all times.
@@ -73,9 +86,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     final Set<DrawableObjectWithText> drawableModelButtons;
 
     /**
-     * A set of all currently-selected PassageObjects
+     * A set of all currently-selected SelectableObjects
      */
-    final Set<PassageObject> selectedObjects;
+    final Set<SelectableObject> selectedObjects;
 
 
 
@@ -84,10 +97,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private final Vector2D drawingTopLeft;
 
-    /**
-     * A vector2D representing the current mouse drag action (from where the drag started to where the mouse is now)
-     */
-    final Vector2D mouseDragVector;
 
     /**
      * The current activity being performed by the model
@@ -103,6 +112,11 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * Mouse position during this left-click drag frame
      */
     private final Vector2D currentLeftDragPos;
+
+    /**
+     * Mouse position during this right-click drag frame
+     */
+    private final Vector2D currentRightDragPos;
 
 
 
@@ -157,6 +171,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         currentLeftDragPos = new Vector2D();
 
+        currentRightDragPos = new Vector2D();
+
 
         drawablePassageObjects = new HashSet<>();
 
@@ -166,7 +182,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         //topRightCorner = new Vector2D(-getPreferredSize().getWidth()/2.0, -getPreferredSize().getHeight()/2.0);
 
-        mouseDragVector = new Vector2D();
+
 
         activity = CurrentActivity.DOING_NOTHING;
 
@@ -232,13 +248,20 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void leftClick(Point mLocation){
         //System.out.println("left click time");
-        if (activity.equals(CurrentActivity.DIALOG_OPEN)){
-            return;
+
+        // won't do anything if an editing dialog is open or if the user's moving the view
+        switch (activity){
+            case DIALOG_OPEN:
+            case RC_MOVING_VIEW:
+                return;
         }
 
-        activity = CurrentActivity.DOING_NOTHING;
-        clearSelection();
 
+
+        activity = CurrentActivity.DOING_NOTHING; // we are doing nothing now
+        clearSelection(); // clears the selected objects.
+
+        // now sees if anything was clicked
 
         if (editMetadataObjectButton.wasClicked(mLocation)) { // if edit metadata button was clicked, we edit metadata.
             startEditingTheMetadata(); // we attempt to start editing the metadata.
@@ -383,13 +406,13 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
     /**
-     * Call this when there's a right-click
-     *
-     * @param mLocation location of mouse
+     * Deselects and clears the set of selectedObjects
      */
-    @Override
-    public void rightClick(Point mLocation) {
-        moveMouseByScroll(mLocation);
+    private void clearSelection(){
+        //deselects all the selectedObjects
+        selectedObjects.forEach(SelectableObject::deselected);
+        selectedObjects.clear(); //clears the set of selectedObjects
+        activity = CurrentActivity.DOING_NOTHING; // and we're doing nothing.
     }
 
     /**
@@ -407,7 +430,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 Optional<PassageObject> pressed =
                         objectMap.values().stream().filter(p -> p.wasClicked(mLocation)).findAny();
                 if (pressed.isPresent()) {
-                    PassageObject p = pressed.get();
+                    SelectableObject p = pressed.get();
                     p.nowSelected();
                     selectedObjects.add(p);
                     activity = CurrentActivity.LC_MOVING_OBJECTS;
@@ -436,24 +459,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     }
 
 
-    /**
-     * Deselects and clears the set of selectedObjects
-     */
-    private void clearSelection(){
-        //deselect selectedObjects
-        selectedObjects.forEach(PassageObject::deselected);
-        selectedObjects.clear(); //clear the list of selectedObjects
-    }
 
-    /**
-     * Call this when there's a right press
-     *
-     * @param mLocation location of mouse
-     */
-    @Override
-    public void rightPress(Point mLocation) {
-        moveMouseByScroll(mLocation);
-    }
+
 
     /**
      * Call this when left button is released
@@ -489,15 +496,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
     }
 
-    /**
-     * Call this when right button is released
-     *
-     * @param mLocation location of mouse
-     */
-    @Override
-    public void rightRelease(Point mLocation) {
-        moveMouseByScroll(mLocation);
-    }
+
+
 
     /**
      * Call this when dragging with left held
@@ -524,13 +524,83 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     }
 
     /**
-     * Call this when dragging with right held
+     * Call this when there's a right-click. Does nothing.
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightClick(Point mLocation) { }
+
+    /**
+     * Call this when there's a right press.
+     *
+     * Sets currentRightDragPos to the current mouse location (not correcting for scroll)
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightPress(Point mLocation) {
+        //moveMouseByScroll(mLocation);
+        currentRightDragPos.set(mLocation);
+        //moveMouseByScroll(mLocation);
+
+
+        switch (activity){
+            case DOING_NOTHING:
+                // if we're doing nothing, we're now moving the view.
+                activity = CurrentActivity.RC_MOVING_VIEW;
+                break;
+        }
+
+    }
+
+    /**
+     * Call this when right button is released.
+     * If we're currently moving the view, we stop doing that.
+     *
+     * @param mLocation location of mouse
+     */
+    @Override
+    public void rightRelease(Point mLocation) {
+
+        moveMouseByScroll(mLocation);
+        switch (activity){
+            case RC_MOVING_VIEW:
+                activity = CurrentActivity.DOING_NOTHING;
+                break;
+        }
+
+    }
+
+    /**
+     * Call this when dragging with right mouse held.
+     *
+     * We make a copy of the last currentRightDragPos (set in last frame). We then overwrite it with the current
+     * mouse location (not correcting for scroll).
+     *
+     * If we're moving the view, we obtain the difference between last frame's drag position and
+     * this frame's drag position. We subtract this difference from the topLeftCorner. Then, we revalidate it
+     * (we'll be repainting it anyway immediately afterwards); this then scrolls the view. It scrolls it such that
+     * the mouse click location is in the same relative position of the model, appearing to the user as if they're
+     * 'dragging' it with their mouse.
      *
      * @param mLocation location of mouse
      */
     @Override
     public void rightDrag(Point mLocation) {
-        moveMouseByScroll(mLocation);
+        Vector2D lastRightDrag = new Vector2D(currentRightDragPos);
+        //moveMouseByScroll(mLocation);
+        currentRightDragPos.set(mLocation);
+
+        switch (activity){
+            case RC_MOVING_VIEW:
+                Vector2D movement = Vector2D.subtract(currentRightDragPos, lastRightDrag);
+                topLeftCorner.subtract(movement);
+
+                revalidate();
+                break;
+        }
+        //moveMouseByScroll(mLocation);
     }
 
 
@@ -544,18 +614,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         m.translate((int) topLeftCorner.x,(int) topLeftCorner.y);
         return m;
     }
-
-
-    /**
-     * Deselects all currently-selected objects.
-     */
-    private void deselectObjects() {
-        for (PassageObject o : selectedObjects) {
-            o.deselected();
-        }
-        selectedObjects.clear();
-    }
-
 
 
     /**
@@ -637,25 +695,29 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
 
     /**
-     * Move the viewable area in the X dimension
+     * Move the viewable area in the X dimension (if currently doing nothing)
      *
      * @param xDist move it by this amount.
      */
-    void xMove(float xDist) {
-        topLeftCorner.x += xDist;
-        revalidate();
-        repaint();
+    private void xMove(float xDist) {
+        if(activity.equals(CurrentActivity.DOING_NOTHING)) {
+            topLeftCorner.x += xDist;
+            revalidate();
+            repaint();
+        }
     }
 
     /**
-     * Move the viewable area in the X dimension
+     * Move the viewable area in the Y dimension (if currently doing nothing)
      *
      * @param yDist move it by this amount.
      */
-    void yMove(float yDist) {
-        topLeftCorner.y += yDist;
-        revalidate();
-        repaint();
+    private void yMove(float yDist) {
+        if(activity.equals(CurrentActivity.DOING_NOTHING)) {
+            topLeftCorner.y += yDist;
+            revalidate();
+            repaint();
+        }
     }
 
     /**
@@ -750,10 +812,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
          * Dialog box open
          */
         DIALOG_OPEN,
-        /**
-         * Click on one of the buttons at the bottom of the screen: doing the operation that button is responsible for
-         */
-        LC_PRESSED_BUTTON,
         /**
          * Right click drag: start dragging the view.
          */

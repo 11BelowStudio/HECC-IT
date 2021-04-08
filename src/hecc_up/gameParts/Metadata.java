@@ -97,7 +97,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
             findIFID();
             findTitle();
             findAuthor();
-            findVariables();
+            //findVariables();
             multilineComment = findComment(rawMetadata);
         }
     }
@@ -197,21 +197,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      */
     private void findVariables(){
         variables.addAll(MetadataReadingInterface.findVariables(rawMetadata));
-        /*
-        Matcher variableMatcher = Pattern.compile(
-                "(?<=^!Var:)\\h*\\w+\\h*(=\\h*.+?\\h*)?(//\\h*.+)?(?=\\h*$)",
-                Pattern.MULTILINE
-        ).matcher(rawMetadata);
-        while(variableMatcher.find()){
-            //System.out.println(variableMatcher.group(0));
-            variables.add(new Variable(variableMatcher.group(0).trim()));
-        }
-
-         */
-        /*
-        for (Variable v: variables) {
-            System.out.println(v.toString());
-        }*/
     }
 
     /**

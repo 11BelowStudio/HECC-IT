@@ -74,7 +74,7 @@ public class EditablePassageTest {
 
     @Test
     void validRenamePassageTest(){
-        Set<String> otherPassages = new HashSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
+        Set<String> otherPassages = new HashSet<>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
         String[] valid = {"p1","dave","Another Passage","Deez-Nutz","_ayy-lmao_"};
 
@@ -96,7 +96,7 @@ public class EditablePassageTest {
 
     @Test
     public void testInvalidNamesThrowException(){
-        Set<String> otherPassages = new HashSet<String>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
+        Set<String> otherPassages = new HashSet<>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
         String[] invalidPassages = {"","-xd-","nice meme!","0w0~"};
 
@@ -120,7 +120,7 @@ public class EditablePassageTest {
     @Test
     void testDuplicatePassageRename(){
         String[] names = {"Start","oldPassage","eecks dee","sample","Another placeholder name"};
-        Set<String> otherPassages = new TreeSet<String>(Arrays.asList(names));
+        Set<String> otherPassages = new TreeSet<>(Arrays.asList(names));
 
         EditablePassage p1 = new EditablePassage();
         for (String s: names) {

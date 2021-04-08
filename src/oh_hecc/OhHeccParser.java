@@ -415,8 +415,8 @@ public class OhHeccParser implements GameDataGetterParserInterface {
 
     /**
      * A deprecated main function, intended for validation and such
-     * @param args
-     * @throws Exception
+     * @param args unused
+     * @throws Exception if something bad happens
      */
     @Deprecated
     public static void main(String[] args) throws Exception{

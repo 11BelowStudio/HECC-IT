@@ -7,8 +7,6 @@ import oh_hecc.Parseable;
 import utilities.Vector2D;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Like Passage but this time it's actually Editable!
@@ -26,25 +24,12 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     final UUID passageUUID;
 
-    /**
-     * The name of this passage
-     */
-    //private String passageName;
-
-    /**
-     * The actual raw contents of this passage
-     */
-    //private String passageContent;
 
     /**
      * The comment that's inline with the passage declaration
      */
     private String inlinePassageComment;
 
-    /**
-     * The set with the names of the other passages this passage links to
-     */
-    //private final Set<String> linkedPassages;
 
     /**
      * The set of UUIDs of the passages that this passage is linked to
@@ -57,19 +42,9 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     private String trailingComment;
 
     /**
-     * The list of tags that this passage has
-     */
-    //private final List<String> passageTags;
-
-    /**
      * The position of this passage
      */
     private final Vector2D position;
-
-    /**
-     * Something to let the user know about the status of this passage.
-     */
-    //private PassageStatus status;
 
 
 
@@ -613,13 +588,11 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @return a string version of the Vector2D, in the format < x,y> (except without that space)
      */
     private static String getHeccPosition(Vector2D position){
-        StringBuilder posBuilder = new StringBuilder();
-        posBuilder.append("<");
-        posBuilder.append(position.x);
-        posBuilder.append(",");
-        posBuilder.append(position.y);
-        posBuilder.append(">");
-        return posBuilder.toString();
+        return "<" +
+                position.x +
+                "," +
+                position.y +
+                ">";
     }
 
 

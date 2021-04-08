@@ -6,7 +6,6 @@ import heccCeptions.InvalidPassageNameException;
 import oh_hecc.game_parts.EditWindowGameDataInterface;
 import oh_hecc.game_parts.GameDataObject;
 import oh_hecc.game_parts.metadata.EditableMetadata;
-import oh_hecc.game_parts.metadata.PassageEditWindowMetadataInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 
@@ -14,12 +13,10 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * A class that basically is a window that allows a user to edit an EditablePassage

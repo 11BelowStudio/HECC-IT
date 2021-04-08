@@ -55,22 +55,11 @@ public abstract class AbstractObject implements ObjectWithAPosition, DrawableObj
      * safety yellow: #f6c700
      */
     static final Color SAFETY_YELLOW = new Color(246, 199, 0);
-    /**
-     * #ffd20a (safety yellow but 52% lightness instead of 48%)
-     */
-    //static final Color OUTLINE_SAFETY_YELLOW = new Color(255, 210, 10);
+
     /**
      * safety orange: #e97600
      */
     static final Color SAFETY_ORANGE = new Color(233, 118, 0);
-    /**
-     * #ff8a14 (safety orange but 54% lightness instead of 46)
-     */
-    //static final Color OUTLINE_SAFETY_ORANGE = new Color(255, 138, 20);
-    /**
-     * safety green: #007256
-     */
-    //static final Color SAFETY_GREEN = new Color(0,114,86);
     /**
      * safety blue: #0067a7
      */

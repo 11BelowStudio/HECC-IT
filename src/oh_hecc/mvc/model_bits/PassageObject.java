@@ -14,7 +14,7 @@ import java.util.*;
  * but it's an GUI form instead.
  * bottom text
  */
-public class PassageObject extends EditModelObject implements DrawablePassageObject {
+public class PassageObject extends EditModelObject implements DrawablePassageObject, SelectableObject {
 
 
     /**
@@ -32,10 +32,16 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      */
     private final Map<UUID, PassageLinkObject> linkMap;
 
+    /**
+     * Basically a label with the name of the passage.
+     */
     private final StringObject passageNameObject;
 
     //private Rectangle fillRect;
 
+    /**
+     * Whether or not this object is 'selected'
+     */
     private boolean isSelected;
 
     /**
@@ -43,10 +49,6 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      */
     private Color overlayColour;
 
-    /**
-     * Colour for the outline of this object.
-     */
-    private Color outlineColour;
 
     private static final Color NORMAL_COLOUR = SAFETY_ORANGE;
     //private static final Color NORMAl_OUTLINE_COLOUR = OUTLINE_SAFETY_ORANGE;
@@ -69,10 +71,6 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      * darker orange if there's nothing in the passage
      */
     private static final Color EMPTY_COLOUR = new Color(190, 70, 30);
-    /**
-     * empty_colour but it's 57% lightness instead of 43%
-     */
-    //private static final Color EMPTY_OUTLINE_COLOUR = new Color(225, 105, 65);
 
 
     /**
@@ -199,15 +197,22 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
         overlayColour = SELECTED_COLOUR;
     }
 
+    /**
+     * Call this when the passageObject gets deselected.
+     * sets isSelected to false.
+     */
     public void deselected() {
         isSelected = false;
     }
 
 
 
+    /**
+     * Subclass-specific draw method.
+     * @param g the graphics context being used.
+     */
     @Override
     void individualDraw(Graphics2D g) {
-
 
 
         //setting the colour to objectColour
@@ -215,6 +220,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
 
         //filling in this object's areaRectangle
         //g.fill(fillArea);
+
         //actually we're filling it in 3d now so it basically has an outline.
         g.fill3DRect(-(width/2), -(height/2), width, height, true);
 

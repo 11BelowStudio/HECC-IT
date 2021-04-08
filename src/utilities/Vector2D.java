@@ -799,7 +799,9 @@ public final class Vector2D {
     }
     public static Vector2D getCollisionVector(Vector2D v1, Vector2D v2){ return v1.getCollisionVector(v2); }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public Vector2D getTangent(){ return new Vector2D(-y,x); }
+    @SuppressWarnings("SuspiciousNameCombination")
     public static Vector2D getTangent(Vector2D collision){ return new Vector2D(-collision.y, collision.x); }
 
     public static Vector2D getCollisionVelocity(Vector2D thisV, Vector2D otherV, Vector2D collision, Vector2D tangent){

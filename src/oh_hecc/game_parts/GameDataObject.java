@@ -285,8 +285,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     @Override
     public EditorWindowInterface openPassageEditWindow(UUID passage){
         EditorWindowInterface pw = new PassageEditorWindow(passageMap.get(passage),this);
-        addClosedListener(pw);
-        return pw;
+        return addClosedListener(pw);
     }
 
     /**
@@ -296,8 +295,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     @Override
     public EditorWindowInterface openMetadataEditWindow(){
         EditorWindowInterface ew = new MetadataEditorWindow(this);
-        addClosedListener(ew);
-        return ew;
+        return addClosedListener(ew);
     }
 
     /**

@@ -245,7 +245,14 @@ closer look at Java's GUI libraries, working out how to make something only repa
 were to interact with it, at which point I realized I could just make the `Model` be a subclass
 of some variety of GUI component, which would let a `MouseListener` or `KeyListener` of some
 description simply call the controlling methods, which in turn call the `invalidate`/`repaint`
-methods of this GUI component, omitting the update loop entirely.
+methods of this GUI component, omitting the update loop entirely. The draw operation and update
+operations of the `Model` are still synchronized (via a single, static, `SYNC_OBJECT`), so only one
+of those operations may happen at a time, so the model won't suddenly become completely different
+mid-draw operation. Furthermore, instead of iterating through the `PassageMap` when attempting to
+draw the `PassageObject`s, the `values` set of that map is deep-copied into a `DrawablePassageObjects`
+set, and this set is iterated through instead by the draw thread, so, even if the `PassageMap`
+somehow gets modified whilst the draw operation is happening, there won't be any problems caused by
+concurrent modification.
 
 In the MVP iteration, I didn't do this in an entirely optimal way. I had a `MouseController` class
 which implemented `MouseListener` (as well as `MouseMotionListener`), to listen for mouse inputs,
@@ -276,7 +283,7 @@ having a `Vector2D` to hold the current 'top left corner' of the viewport. Altho
 some reason, I called the variable `topRightCorner` when I made it, and I didn't realize this
 mistake (and rename it) until a few minutes ago, but it still was the top-left corner.
 When drawing the model, it would translate the `AffineTransform` of the `Graphics2D` context
-by the `x` and `y` of that `Vector2D`, so all of the subsequent `draw` operations on the
+by the `x` and `y` of that `Vector2D`, so all the subsequent `draw` operations on the
 `PassageObject`s would have that initial offset already applied to them, so, because
 they will have been moved, it looks like the viewport had been scrolled. This scrolling
 offset would be undone before displaying the 'buttons', so they would all remain in the
@@ -293,7 +300,7 @@ and the `PassageLinkObjects` (pre-offset by the position of a 'parent' object,
 so they're at the origin of that object), this approach lead to those objects
 having twice as much scrolling applied to them than was intended. The final nail in
 the coffin of the first approach was the problem of clicking the objects. In the title
-screen menus for my previous games, they would be interactable by the user clicking
+screen menus for my previous games, they would be interactable via the user clicking
 the model, and then the game would see if the `Point` location of the click
 intersected with an 'areaRectangle' `Rectangle` of some of the `GameObject`s which
 should do something when clicked; if they intersected, the update loop would then
@@ -310,13 +317,13 @@ individually via a sequence of 'if-else if...' statements (to check if the point
 intersected with a given button, and, if one does intersect, it was pressed, so
 the action which was supposed to happen in response could happen). If none of
 those buttons were pressed, it would go to the 'else' branch, to see if it
-intersected with the areaRectangle of any of the `PassageObject`s. But, before
+intersected with the areaRectangle of any `PassageObject`. However, before
 attempting to find the clicked passage (if any), it translates the click location
 `Point` by the topLeftCorner `Vector2D`'s x and y values, then sees if this
 translated point intersects with a `PassageObject` (opening the appropriate
 `PassageEditorWindow` for the clicked `PassageObject`, if one was clicked).
-In other words, instead of moving all of the hitboxes, I'm just moving the
-single thing that is supposed to hit the hitboxes.
+In other words, instead of moving every 'hitbox', I'm just moving the
+single thing that is supposed to hit the 'hitboxes'.
 
 This approach was also used for the 'dragging passage objects by holding
 the mouse down on them' functionality of the `PassageModel`. In the 'left
@@ -396,5 +403,251 @@ because trying to make the buttons themselves call a method
 reference to do a certain thing would just be overcomplicating
 matters.
 
-The `StringObject` simply renders a string in 
+The `StringObject` simply renders a string on the model, via the `drawString` method of `Graphics2D`.
+This was repurposed from a few of my earlier projects, so, it has a few bits of additional
+functionality built in to it, mostly to make it look nicer. In the constructor, it's possible to
+specify initial text for it, as well as an alignment for the string when rendering it. In the MVP
+iteration of this class, there was functionality to define what font should be used for the text,
+however, upon realizing that not every user may have the font I might want to use installed, I have
+opted to make it simply render the text using a bold version of the default font used by the JVM on
+the user's own computer (in my case, it defaults to Segoe UI). The alignment options work by rendering
+the text at a different location relative to the actual 'position' vector of the `StringObject`. The
+`drawString` method of `Graphics2D` takes an x and y position as arguments along with the actual
+`String` being rendered, rendering the string such that the first character is at the specified
+position. When using the `StringObject.LEFT_ALIGN` setting, I don't modify the rendering position,
+so the string is rendered aligned to the position on the left. For the `MIDDLE_ALIGN` and
+`RIGHT_ALIGN` modes, I use the `getFontMetrics` method of the `Graphics2D` object to obtain a
+`FontMetrics` object for the current font, which I then use to find the total width of the String I'm
+trying to draw. This is probably not the most efficient way of obtaining this width data, as I need to
+re-obtain the `FontMetrics` for every single `StringObject` in every draw operation, even if they all
+have the same font. However, there is no way to obtain `FontMetrics` outside of the draw operation,
+and doing it like this does mean that there is still the option of giving different `StringObject`s
+different fonts, without breaking the alignment code for them. Once I have this width, I can then
+offset the `x` position used for rendering the `StringObject` by a desired amount, depending on the
+alignment. For the `MIDDLE_ALIGN` mode, I subtract half the width from `x`, so the midpoint is at the
+'position' of the `StringObject`. For `RIGHT_ALIGN`, I subtract the full width from `x`, so the
+`StringObject` is rendered such that the right edge is aligned with the 'position'. Within OH-HECC,
+I only used the `MIDDLE_ALIGN` option, so I could have omitted the left/right alignment settings from
+it, but I kept them in there, just in case I found a reason to use them. The outlines that these
+strings have are rendered in a way that basically is cheating. I could have tried to obtain the
+outline shapes for every single character, and rendered them over every character, giving them a
+perfect black outline. But that would have been too convoluted, when there's a much simpler workaround.
+When obtaining the offset for `x` necessary to render the string with the desired horizontal alignment,
+I had it stored as a local variable within the method, meaning I wouldn't need to recalculate it.
+I then render the string four times, in black, with x/y positions that are `+/-1` pixel from the
+calculated offset position. Then, I render the string one final time, this time in white, at the
+precalculated offset (no `+/-`ing involved). Because the black copies of the string had been offset
+from the white copy, they, when combined, look just like a single black outline for the white string.
+This method isn't entirely perfect, as parts of the default string with a height/width of 1 pixel
+will not have an outline next to the edge which is 1 pixel long, such as the sides of the dot on a
+lowercase 'i'. This could easily be fixed by adding another four black strings to the 'outline',
+these ones being `+/-1` in one axis only (no offset on the other axis), however, I opted not to do
+this, because I would almost be doubling the draw operations for the `StringObject`, for a minor
+problem that is only present in very few situations. I did mitigate the problem anyway by making
+the `Graphics2D` object render them in a bold version of the default font, and bold fonts tend to
+not have many single-pixel elements in them anyway, further reducing the number of cases where this
+problem could appear. There is one limitation to the `StringObject`: They cannot render a string with
+newlines. These only use a single `drawString` call (if you don't count the outlining), and the
+`drawString` method cannot draw newlines, so, if I wanted to render multiple lines of text, I would
+need to use multiple `StringObject`s. However, OH-HECC doesn't need to do this anyway, so this problem
+has been avoided. I was also considering adding in something that could be used to cut off the string
+if it had a width beyond a certain horizontal limit, so the text on the `PassageObject`s would not
+expand past the bounds of the `PassageObject`'s shape. I opted against this, mostly because I actually
+liked the appearance of the text occasionally going over the limit of the bounds, and also because, if
+by letting a user see the full passage names at all time in the editor, they won't be able to mistake
+one passage for another.
 
+Now, the functionality of OH-HECC. In the MVP iteration, the buttons along the bottom of the 'model'
+would, when clicked, allow the user to save their `.hecc` file, save their `.hecc` file and close
+OH-HECC, open the metadata editor window to edit the game's metadata, and add a new parentless passage
+to the passage map. Initially, the `PassageModel` was also responsible for performing every single
+operation on the raw passage map/`EditableMetadata`, however, a lot of that logic had been moved
+to the `GameDataObject` later on. The only `PassageMap` logic retained within the `PassageModel` was
+that which directly involved the map of `PassageObject`s etc within the `PassageModel` as well.
+This selection of options would be enough to make OH-HECC usable for its intended purpose of allowing
+users to edit a .hecc file. Later on, the 'save and quit' button would be replaced with one that would
+save the game and open HECC-UP, to make HECC-IT somewhat more 'integrated'. I also created a 
+`PassageStatus` enum, which an `EditablePassage` would have, accessible via a method in the
+`PassageEditingInterface`, to indicate the 'status' of the passage. At first, a passage had only three
+'states'; It could be a `NORMAL` passage (at least one link), an `END_NODE` (no links), or it could
+be a `DELETED_LINK` (if it had a link to a passage that had since been deleted, denoted by the
+`! WAS DELETED !` suffix appended to the end of the passage name in the links to it in other passages
+upon deletion). Then, in the constructor and update method for the `PassageObject`, it would query
+the 'status' for the passage it was associated with, so, depending on the status, the fill colour for
+the `PassageObject` would change appropriately; `NORMAL` passages would be orange, `END_NODE`s would
+be yellow, and `DELETED_LINK`s would be red. This meant that an author could spot any problems with
+deleted links in the overview of the network of connected passages, without needing to look through
+the editing window of each passage individually.
+
+On that note, I also added a `StartHighlightObject`, which would appear as a rounded light-blue
+rectangle, which would appear around the start passage. Whenever the start passage's name was changed
+(whether due to the passage itself being renamed, or due to the metadata referencing a different
+start passage), the appropriate `PassageObject` would be found, and would be given to the
+`StartHighlightObject`, which it would reference as an `AbstractObject`, as it would only need to
+access the `Vector2D` position of it (this reference would later be abstracted out further to be
+performed via an `ObjectWithAPosition` interface). The `StartHighlightObject` would be drawn before
+anything else, so it would appear as if the start object has a blue highlight around it; this, in turn,
+will allow the author to see what the current start object is, so, if the wrong passage is being used
+as the start passage, the author can easily see this, and will know that they need to fix it.
+
+Here is a screenshot of the OH-HECC passage model:
+
+![oh-hecc screenshot](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot.PNG)
+
+Here is a screenshot of the same passage map, but with the window successfully resized:
+
+![oh-hecc screenshot resized](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20resized.PNG)
+
+Here is another screenshot of that passage map, with the viewport scrolled as well:
+
+![oh-hecc screenshot scrolled](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20scrolled.PNG)
+
+Here's yet another screenshot, this time with the passage objects moved around:
+
+![oh-hecc screenshot moved around](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20moved%20around.PNG)
+
+Here's a screenshot of what it looks like when a new passage is added to the passage map:
+
+![oh-hecc screenshot new link](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20new%20link.PNG)
+
+And here's what it looks like when we delete `bob`, leaving `Right` with a deleted link:
+
+![oh-hecc screenshot deleted link](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20deleted%20link.PNG)
+ 
+There was some other functionality which I was considering adding to OH-HECC which I never quite got
+around to doing. The `PassageModel` contains an inner `CurrentActivity` enum, which contains all of
+the actions I considered allowing the author to do. In short, the author was supposed to be allowed
+to be doing nothing (implemented in MVP), have an editing dialog open (implemented in MVP), have
+some objects selected (somewhat implemented), move aforementioned selected objects (implemented in
+MVP), hold the right mouse button to move the view around (implemented as of the time of writing this
+report), and be able to drag a selection box to select multiple objects at once by holding the left
+mouse button (unimplemented). There was a `BUTTON_PRESSED` value in that enum as well, but that was
+ultimately rendered redundant as those activities generally fell under the umbrella category of
+`DIALOG_OPEN`. The purpose of this enum was to ensure that the author wouldn't be trying to do two
+separate editing operations on the view at once, via switch statements in every 'receiving input'
+method, only performing certain actions in response to the input if the current activity allowed
+the activity to happen. Below is a full state machine of how exactly that worked:
+
+![PassageModel Activity State Machine](./MVP%20development/oh-hecc%20development/PassageModel%20Activity%20State%20Machine.png)
+
+I was also planning on adding some sort of method that the author could use to search through the
+map of passages for a given passage, however, I never got around to adding that.
+
+Finally, for the save routine in the `PassageModel`, I also implemented a 'fallback' of sorts,
+in case there was a problem writing to the `.hecc` file. In these cases, the user would be informed
+via a `JOptionPane` about the save operation failing, so the 'emergency save routine' would be used
+instead. After dismissing that dialog, the user is presented with a new `JFrame`; at the top,
+there are some `JLabel`s to tell the user that this is their .hecc code; in the final version, it
+makes it more explicit that they need to copy and paste the .hecc code into a new .hecc file manually.
+Below that is a (read-only) `JTextArea` in a `JScrollPane`, containing the .hecc code. It's presented
+in a `JTextArea` because, by having it in a `JTextArea`, the user can actually select the text,
+allowing them to simply copy and paste it into a new .hecc file manually. It isn't a very elegant
+solution to these sorts of problems, however, in the cases where this fallback has to be used instead
+of the normal save routine, 'elegance' is going to be the least of the user's concerns. A screenshot
+of this is below:
+
+![emergency save routine](./MVP%20development/oh-hecc%20development/mvp%20backup%20save%20method.PNG)
+
+The entire 'MVC' part of OH-HECC wasn't unit tested, mostly due to the inherent awkwardness with
+unit-testing a GUI. So, I improvised with a main method that would read a pre-defined .hecc file,
+parse it into the game data, and then open that game data within OH-HECC. I informally played around
+with the editor, to see if everything behaved as expected, and for the most part, it did. So, as far
+as I was concerned for the MVP, it was good enough.
+
+Now, with the main editing GUI of OH-HECC done, there was just the problem of how the user would
+open OH-HECC to edit their .hecc files (and yes, the class diagram for OH-HECC will be shown after
+that last part)
+
+### 2.D: ChooseFile and OhHeccRunner
+
+I knew I needed a GUI which could be used to create a new .hecc file, or select an existing .hecc file,
+which could then be opened in OH-HECC. So, I started to create one, planning on effectively repurposing
+the existing 'choose a .hecc file' code from HECC-UP. However, there was the problem of what I wanted
+it to look like. I wanted to give users the option to either create a new .hecc file or start editing
+an existing .hecc file, and I didn't want it to look like one option was more important than the other.
+Therefore, I chose to put the two next to each other. Unfortunately, I wasn't sure how to code this
+manually, so I decided to try using IntelliJ's GUI designer to implement this. The 'create file' area
+would need two text fields (for a game title and author name), with a button which would open a
+`JFileChooser`, allowing the user to choose where they want to save their new .hecc file, before
+automatically opening OH-HECC properly. The 'open file' area would need a `JTextArea` to show the
+filepath of the currently-selected file (if any), a button to open a `JFileChooser` to select a
+.hecc file, and a button, only visible after a file has been chosen, which then needs to parse the
+.hecc file and open it in OH-HECC.
+
+Using the GUI designer, I was able to put together the 'ChooseFile' panel, which looked like this:
+
+![ChooseFile panel](./MVP%20development/oh-hecc%20development/choosefile.PNG)
+
+I wasn't able to get both of the main panels in this to be the same size as each other without
+removing the vertical bar between them, and, in the final iteration (not in MVP version), that
+vertical bar was removed. One rather nice design choice with the `ChooseFile` class is that the
+class effectively only constructs a `JPanel` to put the GUI on, instead of constructing a `JFrame`
+to put the GUI on. This means that the main `OhHeccRunner` class can create a `JFrame`, then
+constructs an instance of this `ChooseFile` class (making this GUI), obtains the the `JPanel`
+constructed by this class, and then puts it on the main `JFrame`. Then, when launching the actual
+OH-HECC editor, instead of opening a new `JFrame` which the user would then need to manually
+navigate to, the existing `JFrame` can be passed to the `OhHeccNetworkFrame`, basically keeping this
+all in a single `JFrame`. However, once opening the 'OH-HECC' editor, the program cannot go back
+to this 'choose file' screen, so a user would need to reopen the program.
+
+Like in the `MetadataEditorWindow`, I have the same sort of automatic validation built in to the
+game title and author name inputs, so, if the inputs are invalid, the text will be rendered in red.
+However, to get the point across to the author even more explicitly, these text fields also have an
+`InputVerifier` specified for them: the author won't be able to start editing the other input field
+unless they fix the invalid input in that input field. They can still press the button to try making
+the .hecc file, but it will complain about the invalid input being there. There is one more check
+which isn't performed in the EditableMetadata: the title will be checked to see if it would be usable
+as part of a valid filename, by seeing if a `Path` can be constructed in the form `titleInput.hecc`:
+If this fails (due to the title input not being usable in a filename), the title will be deemed as
+invalid. This additional check is performed because the new .hecc file constructed will be called
+`titleInput.hecc` (replace 'titleInput' with whatever name was input in the title input `JTextField`),
+and an author would probably prefer it if this check was performed sooner, rather than later, when
+they're actually trying to save their .hecc file. Some screenshots of this validation in action are
+below:
+
+![invalid author](./MVP%20development/oh-hecc%20development/choosefile%20bad%20author.PNG)
+
+![invalid author pls to fix](./MVP%20development/oh-hecc%20development/choosefile%20bad%20author%20pls%20to%20fix.PNG)
+
+![invalid title pls to fix](./MVP%20development/oh-hecc%20development/choosefile%20bad%20title%20pls%20to%20fix.PNG)
+
+The 'open existing hecc file' panel is much less interesting. It does exactly the same thing as the
+'open hecc file' part of HECC-UP, asking the user to select a .hecc file. When one has been selected,
+it will show the selected .hecc file, and it will reveal the button which can be used to start editing
+that hecc file. This can be seen in the below screenshot:
+
+![picked a file](./MVP%20development/oh-hecc%20development/choosefile%20selected%20file.PNG)
+
+That is just the surface-level functionality. There's a lot more going on under the hood.
+The functions which create the .hecc file/open a .hecc file for editing aren't actually held within
+the `ChooseFile` class. Instead, those methods belong to the `OhHeccRunner` class. An existing .hecc
+file is edited with `openAndStartEditingFileAtLocation` (takes a `Path` to a .hecc file as an input,
+attempts to parse it into a `GameDataObject`, before trying to open it in the editor), whilst a new
+.hecc file is created for editing in `makeNewHeccFileAtLocation` (takes a `Path` to the new .hecc
+file, along with a `MetadataEditingInterface` constructed by `ChooseFile` holding the inputs,
+before constructing a `GameDataObject` with that Path/Metadata, writing that gamedata to a newly-made
+empty .hecc file at the specified path, before opening that `GameDataObject` in the editor). If 
+there is a problem with these operations, these methods will return false. These are passed to
+`ChooseFile` via functional interfaces (specifically, a `Predicate<Path>` and a
+`BiPredicate<Path, MetadataEditingInterface>`), allowing `ChooseFile` to use those methods without
+`ChooseFile` ever needing to reference the `OhHeccRunner` itself. This approach was used because,
+that way, I could create a main method inside the `ChooseFile` class to run `ChooseFile` and verify
+that it worked correctly, without needing to create the `OhHeccRunner` class.
+
+The specific way that `ChooseFile` called those methods is a bit on the convoluted side.
+When the buttons are pressed, the opening of the `JFileChooser` (and, in the case of the 'make file'
+button, double-checking that the inputs are valid) happens first. Once the .hecc file/the path to
+the .hecc file has been found, the lambda operation which actually parses the .hecc and opens OH-HECC
+is performed using an anonymous `SwingWorker`. I chose to do it in a `SwingWorker` thread instead of
+doing it in the event handling thread, just in case it takes a long time to parse the .hecc file
+(which could be an issue if it's a very long .hecc file), so the entire program doesn't freeze in the
+meantime.
+
+### 2.E: The Long-Awaited Class Diagram
+
+And here's a class diagram for the entirety of the MVP version of OH-HECC (and HECC-UP). `Vector2D`
+has been omitted from this class diagram for the sake of everyone's sanity, because it still had a lot of
+'convenience methods' inside it which hadn't been used (roughly 70 constructors/methods in total)
+and that would take up a bit too much screen space for comfort.
+
+![chungus](./MVP%20development/big%20fat%20class%20diagram%20with%20everything%20but%20Vector2D.png)

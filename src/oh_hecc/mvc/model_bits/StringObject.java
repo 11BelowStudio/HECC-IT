@@ -86,9 +86,6 @@ public class StringObject extends AbstractObject {
         objectColour = Color.WHITE;
     }
 
-
-    public String getString(){ return theString; }
-
     @Override
     void individualUpdate(){ } // no individual update
 
@@ -133,6 +130,11 @@ public class StringObject extends AbstractObject {
         //areaRectangle = new Rectangle((int)position.x - (w/2), (int)position.y + heightOffset,w,h);
     }
 
+    /**
+     * Overwrites the text in the string held in this StringObject
+     * @param s the new string to display
+     * @return this StringObject
+     */
     public StringObject setText(String s){ theString = s; return this;}
 
 }
