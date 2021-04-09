@@ -1,6 +1,7 @@
 package utilities;
 
 import java.awt.*;
+import java.util.Vector;
 
 //le ce218 sample code has arrived (template provided by Dr Dimitri Ognibene)
 
@@ -78,6 +79,15 @@ public final class Vector2D {
         double tempY = v.y;
         this.x = tempX;
         this.y = tempY;
+    }
+
+    /**
+     * Creates a Vector2D from a dimension
+     * @param d the dimension that we're turning into a Vector2D (width = x, height = y)
+     */
+    public Vector2D(Dimension d){
+        this.x = d.getWidth();
+        this.y = d.getHeight();
     }
 
     /**
@@ -819,6 +829,30 @@ public final class Vector2D {
      */
     public boolean isZero(){
         return (x == 0 && y == 0);
+    }
+
+
+    /**
+     * Given two vectors (max xy and min xy), this method will ensure that this vector is within those bounds.
+     * @param minimumXY the lower bounds of x and y
+     * @param maximumXY the upper bounds of x and y
+     * @return this vector, but in the bounds of the given minimumXY and maximumXY
+     */
+    public Vector2D ensureThisIsInBounds(Vector2D minimumXY, Vector2D maximumXY){
+
+        if(x > maximumXY.x){
+            x = maximumXY.x;
+        } else if (x < minimumXY.x){
+            x = minimumXY.x;
+        }
+
+        if (y > maximumXY.y){
+            y = maximumXY.y;
+        } else if (y < minimumXY.y){
+            y = minimumXY.y;
+        }
+
+        return this;
     }
 
     /**

@@ -118,6 +118,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private final Vector2D currentRightDragPos;
 
+    //private final Vector2D minXYBounds;
+
+    //private final Vector2D maxXYBounds;
+
 
 
     /**
@@ -148,7 +152,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             p.update();
         }
 
+        //minXYBounds = new Vector2D(objectMap.values().iterator().next().getPosition());
 
+        //maxXYBounds = new Vector2D(minXYBounds);
 
         startHighlight = new StartHighlightObject();
 
@@ -210,6 +216,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         Set<UUID> allPossibleUUIDSet = new HashSet<>();
         allPossibleUUIDSet.addAll(objectMap.keySet());
         allPossibleUUIDSet.addAll(passageMap.keySet());
+
+
         for (UUID u: allPossibleUUIDSet){
             if (!passageMap.containsKey(u)){
                 // we yeet any passageObjects for objects that don't exist any more
@@ -224,6 +232,43 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 objectMap.get(u).update();
             }
         }
+
+        // we recalculate the xy bounds for the viewport scrolling
+
+        // firstly, we set the min/max bounds to be the position of the first object we encounter
+        Vector2D minXYBounds = new Vector2D(objectMap.values().iterator().next().getPosition());
+        Vector2D maxXYBounds = new Vector2D(minXYBounds);
+
+        for (ObjectWithAPosition p: objectMap.values()){
+            Vector2D thisPos = p.getPosition();
+
+            // if this object is out of the existing x bounds, we update the bounds so it's in bounds.
+            if (thisPos.x < minXYBounds.x){
+                minXYBounds.x = thisPos.x;
+            } else if (thisPos.x > maxXYBounds.x){
+                maxXYBounds.x = thisPos.x;
+            }
+            // ditto for the y bounds
+            if (thisPos.y < minXYBounds.y){
+                minXYBounds.y = thisPos.y;
+            } else if (thisPos.y > maxXYBounds.y){
+                maxXYBounds.y = thisPos.y;
+            }
+
+        }
+
+        // we then obtain half the size of of this component
+        Vector2D halfSize = new Vector2D(getSize()).mult(0.5);
+
+        // then, we make sure that the top-left corner is in the bounds of the objects (with half-viewable-area wiggle room)
+        topLeftCorner.ensureThisIsInBounds(
+                minXYBounds.subtract(halfSize),
+                maxXYBounds.subtract(halfSize)
+        );
+
+
+
+
 
         //move the start highlight to be highlighting the start passage
         Optional<UUID> startUUID = theData.getStartUUID();

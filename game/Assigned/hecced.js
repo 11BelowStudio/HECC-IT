@@ -2,8 +2,9 @@
 
 var startingPassageName = "Start";
 
-function getHECCED(){
-	theHeccer.addPassageToMap(
+function getHECCED(){
+
+	theHeccer.addPassageToMap(
 		new Passage(
 			"toys",
 			"That continues for some time.\n\nYou start to get an ingrained idea of what a 'boy' is, what a 'girl' is, and that you are supposed to be a {if:tAny(\"f\")}{girl}{else:boy}.\n\nTo you, this is probably the least of your concerns, so you just accept that you apparently are a {if:tAny(\"m\")}{boy}{else:girl}, not really giving it much thought.\n\nEspecially not today, because your parents have taken you to the toystore, because you've recently been a very good {if:tAny(\"f\")}{girl}{else:boy} who has been eating all {if:tAny(\"m\")}{his}{else:her} greens!\n\nWhilst your parents are escorting you through the toystore, you notice two particular toys that look rather appealing to you. They're right next to each other on the shelves, and they both look rather fun!\n\nYour parents only said you could have one toy, unfortunately.\n\nSo, which one do you want?\n\n[[The one on the left|monster truck]] or [[the one on the right|dolly]]?",
@@ -40,16 +41,16 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"JustBorn m",
-			"{if:tAny(\"i\")}{The problem has been resolved.}{else:Everything is as expected.}\n\nA form is filled in. Boxes are checked off. Choices are filled in.\n\nLiam, this is your life.\n\n[[And you must follow along|early life]].",
-			["m","noreturn"]
+			"monster truck 2",
+			"You play with the monster truck.\n\nYour parents remark at how much of a boy you are{if:tAny(\"f1\")}{, even though you didn't get to have any say in the matter}, saying how *He's just like his daddy!*\n\nYou find yourself given more toys of a similar calibre. Stuff like toy dinosaurs, superhero action figures, and even more toy cars.\n\nYou don't have anything better to do with your time, so you just play with them{if:tAny(\"f1\")}{, but part of you still wants to try playing with something different}.\n\nLife carries on.\n\n[[But now it's time for school.|school 1]]",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"monster truck 2",
-			"You play with the monster truck.\n\nYour parents remark at how much of a boy you are{if:tAny(\"f1\")}{, even though you didn't get to have any say in the matter}, saying how *He's just like his daddy!*\n\nYou find yourself given more toys of a similar calibre. Stuff like toy dinosaurs, superhero action figures, and even more toy cars.\n\nYou don't have anything better to do with your time, so you just play with them{if:tAny(\"f1\")}{, but part of you still wants to try playing with something different}.\n\nLife carries on.\n\n[[But now it's time for school.|school 1]]",
-			[]
+			"JustBorn m",
+			"{if:tAny(\"i\")}{The problem has been resolved.}{else:Everything is as expected.}\n\nA form is filled in. Boxes are checked off. Choices are filled in.\n\nLiam, this is your life.\n\n[[And you must follow along|early life]].",
+			["m","noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -68,6 +69,13 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
+			"dolly",
+			"{if:tAny(\"m\")}{Your parents are less than enthusiastic.\n\n\"*Liam, you silly boy, that's a girl's toy! You aren't a pretty little girl, you're a big, strong, boy! Why don't we get you this cool monster truck instead?*\"\n\nYou can't help but feel disappointed in this outcome. You wanted the dolly, not the monster truck!\n\nBut you're still a small child, so there's nothing you can really do, as your parents [[buy the monster truck|monster truck 2]] for you instead.\n}{else:Your parents are pleased with your decision.\n\nThey chuckle to each other, with a \"*girls will be girls*\", gladly [[buying the dolly|dolly 2]] for you.}",
+			["noreturn","f1"]
+		)
+	);
+	theHeccer.addPassageToMap(
+		new Passage(
 			"placeholder",
 			"Sample Content",
 			[]
@@ -75,8 +83,8 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"dolly",
-			"{if:tAny(\"m\")}{Your parents are less than enthusiastic.\n\n\"*Liam, you silly boy, that's a girl's toy! You aren't a pretty little girl, you're a big, strong, boy! Why don't we get you this cool monster truck instead?*\"\n\nYou can't help but feel disappointed in this outcome. You wanted the dolly, not the monster truck!\n\nBut you're still a small child, so there's nothing you can really do, as your parents [[buy the monster truck|monster truck 2]] for you instead.\n}{else:Your parents are pleased with your decision.\n\nThey chuckle to each other, with a \"*girls will be girls*\", gladly [[buying the dolly|dolly 2]] for you.}",
+			"skipping",
+			"You ask if you can join in.\n\n{if:tAny(\"f\")}{Of course you can, Emma!\n\nWhy would a girl like you not be allowed to join in playing with this skipping rope? After all, everyone knows that girls always enjoy these sorts of things, don't they?\n\nAnd so, you spend the break playing with the skipping rope, with all the other girls, feeling like you're doing what you're supposed to be doing.\n\nEventually, [[break time ends|placeholder]].}{else:Of course not, Liam!\n\nBoys aren't supposed to play with skipping ropes. And you are a boy, not a girl. The girls remind you of this, as they continue playing their game.\n\nMaybe you should just [[play with the boys|football]] instead.\n\nOr you could just find somewhere to sit down, where you can wait for the end of break, [[all alone|breaktime alone]].}",
 			["noreturn","f1"]
 		)
 	);
@@ -89,22 +97,15 @@ var startingPassageName = "Start";
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"skipping",
-			"You ask if you can join in.\n\n{if:tAny(\"f\")}{Of course you can, Emma!\n\nWhy would a girl like you not be allowed to join in playing with this skipping rope? After all, everyone knows that girls always enjoy these sorts of things, don't they?\n\nAnd so, you spend the break playing with the skipping rope, with all the other girls, feeling like you're doing what you're supposed to be doing.\n\nEventually, [[break time ends|placeholder]].}{else:Of course not, Liam!\n\nBoys aren't supposed to play with skipping ropes. And you are a boy, not a girl. The girls remind you of this, as they continue playing their game.\n\nMaybe you should just [[play with the boys|football]] instead.\n\nOr you could just find somewhere to sit down, where you can wait for the end of break, [[all alone|breaktime alone]].}",
-			["noreturn","f1"]
+			"dolly 2",
+			"You play with the dolly.\n\nYour parents remark at how much of a girl you are{if:tAny(\"m1\")}{, even though you didn't get to have any say in the matter}, saying how *She's just like her mummy!*\n\nYou find yourself given more toys of a similar calibre. Stuff like even more dollies, a toy kitchen, and one of those 'pretend baby' dolls.\n\nYou don't have anything better to do with your time, so you just play with them{if:tAny(\"m1\")}{, but part of you still wants to try playing with something different}.\n\nLife carries on.\n\n[[But now it's time for school.|school 1]]",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
 			"school 1",
 			"That's right, {if:tAny(\"m\")}{Liam}{else:Emma}, it's time for you to start learning how to be a productive member of society!\n\nBut first things first, you need the uniform, don't you?\n\nGood thing your parents have already bought it for you.\n\nIt isn't much to look at. Just a bland {if:tAny(\"f\")}{cardigan}{else:jumper} with the school crest on it, worn on top of a {if:tAny(\"m\")}{white button-up shirt, with some grey trousers, accompanied by a fake, pre-tied, tie, which stays around your neck with the assistance of some elastic}{else:blue checkered dress (or a white blouse worn underneath a grey pinafore dress when it's colder), with some black tights covering your legs}.\n\nThe PE kit in the uniform is just a shirt with the school crest on it, accompanied with some shorts, and some plimsolls.\n\nYour school shoes are a pair of not overtly attention-grabbing black {if:tAny(\"f\")}{mary-janes, with some subtle flower shapes}{else:velcro shoes, with a subtle football shape} embedded in the faux-leather surface of the shoes.\n\n[[It's the first day of school|school 2]].",
-			[]
-		)
-	);
-	theHeccer.addPassageToMap(
-		new Passage(
-			"dolly 2",
-			"You play with the dolly.\n\nYour parents remark at how much of a girl you are{if:tAny(\"m1\")}{, even though you didn't get to have any say in the matter}, saying how *She's just like her mummy!*\n\nYou find yourself given more toys of a similar calibre. Stuff like even more dollies, a toy kitchen, and one of those 'pretend baby' dolls.\n\nYou don't have anything better to do with your time, so you just play with them{if:tAny(\"m1\")}{, but part of you still wants to try playing with something different}.\n\nLife carries on.\n\n[[But now it's time for school.|school 1]]",
 			[]
 		)
 	);
@@ -130,4 +131,3 @@ var startingPassageName = "Start";
 }
 
 //that's all, folks!
-

@@ -102,17 +102,18 @@ HECC-IT is intended to fill this niche.
 
 ## The vision for HECC-IT
 
-* Work-in-progress games are to be stored in a high-level intermediate scripting language, which can be edited
-  manually by a user with ease.
+* Work-in-progress games are to be stored in a high-level intermediate scripting language, which can
+  be edited manually by a user with ease.
   
-* There should be a parsing utility which a user may use to convert games from this intermediate format into
-  playable hypertext games.
+* There should be a parsing utility which a user may use to convert games from this intermediate
+  format into playable hypertext games.
   
 * There should also be a GUI which allows users to edit games stored in that intermediate format,
   presenting it as a network of connected passages.
   
-* The games produced should be 100% clientside, playable via any modern web browser, requiring no unnecessary faff
-  from the author, or the player, in order to actually share/play the games produced with this tool.
+* The games produced should be 100% clientside, playable via any modern web browser, requiring no
+  faffing around from the author, or the player, in order to actually share/play the games produced
+  with this tool.
   
 * The tool should work on any PC, regardless of operating system.
 

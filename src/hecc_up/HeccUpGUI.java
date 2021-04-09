@@ -465,10 +465,11 @@ public class HeccUpGUI implements LoggerInterface {
                         JOptionPane.QUESTION_MESSAGE
                 ) == JOptionPane.YES_OPTION){
                     try{
-                        File gameFile = new File(outputFolderLocation + "/index.html");
+                        // using the Path API instead of the File API
+                        Path gamePath = outputFolderLocation.resolve("index.html");
                         Desktop desktop = Desktop.getDesktop();
                         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)){
-                            desktop.browse(gameFile.toURI());
+                            desktop.browse(gamePath.toUri());
                         }
                     } catch (Exception e){
                         e.printStackTrace();

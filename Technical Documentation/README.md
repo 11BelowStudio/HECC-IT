@@ -19,10 +19,14 @@ This discusses the development of the first iteration of HECC-IT produced during
 # 3. [Development of the Term 1 MVP](./Development%20of%20the%20Term%201%20MVP.md) **WIP**
 
 This discusses the development of the second iteration of HECC-IT, produced during the remainder of
-the first term (the first iteration of OH-HECC, and several improvements to HECC-UP and the HECCIN' Game).
+the first term (the first iteration of OH-HECC, and several improvements to HECC-UP and the
+HECCIN' Game).
 
 This also covers [how OH-HECC holds the game data](./OH-HECC%20MVP%20editable%20passages,%20editable%20metadata,%20and%20GameDataObject.md)
 in a separate document (which that main document does provide a link to).
+
+The [development of the remainder of OH-HECC](./MVP%20Development%20of%20OH-HECC.md) is also discussed
+in its own document, which is once again linked in the main document for this stage of development.
 
 # 4. [Development of the final version of HECC-IT](./Final%20version%20development.md) **//TODO**
 
