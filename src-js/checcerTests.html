@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<!-- unit test basically doing the same thing as https://qunitjs.com/intro/#in-the-browser -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Test Suite</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.14.0.css">
+</head>
+<body>
+<div class = "outerDiv">
+    <div class="innerDiv">
+        <div class = "backDiv" onclick="theHeccer.goBack()">
+            <p><a id="backButton">Click this button to go back</a></p>
+        </div>
+        <div class= "passageDiv" id = "divWhatHoldsPassageContent">
+            <p>
+                If you're reading this, that means there's been a big oopsie with the passage loading lol.<br/>
+                It might be because you're on internet explorer.<br/>
+                Or you've disabled JavaScript.<br/>
+                Or perhaps your browser doesn't support JavaScript 6/JavaScript 2015<br/>
+                Alternatively, it might mean that someone forgot to unzip the folder this game came in,
+                or that someone's misplaced the scripts that are needed for the game to run.<br/>
+                But yeah something's very clearly gone very wrong.</p>
+        </div>
+    </div>
+</div>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+
+<script src="https://code.jquery.com/qunit/qunit-2.14.0.js"></script>
+<script src = "hecced.js"></script>
+<script src="showdown/heccer.js"></script>
+<script src="showdown/showdown.min.js"></script>
+<script>
+
+    showdown.extension('heccstension', heccstension);
+    showdown.setOption('simpleLineBreaks', true);
+
+    const converter = new showdown.Converter({ extensions: ['heccstension']});
+
+    QUnit.moduleStart( details => {
+        console.log( `Now running: ${details.name}`);
+        resetTheHeccer();
+    });
+
+    QUnit.module('firstPassage', function() {
+        QUnit.test('first passage any name should be false', function(assert) {
+            assert.equal(theCheccer.pAny("1"), false, '1');
+            assert.equal(theCheccer.pAny("x"), false, 'x');
+        });
+        QUnit.test('first passage all names should be false', function(assert) {
+            assert.equal(theCheccer.pAll("x"), false, 'x');
+            assert.equal(theCheccer.pAll("1"), false, '1');
+        });
+        QUnit.test('first passage any tags should be false', function(assert) {
+            assert.equal(theCheccer.tAny("x"), false, 'x');
+            assert.equal(theCheccer.tAny("A"), false, 'A');
+        });
+        QUnit.test('first passage all tags should be false', function(assert) {
+            assert.equal(theCheccer.tAll("x"), false, 'x');
+            assert.equal(theCheccer.tAll("A"), false, 'A');
+        });
+    });
+
+    QUnit.module('firstPassage with the checcer doing the checc', function() {
+        QUnit.test('first passage any name should be false', function(assert) {
+            assert.equal(theCheccer.checc("pAny('1')"), false, '1');
+            assert.equal(theCheccer.checc("pAny('x')"), false, 'x');
+        });
+        QUnit.test('first passage all names should be false', function(assert) {
+            assert.equal(theCheccer.checc('pAll("x")'), false, 'x');
+            assert.equal(theCheccer.checc('pAll("1")'), false, '1');
+        });
+        QUnit.test('first passage any tags should be false', function(assert) {
+            assert.equal(theCheccer.checc('tAny("x")'), false, 'x');
+            assert.equal(theCheccer.checc('tAny("A")'), false, 'A');
+        });
+        QUnit.test('first passage all tags should be false', function(assert) {
+            assert.equal(theCheccer.checc('tAll("x")'), false, 'x');
+            assert.equal(theCheccer.checc('tAll("A")'), false, 'A');
+        });
+
+        QUnit.test('first passage not stuff should be true', function(assert) {
+            assert.equal(theCheccer.checc("not(pAny('1'))"), true, "not(pAny('1'))");
+            assert.equal(theCheccer.checc('not(pAll("x"))'), true, 'not(pAll("1"))');
+            assert.equal(theCheccer.checc('not(tAny("x"))'), true, 'not(tAny("A"))');
+            assert.equal(theCheccer.checc('not(tAll("x"))'), true, 'not(tAll("A"))');
+        });
+
+        QUnit.test("really heccin weird stuff",function(assert){
+            assert.equal(theCheccer.checc("dave"),false, "dave");
+            assert.equal(theCheccer.checc("1+1 === 2"),true, "1+1 === 2");
+            assert.equal(theCheccer.checc("69"),true, "69");
+            assert.equal(theCheccer.checc("0"),false, "0");
+            assert.equal(theCheccer.checc("theHeccer.ayylmao()"),false,"theHeccer.ayylmao()");
+        })
+
+        QUnit.test("tCount and pCount (should be 0)",function(assert){
+            assert.equal(theCheccer.checc("pCount('1')"),0, "pCount('1')==0");
+            assert.equal(theCheccer.checc("pCount('2')"),0, "pCount('2')==0");
+            assert.equal(theCheccer.checc("tCount('A')"),0, "tCount('A')==0");
+            assert.equal(theCheccer.checc("tCount('x')"),0, "tCount('x')==0");
+        })
+
+
+    });
+
+    QUnit.module('secondPassage',{
+            before: function(){
+                theHeccer.goToPassage("2");
+            }
+        }, function(){
+            QUnit.test('second passage any should be true if only matching first', function(assert) {
+                assert.equal(theCheccer.pAny("1"), true, "should be true");
+            });
+            QUnit.test('second passage all should be true if only matching first', function(assert){
+               assert.equal(theCheccer.pAll("1"),true,"should be true");
+            });
+            QUnit.test('second passage any should be true if matching first and others', function (assert) {
+                assert.equal(theCheccer.pAny("1","2"), true, "1,2");
+                assert.equal(theCheccer.pAny("1","3"), true, "1,3");
+                assert.equal(theCheccer.pAny("1","56","deez nutz"), true, "1,56,deez nutz");
+            });
+
+            QUnit.test('second tags any should be true if only matching first', function(assert) {
+                assert.equal(theCheccer.tAny("A"),true,"should be true");
+            });
+            QUnit.test('second tags all should be true if only matching first', function(assert) {
+                assert.equal(theCheccer.tAll("A"),true,"should be true");
+            });
+            QUnit.test('second tags any should be true if matching first and others', function(assert) {
+                assert.equal(theCheccer.tAny("A","B"),true,"A, B");
+                assert.equal(theCheccer.tAny("A","C"),true,"A, C");
+                assert.equal(theCheccer.tAny("A","deez nutz"),true,"A, deez nutz");
+            });
+
+            QUnit.test("second any passage should be false if not matching first", function(assert) {
+                assert.equal(theCheccer.pAny("2"),false,"2");
+                assert.equal(theCheccer.pAny("3","2"),false,"3, 2");
+                assert.equal(theCheccer.pAny(),false,"literally nothing");
+                assert.equal(theCheccer.pAny("462"),false,"462");
+            });
+
+            QUnit.test("second all passage should be false if not matching first and only first", function(assert){
+                assert.equal(theCheccer.pAll("1","2"),false,"1,2");
+                assert.equal(theCheccer.pAll("2"),false,"2");
+                assert.equal(theCheccer.pAll(),false,"literally nothing");
+                assert.equal(theCheccer.pAll("deez nutz"),false,"deez nutz");
+            });
+
+            QUnit.test("second any tags should be false if not matching first", function (assert) {
+                assert.equal(theCheccer.tAny("B"),false,"B");
+                assert.equal(theCheccer.tAny("B","C"),false,"B,C");
+                assert.equal(theCheccer.tAny(),false,"nothing");
+                assert.equal(theCheccer.tAny("deez nutz"),false,"deez nutz");
+            });
+
+            QUnit.test("second all tags should be false if not matching first and only first", function (assert) {
+                assert.equal(theCheccer.tAll("A","B"),false,"A,B");
+                assert.equal(theCheccer.tAll("B"),false,"B");
+                assert.equal(theCheccer.tAll(),false,"literally nothing");
+                assert.equal(theCheccer.tAll("deez nutz"),false,"deez nutz");
+            });
+
+            QUnit.test("fuck you, eval time", function(assert){
+                assert.equal(theCheccer.checc("pAny('1','2')"),true,"pAny('1','2')");
+                assert.equal(theCheccer.checc("pAll('1','2')"),false,"pAll('1','2')");
+                assert.equal(theCheccer.checc("tAny('A','B')"),true,"tAny('A','B')");
+                assert.equal(theCheccer.checc("tAll('A','B')"),false,"tAll('A','B')");
+                assert.equal(theCheccer.checc("and(pAny('1','2'),tAny('A','B'))"),true,"and(pAny('1','2'),tAny('A','B'))");
+                assert.equal(theCheccer.checc("and(pAll('1','2'),tAny('A','B'))"),false,"and(pAll('1','2'),tAny('A','B'))");
+                assert.equal(theCheccer.checc("and()"),false,"and()");
+                assert.equal(theCheccer.checc("or(pAny('1','2'),tAny('A','B'))"),true,"or(pAny('1','2'),tAny('A','B'))");
+                assert.equal(theCheccer.checc("or(pAll('1','2'),tAny('A','B'))"),true,"or(pAll('1','2'),tAny('A','B'))");
+                assert.equal(theCheccer.checc("or(pAll('1','2'),tAll('A','B'))"),false,"or(pAll('1','2'),tAll('A','B'))");
+                assert.equal(theCheccer.checc("or()"),false,"or()");
+                assert.equal(theCheccer.checc("and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B')))"),true,"and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B')))");
+                assert.equal(theCheccer.checc("not(and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B'))))"),false,"not(and(or(pAny('1','2'),tAny('A','B')),or(pAll('1','2'),tAny('A','B'))))");
+            });
+
+        QUnit.test("tCount and pCount (prior should be 1)",function(assert){
+            assert.equal(theCheccer.pCount('1'),1, "pCount('1')==1");
+            assert.equal(theCheccer.tCount('A'),1, "tCount('A')==1");
+        });
+
+        QUnit.test("tCount and pCount (not prior should be 0)",function(assert){
+            assert.equal(theCheccer.pCount('3'),0, "pCount('3')==0");
+            assert.equal(theCheccer.pCount('2'),0, "pCount('2')==0");
+            assert.equal(theCheccer.tCount('C'),0, "tCount('C')==0");
+            assert.equal(theCheccer.tCount('B'),0, "tCount('B')==0");
+        });
+
+
+    });
+
+
+
+    QUnit.module('thirdPassage',{
+        before: function(){
+            theHeccer.goToPassage("2");
+            theHeccer.goToPassage("3");
+        }
+    }, function(){
+        QUnit.test('3rd passage any should be true if only matching first and/or 2nd', function(assert) {
+            assert.equal(theCheccer.pAny("1"), true, "1st");
+            assert.equal(theCheccer.pAny("2"), true, "2nd");
+            assert.equal(theCheccer.pAny("1","2"), true, "1st + 2nd");
+        });
+        QUnit.test('3rd passage all should be true if only matching first and or 2nd', function(assert){
+            assert.equal(theCheccer.pAll("1"), true, "1st");
+            assert.equal(theCheccer.pAll("2"), true, "2nd");
+            assert.equal(theCheccer.pAll("1","2"), true, "1st + 2nd");
+        });
+        QUnit.test('3rd passage any should be true if matching first/second and others', function (assert) {
+            assert.equal(theCheccer.pAny("1","2","3"), true, "1,2,3");
+            assert.equal(theCheccer.pAny("1","3"), true, "1,3");
+            assert.equal(theCheccer.pAny("2","3"), true, "2,3");
+            assert.equal(theCheccer.pAny("1","56","deez nutz"), true, "1,56,deez nutz");
+        });
+        QUnit.test('3rd tags any should be true if only matching first/2nd', function(assert) {
+            assert.equal(theCheccer.tAny("A"),true,"A");
+            assert.equal(theCheccer.tAny("B"),true,"B");
+            assert.equal(theCheccer.tAny("A","B"),true,"A,B");
+        });
+        QUnit.test('3rd tags all should be true if only matching first/2nd', function(assert) {
+            assert.equal(theCheccer.tAll("A"),true,"A");
+            assert.equal(theCheccer.tAll("B"),true,"B");
+            assert.equal(theCheccer.tAll("A","B"),true,"A,B");
+        });
+
+        QUnit.test("3rd any passage should be false if not matching first/2nd", function(assert) {
+            assert.equal(theCheccer.pAny("3"),false,"3");
+            assert.equal(theCheccer.pAny("3","4"),false,"3, 4");
+            assert.equal(theCheccer.pAny(),false,"literally nothing");
+            assert.equal(theCheccer.pAny("462"),false,"462");
+        });
+
+        QUnit.test("3rd all passage should be false if not matching only first/second", function(assert){
+            assert.equal(theCheccer.pAll("1","2","3"),false,"1,2,3");
+            assert.equal(theCheccer.pAll("3"),false,"3");
+            assert.equal(theCheccer.pAll(),false,"literally nothing");
+            assert.equal(theCheccer.pAll("deez nutz"),false,"deez nutz");
+        });
+
+        QUnit.test("3rd any tags should be false if not matching first/2nd", function (assert) {
+            assert.equal(theCheccer.tAny("C"),false,"C");
+            assert.equal(theCheccer.tAny("C","D"),false,"C,D");
+            assert.equal(theCheccer.tAny(),false,"nothing");
+            assert.equal(theCheccer.tAny("deez nutz"),false,"deez nutz");
+        });
+
+        QUnit.test("3rd all tags should be false if not matching only first/2nd", function (assert) {
+            assert.equal(theCheccer.tAll("A","B","C"),false,"A,B,C");
+            assert.equal(theCheccer.tAll("C"),false,"C");
+            assert.equal(theCheccer.tAll(),false,"literally nothing");
+            assert.equal(theCheccer.tAll("deez nutz"),false,"deez nutz");
+        });
+
+        QUnit.test("tCount and pCount (prior should be 1)",function(assert){
+            assert.equal(theCheccer.pCount('1'),1, "pCount('1')==1");
+            assert.equal(theCheccer.pCount('2'),1, "pCount('2')==1");
+            assert.equal(theCheccer.tCount('A'),1, "tCount('A')==1");
+            assert.equal(theCheccer.tCount('B'),1, "tCount('B')==1");
+        });
+
+        QUnit.test("tCount and pCount (not prior should be 0)",function(assert){
+            assert.equal(theCheccer.pCount('3'),0, "pCount('3')==0");
+            assert.equal(theCheccer.tCount('C'),0, "tCount('C')==0");
+            assert.equal(theCheccer.pCount('x'),0, "pCount('x')==0");
+            assert.equal(theCheccer.tCount('y'),0, "tCount('y')==0");
+        });
+
+    });
+
+    QUnit.module('1 -> 2 -> 2 -> 3',{
+        before: function(){
+            theHeccer.goToPassage("2");
+            theHeccer.goToPassage("2");
+            theHeccer.goToPassage("3");
+        }
+    }, function(){
+
+
+        QUnit.test("tCount and pCount (passage 1 should have 1s)",function(assert){
+            assert.equal(theCheccer.checc("pCount('1')"),1, "pCount('1')==1");
+            assert.equal(theCheccer.checc("tCount('A')"),1, "tCount('A')==1");
+        });
+
+        QUnit.test("tCount and pCount (passage 2 should have 2s)",function(assert){
+            assert.equal(theCheccer.pCount('2'),2, "pCount('2')==2");
+            assert.equal(theCheccer.tCount('B'),2, "tCount('B')==2");
+        });
+
+        QUnit.test("tCount and pCount (passage 3/unknown should have 0s)",function(assert){
+            assert.equal(theCheccer.pCount('3'),0, "pCount('3')==0");
+            assert.equal(theCheccer.tCount('C'),0, "tCount('C')==0");
+            assert.equal(theCheccer.pCount('x'),0, "pCount('x')==0");
+            assert.equal(theCheccer.tCount('y'),0, "tCount('y')==0");
+        });
+
+
+        QUnit.test("tCount and pCount as evals instead",function(assert){
+            assert.equal(theCheccer.checc("pCount('1')==1"),true, "pCount('1')==1");
+            assert.equal(theCheccer.checc("tCount('A')==1"),true, "tCount('A')==1");
+
+            assert.equal(theCheccer.checc("pCount('2')==2"),true, "pCount('2')==2");
+            assert.equal(theCheccer.checc("tCount('B')==2"),true, "tCount('B')==2");
+
+            assert.equal(theCheccer.checc("pCount('3')==0"),true, "pCount('3')==0");
+            assert.equal(theCheccer.checc("tCount('C')==0"),true, "tCount('C')==0");
+            assert.equal(theCheccer.checc("pCount('x')==0"),true, "pCount('x')==0");
+            assert.equal(theCheccer.checc("tCount('y')==0"),true, "tCount('y')==0");
+        });
+    });
+
+
+    function resetTheHeccer(){
+        theHeccer.reset();
+        theHeccer.addPassageToMap(
+            new Passage(
+                "1",
+                "1\n\n[[2]]",
+                ["A"]
+            )
+        );
+        theHeccer.addPassageToMap(
+            new Passage(
+                "2",
+                "2\n\n[[3]]",
+                ["B"]
+            )
+        );
+        theHeccer.addPassageToMap(
+            new Passage(
+                "3",
+                "3",
+                ["C"]
+            )
+        );
+        theHeccer.printPassages();
+        theHeccer.loadCurrentPassage();
+        console.log(theHeccer.stateStack);
+    }
+
+</script>
+</body>
+</html>

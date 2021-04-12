@@ -5,7 +5,7 @@ this is heccer.js (HECC Environment for Runtime) (v3.1)
 The game data stuff is in hecced.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in hecced.js gives the passage info to the HECCER.
 
-by Rachel Lowe, 10/04/2021
+by Rachel Lowe, 12/04/2021
 
 (this version has been fed into the Hecc Up Parser!)
 */
@@ -20,12 +20,6 @@ var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025\
  * @type {string}
  */
 var passageNameWithWhitespace = anyHorizontalWhitespace + "(([\\w]+[\\w- ]*)?[\\w]+)\\s*" + anyHorizontalWhitespace;
-
-/**
- * Tag name regex with horizontal whitespace
- * @type {string}
- */
-var tagWithWhitespace = anyHorizontalWhitespace + "([\\w]+)" + anyHorizontalWhitespace;
 
 
 /**
@@ -51,14 +45,6 @@ class Passage{
      */
     getName(){
         return this.name;
-    };
-
-    /**
-     * returns the passage contents
-     * @returns {string} contents of the passage
-     */
-    getContent(){
-        return this.content;
     };
 
     /**
@@ -124,7 +110,13 @@ class GameState{
  */
 class Checcer{
 
-    constructor() {}
+    /**
+     * Constructor for theCheccer
+     * @param theHeccer the heccer that this checcer checcs.
+     */
+    constructor(theHeccer) {
+        this.theHeccer = theHeccer;
+    }
 
     /**
      * Will checc a statement it's been given
@@ -134,6 +126,7 @@ class Checcer{
     checc(statementToCheck){
 
         //TODO: maybe it would be better to change this stuff in the hecc->hecced converter thing?
+
 
         let statement = statementToCheck.replace(/pAny\(/g, "this.pAny(");
         statement = statement.replace(/pAll\(/g, "this.pAll(");
@@ -148,10 +141,27 @@ class Checcer{
         statement = statement.replace(/tCount\(/g, "this.tCount(");
         statement = statement.replace(/pCount\(/g, "this.pCount(");
 
+        /*
+        let statement = statementToCheck.replace(/pAny\(/g, "theCheccer.pAny(");
+        statement = statement.replace(/pAll\(/g, "theCheccer.pAll(");
+
+        statement = statement.replace(/tAny\(/g, "theCheccer.tAny(");
+        statement = statement.replace(/tAll\(/g, "theCheccer.tAll(");
+
+        statement = statement.replace(/and\(/g, "theCheccer.and(");
+        statement = statement.replace(/or\(/g, "theCheccer.or(");
+        statement = statement.replace(/not\(/g, "theCheccer.not(");
+
+        statement = statement.replace(/tCount\(/g, "theCheccer.tCount(");
+        statement = statement.replace(/pCount\(/g, "theCheccer.pCount(");
+         */
+
         console.log(statement);
 
         try {
             return !!eval(statement);
+            //console.log('"use strict"; return !!(function(theCheccer){ return ' + statement + ';});');
+            //return Function('"use strict"; return !!(function(theCheccer){ return ' + statement + ';});')()(theCheccer);
         } catch (e) {
             return false;
         }
@@ -163,11 +173,11 @@ class Checcer{
      * @returns {boolean} false if none were visited, true if at least one was visited
      */
     pAny(...passageNames){
-        if (!theHeccer.stateStack.areTherePriorStates()){//}  || passageNames.length === 0){
+        if (!this.theHeccer.stateStack.areTherePriorStates()){//}  || passageNames.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.visitedPassages;
+        const priorStates = this.theHeccer.stateStack.visitedPassages;
         let wereAnyVisited = false;
         for(let i = passageNames.length-1; i >= 0; i--){
             if (priorStates.has(passageNames[i])){
@@ -184,11 +194,11 @@ class Checcer{
      * @returns {boolean} true if all were visited, false otherwise
      */
     pAll(...passageNames){
-        if (!theHeccer.stateStack.areTherePriorStates()  || passageNames.length === 0){
+        if (!this.theHeccer.stateStack.areTherePriorStates()  || passageNames.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.visitedPassages;
+        const priorStates = this.theHeccer.stateStack.visitedPassages;
         let wereAllVisited = true;
         for(let i = passageNames.length-1; i >= 0; i--){
             if (!priorStates.has(passageNames[i])){
@@ -205,12 +215,12 @@ class Checcer{
      * @returns {boolean} false if none were encountered, true if at least one was encountered
      */
     tAny(...tags){
-        if (!theHeccer.stateStack.areTherePriorStates()){//}  || tags.length === 0){
+        if (!this.theHeccer.stateStack.areTherePriorStates()){//}  || tags.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
 
-        const priorTags = theHeccer.stateStack.seenTags;
+        const priorTags = this.theHeccer.stateStack.seenTags;
 
         let wereAnyEncountered = false;
         for(let i = tags.length-1; i >= 0; i--){
@@ -228,12 +238,12 @@ class Checcer{
      * @returns {boolean} true if all were encountered, false otherwise
      */
     tAll(...tags){
-        if (!theHeccer.stateStack.areTherePriorStates() || tags.length === 0){
+        if (!this.theHeccer.stateStack.areTherePriorStates() || tags.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
 
-        const priorTags = theHeccer.stateStack.seenTags;
+        const priorTags = this.theHeccer.stateStack.seenTags;
 
         let wereAllEncountered = true;
         for(let i = tags.length-1; i >= 0; i--){
@@ -258,6 +268,8 @@ class Checcer{
             let currentResult = false;
             try{
                 currentResult = !!eval(statements[i]);
+                //console.log('"use strict"; return !!(function(theCheccer){return ' + statements[i] + ';});');
+                //currentResult = Function('"use strict"; return !!(function(theCheccer){ return ' + statements[i] + ';});')()(theCheccer);
             } catch{
                 currentResult = false;
             }
@@ -286,10 +298,19 @@ class Checcer{
         let result = false;
         for(let i = statements.length - 1; i >= 0; i--){
             try {
+                /*
+                console.log('"use strict"; return !!(function(theCheccer){return ' + statements[i] + '});');
+                if (Function('"use strict"; return !!(function(theCheccer){return ' + statements[i] + '});')()(theCheccer)){
+                    result = true;
+                    break;
+                }
+                */
                 if (!!eval(statements[i])) {
                     result = true;
                     break;
                 }
+
+
             } catch (e) {} //if current eval throws an exception, skip it.
         }
         return result;
@@ -301,6 +322,8 @@ class Checcer{
      * @returns {boolean} the reverse of its result
      */
     not(statement) {
+        //console.log('"use strict"; return !(function(theCheccer){return ' + statement + '});');
+        //return Function('"use strict"; return !(function(theCheccer){return ' + statement + '});')()(theCheccer);
         return (!eval(statement));
     }
 
@@ -310,8 +333,8 @@ class Checcer{
      * @returns {Number} the number of times a passage with that tag has been visited. 0 if unvisited.
      */
     tCount(tagName) {
-        if (theHeccer.stateStack.seenTags.has(tagName)) {
-            return theHeccer.stateStack.seenTags.get(tagName);
+        if (this.theHeccer.stateStack.seenTags.has(tagName)) {
+            return this.theHeccer.stateStack.seenTags.get(tagName);
         } else {
             return 0;
         }
@@ -323,8 +346,8 @@ class Checcer{
      * @returns {Number} the number of times which that particular passage has been visited. 0 if unvisited.
      */
     pCount(passageName) {
-        if (theHeccer.stateStack.visitedPassages.has(passageName)) {
-            return theHeccer.stateStack.visitedPassages.get(passageName);
+        if (this.theHeccer.stateStack.visitedPassages.has(passageName)) {
+            return this.theHeccer.stateStack.visitedPassages.get(passageName);
         } else {
             return 0;
         }
@@ -335,11 +358,30 @@ class Checcer{
 
 class GameStateStack{
 
-
+    /**
+     * Constructor with a given start passage name
+     * @param startPassageName the starting passage
+     */
     constructor(startPassageName)
     {
-        //sets up the 'states' array, initially only holding a gamestate referencing the start passage
+
+        /**
+         * the 'states' array, initially only holding a gamestate referencing the start passage
+         * @type {GameState[]}
+         */
         this.states = [new GameState(startPassageName)];
+
+        /**
+         * map for seen passsages
+         * @type {Map<String, Number>}
+         */
+        this.visitedPassages = new Map();
+
+        /**
+         * map for seen tags
+         * @type {Map<String, Number>}
+         */
+        this.seenTags = new Map();
     }
 
     /**
@@ -451,18 +493,6 @@ class GameStateStack{
     parseStackFromStringJSON(stackAsString){
     };
 
-    /**
-     * Gets all the names of the unique previously visited states (as a set)
-     * @returns {Set<String>} The names of every previously visited state (but with no duplicates)
-     */
-    getUniqueVisitedStateNames(){
-        const uniqueStates = new Set();
-        const priorStates = this.states.slice(0,this.states.length-1);
-        priorStates.forEach(
-            state => uniqueStates.add(state.getPassageName())
-        );
-        return uniqueStates;
-    };
 }
 
 
@@ -471,16 +501,22 @@ class GameStateStack{
  */
 class Heccer{
 
-    constructor() {
+    /**
+     * A constructor
+     * @param start the defined start passage name
+     */
+    constructor(start) {
+
         /**
          * The map of all the passage objects
          * @type {Map<String, Passage>}
          */
         this.passageMap = new Map();
+
         /**
          * The stack of gamestate objects
          */
-        this.stateStack = new GameStateStack(startingPassageName);
+        this.stateStack = new GameStateStack(start);
 
         /**
          * default text for the back button
@@ -497,7 +533,6 @@ class Heccer{
          */
         this.allowedToGoBack = true;
 
-        this.checcer = new Checcer();
     }
 
 
@@ -611,7 +646,13 @@ class Heccer{
  * This is the Heccer itself.
  * @type {Heccer}
  */
-var theHeccer = new Heccer();
+var theHeccer = new Heccer(startingPassageName);
+
+/**
+ * This is the Checcer.
+ * @type {Checcer}
+ */
+var theCheccer = new Checcer(theHeccer);
 
 
 
@@ -737,7 +778,7 @@ var heccstension = function(){
             let replacementString = "";
 
             //if theStatement evaluates to true when checced
-            if(theHeccer.checcer.checc(theStatement)){
+            if(theCheccer.checc(theStatement)){
 
                 //use the ifBranchText
                 replacementString = ifBranchText;

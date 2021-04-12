@@ -13,15 +13,12 @@ import java.util.regex.Pattern;
 public interface SharedMetadata extends Heccable, Parseable {
 
 
-
-
-
     /**
      * Author name declared as '!author: Author name goes here'
-     * Must start with a letter, and must end in a letter (uppercase or lowercase)
+     * Must start/end with a 'word' character (alphanumeric/underscore)
      * May have any number of letters (any case), full stops (for initials), commas (for multiple authors), and spaces
      */
-    String VALID_AUTHOR_REGEX = "\\h*([A-Za-z]+[a-zA-Z., ]*)?[a-zA-Z]+(?=\\h*$)";
+    String VALID_AUTHOR_REGEX = "\\h*([\\w]+[\\w., ]*)?[\\w]+(?=\\h*$)";
 
     /**
      * The regex which titles must satisfy.

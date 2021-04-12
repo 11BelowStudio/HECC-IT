@@ -446,14 +446,17 @@ public class HeccUpTests {
 
         HeccUpHandler handler = new HeccUpHandler(log);
 
-        String expectedOutput = "//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n" +
+        String expectedOutput =
+                "//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
                 "\n" +
+                "// This hecced.js file contains the data for:\n" +
+                "// An Interactive Fiction\n" +
+                "// by Anonymous\n" +
+                "// IFID: unspecified\n" +
                 "\n" +
                 "var startingPassageName = \"Start\";\n" +
                 "\n" +
-                "\n" +
                 "function getHECCED(){\n" +
-                "\n" +
                 "\n" +
                 "\ttheHeccer.addPassageToMap(\n" +
                 "\t\tnew Passage(\n" +
@@ -462,7 +465,6 @@ public class HeccUpTests {
                 "\t\t\t[]\n" +
                 "\t\t)\n" +
                 "\t);\n" +
-                "\n" +
                 "\ttheHeccer.addPassageToMap(\n" +
                 "\t\tnew Passage(\n" +
                 "\t\t\t\"another passage\",\n" +
@@ -471,22 +473,18 @@ public class HeccUpTests {
                 "\t\t)\n" +
                 "\t);\n" +
                 "\n" +
-                "\n" +
                 "\ttheHeccer.printPassages();\n" +
-                "\n" +
                 "\n" +
                 "\ttheHeccer.loadCurrentPassage();\n" +
                 "\n" +
-                "\n" +
                 "}\n" +
-                "\n" +
                 "\n" +
                 "//that's all, folks!";
 
         try {
             handler.attemptToParseTheGame(tagParser);
 
-            assertEquals(expectedOutput, String.join("\n",tagParser.getHeccedData()));
+            assertEquals(expectedOutput, String.join("",tagParser.getHeccedData()));
 
 
         } catch (Exception e){
@@ -609,7 +607,12 @@ public class HeccUpTests {
          * The expected output from HECCSAMPLE as an ArrayList of strings.
          */
         final static ArrayList<String> HECCSAMPLE_OUTPUT = new ArrayList<>(Arrays.asList(
-                "//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n",
+                "//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
+                "\n",
+                "// This hecced.js file contains the data for:\n",
+                "// HECCSample\n",
+                "// by Rachel Lowe\n",
+                "// IFID: DE7B3D02-81BB-4C2A-82BA-7CA9398B2262\n",
                 "\n",
                 "var startingPassageName = \"k\";\n",
                 "\n",

@@ -1,4 +1,9 @@
-//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)
+//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)
+
+// This hecced.js file contains the data for:
+// Backblast
+// by Rachel Lowe
+// IFID: 123F032A-953F-496B-9251-7DBF3B320074
 
 var startingPassageName = "Start";
 
@@ -364,7 +369,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Cafeteria meet Dr Spreewald",
-			"\"I guess I should introduce myself, shouldn't I? My name is Dr. Spreewald, but please, call me Cillian.\"\n\n{if:tCount(\"spreewald\")===1}{You haven't met this person before, so you may as well make a decent first impression.}{else:So this is that 'Spreewald' person you've been hearing so much about recently.}\n\n\"[[So what are you supposed to be doing here?|Cafeteria whats your job]]\"\n\"[[By the way, would you happen to know anything about a bunch of explosions that have been happening recently?|Cafeteria why boom]]\"",
+			"\"I guess I should introduce myself, shouldn't I? My name is Dr. Spreewald, but please, call me Cillian.\"\n\n{if:not(tAny(\"spreewald\"))}{You haven't met this person before, so you may as well make a decent first impression.}{else:So this is that 'Spreewald' person you've been hearing so much about recently.}\n\n\"[[So what are you supposed to be doing here?|Cafeteria whats your job]]\"\n\"[[By the way, would you happen to know anything about a bunch of explosions that have been happening recently?|Cafeteria why boom]]\"",
 			["spreewald"]
 		)
 	);
@@ -497,7 +502,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Archives notebook 3",
-			"Now, this is juicy!\n\nIt looks like Dr Albert really doesn't like {if:pAny(\"Cafeteria meet Dr Spreewald\")}{Cillian}{else:this Dr Spreewald person{if:tCount(\"spreewald\")<1/}{, whoever they are/}}.\n\n*If that renegade upstart keeps trying to render everything I have built my career on completely redundant, I swear I may need to take matters into my own hands. I could probably pin the blame on that Percival fellow in a worst case scenario, but I simply cannot let Spreewald carry on completely unhindered. I guess he probably won't be able to do much if he doesn't have any subjects to test on, though. I suppose I should do something about this.*\n\nMaybe Percival might also be interested in this.\n\nDo you want to [[call him over|Archives summon Percival]], or do you want to [[keep reading|Archives notebook 4]]?",
+			"Now, this is juicy!\n\nIt looks like Dr Albert really doesn't like {if:pAny(\"Cafeteria meet Dr Spreewald\")}{Cillian}{else:this Dr Spreewald person{if:not(tAny(\"spreewald\"))/}{, whoever they are/}}.\n\n*If that renegade upstart keeps trying to render everything I have built my career on completely redundant, I swear I may need to take matters into my own hands. I could probably pin the blame on that Percival fellow in a worst case scenario, but I simply cannot let Spreewald carry on completely unhindered. I guess he probably won't be able to do much if he doesn't have any subjects to test on, though. I suppose I should do something about this.*\n\nMaybe Percival might also be interested in this.\n\nDo you want to [[call him over|Archives summon Percival]], or do you want to [[keep reading|Archives notebook 4]]?",
 			["albertSus","spreewald"]
 		)
 	);
@@ -854,7 +859,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Cafeteria run deadend",
-			"You turn the corner.\n\nYou are greeted by a dead end.\n\nA dead end that someone appears to be using as an armoury of sorts, with an excessive amount of high explosives scattered around.\n\nYou notice a tripwire on the floor. Luckily for you, you haven't stepped on it.\n\nPercival hasn't quite caught up with you yet.\n\n[[Perhaps it would be a good idea to turn back.|Cafeteria run turn back]].",
+			"You turn the corner.\n\nYou are greeted by a dead end.\n\nA dead end that someone appears to be using as an armoury of sorts, with an excessive amount of high explosives scattered around.\n\nYou notice a tripwire on the floor. Luckily for you, you haven't stepped on it.\n\nPercival hasn't quite caught up with you yet.\n\nPerhaps it would be a good idea to [[turn back|Cafeteria run turn back]].",
 			[]
 		)
 	);
@@ -1568,7 +1573,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"PEnd follow him",
-			"You try to sneak behind Subject A as he makes his way towards where the self-destruct button for the facility is, trying to not get seen by him. He's making his way there at a rather fast pace.\n\nEventually, you see him walk through a door labelled \"**REACTOR**\".\n\nI suppose the power for this facility had to come from somewhere, so it makes some sense that it would have its own power supply, just in case.\n\nYou can hear an announcement over the intercom.\n\n#**EMERGENCY SELF-DESTRUCT SEQUENCE ENGAGED. THANK YOU FOR YOUR EFFORTS IN THIS TIMESTREAM.**\n\nYou don't have much time left.\n\n[[You go into the reactor room.|PEnd reactor room]]",
+			"{if:not(pAny(\"PEnd follow him\"))}{You try to sneak behind Subject A as he makes his way towards where the self-destruct button for the facility is, trying to not get seen by him. He's making his way there at a rather fast pace.\n\nEventually, you see him walk through a door labelled \"**REACTOR**\".\n\nI suppose the power for this facility had to come from somewhere, so it makes some sense that it would have its own power supply, just in case.}{else:Once again, you sneak behind Subject A, as he makes his way to the reactor.}\n\nYou can hear an announcement over the intercom.\n\n#**EMERGENCY SELF-DESTRUCT SEQUENCE ENGAGED. THANK YOU FOR YOUR EFFORTS IN THIS TIMESTREAM.**\n\nYou don't have much time left.\n\n[[You go into the reactor room.|PEnd reactor room]]",
 			["noreturn"]
 		)
 	);
@@ -1603,7 +1608,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Cafeteria why boom",
-			"\"{if:pAny(\"Cafeteria what is your job\")}{}{else:Well, isn't that a doozy of a conversation-starter! }I'm not entirely sure what it is you're talking about.\"\n\n{if:tCount(\"spreewald\")==1}{You're not entirely sure if it's worth pressing him for more information, as this is the first time you're seeing him.}{else:You've probably said a bit too much. He's probably going to be a bit suspicious of you from here.}\n\n\n{if:pAny(\"Cafeteria whats your job\")}{}{else:\"[[Okay, forget that, do you know anything for sure about what you're doing here?|Cafeteria whats your job]]\"}\n\"[[You know what? Never mind. Why exactly did we start having this conversation?|Cafeteria why bother]]\"",
+			"\"{if:pAny(\"Cafeteria what is your job\")}{}{else:Well, isn't that a doozy of a conversation-starter! }I'm not entirely sure what it is you're talking about.\"\n\n{if:not(tAny(\"spreewald\"))}{You're not entirely sure if it's worth pressing him for more information, as this is the first time you're seeing him.}{else:You've probably said a bit too much. He's probably going to be a bit suspicious of you from here.}\n\n\n{if:pAny(\"Cafeteria whats your job\")}{}{else:\"[[Okay, forget that, do you know anything for sure about what you're doing here?|Cafeteria whats your job]]\"}\n\"[[You know what? Never mind. Why exactly did we start having this conversation?|Cafeteria why bother]]\"",
 			["cafSus"]
 		)
 	);
@@ -1743,7 +1748,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"PEnd reactor the wager",
-			"Subject A brings his arms forward, making his hands, both closed up into fits, very visible.\n\n\"I came up with this one many lifetimes ago. If you can correctly tell me which hand you think I've put a piece of paper in, I'll let you survive in this timeline. But, if you get it wrong, you can just try again in another timeline, can't you?\"\n\n{if:pAll(\"PEnd left\",\"PEnd right\")}{You remember the last two attempts you made at this wager. You've figured out his trick already.}{else:This seems simple enough. You'll probably just fail it once, and then you'll win, won't you? He's almost making it too easy!}\n\nIt's time to choose.\n\n{if:not(pAny(\"PEnd left\"))}{\"[[It's in your left hand, isn't it?|PEnd left]]\"\n}{if:not(pAny(\"PEnd right\"))}{\"[[It's in your right hand, isn't it?|PEnd right]]\"\n}{if:pAll(\"PEnd left\", \"PEnd right\")}{\"[[I know you're cheating. Both of your hands are empty!|PEnd both empty]]\"}",
+			"Subject A brings his arms forward, making his hands, both closed up into fits, very visible.\n\n\"I came up with this one many lifetimes ago. If you can correctly tell me which hand you think I've put a piece of paper in, I'll let you survive in this timeline. But, if you get it wrong, you can just try again in another timeline, can't you?\"\n\n{if:pAll(\"PEnd left\",\"PEnd right\")}{You remember the last two attempts you made at this wager. You've figured out his trick already.}{else:{if:pAny(\"PEnd reactor the wager\")/}{It's the same wager again. You failed last time, but this time, you know it's in his {if:pAny(\"PEnd left\")//}{right//}{else:left//} hand, isn't it?/}{else:This seems simple enough. You'll probably just fail it once, and then you'll win, won't you? He's almost making it too easy!/}}\n\nIt's time to choose.\n\n{if:not(pAny(\"PEnd left\"))}{\"[[It's in your left hand, isn't it?|PEnd left]]\"\n}{if:not(pAny(\"PEnd right\"))}{\"[[It's in your right hand, isn't it?|PEnd right]]\"\n}{if:pAll(\"PEnd left\", \"PEnd right\")}{\"[[I know you're cheating. Both of your hands are empty!|PEnd both empty]]\"}",
 			[]
 		)
 	);
@@ -1813,7 +1818,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"YourRoom whyKill",
-			"Percival looks a bit bothered by this question.\n\n\"I suppose that is a good question. But something here doesn't really add up. Why would someone want to kill the test subjects? They clearly want the test subjects alive, otherwise, they would have probably stopped with the first one. And Dr. Spreewald *did* say something about needing you to remain alive, and he said I'd be responsible if another of his subjects died...\"\n\n{if:tCount(\"spreewald\")<1}{You don't recall hearing anything about a Dr. Spreewald before now. But whoever this person is, they might know something that Percival doesn't.}{else:That person *again*. At least it still sounds like they might be of some relevance in this timeline as well.}\n\nUnfortunately, before you can press Percival for some more tidbits of information, he lets out a \"We're back!\", as the two of you [[reach your destination|YourRoom arrival]].",
+			"Percival looks a bit bothered by this question.\n\n\"I suppose that is a good question. But something here doesn't really add up. Why would someone want to kill the test subjects? They clearly want the test subjects alive, otherwise, they would have probably stopped with the first one. And Dr. Spreewald *did* say something about needing you to remain alive, and he said I'd be responsible if another of his subjects died...\"\n\n{if:not(tAny(\"spreewald\"))}{You don't recall hearing anything about a Dr. Spreewald before now. But whoever this person is, they might know something that Percival doesn't.}{else:That person *again*. At least it still sounds like they might be of some relevance in this timeline as well.}\n\nUnfortunately, before you can press Percival for some more tidbits of information, he lets out a \"We're back!\", as the two of you [[reach your destination|YourRoom arrival]].",
 			["spreewald"]
 		)
 	);

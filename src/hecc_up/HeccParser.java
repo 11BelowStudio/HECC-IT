@@ -368,7 +368,12 @@ public class HeccParser {
 
         heccedData.clear();
 
-        heccedData.add("//HECC UP output (as of 29/01/2021) (Rachel Lowe, 2021)\n\n");
+        heccedData.add("//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n\n");
+
+        heccedData.add("// This hecced.js file contains the data for:\n");
+        heccedData.add("// " + metadata.getTitle() + "\n");
+        heccedData.add("// by " + metadata.getAuthor() + "\n");
+        heccedData.add("// IFID: " + metadata.getIfid() + "\n\n");
 
         String theStart = metadata.getStartPassage();
 

@@ -264,7 +264,13 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      * returns the IFID string
      * @return ifid
      */
-    public String getIfid(){ return ifid; }
+    public String getIfid(){
+        if (isIfidDeclared) {
+            return ifid;
+        } else {
+            return "unspecified";
+        }
+    }
 
     //returns true if all optional metadata was declared, false otherwise
 

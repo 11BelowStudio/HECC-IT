@@ -80,7 +80,7 @@ public class EditableMetadataTests {
 
     @Test
     public void changeAuthorValidTests(){
-        String[] valid = {"A. N. Onymous", "deez nutz","D. Eez, N. Utz, and L. Mao Gottem", " oh look whitespace "};
+        String[] valid = {"A. N. Onymous", "deez nutz","D. Eez, N. Utz, and L. Mao Gottem", " oh look whitespace ", "thelegend27", "_dave","x"};
 
 
         EditableMetadata md1 = new EditableMetadata("title","author");
@@ -103,7 +103,7 @@ public class EditableMetadataTests {
     @Test
     public void invalidAuthorTests(){
 
-        String[] invalid = {"deez nutz!","42","x","Dread Zeppelin - your time is gonna come (1990)","bruh~"};
+        String[] invalid = {"deez nutz!","$","bob?!","Dread Zeppelin - your time is gonna come (1990)","bruh~"};
 
         String originalAuthor = "author";
         EditableMetadata md1 = new EditableMetadata("title", originalAuthor);

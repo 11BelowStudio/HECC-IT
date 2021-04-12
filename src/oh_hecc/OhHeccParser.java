@@ -350,6 +350,9 @@ public class OhHeccParser implements GameDataGetterParserInterface {
                     e.updatePosition(
                         Vector2D.randomVectorFromOrigin(parent.get().getPosition(), 128, 128)
                     );
+                } else {
+                    // otherwise, we displace it from 0,0
+                    e.updatePosition(Vector2D.randomVectorFromOrigin(new Vector2D(), 256, 128));
                 }
 
             }
