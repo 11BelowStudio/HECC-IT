@@ -5,6 +5,7 @@ import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
+import oh_hecc.game_parts.passage.ModelBitsPassageInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 
 import java.io.IOException;
@@ -90,8 +91,17 @@ public interface MVCGameDataInterface extends Heccable {
      */
     EditorWindowInterface openMetadataEditWindow();
 
+
     /**
-     * Saves the .hecc, but also checks to see if it's valid or not (and, if it's valid, it overwrites the '_lastValidVersion' backup)
+     * Saves the .hecc
+     *
+     * @throws IOException if it couldn't be saved.
+     */
+    void saveTheHecc() throws IOException;
+
+    /**
+     * Attempts to check the hecc for validity, and overwrites the _lastValidVersion backup of the .hecc file
+     * (only overwrites the '_lastValidVersion' backup if it is valid)
      *
      * @throws IOException if there's an IO problem preventing it from being saved.
      * @throws HeccCeption if there's a problem with the .hecc file that renders it invalid.

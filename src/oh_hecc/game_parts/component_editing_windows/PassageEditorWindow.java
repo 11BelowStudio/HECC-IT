@@ -13,7 +13,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -74,22 +73,22 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         //RENAMING THE PASSAGE
         //JPanel nameEditPanel = new JPanel(new GridLayout(3,1));
-        JPanel nameEditPanel = new JPanel(new GridLayout(2,1));
+        final JPanel nameEditPanel = new JPanel(new GridLayout(2,1));
         nameEditPanel.setBorder(new TitledBorder(loweredEtchedBorder, "Edit passage name"));
 
-        JLabel nameEditLabel = new JLabel();
+        final JLabel nameEditLabel = new JLabel();
         nameEditLabel.setFont(notBold);
         nameEditLabel.setText("Passage name must start/end with numbers/letters/underscore. May contain spaces. Duplicate names are banned.");
         nameEditPanel.add(nameEditLabel);
 
-        JPanel namePanel = new JPanel();
+        final JPanel namePanel = new JPanel();
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
         nameField = new JTextField(thePassage.getPassageName(), 64);
         nameField.setEditable(true);
         addPassageNameDocumentListener(nameField);
         //nameEditPanel.add(nameField);
         namePanel.add(nameField);
-        JButton updateTitleButton = new JButton("Rename");
+        final JButton updateTitleButton = new JButton("Rename");
         updateTitleButton.addActionListener(this::updateName);
         //nameEditPanel.add(updateTitleButton);
         namePanel.add(updateTitleButton);
@@ -100,21 +99,21 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         //EDITING PASSAGE TAGS
         //JPanel tagEditPanel = new JPanel(new GridLayout(3,1));
-        JPanel tagEditPanel = new JPanel(new GridLayout(2,1));
+        final JPanel tagEditPanel = new JPanel(new GridLayout(2,1));
         tagEditPanel.setBorder(new TitledBorder(loweredEtchedBorder, "Edit passage tags"));
 
-        JLabel tagEditLabel = new JLabel();
+        final JLabel tagEditLabel = new JLabel();
         tagEditLabel.setFont(notBold);
         tagEditLabel.setText("Tags may only contain letters/numbers/underscores. Must be separated by spaces");
         tagEditPanel.add(tagEditLabel);
 
-        JPanel tagPanel = new JPanel();
+        final JPanel tagPanel = new JPanel();
         tagPanel.setLayout(new BoxLayout(tagPanel,BoxLayout.X_AXIS));
         tagField = new JTextField(thePassage.getPassageTagsAsString(), 64);
         tagField.setEditable(true);
         //tagEditPanel.add(tagField);
         tagPanel.add(tagField);
-        JButton updateTagButton = new JButton("Update Tags");
+        final JButton updateTagButton = new JButton("Update Tags");
         updateTagButton.addActionListener(this::updateTags);
         //tagEditPanel.add(updateTagButton);
         tagPanel.add(updateTagButton);
@@ -125,7 +124,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         //EDITING INLINE COMMENT
         //JPanel inlineEditPanel = new JPanel(new GridLayout(2,1));
-        JPanel inlineEditPanel = new JPanel();
+        final JPanel inlineEditPanel = new JPanel();
         inlineEditPanel.setLayout(new BoxLayout(inlineEditPanel,BoxLayout.X_AXIS));
         inlineEditPanel.setBorder(
                 new TitledBorder(
@@ -138,7 +137,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
         inlineCommentField.setEditable(true);
         inlineEditPanel.add(inlineCommentField);
         //JButton updateInlineButton = new JButton("Update Inline Comment");
-        JButton updateInlineButton = new JButton("Update Comment");
+        final JButton updateInlineButton = new JButton("Update Comment");
         updateInlineButton.addActionListener(this::updateInlineComment);
         inlineEditPanel.add(updateInlineButton);
 
@@ -146,7 +145,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
 
         //EDITING THE ACTUAL PASSAGE CONTENT (the important bit)
-        JPanel contentEditingPanel = new JPanel(new BorderLayout());
+        final JPanel contentEditingPanel = new JPanel(new BorderLayout());
         contentEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
@@ -163,13 +162,13 @@ public class PassageEditorWindow extends GenericEditorWindow {
         contentArea.setWrapStyleWord(true);
         contentArea.setText(thePassage.getPassageContent());
 
-        JScrollPane contentScroll = new JScrollPane(
+        final JScrollPane contentScroll = new JScrollPane(
                 contentArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
         contentEditingPanel.add(contentScroll,BorderLayout.CENTER);
-        JButton contentUpdateButton = new JButton("Update content (yes, players will read this. hopefully.)");
+        final JButton contentUpdateButton = new JButton("Update content (yes, players will read this. hopefully.)");
         contentUpdateButton.addActionListener(this::updateContent);
         contentEditingPanel.add(contentUpdateButton, BorderLayout.SOUTH);
 
@@ -177,7 +176,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
 
         //updating the trailing comment editing panel
-        JPanel commentEditingPanel = new JPanel(new BorderLayout());
+        final JPanel commentEditingPanel = new JPanel(new BorderLayout());
         commentEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
@@ -192,13 +191,13 @@ public class PassageEditorWindow extends GenericEditorWindow {
         commentArea.setWrapStyleWord(true);
         commentArea.setText(thePassage.getTrailingComment());
 
-        JScrollPane commentScroll = new JScrollPane(
+        final JScrollPane commentScroll = new JScrollPane(
                 commentArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
-        JButton commentUpdateButton = new JButton("Update comment");
+        final JButton commentUpdateButton = new JButton("Update comment");
         commentUpdateButton.addActionListener(this::updateTrailingComment);
         commentEditingPanel.add(commentUpdateButton, BorderLayout.SOUTH);
 
@@ -209,7 +208,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
 
         //the 'delete' button
-        JPanel yeetThisPanel = new JPanel();
+        final JPanel yeetThisPanel = new JPanel();
         yeetThisPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
@@ -217,7 +216,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                 )
         );
 
-        JButton bigRedButtonExceptItsNotRed = new JButton("DELETE THIS PASSAGE");
+        final JButton bigRedButtonExceptItsNotRed = new JButton("DELETE THIS PASSAGE");
         bigRedButtonExceptItsNotRed.setForeground(Color.RED);
         bigRedButtonExceptItsNotRed.addActionListener(e -> deletThis());
         yeetThisPanel.add(bigRedButtonExceptItsNotRed);
@@ -257,7 +256,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @return true if it could be updated, false otherwise
      */
     private boolean updateName(boolean checkingIfUnchanged) {
-        String newName = nameField.getText().trim();
+        final String newName = nameField.getText().trim();
         //if the user has entered the current passage name *again*
         if (newName.equals(thePassage.getPassageName())) {
             if (checkingIfUnchanged) {
@@ -327,7 +326,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @return true if it could be updated, false otherwise.
      */
     private boolean updateTags() {
-        String newTagList = tagField.getText().trim();
+        final String newTagList = tagField.getText().trim();
         try {
             thePassage.updatePassageTags(newTagList);
             tagField.setText(thePassage.getPassageTagsAsString());
@@ -360,7 +359,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * Will update the inline comment of the passage
      */
     private void updateInlineComment() {
-        String newInlineComment = inlineCommentField.getText().trim();
+        final String newInlineComment = inlineCommentField.getText().trim();
         thePassage.setInlinePassageComment(newInlineComment);
         inlineCommentField.setText(thePassage.getInlinePassageComment());
         refresh();
@@ -379,7 +378,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * Attempts to update the passage content (and also creates new passages to link to if newly linked passages dont exist yet)
      */
     private void updateContent() {
-        String newContent = contentArea.getText().trim();
+        final String newContent = contentArea.getText().trim();
         thePassage.updatePassageContent(newContent, gameData.getPassageMap());
         contentArea.setText(thePassage.getPassageContent());
         refresh();
@@ -398,7 +397,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * Updates the trailing comment of this passage
      */
     private void updateTrailingComment() {
-        String newTrailingComment = commentArea.getText().trim();
+        final String newTrailingComment = commentArea.getText().trim();
         thePassage.setTrailingComment(newTrailingComment);
         commentArea.setText(thePassage.getTrailingComment());
         refresh();
@@ -456,9 +455,9 @@ public class PassageEditorWindow extends GenericEditorWindow {
      * @param args le command line parameters have not arrived (because they aren't used)
      */
     public static void main(String[] args){
-        EditablePassage[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
+        final EditablePassage[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
 
-        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
+        final Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
         for (EditablePassage e: samples) {
             passages.put(e.getPassageUUID(),e);
@@ -471,14 +470,14 @@ public class PassageEditorWindow extends GenericEditorWindow {
         }
 
 
-        GameDataObject gdo = new GameDataObject(
+        final GameDataObject gdo = new GameDataObject(
                 passages,
                 new EditableMetadata("A Hypertext Fiction","Anonymous"),
-                Paths.get("Z://samplePath/ok.hecc")
+                java.nio.file.Paths.get("Z://samplePath/ok.hecc")
         );
 
         //using this for testing and such, printing everything in passages once the user is done editing and such
-        EditorWindowInterface w = gdo.openPassageEditWindow(samples[0].getPassageUUID());
+        final EditorWindowInterface w = gdo.openPassageEditWindow(samples[0].getPassageUUID());
 
         //making sure that the window updated everything, by seeing the printout of its internal state when closed
         w.addWindowClosedListener(

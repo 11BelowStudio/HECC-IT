@@ -276,7 +276,7 @@ public class ChooseFile {
      * Otherwise, it'll be red.
      */
     private void makeSureAuthorIsValid(){
-        boolean stillValid = make_AuthorInput.getText().trim().matches(SharedMetadata.VALID_AUTHOR_REGEX);
+        final boolean stillValid = make_AuthorInput.getText().trim().matches(SharedMetadata.VALID_AUTHOR_REGEX);
         if (isAuthorValid ^ stillValid){
             make_AuthorInput.setForeground( stillValid ? standardColor : Color.RED);
             isAuthorValid = stillValid;
@@ -291,13 +291,13 @@ public class ChooseFile {
      * Otherwise, it'll be red.
      */
     private void makeSureTitleIsValid(){
-        String titleinput = make_TitleInput.getText().trim();
+        final String titleinput = make_TitleInput.getText().trim();
         boolean validPath = false;
         try{
             Paths.get(titleinput + ".hecc");
             validPath = true;
         } catch (Exception ignored){}
-        boolean stillValid = (titleinput.matches(SharedMetadata.VALID_TITLE_REGEX) && validPath);
+        final boolean stillValid = (titleinput.matches(SharedMetadata.VALID_TITLE_REGEX) && validPath);
         if (isTitleValid ^ stillValid){
             make_TitleInput.setForeground( stillValid ? standardColor : Color.RED);
             isTitleValid = stillValid;
@@ -321,9 +321,9 @@ public class ChooseFile {
     private void makeHeccFile(BiPredicate<Path, MetadataEditingInterface> newFilePathAndMetadataGoesHere) {
         if (isTitleValid) {
             if (isAuthorValid) {
-                String title = make_TitleInput.getText().trim();
-                String author = make_AuthorInput.getText().trim();
-                JFileChooser f = new JFileChooser();
+                final String title = make_TitleInput.getText().trim();
+                final String author = make_AuthorInput.getText().trim();
+                final JFileChooser f = new JFileChooser();
                 f.setDialogTitle("Select where you want to save your .hecc file");
                 f.setMultiSelectionEnabled(false);
                 f.setSelectedFile(new File(title + ".hecc"));
@@ -350,7 +350,7 @@ public class ChooseFile {
                         if (!stringPath.toLowerCase().endsWith(".hecc")) {
                             stringPath = stringPath.concat(".hecc");
                         }
-                        Path finalPath = Paths.get(stringPath);
+                        final Path finalPath = Paths.get(stringPath);
 
                         // this basically attempts to make the .hecc file and start editing it.
                         new SwingWorker<Boolean, Object>() {
@@ -413,7 +413,7 @@ public class ChooseFile {
      * Otherwise, the user won't be allowed to start editing.
      */
     private void selectHeccFile(){
-        JFileChooser f = new JFileChooser();
+        final JFileChooser f = new JFileChooser();
 
 
         f.setDialogTitle("Select a .hecc file to open");
@@ -432,7 +432,7 @@ public class ChooseFile {
                 "Open this file"
         ) == JFileChooser.APPROVE_OPTION){
 
-            File selected = f.getSelectedFile();
+            final File selected = f.getSelectedFile();
             boolean valid = false;
             try{
                 selectedFileToOpen = Paths.get(selected.getAbsolutePath());
@@ -464,7 +464,7 @@ public class ChooseFile {
      * @deprecated this existed for testing only basically
      */
     public static void main(String[] args) {
-        ChooseFile cf = new ChooseFile(
+        final ChooseFile cf = new ChooseFile(
                 e -> {
                     System.out.println("edit " + e.toString());
                     return true;
@@ -481,7 +481,7 @@ public class ChooseFile {
                 }
         );
 
-        JFrame theFrame = new JFrame();
+        final JFrame theFrame = new JFrame();
         theFrame.add(cf.thePanel, BorderLayout.CENTER);
         theFrame.pack();
         theFrame.revalidate();

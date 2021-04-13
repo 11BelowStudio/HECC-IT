@@ -18,10 +18,7 @@ public class FolderOutputter {
     private final Path outputFolderPath; //where to output stuff to
 
 
-    /**
-     * whether or not the output folder exists
-     */
-    private boolean outputFolderExists; //whether or not the output folder exists
+
 
     /**
      * This is the FolderOutputter constructor
@@ -33,17 +30,8 @@ public class FolderOutputter {
     public FolderOutputter(Path outPath) throws SecurityException, IOException {
         //attempts to create the necessary directories for the output folder.
         outputFolderPath = Files.createDirectories(outPath);
-        outputFolderExists = true;
     }
 
-    /**
-     * Working out whether or not the output folder exists
-     *
-     * @return whether or not the output folder exists
-     */
-    public boolean doesOutputFolderExist() {
-        return outputFolderExists;
-    }
 
 
     /**
@@ -54,67 +42,69 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing stuff from being output
      * @throws IOException if there's another input/output problem
      */
-    public boolean outputTheGameWithMetadata(List<String> heccedData, FolderOutputterMetadataInterface metadata) throws
-            SecurityException, IOException {
-        if (outputFolderExists) {
-            Path tempDir = Files.createTempDirectory("oldFiles");
+    public boolean outputTheGameWithMetadata(
+            List<String> heccedData,
+            FolderOutputterMetadataInterface metadata
+    ) throws SecurityException, IOException {
+        //if (outputFolderExists) {
+        final Path tempDir = Files.createTempDirectory("oldFiles");
 
-            Path heccedFilePath = outputFolderPath.resolve("hecced.js");
-
-
-            if (Files.exists(heccedFilePath)) {
-                Files.move(heccedFilePath, tempDir.resolve(heccedFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            Path heccedFile = Files.createFile(heccedFilePath);
-            writeTheFile(heccedFile, heccedData);
-
-            Path heccerFilePath = outputFolderPath.resolve("heccer.js");
-
-            if (Files.exists(heccerFilePath)) {
-                Files.move(heccerFilePath, tempDir.resolve(heccerFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            Path heccerFile = Files.createFile(heccerFilePath);
-
-            writeTheFile(heccerFile, TextAssetReader.getHECCER());
+        final Path heccedFilePath = outputFolderPath.resolve("hecced.js");
 
 
-            Path showdownFilePath = outputFolderPath.resolve("showdown.min.js");
-
-            if (Files.exists(showdownFilePath)) {
-                Files.move(showdownFilePath, tempDir.resolve(showdownFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            Path showdownFile = Files.createFile(showdownFilePath);
-
-            writeTheFile(showdownFile, TextAssetReader.getShowdownMinJs());
-
-            Path indexFilePath = outputFolderPath.resolve("index.html");
-
-            if (Files.exists(indexFilePath)) {
-                Files.move(indexFilePath, tempDir.resolve(indexFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            Path indexFile = Files.createFile(indexFilePath);
-
-            writeIndexButWithMetadata(metadata, indexFile);
-
-            Path iFictionFilePath = outputFolderPath.resolve("metadata.ifiction");
-
-            if (Files.exists(iFictionFilePath)) {
-                Files.move(iFictionFilePath, tempDir.resolve(iFictionFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.deleteIfExists(iFictionFilePath);
-            }
-
-            Path iFictionFile = Files.createFile(iFictionFilePath);
-
-            writeIFictionFile(metadata, iFictionFile);
-
-            return true;
-        } else {
-            return false;
+        if (Files.exists(heccedFilePath)) {
+            Files.move(heccedFilePath, tempDir.resolve(heccedFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
         }
+
+        final Path heccedFile = Files.createFile(heccedFilePath);
+        writeTheFile(heccedFile, heccedData);
+
+        final Path heccerFilePath = outputFolderPath.resolve("heccer.js");
+
+        if (Files.exists(heccerFilePath)) {
+            Files.move(heccerFilePath, tempDir.resolve(heccerFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        final Path heccerFile = Files.createFile(heccerFilePath);
+
+        writeTheFile(heccerFile, TextAssetReader.getHECCER());
+
+
+        final Path showdownFilePath = outputFolderPath.resolve("showdown.min.js");
+
+        if (Files.exists(showdownFilePath)) {
+            Files.move(showdownFilePath, tempDir.resolve(showdownFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        final Path showdownFile = Files.createFile(showdownFilePath);
+
+        writeTheFile(showdownFile, TextAssetReader.getShowdownMinJs());
+
+        final Path indexFilePath = outputFolderPath.resolve("index.html");
+
+        if (Files.exists(indexFilePath)) {
+            Files.move(indexFilePath, tempDir.resolve(indexFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        final Path indexFile = Files.createFile(indexFilePath);
+
+        writeIndexButWithMetadata(metadata, indexFile);
+
+        final Path iFictionFilePath = outputFolderPath.resolve("metadata.ifiction");
+
+        if (Files.exists(iFictionFilePath)) {
+            Files.move(iFictionFilePath, tempDir.resolve(iFictionFilePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            Files.deleteIfExists(iFictionFilePath);
+        }
+
+        final Path iFictionFile = Files.createFile(iFictionFilePath);
+
+        writeIFictionFile(metadata, iFictionFile);
+
+        return true;
+        //} else {
+        //    return false;
+        //}
 
     }
 
@@ -127,7 +117,7 @@ public class FolderOutputter {
      * @throws IOException       if there's another IO problem
      */
     private void writeTheFile(Path p, List<String> dataToWrite) throws SecurityException, IOException {
-        BufferedWriter heccedFileWriter = Files.newBufferedWriter(p);
+        final BufferedWriter heccedFileWriter = Files.newBufferedWriter(p);
         for (String s : dataToWrite) {
             heccedFileWriter.write(s);
         }
@@ -142,8 +132,11 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing this from working
      * @throws IOException       if there's another IO problem
      */
-    private void writeTheFile(Path p, String s) throws SecurityException, IOException {
-        BufferedWriter heccedFileWriter = Files.newBufferedWriter(p);
+    private void writeTheFile(
+            Path p,
+            String s
+    ) throws SecurityException, IOException {
+        final BufferedWriter heccedFileWriter = Files.newBufferedWriter(p);
         heccedFileWriter.write(s);
         heccedFileWriter.close();
     }
@@ -156,11 +149,13 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing the file from being made
      * @throws IOException       if there's another IO problem
      */
-    private void writeIndexButWithMetadata(FolderOutputterMetadataInterface metadata, Path indexPath) throws
-            SecurityException, IOException {
+    private void writeIndexButWithMetadata(
+            FolderOutputterMetadataInterface metadata,
+            Path indexPath
+    ) throws SecurityException, IOException {
 
         //List<String> indexData = TextAssetReader.getIndex();
-        BufferedWriter indexFileWriter = Files.newBufferedWriter(indexPath);
+        final BufferedWriter indexFileWriter = Files.newBufferedWriter(indexPath);
 
         String theIndexString = TextAssetReader.getIndex();
 
@@ -189,9 +184,11 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing the file from being made
      * @throws IOException       if there's another IO problem
      */
-    private void writeIFictionFile(FolderOutputterMetadataInterface metadata, Path thePath) throws
-            SecurityException, IOException {
-        BufferedWriter iFictionFileWriter = Files.newBufferedWriter(thePath);
+    private void writeIFictionFile(
+            FolderOutputterMetadataInterface metadata,
+            Path thePath
+    ) throws SecurityException, IOException {
+        final BufferedWriter iFictionFileWriter = Files.newBufferedWriter(thePath);
         iFictionFileWriter.write(metadata.getIFictionMetadata());
         iFictionFileWriter.close();
     }

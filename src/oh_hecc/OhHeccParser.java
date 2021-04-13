@@ -44,7 +44,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
 
         heccMap = new HashMap<>();
 
-        String[] splitData = splitRawDataToMetadataAndPassageString(rawHeccData.trim().concat("\n"));
+        final String[] splitData = splitRawDataToMetadataAndPassageString(rawHeccData.trim().concat("\n"));
 
         /*
             you might be asking 'why am I concatting a "\n" to the end of the raw hecc data?'
@@ -91,7 +91,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
         String metadataString = "";
         String everythingAfterTheMetadata = "";
 
-        Matcher firstDeclarationMatcher = Pattern.compile(
+        final Matcher firstDeclarationMatcher = Pattern.compile(
                 "(^::)",
                 Pattern.MULTILINE
         ).matcher(rawData);
@@ -132,39 +132,39 @@ public class OhHeccParser implements GameDataGetterParserInterface {
      */
     private Map<UUID, PassageEditingInterface> constructPassageMap(String dataToParse){
         //creating the map
-        Map<UUID, PassageEditingInterface> pMap = new HashMap<>();
+        final Map<UUID, PassageEditingInterface> pMap = new HashMap<>();
 
         // this will keep track of all the names that have been used for passages, so duplicates can be avoided.
-        Set<String> passageNames = new HashSet<>();
+        final Set<String> passageNames = new HashSet<>();
 
         boolean notDone;
 
         //matches declarations
-        Matcher declarationMatcher = Pattern.compile(
+        final Matcher declarationMatcher = Pattern.compile(
                 "(^::("+ Parseable.PASSAGE_NAME_REGEX_WITH_WHITESPACE + "))",
                 Pattern.MULTILINE
         ).matcher(dataToParse);
 
         //will give this the everythingAfterDeclaration (the content)
-        Matcher passageContentMatcher = Pattern.compile(
+        final Matcher passageContentMatcher = Pattern.compile(
                 "((?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)",
                 Pattern.MULTILINE
         ).matcher("");
 
         //will use this to crop leading whitespace lines
-        Matcher entirelyWhitespaceMatcher = Pattern.compile(
+        final Matcher entirelyWhitespaceMatcher = Pattern.compile(
                 "^\\h*$",
                 Pattern.MULTILINE
         ).matcher("");
 
         //matches whitespace at the end of the line
-        Matcher lineEndWhitespaceMatcher = Pattern.compile(
+        final Matcher lineEndWhitespaceMatcher = Pattern.compile(
                 "\\h*\\R$",
                 Pattern.MULTILINE
         ).matcher("");
 
         //This matches the line that indicates the start/end of a multiline comment at the end of a passage (containing only ;;)
-        Matcher commentStartEndMatcher = Pattern.compile(
+        final Matcher commentStartEndMatcher = Pattern.compile(
                 "^;;\\R$",
                 Pattern.MULTILINE
         ).matcher("");
@@ -239,8 +239,8 @@ public class OhHeccParser implements GameDataGetterParserInterface {
             passageContentMatcher.reset(everythingAfterDeclaration);
 
 
-            StringBuilder contentBuilder = new StringBuilder(); //builds a content string
-            StringBuilder commentBuilder = new StringBuilder(); //builds a comment string
+            final StringBuilder contentBuilder = new StringBuilder(); //builds a content string
+            final StringBuilder commentBuilder = new StringBuilder(); //builds a comment string
 
             contentFound = false;
             boolean commentStarted = false;
@@ -298,7 +298,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
                 trimmedName = newName; // overwrites the duplicate name with one that's unique enough
             }
 
-            PassageEditingInterface thePassage = new EditablePassage(
+            final PassageEditingInterface thePassage = new EditablePassage(
                     trimmedName,
                     contentBuilder.toString().trim(),
                     commentBuilder.toString().trim(),
@@ -309,7 +309,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
 
 
         // this holds passages from the .hecc that may have links to undefined passages
-        Set<PassageEditingInterface> thePassagesWithUnresolvedLinks = new HashSet<>();
+        final Set<PassageEditingInterface> thePassagesWithUnresolvedLinks = new HashSet<>();
 
         //And now, time to actually update the UUIDs.
         for (PassageEditingInterface e: pMap.values()){
@@ -337,10 +337,10 @@ public class OhHeccParser implements GameDataGetterParserInterface {
                     continue; // the start passage won't get displaced.
                 }
 
-                UUID currentUUID = e.getPassageUUID();
+                final UUID currentUUID = e.getPassageUUID();
 
                 // attempts to find any parent passage (containing a link to this passage).
-                Optional<PassageEditingInterface> parent = pMap.values().stream().filter(
+                final Optional<PassageEditingInterface> parent = pMap.values().stream().filter(
                         p1 -> p1.getLinkedPassageUUIDs().contains(currentUUID)
                 ).findAny();
 
@@ -402,7 +402,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
      * @return the .hecc version of the data which has been read.
      */
     public String toHecc(){
-        StringBuilder heccBuilder = new StringBuilder();
+        final StringBuilder heccBuilder = new StringBuilder();
 
         heccBuilder.append(theMetadata.toHecc());
         heccBuilder.append("\n");
@@ -423,7 +423,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
      */
     @Deprecated
     public static void main(String[] args) throws Exception{
-        String sample = TextAssetReader.fileToString("src/assets/textAssets/HeccSample.hecc");
+        final String sample = TextAssetReader.fileToString("src/assets/textAssets/HeccSample.hecc");
         System.out.println("SAMPLE HECC CODE:\n----------------------------");
         System.out.println(sample);
 

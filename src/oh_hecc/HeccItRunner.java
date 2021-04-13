@@ -45,7 +45,7 @@ public class HeccItRunner {
         // gives it the HECC-IT logo(s)
         theFrame.setIconImages(ImageManager.getHeccItIcons());
 
-        ChooseFile chooseFile = new ChooseFile(
+        final ChooseFile chooseFile = new ChooseFile(
                 this::openAndStartEditingFileAtLocation,
                 this::makeNewHeccFileAtLocation,
                 this::openAndHeccUpFileAtLocation
@@ -130,7 +130,7 @@ public class HeccItRunner {
         boolean success = false;
         try{
             //makes game data
-            MVCGameDataInterface theGameData = new GameDataObject(
+            final MVCGameDataInterface theGameData = new GameDataObject(
                     meta,
                     heccFilePath
             );
@@ -154,12 +154,13 @@ public class HeccItRunner {
      */
     void startEditingTheGameData(MVCGameDataInterface theGameData) {
         // creates the PassageModel
-        PassageModel editModel = new PassageModel(theGameData);
+        final PassageModel editModel = new PassageModel(theGameData);
 
         // basically repurposes theFrame for OH-HECC instead, also constructing a new View and ModelController en-route.
         new OhHeccNetworkFrame(
                 theFrame,
-                new View(editModel),
+                //new View(editModel),
+                editModel,
                 new ModelController(editModel, theFrame)
         );
 

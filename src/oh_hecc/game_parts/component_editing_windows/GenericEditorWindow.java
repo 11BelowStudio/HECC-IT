@@ -86,8 +86,8 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
      */
     JPanel donePanel() {
         //button to say 'right thats it im done'
-        JPanel donePanel = new JPanel(new GridLayout(1, 1));
-        JButton thatsItImDone = new JButton("Save and Exit");
+        final JPanel donePanel = new JPanel(new GridLayout(1, 1));
+        final JButton thatsItImDone = new JButton("Save and Exit");
         thatsItImDone.addActionListener(this::imDone);
         donePanel.add(thatsItImDone);
         return donePanel;
@@ -156,7 +156,7 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
      * @param passageNameComponent the JTextComponent that will be holding the text that might be a passage name.
      */
     private void isPassageNameRegexValid(JTextComponent passageNameComponent) {
-        boolean stillValid = (passageNameComponent.getText().trim().matches(Parseable.PASSAGE_NAME_REGEX));
+        final boolean stillValid = (passageNameComponent.getText().trim().matches(Parseable.PASSAGE_NAME_REGEX));
         if (isPassageNameValid ^ stillValid){
             passageNameComponent.setForeground(stillValid? defaultTextFieldColor : errorTextFieldColor);
             isPassageNameValid = stillValid;

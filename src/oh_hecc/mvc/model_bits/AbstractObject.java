@@ -120,7 +120,7 @@ public abstract class AbstractObject implements ObjectWithAPosition, DrawableObj
      * @param g the graphics2D context being used to draw this object.
      */
     public final void draw(Graphics2D g){
-        AffineTransform initialTransform = g.getTransform();
+        final AffineTransform initialTransform = g.getTransform();
         g.translate(position.x, position.y);
         individualDraw(g);
         g.setTransform(initialTransform);

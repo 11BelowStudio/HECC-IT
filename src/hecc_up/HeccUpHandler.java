@@ -68,31 +68,32 @@ public class HeccUpHandler {
      */
     private boolean heccUpTheGame(Path heccFilePath, Path outputFolderPath) throws HeccCeption, IOException {
 
-        HeccParser parser = new HeccParser(
+        final HeccParser parser = new HeccParser(
                 String.join("\n", Files.readAllLines(heccFilePath)),
                 logger
         );
 
-        FolderOutputter outputter = new FolderOutputter(outputFolderPath);
+        final FolderOutputter outputter = new FolderOutputter(outputFolderPath);
         //first, check that the output folder actually exists
-        if (outputter.doesOutputFolderExist()) {
-            logger.logInfo("Output folder has been made");
+        //if (outputter.doesOutputFolderExist()) {
+        //    logger.logInfo("Output folder has been made");
 
 
-            //if the output folder exists, attempt to construct the passage objects
-            if (attemptToParseTheGame(parser)){
+        //if the output folder exists, attempt to construct the passage objects
+        if (attemptToParseTheGame(parser)){
 
-                logger.logInfo("Proceeding to output");
-                //uses heccedData and metadata to from passageParser to output the HECCIN Game
-                outputter.outputTheGameWithMetadata(parser.getHeccedData(), parser.getMetadata());
+            logger.logInfo("Proceeding to output");
+            //uses heccedData and metadata to from passageParser to output the HECCIN Game
+            outputter.outputTheGameWithMetadata(parser.getHeccedData(), parser.getMetadata());
 
-                //confirm it's done
-                return true;
-            }
-        } else {
-            //log an error message if the output folder vanishes
-            logger.logInfo("The game cannot be parsed and output, as there is no output folder for it");
+            //confirm it's done
+            return true;
         }
+
+        //} else {
+        ///    //log an error message if the output folder vanishes
+        //    logger.logInfo("The game cannot be parsed and output, as there is no output folder for it");
+        //}
         return false;
     }
 

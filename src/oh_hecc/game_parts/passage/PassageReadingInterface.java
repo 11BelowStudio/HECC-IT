@@ -19,7 +19,7 @@ public interface PassageReadingInterface extends SharedPassage {
      * @return an ArrayList<String> containing all the tag metadata
      */
     static ArrayList<String> readTagMetadata(String lineEndMetadata){
-        ArrayList<String> tagList = new ArrayList<>();
+        final ArrayList<String> tagList = new ArrayList<>();
         /*
             this processes the list of tags (if they exist)
             tags may be alphanumeric with underscores, divided by spaces, must be within []
@@ -27,12 +27,12 @@ public interface PassageReadingInterface extends SharedPassage {
 
             will also accept `[]` as a valid 'tag list' (but it'll be empty)
          */
-        Matcher tagListMatcher = Pattern.compile("\\[("+TAG_STRING_REGEX+")?]").matcher(lineEndMetadata);
+        final Matcher tagListMatcher = Pattern.compile("\\[("+TAG_STRING_REGEX+")?]").matcher(lineEndMetadata);
         //finds the tag list metadata
         if (tagListMatcher.find()){ //if found
             String tagListString = tagListMatcher.group(0); //gets it
             tagListString = tagListString.substring(1,tagListString.length()-1); //removes surrounding []
-            tagList = SharedPassage.actuallyPutValidTagListStringIntoArrayList(tagListString); // and makes it a list.
+            tagList.addAll(SharedPassage.actuallyPutValidTagListStringIntoArrayList(tagListString)); // and makes it a list.
         }
         return tagList; //return the tagList
     }
@@ -44,13 +44,13 @@ public interface PassageReadingInterface extends SharedPassage {
      * @return A Vector2D for the OH-HECC position of this passage
      */
     static Vector2D readVectorMetadata(String lineEndMetadata){
-        Vector2D readVector = new Vector2D();
+        final Vector2D readVector = new Vector2D();
         /*
         Searches for it in the form
             <x,y>
         x and y are double numbers, may be negative, may have decimal point, and can have leading/trailing whitespace
          */
-        Matcher vectorCoordsMatcher = Pattern.compile(
+        final Matcher vectorCoordsMatcher = Pattern.compile(
                 "<\\h*-?\\h*\\d*\\.?\\d+\\h*,\\h*-?\\h*\\d*\\.?\\d+\\h*>"
         ).matcher(lineEndMetadata);
         if (vectorCoordsMatcher.find()){
@@ -59,7 +59,7 @@ public interface PassageReadingInterface extends SharedPassage {
             //trims the trailing/leading '<''>' characters
             vectorCoordsString = vectorCoordsString.substring(1,vectorCoordsString.length()-1);
             //converts it into an array, splitting at the comma
-            String[] vectorCoordsArray = vectorCoordsString.split(",");
+            final String[] vectorCoordsArray = vectorCoordsString.split(",");
             if(vectorCoordsArray.length > 1){ //if there's 2 (or more) indexes in the array
                 int i = 0; //counter thing
                 double[] coords = {0,0}; //2d array of doubles to store the coordinate doubles
@@ -87,7 +87,7 @@ public interface PassageReadingInterface extends SharedPassage {
      * returns empty string if no comment is found.
      */
     static String getInlineComment(String lineEndMetadata){
-        Matcher inlineCommentMatcher = Pattern.compile(
+        final Matcher inlineCommentMatcher = Pattern.compile(
                 "((?<=\\/\\/).*)"
         ).matcher(lineEndMetadata); //matches everything between the first // and the end of the line
         String theComment = ""; //blank comment by default

@@ -111,7 +111,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      * @throws NoMatchException if no match was found
      */
     private String metadataRegexHandler(String regex, String input) throws NoMatchException {
-        Matcher metadataMatcher = Pattern.compile(
+        final Matcher metadataMatcher = Pattern.compile(
                 regex,
                 Pattern.MULTILINE
         ).matcher(input);
@@ -291,7 +291,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
         if (isAllOptionalMetadataDeclared()){
             return "No metadata problems detected!";
         } else {
-            StringBuilder instructionBuilder = new StringBuilder("\n");
+            final StringBuilder instructionBuilder = new StringBuilder("\n");
             instructionBuilder.append("Your .hecc file appears to be missing some optional metadata. Here's what's wrong, and what you need to insert before the first passage declaration to fix this issue:\n");
             if (!isIfidDeclared) {
                 //Add instructions on declaring an IFID if no IFID was declared
@@ -371,7 +371,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      */
     @Override
     public String getIFictionMetadata() {
-        StringBuilder iFictionBuilder = new StringBuilder();
+        final StringBuilder iFictionBuilder = new StringBuilder();
         iFictionBuilder.append(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<ifindex version=\"1.0\" xmlns=\"http://babel.ifarchive.org/protocol/iFiction/\">\n" +

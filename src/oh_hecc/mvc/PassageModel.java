@@ -7,7 +7,9 @@ import oh_hecc.game_parts.MVCGameDataInterface;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
+import oh_hecc.game_parts.passage.ModelBitsPassageInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
+import oh_hecc.game_parts.passage.PassageModelEditablePassageInterface;
 import oh_hecc.mvc.model_bits.*;
 import utilities.Vector2D;
 
@@ -143,7 +145,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         objectMap = new HashMap<>();
 
-        for (PassageEditingInterface p: passageMap.values()) {
+        for (PassageModelEditablePassageInterface p: passageMap.values()) {
             p.updateLinkedUUIDs(passageMap);
             objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
@@ -198,7 +200,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         drawingTopLeft = new Vector2D();
 
-        refreshDrawables();
+        //refreshDrawables();
         revalidate();
         repaint();
 
@@ -213,7 +215,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void revalidate() {
-        Set<UUID> allPossibleUUIDSet = new HashSet<>();
+        final Set<UUID> allPossibleUUIDSet = new HashSet<>();
         allPossibleUUIDSet.addAll(objectMap.keySet());
         allPossibleUUIDSet.addAll(passageMap.keySet());
 
@@ -236,11 +238,11 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         // we recalculate the xy bounds for the viewport scrolling
 
         // firstly, we set the min/max bounds to be the position of the first object we encounter
-        Vector2D minXYBounds = new Vector2D(objectMap.values().iterator().next().getPosition());
-        Vector2D maxXYBounds = new Vector2D(minXYBounds);
+        final Vector2D minXYBounds = new Vector2D(objectMap.values().iterator().next().getPosition());
+        final Vector2D maxXYBounds = new Vector2D(minXYBounds);
 
         for (ObjectWithAPosition p: objectMap.values()){
-            Vector2D thisPos = p.getPosition();
+            final Vector2D thisPos = p.getPosition();
 
             // if this object is out of the existing x bounds, we update the bounds so it's in bounds.
             if (thisPos.x < minXYBounds.x){
@@ -258,7 +260,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         }
 
         // we then obtain half the size of of this component
-        Vector2D halfSize = new Vector2D(getSize()).mult(0.5);
+        final Vector2D halfSize = new Vector2D(getSize()).mult(0.5);
 
         // then, we make sure that the top-left corner is in the bounds of the objects (with half-viewable-area wiggle room)
         topLeftCorner.ensureThisIsInBounds(
@@ -266,12 +268,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 maxXYBounds.subtract(halfSize)
         );
 
-
-
-
-
         //move the start highlight to be highlighting the start passage
-        Optional<UUID> startUUID = theData.getStartUUID();
+        final Optional<UUID> startUUID = theData.getStartUUID();
         if (startUUID.isPresent()) {
             startHighlight.setStartObject(objectMap.get(startUUID.get()));
         } else {
@@ -301,8 +299,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 return;
         }
 
-
-
         activity = CurrentActivity.DOING_NOTHING; // we are doing nothing now
         clearSelection(); // clears the selected objects.
 
@@ -319,10 +315,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             saveTheHecc(); // we save the hecc.
         } else {
 
-            Point scrolledMouse = moveMouseByScroll(mLocation); // factoring any offset from moving the viewport
+            final Point scrolledMouse = moveMouseByScroll(mLocation); // factoring any offset from moving the viewport
 
             //this will hold the clicked passageObject if it was clicked
-            Optional<PassageObject> clicked =
+            final Optional<PassageObject> clicked =
                 objectMap.values().stream().filter(
                         o -> o.wasClicked(scrolledMouse)
                 ).findAny(); //basically tries to find the first one where the 'wasClicked' method evaluates to true
@@ -331,7 +327,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 //if a passage object was clicked, we start editing it.
                 activity = CurrentActivity.DIALOG_OPEN;
 
-                EditorWindowInterface w = theData.openPassageEditWindow(clicked.get().getTheUUID());
+                final EditorWindowInterface w = theData.openPassageEditWindow(clicked.get().getTheUUID());
 
                 w.addWindowClosedListener(this::editingWindowClosed);
             }
@@ -345,7 +341,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     private void startEditingTheMetadata(){
         if (activity != CurrentActivity.DIALOG_OPEN) { // we don't do this if there's already a dialog open.
             activity = CurrentActivity.DIALOG_OPEN;
-            EditorWindowInterface w = theData.openMetadataEditWindow();
+            final EditorWindowInterface w = theData.openMetadataEditWindow();
             w.addWindowClosedListener(this::editingWindowClosed);
         }
     }
@@ -355,7 +351,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private void addNewPassage(){
         if (activity != CurrentActivity.DIALOG_OPEN) {
-            PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topLeftCorner, getWidth() / 2.0, getHeight() / 2.0));
+            final PassageEditingInterface newPassage = new EditablePassage(Vector2D.add(topLeftCorner, getWidth() / 2.0, getHeight() / 2.0));
             passageMap.put(newPassage.getPassageUUID(), newPassage);
             revalidate();
         }
@@ -382,28 +378,35 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * If the .hecc file couldn't be saved successfully, it'll present the 'Emergency Save Method' dialog to the user,
      * allowing them to basically copy and paste the contents of their .hecc file and save it manually.
      *
-     * @return true if it could be saved. false if it failed. will not happen if an editing dialog is open.
+     * @return true if it could be saved. false if it failed/the .hecc file isn't entirely valid. will not happen if an editing dialog is open.
      */
     private boolean saveTheHecc() {
         if (activity != CurrentActivity.DIALOG_OPEN) {
             try {
-                //we attempt to save the hecc.
-                theData.saveTheHeccCheckingValidity();
-                JOptionPane.showMessageDialog(
-                        this,
-                        ".hecc file saved successfully!",
-                        "that's pretty heccin' nice",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-                return true;
-            } catch (HeccCeption h) {
-                // if the hecc wasn't exactly valid, we still save it, but we let the author know what the problem was.
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
-                        "pls fix this",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                //we attempt to save the hecc file
+                theData.saveTheHecc();
+
+                try{
+                    // we then attempt to save the _lastValidVersion hecc file
+                    theData.saveTheHeccCheckingValidity();
+                    JOptionPane.showMessageDialog(
+                            this,
+                            ".hecc file saved successfully!",
+                            "that's pretty heccin' nice",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    return true;
+                } catch (HeccCeption h){
+                    // if the hecc isn't entirely valid, we show this warning message.
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Your work has been saved, but there's a minor problem you need to fix before you can export it:\n" + h.getErrorMessage(),
+                            "pls fix this",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    return false;
+                }
+
 
             } catch (IOException ioe) {
                 // and if it couldn't be saved at all, we panic.
@@ -414,15 +417,15 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                         "Something hecced up.",
                         JOptionPane.ERROR_MESSAGE
                 );
-                JFrame f = new JFrame("The emergency save method.");
+                final JFrame f = new JFrame("The emergency save method.");
                 f.setLayout(new BorderLayout());
-                JPanel topPanel = new JPanel();
+                final JPanel topPanel = new JPanel();
                 topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
                 topPanel.add(new JLabel("We couldn't save your .hecc file."));
                 topPanel.add(new JLabel("However, here's your .hecc code, for you to copy and paste into a new .hecc file"));
                 topPanel.add(new JLabel("We apologize for any inconvenience caused."));
                 f.add(topPanel, BorderLayout.NORTH);
-                JTextArea heccArea = new JTextArea(theData.toHecc());
+                final JTextArea heccArea = new JTextArea(theData.toHecc());
                 heccArea.setLineWrap(true);
                 heccArea.setWrapStyleWord(true);
                 f.add(new JScrollPane(
@@ -444,8 +447,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     void editingWindowClosed() {
         this.requestFocusInWindow();
-        revalidate();
         activity = CurrentActivity.DOING_NOTHING;
+        revalidate();
         repaint();
     }
 
@@ -466,23 +469,26 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void leftPress(Point mLocation){
-        moveMouseByScroll(mLocation);
+        final Point movedMouse = moveMouseByScroll(mLocation);
 
-        currentLeftDragPos.set(mLocation);
+        currentLeftDragPos.set(movedMouse);
         switch (activity){
             case DOING_NOTHING:
 
-                Optional<PassageObject> pressed =
-                        objectMap.values().stream().filter(p -> p.wasClicked(mLocation)).findAny();
+                final Optional<PassageObject> pressed =
+                        objectMap.values().stream().filter(
+                                p -> p.wasClicked(movedMouse)
+                        ).findAny();
                 if (pressed.isPresent()) {
-                    SelectableObject p = pressed.get();
+                    final SelectableObject p = pressed.get();
                     p.nowSelected();
                     selectedObjects.add(p);
                     activity = CurrentActivity.LC_MOVING_OBJECTS;
 
                 } else {
                     //TODO: START DRAGGING SELECTION AREA
-                    activity = CurrentActivity.LC_DRAGGING_SELECTION_BOX;
+
+                    //activity = CurrentActivity.LC_DRAGGING_SELECTION_BOX;
 
                 }
                 break;
@@ -490,7 +496,11 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 //TODO: any other things I need to do when left-clicking whilst done selecting the things?
 
                 //If mouse down on a selected object
-                if (selectedObjects.stream().anyMatch(p -> p.wasClicked(mLocation))) {
+                if (
+                    selectedObjects.stream().anyMatch(
+                        p -> p.wasClicked(movedMouse)
+                    )
+                ) {
                     //start moving them
                     activity = CurrentActivity.LC_MOVING_OBJECTS;
                 } else {
@@ -514,7 +524,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void leftRelease(Point mLocation) {
-        moveMouseByScroll(mLocation);
+        final Point movedMouse = moveMouseByScroll(mLocation);
         switch (activity) {
             case LC_DRAGGING_SELECTION_BOX:
                 //if we were dragging selection box, finalize selection
@@ -551,16 +561,17 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void leftDrag(Point mLocation) {
-        moveMouseByScroll(mLocation);
-        Vector2D lastLeftDrag = new Vector2D(currentLeftDragPos);
-        currentLeftDragPos.set(mLocation);
+
+        final Point movedMouse = moveMouseByScroll(mLocation);
+        final Vector2D lastLeftDrag = new Vector2D(currentLeftDragPos);
+        currentLeftDragPos.set(movedMouse);
         switch (activity) {
             case LC_DRAGGING_SELECTION_BOX:
                 //TODO: drag selection box
                 break;
 
             case LC_MOVING_OBJECTS:
-                Vector2D movement = Vector2D.subtract(currentLeftDragPos, lastLeftDrag);
+                final Vector2D movement = Vector2D.subtract(currentLeftDragPos, lastLeftDrag);
                 selectedObjects.forEach(
                         o -> o.move(movement)
                 );
@@ -608,7 +619,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void rightRelease(Point mLocation) {
 
-        moveMouseByScroll(mLocation);
+        //moveMouseByScroll(mLocation);
         switch (activity){
             case RC_MOVING_VIEW:
                 activity = CurrentActivity.DOING_NOTHING;
@@ -633,13 +644,13 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void rightDrag(Point mLocation) {
-        Vector2D lastRightDrag = new Vector2D(currentRightDragPos);
+        final Vector2D lastRightDrag = new Vector2D(currentRightDragPos);
         //moveMouseByScroll(mLocation);
         currentRightDragPos.set(mLocation);
 
         switch (activity){
             case RC_MOVING_VIEW:
-                Vector2D movement = Vector2D.subtract(currentRightDragPos, lastRightDrag);
+                final Vector2D movement = Vector2D.subtract(currentRightDragPos, lastRightDrag);
                 topLeftCorner.subtract(movement);
 
                 revalidate();
@@ -656,8 +667,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      * @return m but translated by topLeftCorner
      */
     private Point moveMouseByScroll(Point m){
-        m.translate((int) topLeftCorner.x,(int) topLeftCorner.y);
-        return m;
+        final Point moved = new Point(m);
+        moved.translate((int) topLeftCorner.x,(int) topLeftCorner.y);
+        return moved;
     }
 
 
@@ -686,10 +698,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     public void drawModel(Graphics2D g){
 
-        Shape existingClip = g.getClip();
+        final Shape existingClip = g.getClip();
 
         //backup of the original lack of a transform
-        AffineTransform unscrolled = g.getTransform();
+        final AffineTransform unscrolled = g.getTransform();
 
         //translates everything in the negative direction to where the top-right corner currently is
         g.translate(-drawingTopLeft.x,-drawingTopLeft.y);
@@ -824,8 +836,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     @Override
     public void setSize(Dimension d){
         super.setSize(d);
-        for (ModelButtonObject b: buttons) {
-            b.resize(getWidth(),getHeight());
+        final int w = getWidth();
+        final int h = getHeight();
+        for (ResizeableObject b: buttons) {
+            b.resize(w,h);
         }
         revalidate();
         repaint();

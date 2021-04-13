@@ -59,7 +59,7 @@ public class Variable implements Heccable {
      * returns empty string if no comment is found.
      */
     private String getInlineComment(String rawData){
-        Matcher inlineCommentMatcher = Pattern.compile(
+        final Matcher inlineCommentMatcher = Pattern.compile(
                 "((?<=\\/\\/).*)"
         ).matcher(rawData); //matches everything between the first // and the end of the line
         String theComment = ""; //blank comment by default
@@ -102,7 +102,7 @@ public class Variable implements Heccable {
      */
     @Override
     public String toHecc() {
-        StringBuilder heccBuilder = new StringBuilder();
+        final StringBuilder heccBuilder = new StringBuilder();
         heccBuilder.append("!var: ");
         heccBuilder.append(variableName);
         heccBuilder.append(" = ");

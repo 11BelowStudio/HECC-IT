@@ -134,14 +134,14 @@ public class HeccUpGUI implements LoggerInterface {
         //pre-selects the .hecc file from OH-HECC.
         selectedAHeccFile(heccFilePath);
 
-        Path fpath = heccFilePath.getFileName();
+        final Path fpath = heccFilePath.getFileName();
 
         String fname = fpath.toString();
         if (fname.endsWith(".hecc")) {
             fname = fname.substring(0, fname.length() - 5);
         }
 
-        Path heccfileDirectory = heccFilePath.getParent().resolve(fname);
+        final Path heccfileDirectory = heccFilePath.getParent().resolve(fname);
 
         selectedAnOutputFolder(heccfileDirectory);
     }
@@ -181,22 +181,22 @@ public class HeccUpGUI implements LoggerInterface {
         theFrame.setIconImages(ImageManager.getHeccUpIcons());
 
         //A lowered etched border
-        Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+        final Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
         theFrame.setLayout(new GridLayout(1, 1));
 
 
-        JPanel thePanel = new JPanel(); // The panel that will actually hold the GUI
+        final JPanel thePanel = new JPanel(); // The panel that will actually hold the GUI
 
         // it will have a BoxLayout
         thePanel.setLayout(new BoxLayout(thePanel, BoxLayout.Y_AXIS));
 
 
         //Creating the title panel to hold the title label
-        JPanel titlePanel = new JPanel();
+        final JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(1,1));
         //and now the title label
-        JLabel titleLabel = new JLabel(
+        final JLabel titleLabel = new JLabel(
                 "<html><h1>HECC-UP!</h1><html>",
                 SwingConstants.CENTER
         );
@@ -205,7 +205,7 @@ public class HeccUpGUI implements LoggerInterface {
         
 
         //Creating the 'select your HECC file' panel
-        JPanel selectHeccFilePanel = new JPanel();
+        final JPanel selectHeccFilePanel = new JPanel();
         selectHeccFilePanel.setLayout(new GridLayout(3,1));
         selectHeccFilePanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -214,7 +214,7 @@ public class HeccUpGUI implements LoggerInterface {
                 )
         );
         //instructions label
-        JLabel selectHeccFileLabel = new JLabel(
+        final JLabel selectHeccFileLabel = new JLabel(
                 "Please select the .hecc file you want to parse",
                 SwingConstants.CENTER
         );
@@ -227,7 +227,7 @@ public class HeccUpGUI implements LoggerInterface {
         selectHeccFilePanel.add(heccFileLocationDisplay);
         //button to open hecc file chooser
         //Button to open the selectHeccFileChooser
-        JButton selectHeccFileButton = new JButton("Choose .hecc file");
+        final JButton selectHeccFileButton = new JButton("Choose .hecc file");
         selectHeccFileButton.addActionListener(this::selectHeccFileHandler);
         selectHeccFilePanel.add(selectHeccFileButton);
         //jFileChooser for hecc file
@@ -239,7 +239,7 @@ public class HeccUpGUI implements LoggerInterface {
 
 
         //Output folder chooser panel
-        JPanel selectGameLocationPanel = new JPanel();
+        final JPanel selectGameLocationPanel = new JPanel();
         selectGameLocationPanel.setLayout(new GridLayout(3,1));
         selectGameLocationPanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -247,7 +247,7 @@ public class HeccUpGUI implements LoggerInterface {
                         "Step 2"
                 )
         );
-        JLabel selectGameLocationLabel = new JLabel(
+        final JLabel selectGameLocationLabel = new JLabel(
                 "Please select the directory for your HECCIN Game",
                 SwingConstants.CENTER
         );
@@ -260,7 +260,7 @@ public class HeccUpGUI implements LoggerInterface {
         selectGameLocationPanel.add(gameLocationDisplay);
         //output directory button
         //will open selectGameLocationChooser
-        JButton selectGameLocationButton = new JButton("Select output directory");
+        final JButton selectGameLocationButton = new JButton("Select output directory");
         selectGameLocationButton.addActionListener(this::selectOutputFileHandler);
         selectGameLocationPanel.add(selectGameLocationButton);
         //jFileChooser for the game location stuff
@@ -270,7 +270,7 @@ public class HeccUpGUI implements LoggerInterface {
         thePanel.add(selectGameLocationPanel);
 
         //and now, a panel for the 'HECC-UP' button
-        JPanel heccItUpPanel = new JPanel();
+        final JPanel heccItUpPanel = new JPanel();
         heccItUpPanel.setLayout(new GridLayout(1,1));
         heccItUpPanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -279,7 +279,7 @@ public class HeccUpGUI implements LoggerInterface {
                 )
         );
         //the 'HECC-IT' button
-        JButton heccItUpButton = new JButton("HECC-IT!");
+        final JButton heccItUpButton = new JButton("HECC-IT!");
         heccItUpButton.addActionListener(this::heccUpTheGame);
 
         heccItUpPanel.add(heccItUpButton);
@@ -288,7 +288,7 @@ public class HeccUpGUI implements LoggerInterface {
 
 
         //And now, an output panel thing
-        JPanel outputPanel = new JPanel();
+        final JPanel outputPanel = new JPanel();
         outputPanel.setLayout(new GridLayout(1,1));
         outputPanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -300,9 +300,11 @@ public class HeccUpGUI implements LoggerInterface {
         logDisplay.setEditable(false);
         logDisplay.setLineWrap(true);
         logDisplay.setRows(5);
-        JScrollPane logScroll = new JScrollPane(logDisplay,
+        final JScrollPane logScroll = new JScrollPane(
+                logDisplay,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
         outputPanel.add(logScroll);
         thePanel.add(outputPanel);
 
@@ -316,13 +318,13 @@ public class HeccUpGUI implements LoggerInterface {
      * @return A JFileChooser, which has been set up with the appropriate configuration
      */
     private JFileChooser setupTheFileChoosers(boolean isHeccFileChooser){
-        JFileChooser fc = new JFileChooser(); //creates the JFileChooser
+        final JFileChooser fc = new JFileChooser(); //creates the JFileChooser
         fc.setMultiSelectionEnabled(false); //both of them will only allow a single file to be selected
         if (isHeccFileChooser){
             //.hecc file chooser
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY); //only allows files to be chosen
             //filters out everything that isn't a .hecc file
-            FileNameExtensionFilter heccFilter = new FileNameExtensionFilter(".hecc files","hecc","HECC","Hecc");
+            final FileNameExtensionFilter heccFilter = new FileNameExtensionFilter(".hecc files","hecc","HECC","Hecc");
             fc.setFileFilter(heccFilter);
             fc.setDialogTitle("Select a .hecc file to parse"); //reminds user that they need to select a .hecc file
 
@@ -349,7 +351,7 @@ public class HeccUpGUI implements LoggerInterface {
 
         int fcReturnValue = selectHeccFileChooser.showOpenDialog(theFrame);
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a .hecc file was chosen
-            Path thePath = selectHeccFileChooser.getSelectedFile().toPath().toAbsolutePath();
+            final Path thePath = selectHeccFileChooser.getSelectedFile().toPath().toAbsolutePath();
             selectedAHeccFile(thePath);
         }
     }
@@ -366,7 +368,7 @@ public class HeccUpGUI implements LoggerInterface {
         heccFileLocation = heccFilePath;
 
         //updates the display to show the new hecc file location
-        String stringHeccPath = heccFilePath.toString();
+        final String stringHeccPath = heccFilePath.toString();
         heccFileAttributeString.showValue(stringHeccPath);
         heccFileLocationDisplay.setText(heccFileAttributeString.toString());
 
@@ -391,10 +393,10 @@ public class HeccUpGUI implements LoggerInterface {
             selectGameLocationChooser.setCurrentDirectory(outputFolderLocation.toFile());
         }
 
-        int fcReturnValue = selectGameLocationChooser.showDialog(theFrame, "Select");
+        final int fcReturnValue = selectGameLocationChooser.showDialog(theFrame, "Select");
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a directory was chosen
 
-            Path thePath = selectGameLocationChooser.getSelectedFile().toPath().toAbsolutePath();
+            final Path thePath = selectGameLocationChooser.getSelectedFile().toPath().toAbsolutePath();
             selectedAnOutputFolder(thePath);
 
         }
@@ -410,7 +412,7 @@ public class HeccUpGUI implements LoggerInterface {
         //records the path of it
         outputFolderLocation = outputPath;
 
-        String pathString = outputPath.toString();
+        final String pathString = outputPath.toString();
         //updates the display to show the path of it
         gameLocationAttributeString.showValue(pathString);
         gameLocationDisplay.setText(gameLocationAttributeString.toString());
@@ -466,8 +468,8 @@ public class HeccUpGUI implements LoggerInterface {
                 ) == JOptionPane.YES_OPTION){
                     try{
                         // using the Path API instead of the File API
-                        Path gamePath = outputFolderLocation.resolve("index.html");
-                        Desktop desktop = Desktop.getDesktop();
+                        final Path gamePath = outputFolderLocation.resolve("index.html");
+                        final Desktop desktop = Desktop.getDesktop();
                         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)){
                             desktop.browse(gamePath.toUri());
                         }

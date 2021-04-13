@@ -143,8 +143,8 @@ public interface MetadataReadingInterface extends SharedMetadata {
      * @return a List of all the Variable objects
      */
     static List<Variable> findVariables(String rawData){
-        List<Variable> variables = new ArrayList<>();
-        Matcher variableMatcher = Pattern.compile(
+        final List<Variable> variables = new ArrayList<>();
+        final Matcher variableMatcher = Pattern.compile(
                 "(?<=^"+VARIABLE_PREFIX+")\\h*\\w+\\h*(=\\h*.+?\\h*)?(\\/\\/\\h*?.+)?(?=$)",
                 Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(rawData);
@@ -162,8 +162,8 @@ public interface MetadataReadingInterface extends SharedMetadata {
      */
     static String findComment(String rawData){
         //a StringBuilder that constructs the comment
-        StringBuilder commentBuilder = new StringBuilder();
-        Matcher commentMatcher = Pattern.compile(
+        final StringBuilder commentBuilder = new StringBuilder();
+        final Matcher commentMatcher = Pattern.compile(
                 "((?<=^"+COMMENT_PREFIX+").*$)",
                 Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(rawData); //matches lines that start with a '//' (getting everything from the // to end of line)

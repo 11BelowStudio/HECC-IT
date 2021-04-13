@@ -95,13 +95,13 @@ public class StringObject extends AbstractObject {
 
     @Override
     public void individualDraw(Graphics2D g) {
-        Font tempFont = g.getFont();
+        final Font tempFont = g.getFont();
         g.setFont(tempFont.deriveFont(Font.BOLD)); // we're using bold text
         g.setColor(Color.black);
-        FontMetrics metrics = g.getFontMetrics(g.getFont());
-        int w = metrics.stringWidth(theString);
-        int h = metrics.getHeight();
-        int heightOffset = -h/2;
+        final FontMetrics metrics = g.getFontMetrics(g.getFont());
+        final int w = metrics.stringWidth(theString);
+        //int h = metrics.getHeight();
+
         int widthOffset = 0;
         // basically moves the horizontal position of the rendered text to make it appear 'aligned' a certain way
         switch (alignment) {

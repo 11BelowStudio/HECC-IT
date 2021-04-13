@@ -46,7 +46,7 @@ public interface SharedPassage extends Parseable, Heccable {
      * @return true if it contains a link to a now-deleted passage. false otherwise.
      */
     static boolean doesPassageContentContainDeletedLinks(String content){
-        Matcher deletedLinkMatcher = Pattern.compile(
+        final Matcher deletedLinkMatcher = Pattern.compile(
                 DELETED_PASSAGE_LINK_REGEX,
                 Pattern.MULTILINE
         ).matcher(content);
@@ -60,8 +60,8 @@ public interface SharedPassage extends Parseable, Heccable {
      * @return an ArrayList holding the tag names that the given validTagListString held
      */
     static ArrayList<String> actuallyPutValidTagListStringIntoArrayList(String validTagListString){
-        ArrayList<String> foundTags = new ArrayList<>();
-        String[] tagListArray = validTagListString.split(" "); //splits list string at spaces
+        final ArrayList<String> foundTags = new ArrayList<>();
+        final String[] tagListArray = validTagListString.split(" "); //splits list string at spaces
         for (String s: tagListArray){ //for each of the tags
             if (!s.isEmpty()){
                 foundTags.add(s.trim()); //add it to the tagList
@@ -78,7 +78,7 @@ public interface SharedPassage extends Parseable, Heccable {
      */
     static Set<String> findLinks(String rawContent){
         //finds the direct links, puts them into the set of found links
-        Set<String> foundLinks = actuallyParseThePassageLinks(rawContent, true);
+        final Set<String> foundLinks = actuallyParseThePassageLinks(rawContent, true);
         //adds the indirect links to the set of found links
         foundLinks.addAll(actuallyParseThePassageLinks(rawContent,false));
         //returns the found links
@@ -92,7 +92,7 @@ public interface SharedPassage extends Parseable, Heccable {
      * @return the input passage text with the links converted into hecc links
      */
     static Set<String> actuallyParseThePassageLinks(String input, boolean direct){
-        Set<String> foundLinks = new HashSet<>();
+        final Set<String> foundLinks = new HashSet<>();
         String regex; //local variable for the regex being used
         if (direct){
             //direct link regex [[Passage name]]
@@ -104,7 +104,7 @@ public interface SharedPassage extends Parseable, Heccable {
             regex = INDIRECT_PASSAGE_LINK_REGEX;
         }
         //creates the matcher
-        Matcher theMatcher = Pattern.compile(
+        final Matcher theMatcher = Pattern.compile(
                 regex,
                 Pattern.MULTILINE
         ).matcher(input);

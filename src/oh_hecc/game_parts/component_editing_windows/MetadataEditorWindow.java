@@ -13,7 +13,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.nio.file.Paths;
 
 /**
  * Basically this class is a dialog window to be used for editing EditableMetadata objects
@@ -86,7 +85,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
         //a panel to show the current data stuff
-        JPanel currentDataPanel = new JPanel(new GridLayout(2,2));
+        final JPanel currentDataPanel = new JPanel(new GridLayout(2,2));
 
         currentDataPanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -99,7 +98,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
         //TODO: possibly replace the things that actually display the metadatas with JTextAreas, to allow word wrapping etc
-        JPanel showTitlePanel = new JPanel(new GridLayout(2,1));
+        final JPanel showTitlePanel = new JPanel(new GridLayout(2,1));
         showTitlePanel.add(new JLabel("Title:"));
         titleLabel = new JLabel(theMetadata.getTitle());
         titleLabel.setFont(notBold);
@@ -107,7 +106,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         currentDataPanel.add(showTitlePanel);
 
         //author
-        JPanel showAuthorPanel = new JPanel(new GridLayout(2,1));
+        final JPanel showAuthorPanel = new JPanel(new GridLayout(2,1));
         showAuthorPanel.add(new JLabel("Author:"));
         authorLabel = new JLabel(theMetadata.getAuthor());
         authorLabel.setFont(notBold);
@@ -115,7 +114,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         currentDataPanel.add(showAuthorPanel);
 
         //start passage
-        JPanel showStartPanel = new JPanel(new GridLayout(2,1));
+        final JPanel showStartPanel = new JPanel(new GridLayout(2,1));
         showStartPanel.add(new JLabel("Start passage:"));
         startPassageLabel = new JLabel(theMetadata.getStartPassage());
         startPassageLabel.setFont(notBold);
@@ -123,7 +122,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         currentDataPanel.add(showStartPanel);
 
         //ifid
-        JPanel showIfidPanel = new JPanel(new GridLayout(2,1));
+        final JPanel showIfidPanel = new JPanel(new GridLayout(2,1));
         showIfidPanel.add(new JLabel("IFID:"));
         JLabel metaLabel = new JLabel(theMetadata.getIfid());
         metaLabel.setFont(notBold);
@@ -135,14 +134,14 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
         //title editing panel
-        JPanel titleEditingPanel = new JPanel(new GridLayout(3,1));
+        final JPanel titleEditingPanel = new JPanel(new GridLayout(3,1));
         titleEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
                         "Edit title"
                 )
         ); //border
-        JLabel titleInstructions = new JLabel("Enter title here. Must start and end with non-whitespace characters.");
+        final JLabel titleInstructions = new JLabel("Enter title here. Must start and end with non-whitespace characters.");
         titleInstructions.setFont(notBold);
         titleEditingPanel.add(titleInstructions);
         titleInput = new JTextField(theMetadata.getTitle(),0);
@@ -162,7 +161,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         );
 
         titleEditingPanel.add(titleInput);
-        JButton titleUpdateButton = new JButton("Update title");
+        final JButton titleUpdateButton = new JButton("Update title");
         titleUpdateButton.addActionListener(this::attemptTitleUpdate);
         titleEditingPanel.add(titleUpdateButton);
 
@@ -170,14 +169,14 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
 
-        JPanel authorEditingPanel = new JPanel(new GridLayout(3,1));
+        final JPanel authorEditingPanel = new JPanel(new GridLayout(3,1));
         authorEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
                         "Edit author"
                 )
         ); //border
-        JLabel authorInstructions = new JLabel("Enter author here. Must start and end with letters. May contain spaces, commas, and full stops.");
+        final JLabel authorInstructions = new JLabel("Enter author here. Must start and end with letters. May contain spaces, commas, and full stops.");
         authorInstructions.setFont(notBold);
         authorEditingPanel.add(authorInstructions);
         authorInput = new JTextField(theMetadata.getAuthor(),0);
@@ -192,7 +191,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
                 }
         );
         authorEditingPanel.add(authorInput);
-        JButton authorUpdateButton = new JButton("Update author");
+        final JButton authorUpdateButton = new JButton("Update author");
         authorUpdateButton.addActionListener(this::attemptAuthorUpdate);
         authorEditingPanel.add(authorUpdateButton);
 
@@ -200,20 +199,20 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
 
-        JPanel startEditingPanel = new JPanel(new GridLayout(3,1));
+        final JPanel startEditingPanel = new JPanel(new GridLayout(3,1));
         startEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
                         "Edit start passage"
                 )
         ); //border
-        JLabel startInstructions = new JLabel("Enter start passage here. Must be a valid passage name.");
+        final JLabel startInstructions = new JLabel("Enter start passage here. Must be a valid passage name.");
         startInstructions.setFont(notBold);
         startEditingPanel.add(startInstructions);
         startInput = new JTextField(theMetadata.getStartPassage(),0);
         addPassageNameDocumentListener(startInput);
         startEditingPanel.add(startInput);
-        JButton startUpdateButton = new JButton("Update start");
+        final JButton startUpdateButton = new JButton("Update start");
         startUpdateButton.addActionListener(this::attemptStartUpdate);
         startEditingPanel.add(startUpdateButton);
 
@@ -221,7 +220,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
 
-        JPanel commentEditingPanel = new JPanel(new BorderLayout());
+        final JPanel commentEditingPanel = new JPanel(new BorderLayout());
         commentEditingPanel.setBorder(
                 BorderFactory.createTitledBorder(
                         loweredEtchedBorder,
@@ -235,14 +234,14 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         commentInput.setLineWrap(true);
         commentInput.setWrapStyleWord(true);
 
-        JScrollPane commentScroll = new JScrollPane(
+        final JScrollPane commentScroll = new JScrollPane(
                 commentInput,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
         commentInput.setText(theMetadata.getComment());
         commentEditingPanel.add(commentScroll,BorderLayout.CENTER);
-        JButton commentUpdateButton = new JButton("Update comment");
+        final JButton commentUpdateButton = new JButton("Update comment");
         commentUpdateButton.addActionListener(this::attemptCommentUpdate);
         commentEditingPanel.add(commentUpdateButton, BorderLayout.SOUTH);
 
@@ -285,7 +284,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * @return true if it could be updated, false otherwise
      */
     boolean attemptTitleUpdate() {
-        String newTitle = titleInput.getText().trim();
+        final String newTitle = titleInput.getText().trim();
         try {
             if (!isTitleValid) {
                 throw new InvalidMetadataDeclarationException(newTitle, "title");
@@ -323,7 +322,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * @return true if it could be updated, false otherwise
      */
     boolean attemptAuthorUpdate() {
-        String newAuthor = authorInput.getText().trim();
+        final String newAuthor = authorInput.getText().trim();
         try {
             if (!isAuthorValid) {
                 throw new InvalidMetadataDeclarationException(newAuthor, "author");
@@ -363,7 +362,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * @return true if it could be updated, false otherwise
      */
     boolean attemptStartUpdate() {
-        String newStart = startInput.getText().trim();
+        final String newStart = startInput.getText().trim();
         try {
             if (!isPassageNameValid) {
                 throw new InvalidPassageNameException(newStart);
@@ -402,34 +401,34 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Attempts to update the metadata comment
      */
     void attemptCommentUpdate() {
-        String newComment = commentInput.getText().trim();
+        final String newComment = commentInput.getText().trim();
         theMetadata.updateComment(newComment);
         showNewComment();
     }
 
     void showNewTitle(){
-        String newTitle = theMetadata.getTitle();
+        final String newTitle = theMetadata.getTitle();
         titleLabel.setText(newTitle);
         titleInput.setText(newTitle);
         refresh();
     }
 
     void showNewAuthor(){
-        String newAuthor = theMetadata.getAuthor();
+        final String newAuthor = theMetadata.getAuthor();
         authorLabel.setText(newAuthor);
         authorInput.setText(newAuthor);
         refresh();
     }
 
     void showNewStartPassage(){
-        String newStart = theMetadata.getStartPassage();
+        final String newStart = theMetadata.getStartPassage();
         startPassageLabel.setText(newStart);
         startInput.setText(newStart);
         refresh();
     }
 
     void showNewComment(){
-        String newComment = theMetadata.getComment();
+        final String newComment = theMetadata.getComment();
         commentInput.setText(newComment);
         refresh();
     }
@@ -444,7 +443,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Otherwise, it'll be red.
      */
     private void makeSureTitleIsValid(){
-        boolean stillValid = titleInput.getText().trim().matches(SharedMetadata.VALID_TITLE_REGEX);
+        final boolean stillValid = titleInput.getText().trim().matches(SharedMetadata.VALID_TITLE_REGEX);
         if (isTitleValid ^ stillValid){
             titleInput.setForeground( stillValid ? defaultTextFieldColor : Color.RED);
             isTitleValid = stillValid;
@@ -458,7 +457,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      * Otherwise, it'll be red.
      */
     private void makeSureAuthorIsValid(){
-        boolean stillValid = authorInput.getText().trim().matches(SharedMetadata.VALID_AUTHOR_REGEX);
+        final boolean stillValid = authorInput.getText().trim().matches(SharedMetadata.VALID_AUTHOR_REGEX);
         if (isAuthorValid ^ stillValid){
             authorInput.setForeground( stillValid ?  defaultTextFieldColor : Color.RED);
             isAuthorValid = stillValid;
@@ -468,16 +467,19 @@ public class MetadataEditorWindow extends GenericEditorWindow {
 
 
     public static void main(String[] args){
-        EditableMetadata theTestMetadata = new EditableMetadata("sample title","an author");
+        final EditableMetadata theTestMetadata = new EditableMetadata("sample title","an author");
 
-        GameDataObject gdo = new GameDataObject(theTestMetadata, Paths.get("Z://samplePath/ok.hecc"));
+        final GameDataObject gdo = new GameDataObject(
+                theTestMetadata,
+                java.nio.file.Paths.get("Z://samplePath/ok.hecc")
+        );
 
         System.out.println(theTestMetadata.toString());
 
         //MetadataEditorWindow w = new MetadataEditorWindow(theTestMetadata);
         //MetadataEditorWindow w = theTestMetadata.openEditingWindow();
 
-        EditorWindowInterface w = gdo.openMetadataEditWindow();
+        final EditorWindowInterface w = gdo.openMetadataEditWindow();
 
         w.addWindowClosedListener(
                 () -> {

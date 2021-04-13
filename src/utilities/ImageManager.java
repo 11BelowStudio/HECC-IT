@@ -28,30 +28,6 @@ public class ImageManager {
     private final static String ext = ".png";
 
     /**
-     * A map holding all the images, by name.
-     */
-    private static final Map<String, Image> _images = new HashMap<>();
-
-    /**
-     * Obtains a copy of that map of all the images.
-     *
-     * @return a map of images and their filenames
-     */
-    public static Map<String, Image> getImages() {
-        return Collections.unmodifiableMap(_images);
-    }
-
-    /**
-     * Get an image from the image map by name.
-     *
-     * @param imName the name of the image to get.
-     * @return that image.
-     */
-    public static Image getImage(String imName) {
-        return _images.get(imName);
-    }
-
-    /**
      * Loads an image from a given file and also puts it on the map
      *
      * @param fname the name of the image file
@@ -59,9 +35,7 @@ public class ImageManager {
      * @throws IOException if something goes wrong.
      */
     public static Image loadImage(String fname) throws IOException {
-        BufferedImage img = loadBufferedImage(fname);
-        _images.put(fname, img);
-        return img;
+        return loadBufferedImage(fname);
     }
 
     /**
@@ -75,44 +49,6 @@ public class ImageManager {
     public static BufferedImage loadBufferedImage(String fname) throws IOException {
         //return ImageIO.read(new File(path + fname + ext));
         return ImageIO.read(Objects.requireNonNull(ImageManager.class.getResource(path + fname + ext)));
-    }
-
-    /**
-     * Like the other loadImage but storing it on the map with a different name to its filename
-     *
-     * @param imName name to give the image in the map
-     * @param fname  filename of the image
-     * @return the image
-     * @throws IOException if it couldn't be loaded
-     */
-    public static Image loadImage(String imName, String fname) throws IOException {
-        BufferedImage img = loadBufferedImage(fname);
-        _images.put(imName, img);
-        return img;
-    }
-
-    /**
-     * like loadImage but for an array of filenames
-     *
-     * @param fNames an array of filenames for images to read
-     * @throws IOException if they couldn't be read
-     */
-    public static void loadImages(String[] fNames) throws IOException {
-        for (String s : fNames) {
-            loadImage(s);
-        }
-    }
-
-    /**
-     * like loadImage but for an iterable of filenames
-     *
-     * @param fNames an array of filenames for images to read
-     * @throws IOException if they couldn't be read
-     */
-    public static void loadImages(Iterable<String> fNames) throws IOException {
-        for (String s : fNames) {
-            loadImage(s);
-        }
     }
 
     /**
@@ -159,16 +95,16 @@ public class ImageManager {
     //and here we attempt to load some images.
     static {
         try {
-            Image heccIt = ImageManager.loadImage("HECC-IT icon");
-            Image heccUp = ImageManager.loadImage("HECC-UP icon");
-            Image ohHecc = ImageManager.loadImage("OH-HECC icon");
-            Image smallHecc = ImageManager.loadImage("HECC small");
-            Image heccIt64 = ImageManager.loadImage("HECC-IT 64");
-            Image heccUp64 = ImageManager.loadImage("HECC-UP 64");
-            Image ohHecc64 = ImageManager.loadImage("OH-HECC 64");
-            Image heccItBig = ImageManager.loadImage("HECC-IT large");
-            Image heccUpBig = ImageManager.loadImage("HECC-UP large");
-            Image ohHeccBig = ImageManager.loadImage("OH-HECC large");
+            final Image heccIt = ImageManager.loadImage("HECC-IT icon");
+            final Image heccUp = ImageManager.loadImage("HECC-UP icon");
+            final Image ohHecc = ImageManager.loadImage("OH-HECC icon");
+            final Image smallHecc = ImageManager.loadImage("HECC small");
+            final Image heccIt64 = ImageManager.loadImage("HECC-IT 64");
+            final Image heccUp64 = ImageManager.loadImage("HECC-UP 64");
+            final Image ohHecc64 = ImageManager.loadImage("OH-HECC 64");
+            final Image heccItBig = ImageManager.loadImage("HECC-IT large");
+            final Image heccUpBig = ImageManager.loadImage("HECC-UP large");
+            final Image ohHeccBig = ImageManager.loadImage("OH-HECC large");
 
             //puts the icons into the appropriate lists.
             OH_HECC_IMAGES.add(smallHecc);

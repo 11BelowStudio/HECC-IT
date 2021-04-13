@@ -34,7 +34,7 @@ public class View extends JComponent {
      * Constructor to show a View with a Model
      * @param showThis the Model to show
      */
-    public View(Model showThis){
+    public View(ViewableModelInterface showThis){
         showThisModel(showThis);
     }
 
@@ -43,7 +43,7 @@ public class View extends JComponent {
      * Call this method to make this View display a Model
      * @param m the model to display
      */
-    public void showThisModel(Model m){
+    public void showThisModel(ViewableModelInterface m){
         theModelThatsBeingViewed = m;
         drawingModel = true;
 
@@ -57,7 +57,7 @@ public class View extends JComponent {
     public void paintComponent(Graphics g0){
         super.paintComponent(g0);
         if (drawingModel){
-            Graphics2D g = (Graphics2D) g0;
+            final Graphics2D g = (Graphics2D) g0;
             theModelThatsBeingViewed.draw(g);
         }
 

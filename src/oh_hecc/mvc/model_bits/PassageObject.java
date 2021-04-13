@@ -1,5 +1,6 @@
 package oh_hecc.mvc.model_bits;
 
+import oh_hecc.game_parts.passage.ModelBitsPassageInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
@@ -25,7 +26,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
     /**
      * The PassageEditingInterface held by this object
      */
-    private final PassageEditingInterface thePassage;
+    private final ModelBitsPassageInterface thePassage;
 
     /**
      * Map of the PassageLinkObjects from this object.
@@ -49,29 +50,41 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      */
     private Color overlayColour;
 
+    /**
+     * The colour that will be overlain if this PassageObject is currently selected.
+     */
+    private static final Color SELECTED_COLOUR = new Color(0,255,255,191);
 
+
+    /**
+     * The colour of a passage with the 'NORMAL' status
+     */
     private static final Color NORMAL_COLOUR = SAFETY_ORANGE;
     //private static final Color NORMAl_OUTLINE_COLOUR = OUTLINE_SAFETY_ORANGE;
 
+    /**
+     * The colour of a passage with the 'END_NODE' status
+     */
     private static final Color END_COLOUR = SAFETY_YELLOW;
     //private static final Color END_OUTLINE_COLOUR = OUTLINE_SAFETY_YELLOW;
 
-    private static final Color SELECTED_COLOUR = new Color(0,255,255,191);
 
     //private static final Color START_COLOUR = SAFETY_YELLOW;
-
+    /**
+     * The colour of a passage with the 'DELETED_LINK' status
+     */
     private static final Color ERROR_COLOUR = SAFETY_RED;
+
+
+    /**
+     * darker orange if there's nothing in the passage ('EMPTY_CONTENT' status)
+     */
+    private static final Color EMPTY_COLOUR = new Color(190, 70, 30);
 
     /**
      * Colour for the outline if this passage is a 'point of no return'
      */
     private static final Color POINT_OF_NO_RETURN_OUTLINE_COLOUR = OUTLINE_SAFETY_RED;
-
-    /**
-     * darker orange if there's nothing in the passage
-     */
-    private static final Color EMPTY_COLOUR = new Color(190, 70, 30);
-
 
     /**
      * Whether or not the passage this refers to is a 'Point Of No Return'
@@ -85,7 +98,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      * @param model the model that it's part of
      * @param passage the passage this represents
      */
-    public PassageObject(EditModelInterface model, PassageEditingInterface passage){
+    public PassageObject(EditModelInterface model, ModelBitsPassageInterface passage){
         super(passage.getPosition(), model);
 
 
@@ -108,7 +121,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
 
         passageNameObject = new StringObject(thePassage.getPassageName(),StringObject.MIDDLE_ALIGN);
 
-        Set<UUID> linkedUUIDs = thePassage.getLinkedPassageUUIDs();
+        final Set<UUID> linkedUUIDs = thePassage.getLinkedPassageUUIDs();
 
 
         linkMap = new HashMap<>();
@@ -128,14 +141,14 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
             case NORMAL:
                 objectColour = NORMAL_COLOUR;
                 break;
-            case DELETED_LINK:
-                objectColour = ERROR_COLOUR;
-                break;
             case END_NODE:
                 objectColour = END_COLOUR;
                 break;
             case EMPTY_CONTENT:
                 objectColour = EMPTY_COLOUR;
+                break;
+            case DELETED_LINK:
+                objectColour = ERROR_COLOUR;
                 break;
         }
         pointOfNoReturn = thePassage.isThisAPointOfNoReturn();
@@ -156,7 +169,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
         this.passageNameObject.setText(thePassage.getPassageName()); // makes sure the passage name is correct
         this.position.set(thePassage.getPosition()); // ensures that the position data is correct
 
-        Set<UUID> setOfLinkedUUIDs = new HashSet<>(thePassage.getLinkedPassageUUIDs());
+        final Set<UUID> setOfLinkedUUIDs = new HashSet<>(thePassage.getLinkedPassageUUIDs());
         if (!linkMap.keySet().equals(setOfLinkedUUIDs)){
             // if the keys of the linkMap aren't the same as the passage's linked UUIDs,
             // we'll need to fix the linkMap so it has all the necessary links.
@@ -247,7 +260,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      * @param g the Graphics2D object responsible for the actual drawing stuff
      */
     public void drawText(Graphics2D g){
-        AffineTransform backup = g.getTransform();
+        final AffineTransform backup = g.getTransform();
         g.translate(position.x, position.y);
         passageNameObject.draw(g);
         g.setTransform(backup);

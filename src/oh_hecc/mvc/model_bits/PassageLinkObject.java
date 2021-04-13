@@ -91,7 +91,7 @@ public class PassageLinkObject extends EditModelObject {
 
 
         //rotates this according to the rotationAngle
-        AffineTransform notRotated = g.getTransform();
+        final AffineTransform notRotated = g.getTransform();
         g.rotate(rotationAngle);
 
         //makes this the appropriate colour

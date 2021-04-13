@@ -55,7 +55,7 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
      */
     private String parseTags(List<String> inputTags){
         //creating a stringBuilder
-        StringBuilder parsedTagBuilder = new StringBuilder();
+        final StringBuilder parsedTagBuilder = new StringBuilder();
         //opening the array declaration
         parsedTagBuilder.append("[");
         //if it's not empty, start filling up the array
@@ -122,7 +122,7 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
      */
     public String getHecced(){
         //making a StringBuilder
-        StringBuilder heccedBuilder = new StringBuilder();
+        final StringBuilder heccedBuilder = new StringBuilder();
 
         //starting constructor
         heccedBuilder.append("\ttheHeccer.addPassageToMap(\n\t\tnew Passage(\n\t\t\t\"");

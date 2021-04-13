@@ -48,7 +48,7 @@ public class OldHeccUpMain implements LoggerInterface {
      * @param args le command line arguments have arrived (and will promptly be ignored)
      */
     public static void main(String[] args) {
-        OldHeccUpMain heccUp = new OldHeccUpMain();
+        final OldHeccUpMain heccUp = new OldHeccUpMain();
         heccUp.heccUpTheGame();
     }
 

@@ -14,7 +14,7 @@ import java.awt.geom.Area;
  * <p>
  * Y'know, the boring bits.
  */
-public class ModelButtonObject extends AbstractObject implements DrawableObjectWithText {
+public class ModelButtonObject extends AbstractObject implements DrawableObjectWithText, ResizeableObject {
 
     /**
      * The words that are on this button
@@ -48,8 +48,8 @@ public class ModelButtonObject extends AbstractObject implements DrawableObjectW
         height = 32;
 
         //Dimension modelDimension = model.getSize();
-        int mw = 800;
-        int mh = 600;
+        final int mw = 800;
+        final int mh = 600;
 
         //TODO: maybe set these to dummy values?
         width = (int) ((scaledRightSide - scaledLeftSide) * mw);
@@ -115,7 +115,7 @@ public class ModelButtonObject extends AbstractObject implements DrawableObjectW
      * @param g the graphics2D context being used to draw the text of the object
      */
     public void drawText(Graphics2D g){
-        AffineTransform backup = g.getTransform();
+        final AffineTransform backup = g.getTransform();
         g.translate(position.x, position.y);
         buttonLabel.draw(g);
         g.setTransform(backup);

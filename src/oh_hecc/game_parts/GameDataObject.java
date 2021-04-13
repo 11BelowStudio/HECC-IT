@@ -66,7 +66,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         getStartUUID(true);
         updateLinkedUUIDs();
 
-        Path fpath = savePath.getFileName();
+        final Path fpath = savePath.getFileName();
 
         String fname = fpath.toString();
         if (fname.endsWith(".hecc")) {
@@ -122,7 +122,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Override
     public boolean updateStartPassage(String newStartPassage) throws InvalidPassageNameException {
-        String currentStartPassage = theMetadata.getStartPassage();
+        final String currentStartPassage = theMetadata.getStartPassage();
 
         if (newStartPassage.equals(currentStartPassage)){
             // if the start passage isn't changing, we just let it (not) change.
@@ -130,8 +130,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         }
         boolean result = false; // will be returned by several of the following branches
 
-        Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get)); // the current start passage
-        Optional<PassageEditingInterface> pWithNewName = passageMap.values().stream().filter(p -> p.getPassageName().equals(newStartPassage)).findAny();
+        final Optional<PassageEditingInterface> pWithOldName = (startUUID.map(passageMap::get)); // the current start passage
+        final Optional<PassageEditingInterface> pWithNewName = passageMap.values().stream().filter(p -> p.getPassageName().equals(newStartPassage)).findAny();
         // this is the passage with the newly-input start passage name
 
         if (pWithOldName.isPresent()){ // if the old start existed
@@ -209,7 +209,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     public Optional<UUID> getStartUUID(boolean forceCreateStart){
         Optional<PassageEditingInterface> start;
-        String startName = theMetadata.getStartPassage();
+        final String startName = theMetadata.getStartPassage();
         if (startUUID.isPresent()){
             start = (startUUID.map(passageMap::get));
             if (start.isPresent() && (start.get().getPassageName()).equals(startName)){
@@ -220,7 +220,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         if (start.isPresent()){
             startUUID = Optional.of(start.get().getPassageUUID());
         } else if (forceCreateStart){
-            PassageEditingInterface p = new EditablePassage(theMetadata.getStartPassage());
+            final PassageEditingInterface p = new EditablePassage(theMetadata.getStartPassage());
             passageMap.put(p.getPassageUUID(),p);
             startUUID = Optional.of(p.getPassageUUID());
         } else {
@@ -284,7 +284,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Override
     public EditorWindowInterface openPassageEditWindow(UUID passage){
-        EditorWindowInterface pw = new PassageEditorWindow(passageMap.get(passage),this);
+        final EditorWindowInterface pw = new PassageEditorWindow(passageMap.get(passage),this);
         return addClosedListener(pw);
     }
 
@@ -294,7 +294,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Override
     public EditorWindowInterface openMetadataEditWindow(){
-        EditorWindowInterface ew = new MetadataEditorWindow(this);
+        final EditorWindowInterface ew = new MetadataEditorWindow(this);
         return addClosedListener(ew);
     }
 
@@ -341,7 +341,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Override
     public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject) {
-        Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
+        final Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
         passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs().forEach(
                 u -> theLinkedPassages.add(passageMap.get(u))
         );
@@ -366,6 +366,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      *
      * @throws IOException if it couldn't be saved.
      */
+    @Override
     public void saveTheHecc() throws IOException {
         Files.write(savePath, Collections.singleton(toHecc()));
     }
@@ -378,7 +379,6 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Override
     public void saveTheHeccCheckingValidity() throws IOException, HeccCeption {
-        Files.write(savePath, Collections.singleton(toHecc()));
         if (checkForValidity()) {
             Files.write(lastValidPath, Collections.singleton(toHecc()));
         }
@@ -392,7 +392,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     @Override
     public String toHecc() {
 
-        StringBuilder heccBuilder = new StringBuilder();
+        final StringBuilder heccBuilder = new StringBuilder();
         heccBuilder.append(theMetadata.toHecc());
         heccBuilder.append("\n");
 
@@ -424,10 +424,10 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      */
     @Deprecated
     private String breadthFirstHeccBuilder(){
-        StringBuilder sb = new StringBuilder();
-        Set<UUID> keys = new HashSet<>(passageMap.keySet());
-        Set<UUID> nextChildren = new HashSet<>();
-        Set<UUID> current = new HashSet<>();
+        final StringBuilder sb = new StringBuilder();
+        final Set<UUID> keys = new HashSet<>(passageMap.keySet());
+        final Set<UUID> nextChildren = new HashSet<>();
+        final Set<UUID> current = new HashSet<>();
         if (startUUID.isPresent()){
             nextChildren.add(startUUID.get());
         } else {
@@ -439,7 +439,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
                 keys.removeAll(current);
                 current.forEach(
                         c -> {
-                            SharedPassage sp = passageMap.get(c);
+                            final SharedPassage sp = passageMap.get(c);
                             sb.append(sp.toHecc());
                             sb.append("\n");
                             nextChildren.addAll(sp.getLinkedPassageUUIDs());
@@ -461,8 +461,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      *  @throws StackOverflowError because recursion do be like that sometimes
      */
     private String startDepthFirstHeccBuilder() throws StackOverflowError{
-        StringBuilder sb = new StringBuilder();
-        Set<UUID> keys = new HashSet<>(passageMap.keySet());
+        final StringBuilder sb = new StringBuilder();
+        final Set<UUID> keys = new HashSet<>(passageMap.keySet());
         if (!keys.isEmpty()){
             UUID start = startUUID.orElse(keys.iterator().next());
             keys.remove(start);
@@ -486,8 +486,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      * @throws StackOverflowError because recursion do be like that sometimes
      */
     private String depthFirstHeccBuilder(Set<UUID> allKeys, UUID current) throws StackOverflowError {
-        StringBuilder sb = new StringBuilder();
-        SharedPassage sp = passageMap.get(current);
+        final StringBuilder sb = new StringBuilder();
+        final SharedPassage sp = passageMap.get(current);
         sb.append(sp.toHecc());
         /*
         we explicitly do a deep clone here, because not doing a deep clone leads to the actual
@@ -495,7 +495,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
 
         Which, as you can imagine, is kinda awkward.
          */
-        Set<UUID> kids = new HashSet<>(sp.getLinkedPassageUUIDs());
+        final Set<UUID> kids = new HashSet<>(sp.getLinkedPassageUUIDs());
         kids.retainAll(allKeys);
         if (!kids.isEmpty()) {
             allKeys.removeAll(kids);
@@ -522,14 +522,12 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         }
         for (PassageEditingInterface p : passageMap.values()) {
             if (!p.isThisValid()) {
-                String thePassage = p.getPassageName();
+                final String thePassage = p.getPassageName();
                 switch (p.getPassageStatus()) {
                     case DELETED_LINK:
                         throw new heccCeptions.DeletedLinkPresentException(thePassage);
                     case EMPTY_CONTENT:
                         throw new heccCeptions.EmptyPassageException(thePassage);
-                    default:
-                        break;
                 }
             }
         }

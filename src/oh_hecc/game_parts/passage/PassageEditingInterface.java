@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * An interface for the passages, intended for use with editing them.
  */
-public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedUUIDsInterface {
+public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedUUIDsInterface, ModelBitsPassageInterface, PassageModelEditablePassageInterface {
 
 
 
@@ -29,9 +29,9 @@ public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedU
         if (tagListString.equals("")) { return new ArrayList<>(); } //returns empty tag list if input is empty
 
         //String validListString = ""; //this will be overwritten with the valid tag list if it exists within the tagListString
-        Matcher validListMatcher = Pattern.compile(TAG_STRING_REGEX).matcher(tagListString); //attempts to find valid list
+        final Matcher validListMatcher = Pattern.compile(TAG_STRING_REGEX).matcher(tagListString); //attempts to find valid list
         if (validListMatcher.find()){ //if valid list was found
-            String validListString = validListMatcher.group(0).trim(); //takes note of the valid list if it exists (and trims it)
+            final String validListString = validListMatcher.group(0).trim(); //takes note of the valid list if it exists (and trims it)
             return SharedPassage.actuallyPutValidTagListStringIntoArrayList(validListString); //puts it into an ArrayList
         } else {
             throw new InvalidMetadataDeclarationException(tagListString, "passage tag list metadata");
@@ -53,13 +53,13 @@ public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedU
                 "[[" + renameTo + "]]"
         ); //direct links can be replaceall'd ez
         //indirect links are more tricky.
-        Matcher indirectMatcher = Pattern.compile(
+        final Matcher indirectMatcher = Pattern.compile(
                 "(\\[\\[[^\\[\\]\\|]+\\|[\\h]*" + oldPassageName + "[\\h]*]])",
                 Pattern.MULTILINE
         ).matcher(rawContent); //first it needs to find the indirect links
         while (indirectMatcher.find()) { //whist it can find an indirect link
-            String currentMatch = indirectMatcher.group(0); //finds the first one
-            String currentRenamed = currentMatch.replaceAll(
+            final String currentMatch = indirectMatcher.group(0); //finds the first one
+            final String currentRenamed = currentMatch.replaceAll(
                     "(\\|[\\h]*" + oldPassageName + "[\\h]*]])",
                     "|" + renameTo + "]]"
             ); //makes a copy of that match with the old passage name replaced with the new passage name

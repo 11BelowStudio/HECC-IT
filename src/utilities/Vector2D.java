@@ -75,8 +75,8 @@ public final class Vector2D {
      * @param v the argument vector.
      */
     public Vector2D(Vector2D v) {
-        double tempX = v.x;
-        double tempY = v.y;
+        final double tempX = v.x;
+        final double tempY = v.y;
         this.x = tempX;
         this.y = tempY;
     }
@@ -142,7 +142,7 @@ public final class Vector2D {
     public boolean equals(Object o) {
         if (o instanceof Vector2D){
             //if the other object is a Vector2D, compares x and y of this Vector2D and that Vector2D
-            Vector2D v =(Vector2D) o;
+            final Vector2D v =(Vector2D) o;
             return (this.x == v.x && this.y == v.y);
         }
         return false;
@@ -210,7 +210,7 @@ public final class Vector2D {
      * @return a copy of v1 with v2 added to it.
      */
     public static Vector2D add(Vector2D v1, Vector2D v2){
-        Vector2D result = new Vector2D(v1);
+        final Vector2D result = new Vector2D(v1);
         return result.add(v2);
     }
 
@@ -234,7 +234,7 @@ public final class Vector2D {
      * @return a copy of v but with (x,y) added to it
      */
     public static Vector2D add(Vector2D v, double x, double y){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.add(x,y);
     }
 
@@ -257,7 +257,7 @@ public final class Vector2D {
      * @return modified copy of v1
      */
     public static Vector2D addScaled(Vector2D v1, Vector2D v2, double fac){
-        Vector2D result = new Vector2D(v1);
+        final Vector2D result = new Vector2D(v1);
         return result.addScaled(v2,fac);
     }
 
@@ -279,7 +279,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D subtract(Vector2D v1, Vector2D v2){
-        Vector2D result = new Vector2D(v1);
+        final Vector2D result = new Vector2D(v1);
         return result.subtract(v2);
     }
 
@@ -302,7 +302,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D subtract(Vector2D v, double x, double y){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.subtract(x,y);
     }
 
@@ -334,7 +334,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D mult(Vector2D v, double fac){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.mult(fac);
     }
 
@@ -345,8 +345,8 @@ public final class Vector2D {
      * @return
      */
     public Vector2D rotate(double angle) {
-        double tempX = x;
-        double tempY = y;
+        final double tempX = x;
+        final double tempY = y;
         x = (tempX * Math.cos(angle)) - (tempY * Math.sin(angle));
         y = (tempX * Math.sin(angle)) + (tempY * Math.cos(angle));
         return this;
@@ -360,7 +360,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D rotate(Vector2D v, double angle){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.rotate(angle);
     }
 
@@ -431,7 +431,7 @@ public final class Vector2D {
      * @return
      */
     public Vector2D normalise() {
-        double currentMag = this.mag();
+        final double currentMag = this.mag();
         if (currentMag != 0) {
             this.x = x / currentMag;
             this.y = y / currentMag;
@@ -447,7 +447,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D normalise(Vector2D v){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.normalise();
     }
 
@@ -489,7 +489,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D wrap(Vector2D v, double w, double h){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.wrap(w,h);
     }
 
@@ -620,8 +620,8 @@ public final class Vector2D {
      * @return
      */
     public double getAngleTo(Vector2D targetVector){
-        double xAngle = targetVector.x - x;
-        double yAngle = targetVector.y - y;
+        final double xAngle = targetVector.x - x;
+        final double yAngle = targetVector.y - y;
         return Math.atan2(yAngle,xAngle);
     }
 
@@ -666,8 +666,8 @@ public final class Vector2D {
     public double getAngleTo(Vector2D v, double w, double h){
         double xAngle = v.x - x;
         double yAngle = v.y - y;
-        double w2 = w/2;
-        double h2 = h/2;
+        final double w2 = w/2;
+        final double h2 = h/2;
         if (xAngle > w2){
             xAngle =- w2;
         } else if(xAngle < -w2){
@@ -710,7 +710,7 @@ public final class Vector2D {
      * @return
      */
     public Vector2D proj(Vector2D d){
-        Vector2D result = new Vector2D(d);
+        final Vector2D result = new Vector2D(d);
         result.mult(this.dot(d));
         return result;
     }
@@ -723,7 +723,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D randomVectorFromOrigin(Vector2D origin, double minDist, double rangeDist){
-        Vector2D fromOrigin = polar(Math.toRadians(Math.random()*360),(Math.random()*rangeDist)+minDist);
+        final Vector2D fromOrigin = polar(Math.toRadians(Math.random()*360),(Math.random()*rangeDist)+minDist);
         fromOrigin.add(origin);
         return fromOrigin;
     }
@@ -735,10 +735,10 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D randomVectorPointingTo(Vector2D pointToThis, double mag){
-        Vector2D vectorFromOrigin = polar(Math.toRadians(Math.random()*360),mag);
+        final Vector2D vectorFromOrigin = polar(Math.toRadians(Math.random()*360),mag);
         vectorFromOrigin.add(pointToThis);
-        double xAngle = pointToThis.x - vectorFromOrigin.x;
-        double yAngle = pointToThis.y - vectorFromOrigin.y;
+        final double xAngle = pointToThis.x - vectorFromOrigin.x;
+        final double yAngle = pointToThis.y - vectorFromOrigin.y;
         return polar(Math.atan2(yAngle,xAngle),mag);
     }
 
@@ -785,7 +785,7 @@ public final class Vector2D {
      * @return
      */
     public static Vector2D inverse(Vector2D v){
-        Vector2D result = new Vector2D(v);
+        final Vector2D result = new Vector2D(v);
         return result.inverse();
     }
 
@@ -819,7 +819,7 @@ public final class Vector2D {
     }
 
     public Vector2D getCollisionVelocity(Vector2D thisP, Vector2D otherP, Vector2D otherV){
-        Vector2D coll = thisP.getCollisionVector(otherP);
+        final Vector2D coll = thisP.getCollisionVector(otherP);
         return this.set((this.proj(coll.getTangent())).add(otherV.proj(coll)));
     }
 

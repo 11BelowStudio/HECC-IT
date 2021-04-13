@@ -45,11 +45,11 @@ public class TextAssetReader {
      * @return the contents of the file, as a string
      */
     private static String fileToStaticString(String filename){
-        StringBuilder output = new StringBuilder();
+        final StringBuilder output = new StringBuilder();
         try{
-            InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
+            final InputStream in = TextAssetReader.class.getResourceAsStream(path + filename);
             assert in != null;
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            final BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String currentString;
             while ((currentString = br.readLine())!=null) {
                 output.append(currentString.concat("\n"));

@@ -49,7 +49,9 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
 
 
     /**
-     * A no-argument constructor for an editable passage. Only called by the other constructors of this class
+     * A no-argument constructor for an editable passage. Only called by the other constructors of this class.
+     * Will be given a random UUID as a passageUUID, will be called 'Untitled Passage {that UUID}', and will have
+     * content consisting of "Sample Content".
      */
     EditablePassage(){
         super();
@@ -112,7 +114,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         trailingComment = comment;
 
         // making sure we stop the metadata at the first newline
-        String[] quickAndDirtyLineEndFix = lineEndMetadata.split("\\R",2);
+        final String[] quickAndDirtyLineEndFix = lineEndMetadata.split("\\R",2);
         lineEndMetadata = quickAndDirtyLineEndFix[0];
 
         // now parsing the metadata
@@ -134,7 +136,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     @Override
     public void setPassageContent(String newContent) {
 
-        String content = sanitizeContent(newContent); //sanitization.
+        final String content = sanitizeContent(newContent); //sanitization.
 
         passageContent = content; //replaces the content
         linkedPassages.clear();
@@ -150,6 +152,14 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @return the content but sanitized.
      */
     private String sanitizeContent(String content) {
+
+        /*
+        why are there 4 \s? Simple.
+            One \ is needed to be rendered before the ;; or ::.
+            Another one needs to escape that \ in the produced string.
+            Both of these need another \ before each of them to work in the replacement string anyway
+         */
+
         content = content.replaceAll("(?m)(^;;)", "\\\\;;");
         content = content.replaceAll("(?m)(^::)", "\\\\::");
         return content;
@@ -164,7 +174,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     void updatePassageStatus() {
-        if (this.getPassageContent().equals("")) {
+        if (this.getPassageContent().trim().isEmpty()) {
             status = PassageStatus.EMPTY_CONTENT;
         } else if(SharedPassage.doesPassageContentContainDeletedLinks(passageContent)){
             status = PassageStatus.DELETED_LINK;
@@ -183,7 +193,10 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
      */
     @Override
-    public Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages){ //<T extends PassageEditingInterface>
+    public Map<UUID, PassageEditingInterface> updatePassageContent(
+            String newContent,
+            Map<UUID, PassageEditingInterface> allPassages
+    ){
         this.setPassageContent(newContent);
 
         return this.resolvePassageLinks(allPassages);
@@ -199,13 +212,16 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         //gets all the linked passage names that aren't the names of passages that are in allPassages
         linkedPassages.stream()
                 .filter(
-                        s -> allPassages.values().stream().noneMatch( p -> p.getPassageName().equals(s))
+                        // we find out what passage names in the linked passages set refer to passages that don't exist.
+                        s -> allPassages.values().stream().noneMatch(
+                                p -> p.getPassageName().equals(s)
+                        )
                 )
                 .forEach(
                         //then, for all of those not-yet-present passages, they're made and added to the map of all passages.
                         s ->
                         {
-                            PassageEditingInterface p = new EditablePassage(s, this.position);
+                            final PassageEditingInterface p = new EditablePassage(s, this.position);
                             allPassages.put(p.getPassageUUID(),p);
                         }
                 );
@@ -229,8 +245,8 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public String renameThisPassage(String newName, Set<String> allPassageNames) throws InvalidPassageNameException, DuplicatePassageNameException {
-        String oldName = passageName; //backup of old name
-        String trimmedValidatedName = Parseable.validatePassageNameRegex(newName);
+        final String oldName = passageName; //backup of old name
+        final String trimmedValidatedName = Parseable.validatePassageNameRegex(newName);
 
         if (allPassageNames.contains(trimmedValidatedName)){
             throw new DuplicatePassageNameException(trimmedValidatedName); //complain if passage with newName exists already
@@ -252,10 +268,12 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @throws DuplicatePassageNameException if there's already a passage with this name which exists
      */
     @Override
-    public Map<UUID, PassageEditingInterface> renameThisPassage(String newName, Map<UUID, PassageEditingInterface> allPassages)
-            throws InvalidPassageNameException, DuplicatePassageNameException {
-        String oldName = passageName; //backup of old name
-        String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
+    public Map<UUID, PassageEditingInterface> renameThisPassage(
+            String newName,
+            Map<UUID, PassageEditingInterface> allPassages
+    ) throws InvalidPassageNameException, DuplicatePassageNameException {
+        final String oldName = passageName; //backup of old name
+        final String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
 
         //checks to see if the new passage name isn't a duplicate of an existing passage name
         if (allPassages.values().stream()
@@ -300,7 +318,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         allPassages.remove(this.getPassageUUID());
 
         //makes a version of this passage's name with the deleted passage name placeholder suffix
-        String deletedName = this.passageName + SharedPassage.DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX;
+        final String deletedName = this.passageName + SharedPassage.DELETED_PASSAGE_NAME_PLACEHOLDER_SUFFIX;
 
         //and now proceeds to remove all the links to this passage from the passages that link to it
         allPassages.values().stream()
@@ -341,7 +359,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public String getPassageTagsAsString(){
-        StringBuilder tagBuilder = new StringBuilder();
+        final StringBuilder tagBuilder = new StringBuilder();
         for (String tag: passageTags) {
             tagBuilder.append(tag);
             if (passageTags.iterator().hasNext()){
@@ -477,12 +495,16 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public boolean removeLinkedPassage(String removeThisPassageName, UUID removeThisPassageUUID) {
-        boolean a = linkedPassages.remove(removeThisPassageName);
-        boolean b = linkedUUIDs.remove(removeThisPassageUUID);
+        final boolean a = linkedPassages.remove(removeThisPassageName);
+        final boolean b = linkedUUIDs.remove(removeThisPassageUUID);
         return (a && b);
     }
 
-
+    /**
+     * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
+     * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
+     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
+     */
     @Override
     public void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages){
         //clears existing list of linkedUUIDs
@@ -538,7 +560,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public String toHecc(){
-        StringBuilder heccBuilder = new StringBuilder();
+        final StringBuilder heccBuilder = new StringBuilder();
         //Creating passage declaration
         heccBuilder.append("::");
         heccBuilder.append(passageName);
@@ -570,7 +592,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @return the list of passage tags as a string in the format [list of tags]
      */
     private static String getHeccPassageTags(List<String> passageTags){
-        StringBuilder passageTagBuilder = new StringBuilder();
+        final StringBuilder passageTagBuilder = new StringBuilder();
         passageTagBuilder.append("[");
         for(int i = 0; i < passageTags.size(); i++){
             passageTagBuilder.append(passageTags.get(i));
@@ -585,13 +607,13 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     /**
      * Obtains the position Vector2D in .hecc format
      * @param position the vector2D to be made into .hecc
-     * @return a string version of the Vector2D, in the format < x,y> (except without that space)
+     * @return a string version of the Vector2D, in the format {@literal <x,y>}, with x and y rounded to nearest int.
      */
     private static String getHeccPosition(Vector2D position){
         return "<" +
-                position.x +
+                Math.round(position.x) +
                 "," +
-                position.y +
+                Math.round(position.y) +
                 ">";
     }
 
@@ -604,7 +626,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public String getAsStringForDebuggingReasons(){
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("UUID: ");
         sb.append(passageUUID.toString());
         sb.append("\npassageName: ");

@@ -59,7 +59,7 @@ public class OhHeccNetworkFrame {
                     @Override
                     public void componentResized(ComponentEvent e) {
                         //System.out.println("Resize event");
-                        Dimension newDimension = theFrame.getContentPane().getSize();
+                        final Dimension newDimension = theFrame.getContentPane().getSize();
                         theView.setSize(newDimension);
                         theView.repaint();
                     }
@@ -73,7 +73,7 @@ public class OhHeccNetworkFrame {
      * @param v the existing View object to put into that JFrame.
      * @param mc the ModelController which has listeners that need to be added to the JFrame
      */
-    public OhHeccNetworkFrame(JFrame f, View v, ModelController mc) {
+    public OhHeccNetworkFrame(JFrame f, JComponent v, ModelController mc) {
         this(f);
         addTheView(v);
         addTheModelController(mc);
@@ -84,7 +84,7 @@ public class OhHeccNetworkFrame {
      * Adds theViewToAdd to TheFrame. CENTER in TheFrame's content pane.
      * @param viewToAdd the View object that's being added to theFrame
      */
-    public void addTheView(View viewToAdd){
+    public void addTheView(JComponent viewToAdd){
 
         //adds theView
 

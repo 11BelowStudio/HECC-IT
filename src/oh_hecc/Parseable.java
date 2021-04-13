@@ -37,7 +37,7 @@ public interface Parseable {
      * @throws InvalidPassageNameException if the passage name was invalid
      */
     static String validatePassageNameRegex(String passageNameToCheck) throws InvalidPassageNameException {
-        Matcher validNameMatcher = Pattern.compile(STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE).matcher(passageNameToCheck);
+        final Matcher validNameMatcher = Pattern.compile(STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE).matcher(passageNameToCheck);
         if (validNameMatcher.find()){
             return validNameMatcher.group(0).trim();
         } else{

@@ -39,7 +39,7 @@ public interface SharedMetadata extends Heccable, Parseable {
      * @throws NoMatchException if no match was found
      */
     static String metadataRegexHandler(String regex, String input) throws NoMatchException {
-        Matcher metadataMatcher = Pattern.compile(
+        final Matcher metadataMatcher = Pattern.compile(
                 regex,
                 Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(input);

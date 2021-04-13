@@ -56,6 +56,17 @@ public abstract class Model extends JComponent implements ControllableModelInter
      */
     abstract void refreshDrawables();
 
+    /**
+     * We basically draw the model.
+     * @param g0 the Graphics context being used.
+     */
+    @Override
+    public final void paintComponent(Graphics g0){
+        super.paintComponent(g0);
+        final Graphics2D g = (Graphics2D) g0;
+        draw(g);
+    }
+
 
     /**
      * Fills in the background, enables anti-aliasing, gets a backup of the current affine transform,
@@ -72,7 +83,7 @@ public abstract class Model extends JComponent implements ControllableModelInter
         g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON
         );
-        AffineTransform initialTransform = g.getTransform();
+        final AffineTransform initialTransform = g.getTransform();
         synchronized (SYNC_OBJECT) {
             drawModel(g);
         }
@@ -98,19 +109,6 @@ public abstract class Model extends JComponent implements ControllableModelInter
      * @param g the Graphics2D context being used for the drawing of the model
      */
     public abstract void drawModel(Graphics2D g);
-
-
-    /**
-     * Move the viewport in the X direction
-     * @param positive whether it should be moved in positive X or in negative X
-     */
-    public abstract void xMove(boolean positive);
-
-    /**
-     * Move the viewport in the Y direction
-     * @param positive whether it should be moved in positive Y or in negative Y
-     */
-    public abstract void yMove(boolean positive);
 
 
 }

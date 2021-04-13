@@ -15,7 +15,7 @@ public interface MetadataEditingInterface extends SharedMetadata, PassageEditWin
      * @throws InvalidMetadataDeclarationException if the new title is invalid
      */
     static String checkTitleValidity(String newTitleToCheck) throws InvalidMetadataDeclarationException {
-        Matcher validTitleMatcher = Pattern.compile(SharedMetadata.VALID_TITLE_REGEX).matcher(newTitleToCheck);
+        final Matcher validTitleMatcher = Pattern.compile(SharedMetadata.VALID_TITLE_REGEX).matcher(newTitleToCheck);
         if (validTitleMatcher.find()){
             return validTitleMatcher.group(0).trim(); //returns the trimmed match if there is a match
         } else {
@@ -30,7 +30,7 @@ public interface MetadataEditingInterface extends SharedMetadata, PassageEditWin
      * @throws InvalidMetadataDeclarationException if newAuthorToCheck is not a valid author name
      */
     static String checkAuthorValidity(String newAuthorToCheck) throws InvalidMetadataDeclarationException{
-        Matcher authorMatcher = Pattern.compile(VALID_AUTHOR_REGEX).matcher(newAuthorToCheck);
+        final Matcher authorMatcher = Pattern.compile(VALID_AUTHOR_REGEX).matcher(newAuthorToCheck);
         if (authorMatcher.find()){
             return authorMatcher.group(0).trim();
         } else{

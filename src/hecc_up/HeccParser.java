@@ -91,7 +91,7 @@ public class HeccParser {
             NoPassagesException, DuplicatePassageNameException, EmptyPassageException, DeletedLinkPresentException {
 
         //trims metadata stuff from dataToParse, and creates the Metadata object
-        String dataToParse = makeMetadataObject(this.dataToParse);
+        final String dataToParse = makeMetadataObject(this.dataToParse);
 
         metadata.parseMetadata();
 
@@ -120,7 +120,7 @@ public class HeccParser {
         String metadataString = "";
         boolean hasMetadata = false;
 
-        Matcher firstDeclarationMatcher = Pattern.compile(
+        final Matcher firstDeclarationMatcher = Pattern.compile(
                 "(^::)",
                 Pattern.MULTILINE
         ).matcher(dataToParse);
@@ -151,17 +151,17 @@ public class HeccParser {
     private Set<String> findPassageNames(String dataToParse) throws
             DuplicatePassageNameException, NoPassagesException{
 
-        Set<String> pNames = new TreeSet<>();
+        final Set<String> pNames = new TreeSet<>();
 
         //attempts to find passage declarations
-        Matcher passageNameMatcher = Pattern.compile(
+        final Matcher passageNameMatcher = Pattern.compile(
                 "(?<names>(?<=^::)([\\w]+[\\w- ]*)?[\\w]+)"
                 , Pattern.MULTILINE
         ).matcher(dataToParse);
 
 
         while (passageNameMatcher.find()){
-            String currentName = passageNameMatcher.group(0);
+            final String currentName = passageNameMatcher.group(0);
             if (!pNames.add(currentName)){
                 throw new DuplicatePassageNameException(currentName);
                 //complains if there are multiple passages with the same name
@@ -185,33 +185,33 @@ public class HeccParser {
     private Map<String, PassageOutputtingInterface> constructPassageMap(String dataToParse) throws
             EmptyPassageException, DeletedLinkPresentException{
         //creating the map
-        Map<String, PassageOutputtingInterface> pMap = new HashMap<>();
+        final Map<String, PassageOutputtingInterface> pMap = new HashMap<>();
 
         boolean notDone;
 
         //matches declarations
-        Matcher declarationMatcher = Pattern.compile(
+        final Matcher declarationMatcher = Pattern.compile(
                 "(?<declarations>^::([\\w]+[\\w- ]*)?[\\w]+)",
                 Pattern.MULTILINE
         ).matcher(dataToParse);
 
         //will give this the everythingAfterDeclaration (the content)
-        Matcher passageContentMatcher = Pattern.compile(
+        final Matcher passageContentMatcher = Pattern.compile(
                 "(?<content>(?<=\\r\\n|\\r|\\n)(?!^::).*\\n(?!^::)|\\r(?!^::)|\\n\\r(?!^::)*.+)",
                 Pattern.MULTILINE
         ).matcher("");
 
         //will use this to crop leading whitespace lines
-        Matcher entirelyWhitespaceMatcher = Pattern.compile(
+        final Matcher entirelyWhitespaceMatcher = Pattern.compile(
                 "^\\h*$",
                 Pattern.MULTILINE
         ).matcher("");
 
         //matches whitespace at the end of the line
-        Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
+        final Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
 
         //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
-        Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
+        final Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
 
         String currentPassageName;
         String nextPassageName = "";
@@ -341,7 +341,7 @@ public class HeccParser {
         if ((metadata.doesStartPassageExist(passageNames))){
             //ensure that every single linked passage is valid
             for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
-                PassageOutputtingInterface current = e.getValue();
+                final PassageOutputtingInterface current = e.getValue();
                 current.validateLinkedPassagesThrowingException(passageNames);
                 //exception is thrown if an undefined passage is being linked
                 e.setValue(current);
@@ -375,7 +375,7 @@ public class HeccParser {
         heccedData.add("// by " + metadata.getAuthor() + "\n");
         heccedData.add("// IFID: " + metadata.getIfid() + "\n\n");
 
-        String theStart = metadata.getStartPassage();
+        final String theStart = metadata.getStartPassage();
 
         //declaration of starting passage name is added to heccedData
         heccedData.add("var startingPassageName = \""+theStart+"\";\n\n");
@@ -387,7 +387,7 @@ public class HeccParser {
         try {
             // we attempt to find the passages that are actually linked to something else, and only output them.
 
-            Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), theStart);
+            final Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), theStart);
 
             for (String passageName : nonOrphanPassageNames) {
                 heccedData.add(passageMap.get(passageName).getHecced());
@@ -398,7 +398,7 @@ public class HeccParser {
             // if recursion screws us over, we just output all the passages.
 
             for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
-                PassageOutputtingInterface current = e.getValue();
+                final PassageOutputtingInterface current = e.getValue();
 
                 //ensure that the passages they link to are valid
                 if (current.validateLinkedPassages(passageNames)){
@@ -450,7 +450,7 @@ public class HeccParser {
         }
 
         // we get the actual passage we need for this situation
-        PassageOutputtingLinkCheckingInterface currentPassage = passageMap.get(currentPassageName);
+        final PassageOutputtingLinkCheckingInterface currentPassage = passageMap.get(currentPassageName);
 
 
         // if the contents of the passage are bad, this gets thrown.
@@ -460,7 +460,7 @@ public class HeccParser {
         knownLinked.add(currentPassageName);
 
         // we take a copy of the set of the passages which this passage is linked to
-        Set<String> linkedPassageNames = new HashSet<>(currentPassage.getLinkedPassages());
+        final Set<String> linkedPassageNames = new HashSet<>(currentPassage.getLinkedPassages());
 
         if (!linkedPassageNames.isEmpty()){ // if it has any links
 
