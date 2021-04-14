@@ -99,8 +99,9 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
      * Updates the linked UUIDs of every single passage in the passageMap
      */
     public void updateLinkedUUIDs(){
-        for (UpdatableLinkedUUIDsInterface e: passageMap.values()){
-            e.updateLinkedUUIDs(passageMap);
+        final Collection<PassageEditingInterface> pValues = passageMap.values();
+        for (UpdatableLinkedUUIDsInterface e: pValues){
+            e.updateLinkedUUIDs(pValues);
         }
     }
 
@@ -216,7 +217,9 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
                 return startUUID;
             }
         }
-        start = passageMap.values().stream().filter( e -> e.getPassageName().equals(startName)).findAny();
+        start = passageMap.values().stream().filter(
+                e -> e.getPassageName().equals(startName)
+        ).findAny();
         if (start.isPresent()){
             startUUID = Optional.of(start.get().getPassageUUID());
         } else if (forceCreateStart){
@@ -334,31 +337,36 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
 
 
     /**
-     * Obtains the PassageEditingInterface objects of all the passages which the given passage links to
-     *
-     * @param uuidOfSourceObject the UUID of the passage that we're trying to find the 'child' passages of
-     * @return the UUIDs of all the 'child' passages
-     */
-    @Override
-    public Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject) {
-        final Set<PassageEditingInterface> theLinkedPassages = new HashSet<>();
-        passageMap.get(uuidOfSourceObject).getLinkedPassageUUIDs().forEach(
-                u -> theLinkedPassages.add(passageMap.get(u))
-        );
-        return theLinkedPassages;
-    }
-
-    /**
      * Obtains the UUIDs of the passages that link to the destination passage
      *
      * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
      * @return the UUIDs of all the 'parent' passages
      */
     @Override
-    public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
+    public Set<UUID> getUUIDsOfPassagesThatLinkToThisOne(UUID destination) {
+
+        Set<UUID> theUUIDs = new HashSet<>();
+        for (SharedPassage s: passageMap.values()) {
+            if (s.getLinkedPassageUUIDs().contains(destination)){
+                theUUIDs.add(s.getPassageUUID());
+            }
+        }
+        return theUUIDs;
+
+        /*
+        return passageMap.entrySet().stream().filter(
+                kv -> kv.getValue().getLinkedPassageUUIDs().contains(destination)
+        ).map(
+                Map.Entry::getKey
+        ).collect(Collectors.toSet());
+
+         */
+
+        /*
         return passageMap.keySet().stream().filter(
                 p -> passageMap.get(p).getLinkedPassageUUIDs().contains(destination)
         ).collect(Collectors.toSet());
+        */
     }
 
     /**
@@ -437,14 +445,12 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
             do{
                 current.addAll(nextChildren);
                 keys.removeAll(current);
-                current.forEach(
-                        c -> {
-                            final SharedPassage sp = passageMap.get(c);
-                            sb.append(sp.toHecc());
-                            sb.append("\n");
-                            nextChildren.addAll(sp.getLinkedPassageUUIDs());
-                        }
-                );
+                for(UUID u: current){
+                    final SharedPassage sp = passageMap.get(u);
+                    sb.append(sp.toHecc());
+                    sb.append("\n");
+                    nextChildren.addAll(sp.getLinkedPassageUUIDs());
+                }
                 nextChildren.retainAll(keys);
                 current.clear();
             } while(!nextChildren.isEmpty());
@@ -467,7 +473,6 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
             UUID start = startUUID.orElse(keys.iterator().next());
             keys.remove(start);
             sb.append(depthFirstHeccBuilder(keys,start));
-
             while(!keys.isEmpty()){
                 start = keys.iterator().next();
                 keys.remove(start);
@@ -505,6 +510,8 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
         }
         return sb.toString();
     }
+
+
 
     /**
      * Call this to work out if the current game is valid or not.

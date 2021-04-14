@@ -113,8 +113,14 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
      */
     @Override
     public boolean updateTitle(String newTitle) throws InvalidMetadataDeclarationException {
-        title = MetadataEditingInterface.checkTitleValidity(newTitle);
-        return true;
+        final String trimmedTitle = newTitle.trim();
+        final String validatedTitle = MetadataEditingInterface.checkTitleValidity(trimmedTitle);
+        if (trimmedTitle.equals(validatedTitle)) {
+            title = MetadataEditingInterface.checkTitleValidity(newTitle);
+            return true;
+        } else {
+            throw new InvalidMetadataDeclarationException(newTitle, "title");
+        }
     }
 
 
@@ -126,8 +132,14 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
      */
     @Override
     public boolean updateAuthor(String newAuthor) throws InvalidMetadataDeclarationException{
-        author = MetadataEditingInterface.checkAuthorValidity(newAuthor);
-        return true;
+        final String trimmedAuthor = newAuthor.trim();
+        final String validatedAuthor = MetadataEditingInterface.checkAuthorValidity(trimmedAuthor);
+        if (trimmedAuthor.equals(validatedAuthor)) {
+            author = validatedAuthor;
+            return true;
+        } else {
+            throw new InvalidMetadataDeclarationException(trimmedAuthor,"author");
+        }
     }
 
     /**

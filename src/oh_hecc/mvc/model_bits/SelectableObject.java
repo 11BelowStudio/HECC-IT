@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * Interface for an object which can be selected/deselected/moved.
  */
-public interface SelectableObject {
+public interface SelectableObject extends MoveableObject, ClickableObject {
 
     /**
      * Call this if this object is now selected.

@@ -5,6 +5,7 @@ import hecc_up.FolderOutputterMetadataInterface;
 import oh_hecc.game_parts.metadata.MetadataReadingInterface;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -24,10 +25,6 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      */
     private final String rawMetadata;
 
-    /**
-     * boolean value to keep track of whether or not this actually has metadata
-     */
-    private final boolean hasMetadata;
 
     //These are going to be used to store the metadata about the game title and the author name
     /**
@@ -61,28 +58,22 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
     /**
      * The IFID. empty by default
      */
-    private String ifid; //holds the IFID if it is declared
+    private String ifid = ""; //holds the IFID if it is declared
 
     /**
      * All the variable definitions.
      *
      * STILL UNUSED!
      */
-    private final ArrayList<Variable> variables;
+    private final List<Variable> variables;
 
-    /**
-     * The multline comment held within the metadata
-     */
-    private String multilineComment = "";
 
     /**
      * This is a constructor for the metadata object
      * @param givenMetadata the raw, unparsed, metadata as a string
-     * @param isThereActuallyMetadata true if there actually is any metadata, false otherwise
      */
-    public Metadata(String givenMetadata, boolean isThereActuallyMetadata){
+    public Metadata(String givenMetadata){
         rawMetadata = givenMetadata;
-        hasMetadata = isThereActuallyMetadata;
         variables = new ArrayList<>();
     }
 
@@ -91,14 +82,13 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      * Does nothing if there's no metadata to parse
      */
     public void parseMetadata(){
-        if (hasMetadata){ //only bothers doing this if there actually is any metadata to parse
-            //startPassage = findStartPassage(rawMetadata);
-            startPassage = MetadataReadingInterface.findStartPassage(rawMetadata);
+        if (!rawMetadata.trim().isEmpty()){ //only bothers doing this if there actually is any metadata to parse
+            startPassage = findStartPassage();
+            //startPassage = MetadataReadingInterface.findStartPassage(rawMetadata);
             findIFID();
             findTitle();
             findAuthor();
-            //findVariables();
-            multilineComment = findComment(rawMetadata);
+            findVariables();
         }
     }
 
@@ -122,12 +112,23 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
         }
     }
 
+    /**
+     * Finds start passage declaration.
+     * @return start passage string
+     * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findStartPassage(String)
+     */
+    String findStartPassage(){
+        startPassage = MetadataReadingInterface.findStartPassage(rawMetadata);
+        return startPassage;
+    }
+
 
     /**
      * Finds IFID declaration.
+     * @return IFID string
      * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findIfid(String)
      */
-    private void findIFID(){
+    String findIFID(){
         /*
         attempts to find an IFID declaration, in the form '!IFID: UUID goes here'
             sequence of 8-4-4-4-12 hex characters (seperated by hyphens)
@@ -138,13 +139,15 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
         } catch (NoMatchException e){
             isIfidDeclared = false;
         }
+        return ifid;
     }
 
     /**
      * A method which finds the title metadata
+     * @return Title string
      * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findTitle(String)
      */
-    private void findTitle(){
+    String findTitle(){
         /*
         Titles are declared as '!StoryTitle: Title Goes Here'
         Valid titles must start with 1 non-whitespace character, and end with 1 non-whitespace character.
@@ -158,13 +161,15 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
             title = "An Interactive Fiction";
             isTitleDeclared = false;
         }
+        return title;
     }
 
     /**
      * Method to find the author metadata
+     * @return author string
      * @see oh_hecc.game_parts.metadata.MetadataReadingInterface#findAuthor(String)
      */
-    private void findAuthor(){
+    String findAuthor(){
         /*
         Author name declared as '!Author: Author name goes here'
             Must start with a letter, and must end in a letter (uppercase or lowercase)
@@ -177,6 +182,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
             author = "Anonymous";
             isAuthorDeclared = false;
         }
+        return author;
     }
 
     /**
@@ -194,37 +200,23 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      *      <dd>comment is anything between the // and the end of line
      *      (optional)</dd>
      * </dl>
+     * @return the list of variables
      */
-    private void findVariables(){
-        variables.addAll(MetadataReadingInterface.findVariables(rawMetadata));
+    List<Variable> findVariables(){
+        variables.clear();
+        final List<Variable> vars = MetadataReadingInterface.findVariables(rawMetadata);
+        variables.addAll(vars);
+        return vars;
     }
 
     /**
-     * This reads the multiline comment within the metadata (all lines starting with //)
-     * @param rawData the full metadata being read
-     * @return the multiline comment held within the metadata (as a string)
+     * returns the variables
+     * @return the variables
      */
-    private String findComment(String rawData){
-        return MetadataReadingInterface.findComment(rawData);
-        /*
-        //a StringBuilder that constructs the comment
-        StringBuilder commentBuilder = new StringBuilder();
-        Matcher commentMatcher = Pattern.compile(
-                "((?<=^\\/\\/).*$)",
-                Pattern.MULTILINE
-        ).matcher(rawData); //matches lines that start with a '//' (getting everything from the // to end of line)
-
-        while(commentMatcher.find()){
-            //adds the line of the comment to the commentBuilder
-            commentBuilder.append(commentMatcher.group(0));
-            //followed by a newline
-            commentBuilder.append("\n");
-        }
-        //returns the string built by the commentBuilder
-        return commentBuilder.toString();
-
-         */
+    public List<Variable> getVariables(){
+        return variables;
     }
+
 
     /**
      * Used to check whether or not the start passage exists
@@ -249,9 +241,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
      * UNUSED!
      */
     @Override
-    public String getComment() {
-        return "";
-    }
+    public String getComment() { return ""; }
 
     /**
      * Returns whether or not the IFID was declared
@@ -328,10 +318,40 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
     public String getTitle(){ return title; }
 
     /**
-     *
+     * gets the Title, but with html escape characters
+     * @return the title but with any special html characters escaped and such
+     */
+    public String getTitleHtmlEscaped(){
+        return getHtmlEscapedString(title);
+    }
+
+    /**
+     * gets the author
      * @return the 'author' field of this object
      */
     public String getAuthor(){ return author; }
+
+    /**
+     * gets the author, but HTML escaped
+     * @return the html-escaped version of the author's name
+     */
+    public String getAuthorHTMLEscaped(){
+        return getHtmlEscapedString(author);
+    }
+
+    /**
+     * escapes a string for use in HTML stuff
+     * @param escapeThis the string being escaped
+     * @return escapeThis but HTML escaped
+     */
+    private String getHtmlEscapedString(String escapeThis){
+        escapeThis = escapeThis.replaceAll("&","&amp"); //escapes ampersands
+        escapeThis = escapeThis.replaceAll("<","&lt"); //escapes <
+        escapeThis = escapeThis.replaceAll(">","&gt"); //escapes >
+        escapeThis = escapeThis.replaceAll("\"","&quot"); //escapes "
+        escapeThis = escapeThis.replaceAll("'","&#39"); //escapes '
+        return escapeThis;
+    }
 
 
     /**
@@ -345,8 +365,8 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
         System.out.println("IFID: "+ ifid);
         System.out.println("TITLE: " + title);
         System.out.println("AUTHOR: " + author);
+        System.out.println("VARIABLES: " + variables);
         System.out.println("RAW METADATA:\n" + rawMetadata);
-        System.out.println("THE COMMENT:\n" + multilineComment);
         System.out.println("end of metadata debug info");
     }
 
@@ -390,12 +410,12 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
                 "\t\t<bibliographic>\n" +
                 "\t\t\t<title>"
         );
-        iFictionBuilder.append(title);
+        iFictionBuilder.append(getTitleHtmlEscaped());
         iFictionBuilder.append(
                 "</title>\n" +
                 "\t\t\t<author>"
         );
-        iFictionBuilder.append(author);
+        iFictionBuilder.append(getAuthorHTMLEscaped());
         iFictionBuilder.append(
                 "</author>\n" +
                 "\t\t</bibliographic>\n" +

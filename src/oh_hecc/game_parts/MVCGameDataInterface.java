@@ -61,13 +61,6 @@ public interface MVCGameDataInterface extends Heccable {
      */
     PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet);
 
-    /**
-     * Obtains the PassageEditingInterface objects of all the passages which the given passage links to
-     *
-     * @param uuidOfSourceObject the UUID of the passage that we're trying to find the 'child' passages of
-     * @return the UUIDs of all the 'child' passages
-     */
-    Set<PassageEditingInterface> getPassageEditingInterfaceObjectsConnectedToGivenObject(UUID uuidOfSourceObject);
 
     /**
      * Obtains the UUIDs of the passages that link to the destination passage
@@ -75,7 +68,7 @@ public interface MVCGameDataInterface extends Heccable {
      * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
      * @return the UUIDs of all the 'parent' passages
      */
-    Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination);
+    Set<UUID> getUUIDsOfPassagesThatLinkToThisOne(UUID destination);
 
 
     /**

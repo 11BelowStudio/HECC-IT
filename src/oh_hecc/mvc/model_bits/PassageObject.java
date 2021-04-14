@@ -1,7 +1,6 @@
 package oh_hecc.mvc.model_bits;
 
 import oh_hecc.game_parts.passage.ModelBitsPassageInterface;
-import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.mvc.EditModelInterface;
 import utilities.Vector2D;
 
@@ -15,7 +14,7 @@ import java.util.*;
  * but it's an GUI form instead.
  * bottom text
  */
-public class PassageObject extends EditModelObject implements DrawablePassageObject, SelectableObject {
+public class PassageObject extends EditModelObject implements DrawablePassageObject, SelectableObject, ObjectWithAPositionAndUUID, ObjectWithUUID, ClickableObjectWithUUID {
 
 
     /**
@@ -126,7 +125,11 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
 
         linkMap = new HashMap<>();
 
-        linkedUUIDs.forEach(u -> linkMap.put(u,new PassageLinkObject(model,this,u)));
+        for (UUID u: linkedUUIDs){
+            linkMap.put(u,new PassageLinkObject(model,this,u));
+        }
+
+        //linkedUUIDs.forEach(u -> linkMap.put(u,new PassageLinkObject(model,this,u)));
 
 
         whatColourShouldThisObjectBe();
@@ -158,6 +161,7 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
      * A method which returns the UUID of the passage which this PassageObject represents
      * @return the UUID of the passage this PassageObject represents.
      */
+    @Override
     public UUID getTheUUID(){
         return theUUID;
     }

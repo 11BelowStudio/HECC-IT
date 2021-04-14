@@ -5,6 +5,7 @@ package hecc_up;
  */
 public interface FolderOutputterMetadataInterface {
 
+
     /**
      * Called when writing the index.html page
      * @return the IFID but formatted as HTML
@@ -17,8 +18,16 @@ public interface FolderOutputterMetadataInterface {
      */
     String getIFictionMetadata();
 
+
     /**
-     * @return the 'title' field of this object
+     * gets the Title, but with html escape characters
+     * @return the title but with any special html characters escaped and such
      */
-    String getTitle();
+    String getTitleHtmlEscaped();
+
+    /**
+     * gets the author, but HTML escaped
+     * @return the html-escaped version of the author's name
+     */
+    String getAuthorHTMLEscaped();
 }

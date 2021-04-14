@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * This is an interface which encapsulates all the metadata reading functionality
  * Only contains static methods
  */
+@SuppressWarnings("RegExpAnonymousGroup")
 public interface MetadataReadingInterface extends SharedMetadata {
 
     /**
@@ -145,7 +146,7 @@ public interface MetadataReadingInterface extends SharedMetadata {
     static List<Variable> findVariables(String rawData){
         final List<Variable> variables = new ArrayList<>();
         final Matcher variableMatcher = Pattern.compile(
-                "(?<=^"+VARIABLE_PREFIX+")\\h*\\w+\\h*(=\\h*.+?\\h*)?(\\/\\/\\h*?.+)?(?=$)",
+                "(?<=^"+VARIABLE_PREFIX+")\\h*\\w+\\h*(=\\h*.+?\\h*)?(//\\h*?.+)?(?=$)",
                 Pattern.MULTILINE | Pattern.CASE_INSENSITIVE
         ).matcher(rawData);
         while(variableMatcher.find()){

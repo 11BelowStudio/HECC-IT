@@ -23,16 +23,16 @@ public class GameDataObjectTests {
      */
     @Test
     void testForStartPassageUUID(){
-        PassageEditingInterface[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
+        final PassageEditingInterface[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
 
-        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
+        final Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
         for (PassageEditingInterface e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
 
 
-        GameDataObject gdo = new GameDataObject(
+        final GameDataObject gdo = new GameDataObject(
                 passages,
                 new EditableMetadata("A Hypertext Fiction","Anonymous"),
                 Paths.get("Z://samplePath/ok.hecc")
@@ -54,15 +54,15 @@ public class GameDataObjectTests {
      */
     @Test
     void testStartPassageDelete(){
-        PassageEditingInterface[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
+        final PassageEditingInterface[] samples = {new EditablePassage("Start", "ayy lmao\neecks dee", "nice\n\nmeme","[yes theres tags] < 256,96> //this is another passage"), new EditablePassage("ayy lmao", "[[Start]]","","")};
 
-        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
+        final Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
         for (PassageEditingInterface e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
 
-        GameDataObject gdo = new GameDataObject(
+        final GameDataObject gdo = new GameDataObject(
                 passages,
                 new EditableMetadata("A Hypertext Fiction","Anonymous"),
                 Paths.get("Z://samplePath/ok.hecc")

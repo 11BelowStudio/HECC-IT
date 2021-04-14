@@ -7,7 +7,6 @@ import oh_hecc.Parseable;
 import utilities.Vector2D;
 
 import java.util.*;
-
 /**
  * Like Passage but this time it's actually Editable!
  */
@@ -125,6 +124,15 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         updatePassageStatus();
     }
 
+    /**
+     * Used by the EditablePassageTest class (no metadata)
+     * @param passageName the name for this passage
+     * @param content the raw content of this passage
+     */
+    EditablePassage(String passageName, String content){
+        this(passageName,content,"","");
+    }
+
 
 
 
@@ -151,6 +159,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @param content the content to be sanitized
      * @return the content but sanitized.
      */
+    @SuppressWarnings("RegExpAnonymousGroup")
     private String sanitizeContent(String content) {
 
         /*
@@ -199,6 +208,9 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
     ){
         this.setPassageContent(newContent);
 
+        //gets all the linked passage names that aren't the names of passages that are in allPassage
+
+
         return this.resolvePassageLinks(allPassages);
     }
 
@@ -210,6 +222,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     public Map<UUID, PassageEditingInterface> resolvePassageLinks(Map<UUID, PassageEditingInterface> allPassages){
         //gets all the linked passage names that aren't the names of passages that are in allPassages
+
         linkedPassages.stream()
                 .filter(
                         // we find out what passage names in the linked passages set refer to passages that don't exist.
@@ -226,33 +239,10 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
                         }
                 );
 
-        updateLinkedUUIDs(allPassages);
+        updateLinkedUUIDs(allPassages.values());
 
         return allPassages;
 
-    }
-
-
-
-    /**
-     * This method will be used when attempting to rename this passage.
-     * @param newName the new name that the user is trying to give this passage.
-     * @param allPassageNames the set of all passage names
-     * @return the previous name of this passage (before it got renamed)
-     * @throws InvalidPassageNameException if the passage name isn't a valid passage name
-     * @throws DuplicatePassageNameException if there's already a passage with this name which exists
-     * @deprecated
-     */
-    @Override
-    public String renameThisPassage(String newName, Set<String> allPassageNames) throws InvalidPassageNameException, DuplicatePassageNameException {
-        final String oldName = passageName; //backup of old name
-        final String trimmedValidatedName = Parseable.validatePassageNameRegex(newName);
-
-        if (allPassageNames.contains(trimmedValidatedName)){
-            throw new DuplicatePassageNameException(trimmedValidatedName); //complain if passage with newName exists already
-        }
-        passageName = trimmedValidatedName; //updates the passage name
-        return oldName; //returns old name
     }
 
 
@@ -273,30 +263,35 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
             Map<UUID, PassageEditingInterface> allPassages
     ) throws InvalidPassageNameException, DuplicatePassageNameException {
         final String oldName = passageName; //backup of old name
-        final String trimmedValidatedName = Parseable.validatePassageNameRegex(newName); //validates the format of the new name
+
+        final String trimmedName = newName.trim(); // obtains trimmed version of name
+        final String validatedName = Parseable.validatePassageNameRegex(trimmedName); //validates the format of the new name
+
+        if (!trimmedName.equals(validatedName)){ // complain if the full trimmed new name isn't valid
+            throw new InvalidPassageNameException(trimmedName);
+        }
 
         //checks to see if the new passage name isn't a duplicate of an existing passage name
         if (allPassages.values().stream()
                 .anyMatch(
-                        p -> p.getPassageName().equals(trimmedValidatedName)
+                        p -> p.getPassageName().equals(validatedName)
                 )
         ) {
-            throw new DuplicatePassageNameException(trimmedValidatedName);
+            throw new DuplicatePassageNameException(validatedName);
         }
 
         //updates this passage name
-        passageName = trimmedValidatedName;
+        passageName = validatedName;
 
         //updates all passages that link to this passage so they link to its new name
         allPassages.values().stream()
             .filter(
                     //finding the passage s that link to this one
                 p -> p.getLinkedPassageUUIDs().contains(passageUUID)
-            )
-            .forEach(
+            ).forEach(
                     //and updating their content
                 p -> p.setPassageContent(
-                        PassageEditingInterface.getPassageContentWithRenamedLinks(p.getPassageContent(),oldName,trimmedValidatedName)
+                        PassageEditingInterface.getPassageContentWithRenamedLinks(p.getPassageContent(),oldName,validatedName)
                 )
         );
 
@@ -444,7 +439,7 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public void setInlinePassageComment(String newComment){
-        inlinePassageComment = newComment;
+        inlinePassageComment = newComment.replaceAll("\\R", " ");
     }
 
     /**
@@ -463,7 +458,8 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      */
     @Override
     public void setTrailingComment(String newComment) {
-        trailingComment = sanitizeContent(newComment); }
+        trailingComment = sanitizeContent(newComment);
+    }
 
     /**
      * Is this passage a 'point of no return'?
@@ -500,57 +496,24 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         return (a && b);
     }
 
+
     /**
      * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
-     * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
-     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
+     * call this for each element in the set of (? extends SharedPassages) <b>after</b> everything's been added to it.
+     * @param allPassages the collection of all passages mapped to UUIDs (where the UUIDs will be read from basically)
      */
     @Override
-    public void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages){
+    public void updateLinkedUUIDs(Collection<? extends SharedPassage> allPassages) {
         //clears existing list of linkedUUIDs
         linkedUUIDs.clear();
-
         //add the UUIDs of all the named linked passages to the set of linked UUIDs.
-        allPassages.values().stream()
-            .filter(
+        allPassages.stream()
+        .filter(
                 p -> this.linkedPassages.contains(p.getPassageName())
-            )
-            .limit(linkedPassages.size())
-            .forEach(
+        )
+        .forEach(
                 p -> linkedUUIDs.add(p.getPassageUUID())
-            );
-
-        /*
-        //if the set of linkedPassages isn't empty
-        if (!linkedPassages.isEmpty()) {
-            //copies linkedPassages into a new set (for efficiency later on)
-            Set<String> setToCheck = new HashSet<>(linkedPassages);
-            for (SharedPassage e : allPassages.values()) {
-
-                boolean foundString = false; //haven't found it yet
-
-                //then, for every string in the set of passage names to find
-                for (String s : setToCheck) {
-                    //we see if that string is what the name of this passage is
-                    if (e.getPassageName().equals(s)) {
-                        //if so, foundString is true, and we add the passage's UUID to this passage's linkedUUIDs
-                        foundString = true;
-                        linkedUUIDs.add(e.getPassageUUID());
-                        break;
-                    }
-                }
-                //if we found the passage
-                if (foundString) {
-                    //we remove the name of that passage from the setToCheck (so we don't waste more time on it)
-                    setToCheck.remove(e.getPassageName());
-                    if (setToCheck.isEmpty()) {
-                        break; //we stop if there's no more to find
-                    }
-                }
-            }
-        }
-
-         */
+        );
     }
 
 
@@ -559,7 +522,11 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
      * @return this passage but in HECC format
      */
     @Override
-    public String toHecc(){
+    public String toHecc() {
+        //Creating passage declaration
+        //end with a newline, and then return the string
+        //heccBuilder.append("\n");
+
         final StringBuilder heccBuilder = new StringBuilder();
         //Creating passage declaration
         heccBuilder.append("::");

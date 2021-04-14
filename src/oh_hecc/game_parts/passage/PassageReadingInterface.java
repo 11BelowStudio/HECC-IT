@@ -27,6 +27,8 @@ public interface PassageReadingInterface extends SharedPassage {
 
             will also accept `[]` as a valid 'tag list' (but it'll be empty)
          */
+
+        //noinspection RegExpAnonymousGroup
         final Matcher tagListMatcher = Pattern.compile("\\[("+TAG_STRING_REGEX+")?]").matcher(lineEndMetadata);
         //finds the tag list metadata
         if (tagListMatcher.find()){ //if found
@@ -88,7 +90,7 @@ public interface PassageReadingInterface extends SharedPassage {
      */
     static String getInlineComment(String lineEndMetadata){
         final Matcher inlineCommentMatcher = Pattern.compile(
-                "((?<=\\/\\/).*)"
+                "((?<=//).*)"
         ).matcher(lineEndMetadata); //matches everything between the first // and the end of the line
         String theComment = ""; //blank comment by default
         if (inlineCommentMatcher.find()){

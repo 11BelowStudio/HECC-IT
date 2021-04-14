@@ -20,11 +20,11 @@ public class HeccUpTests {
     void testAHeccSample(){
 
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccParser heccSampleParser = new HeccParser(HeccUpTestConstants.HECCSAMPLE_STRING, log);
+        final HeccParser heccSampleParser = new HeccParser(HeccUpTestConstants.HECCSAMPLE_STRING, log);
 
-        HeccUpHandler theHandler = new HeccUpHandler(log);
+        final HeccUpHandler theHandler = new HeccUpHandler(log);
 
         assertDoesNotThrow(
                 () -> assertTrue(theHandler.attemptToParseTheGame(heccSampleParser))
@@ -37,7 +37,7 @@ public class HeccUpTests {
                 HeccUpTestConstants.HECCSAMPLE_LOGS
         );
 
-        String singleStringHeccedData = String.join("", heccSampleParser.getHeccedData());
+        final String singleStringHeccedData = String.join("", heccSampleParser.getHeccedData());
 
         assertEquals(
                 singleStringHeccedData,
@@ -56,7 +56,7 @@ public class HeccUpTests {
 
         HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccParser nothingParser = new HeccParser("", log);
+        final HeccParser nothingParser = new HeccParser("", log);
 
         NoPassagesException e = assertThrows(
                 NoPassagesException.class,
@@ -87,7 +87,7 @@ public class HeccUpTests {
 
         HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccParser dupeParser = new HeccParser(
+        final HeccParser dupeParser = new HeccParser(
                 "!title: dupe time\n" +
                 "!author: joe mamma\n" +
                 "!start: Start\n" +
@@ -119,7 +119,7 @@ public class HeccUpTests {
 
         log = new HeccUpTestLogger();
 
-        HeccParser anotherDupe = new HeccParser(
+        final HeccParser anotherDupe = new HeccParser(
                 "!title: dupe time 2\n" +
                 "!author: joe mamma\n" +
                 "!start: Start\n" +
@@ -164,11 +164,11 @@ public class HeccUpTests {
     @Test
     void testForNoStart(){
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
         HeccUpHandler theHandler = new HeccUpHandler(log);
 
-        HeccParser noExplicitStart = new HeccParser(
+        final HeccParser noExplicitStart = new HeccParser(
                 "!title: no start\n" +
                 "!author: joe mamma\n" +
                 "!start: Dave\n" +
@@ -206,7 +206,7 @@ public class HeccUpTests {
         System.out.println(e.getMessage());
 
 
-        HeccParser noImplictStart = new HeccParser(
+        final HeccParser noImplictStart = new HeccParser(
                 "!title: no start\n" +
                 "!author: joe mamma\n" +
                 "\n" +
@@ -249,9 +249,9 @@ public class HeccUpTests {
     @Test
     void testForEmptyPassage(){
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccParser emptyPassageParser = new HeccParser(
+        final HeccParser emptyPassageParser = new HeccParser(
                 "!title: empty passage\n" +
                 "!author: joe mamma\n" +
                 "!start: Start\n" +
@@ -267,10 +267,10 @@ public class HeccUpTests {
                 "\n" +
                 ";;", log);
 
-        HeccUpHandler theHandler = new HeccUpHandler(log);
+        final HeccUpHandler theHandler = new HeccUpHandler(log);
 
 
-        EmptyPassageException e = assertThrows(
+        final EmptyPassageException e = assertThrows(
                 EmptyPassageException.class,
                 () ->theHandler.attemptToParseTheGame(emptyPassageParser)
         );
@@ -285,9 +285,9 @@ public class HeccUpTests {
     @Test
     void invalidPassageTest(){
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccParser invalidPassageParser = new HeccParser(
+        final HeccParser invalidPassageParser = new HeccParser(
                 "!title: ok\n" +
                 "!author: joe mamma\n" +
                 "!start: !THIS IS EPIC! WOO!\n" +
@@ -297,9 +297,9 @@ public class HeccUpTests {
                 ";;\n" +
                 ";;\n", log);
 
-        HeccUpHandler theHandler = new HeccUpHandler(log);
+        final HeccUpHandler theHandler = new HeccUpHandler(log);
 
-        NoPassagesException e = assertThrows(
+        final NoPassagesException e = assertThrows(
                 NoPassagesException.class,
                 () -> theHandler.attemptToParseTheGame(invalidPassageParser)
         );
@@ -313,11 +313,11 @@ public class HeccUpTests {
     @Test
     void undefinedPassageTest(){
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccUpHandler theHandler = new HeccUpHandler(log);
+        final HeccUpHandler theHandler = new HeccUpHandler(log);
 
-        HeccParser undefinedParser = new HeccParser(
+        final HeccParser undefinedParser = new HeccParser(
                 "!title: davent\n" +
                 "!author: joe mamma\n" +
                 "!start: Start\n" +
@@ -340,7 +340,7 @@ public class HeccUpTests {
 
         System.out.println(e.getMessage());
 
-        HeccParser undefinedIndirectParser = new HeccParser(
+        final HeccParser undefinedIndirectParser = new HeccParser(
         "!title: davent\n" +
                 "!author: joe mamma\n" +
                 "!start: Start\n" +
@@ -371,11 +371,11 @@ public class HeccUpTests {
     @Test
     void testForDeletedPassageLinks(){
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccUpHandler theHandler = new HeccUpHandler(log);
+        final HeccUpHandler theHandler = new HeccUpHandler(log);
 
-        HeccParser deletedParser = new HeccParser(
+        final HeccParser deletedParser = new HeccParser(
                 "!title: davent\n" +
                 "!author: joe mamma\n" +
                 "!start: Start\n" +
@@ -398,7 +398,7 @@ public class HeccUpTests {
 
         System.out.println(e.getMessage());
 
-        HeccParser indirectDeletedParser = new HeccParser(
+        final HeccParser indirectDeletedParser = new HeccParser(
                 "!title: davent\n" +
                         "!author: joe mamma\n" +
                         "!start: Start\n" +
@@ -429,9 +429,9 @@ public class HeccUpTests {
     @Test
     void testForTheWeirdnessWithTheTagsAndLineEndStuff(){
 
-        HeccUpTestLogger log = new HeccUpTestLogger();
+        final HeccUpTestLogger log = new HeccUpTestLogger();
 
-        HeccParser tagParser = new HeccParser("::Start [] <a,b> //\n" +
+        final HeccParser tagParser = new HeccParser("::Start [] <a,b> //\n" +
                 "[[another passage]]\n" +
                 "<3400,1343>\n" +
                 ";;\n" +
@@ -444,9 +444,9 @@ public class HeccUpTests {
                 "\n" +
                 ";;", log);
 
-        HeccUpHandler handler = new HeccUpHandler(log);
+        final HeccUpHandler handler = new HeccUpHandler(log);
 
-        String expectedOutput =
+        final String expectedOutput =
                 "//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
                 "\n" +
                 "// This hecced.js file contains the data for:\n" +

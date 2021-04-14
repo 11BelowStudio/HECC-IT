@@ -729,6 +729,16 @@ public final class Vector2D {
     }
 
     /**
+     * Random polar vector in some arbitrary length at an arbitrary angle from (0,0)
+     * @param minDist minimum length for this vector
+     * @param rangeDist range of lengths
+     * @return this random polar vector
+     */
+    public static Vector2D getRandomPolarVector(double minDist, double rangeDist){
+        return polar(Math.toRadians(Math.random()*360),(Math.random()*rangeDist)+minDist);
+    }
+
+    /**
      * random vector pointing to pointToThis (at a random angle), with given magnitude
      * @param pointToThis
      * @param mag

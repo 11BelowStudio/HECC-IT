@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 /**
  * An interface for EditablePassage that encapsulates the basic things for both reading/editing a passage.
  */
+@SuppressWarnings("RegExpAnonymousGroup")
 public interface SharedPassage extends Parseable, Heccable {
 
     /**

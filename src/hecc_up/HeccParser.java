@@ -87,8 +87,8 @@ public class HeccParser {
      * @throws EmptyPassageException if there's an empty passage
      * @throws DeletedLinkPresentException if the passage contains a link to a deleted passage
      */
-    public boolean constructThePassageObjects() throws
-            NoPassagesException, DuplicatePassageNameException, EmptyPassageException, DeletedLinkPresentException {
+    public boolean constructThePassageObjects()
+            throws NoPassagesException, DuplicatePassageNameException, EmptyPassageException, DeletedLinkPresentException {
 
         //trims metadata stuff from dataToParse, and creates the Metadata object
         final String dataToParse = makeMetadataObject(this.dataToParse);
@@ -118,7 +118,6 @@ public class HeccParser {
      */
     private String makeMetadataObject(String dataToParse){
         String metadataString = "";
-        boolean hasMetadata = false;
 
         final Matcher firstDeclarationMatcher = Pattern.compile(
                 "(^::)",
@@ -130,13 +129,12 @@ public class HeccParser {
             if (startIndex > 1){
                 //metadata is everything before first declaration
                 metadataString = dataToParse.substring(0,startIndex-1);
-                hasMetadata = true;
                 //dataToParse takes up everything after first declaration
                 dataToParse = dataToParse.substring(startIndex);
             }
         }
 
-        metadata = new Metadata(metadataString,hasMetadata);
+        metadata = new Metadata(metadataString);
 
         return dataToParse;
     }
@@ -155,8 +153,8 @@ public class HeccParser {
 
         //attempts to find passage declarations
         final Matcher passageNameMatcher = Pattern.compile(
-                "(?<names>(?<=^::)([\\w]+[\\w- ]*)?[\\w]+)"
-                , Pattern.MULTILINE
+                "(?<names>(?<=^::)([\\w]+[\\w- ]*)?[\\w]+)",
+                Pattern.MULTILINE
         ).matcher(dataToParse);
 
 
@@ -208,10 +206,16 @@ public class HeccParser {
         ).matcher("");
 
         //matches whitespace at the end of the line
-        final Matcher lineEndWhitespaceMatcher = Pattern.compile("\\h*\\R$", Pattern.MULTILINE).matcher("");
+        final Matcher lineEndWhitespaceMatcher = Pattern.compile(
+                "\\h*\\R$",
+                Pattern.MULTILINE
+        ).matcher("");
 
         //This matches the line that indicates the start of a multiline comment at the end of a passage (containing only ;;)
-        final Matcher commentStartEndMatcher = Pattern.compile("^;;\\R$", Pattern.MULTILINE).matcher("");
+        final Matcher commentStartEndMatcher = Pattern.compile(
+                "^;;\\R$",
+                Pattern.MULTILINE
+        ).matcher("");
 
         String currentPassageName;
         String nextPassageName = "";
@@ -338,7 +342,7 @@ public class HeccParser {
      * @throws MissingStartingPassageException if the defined starting passage doesn't exist
      */
     public boolean validatePassages() throws UndefinedPassageException, MissingStartingPassageException {
-        if ((metadata.doesStartPassageExist(passageNames))){
+        if (metadata.doesStartPassageExist(passageNames)){
             //ensure that every single linked passage is valid
             for (Map.Entry<String, PassageOutputtingInterface> e: passageMap.entrySet()){
                 final PassageOutputtingInterface current = e.getValue();
@@ -511,17 +515,6 @@ public class HeccParser {
 
     }
 
-
-    private String suggestIFID(){
-        //returns a string suggesting that you add an IFID
-        String suggestion = "Oh no! It looks like you forgot to declare an IFID in your hecc game!\n"
-                + "Declaring an IFID can be rather helpful in case you decide to post your game somewhere, so it can be archived.\n"
-                + "If you want a better explanation, here's a better explanation: https://ifdb.tads.org/help-ifid\n"
-                + "Anywho, here's a line of code with a newly generated IFID that you can put in your hecc file, before the first passage declaration,\n"
-                + "in case you actually want to declare an IFID for your work:\n\n";
-        String ifidString = "!IFID: " + UUID.randomUUID().toString().toUpperCase();
-        return (suggestion.concat(ifidString));
-    }
 
 
 }

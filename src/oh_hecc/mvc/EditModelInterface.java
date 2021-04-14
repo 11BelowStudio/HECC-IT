@@ -19,12 +19,6 @@ public interface EditModelInterface {
     PassageEditingInterface getPassageFromUUID(UUID uuidOfPassageToGet);
 
 
-    /**
-     * Obtains the UUIDs of the passages that link to the destination passage
-     * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
-     * @return the UUIDs of all the 'parent' passage
-     */
-    Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination);
 
     /**
      * Update the passageLinks of the passage objects that link to the given passage

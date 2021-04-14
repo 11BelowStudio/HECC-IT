@@ -9,7 +9,7 @@ import java.awt.geom.Area;
 /**
  * Superclass for all objects in the model.
  */
-public abstract class AbstractObject implements ObjectWithAPosition, DrawableObject, UpdatableObject {
+public abstract class AbstractObject implements ObjectWithAPosition, DrawableObject, UpdatableObject, ClickableObject {
 
     /**
      * The position of this object

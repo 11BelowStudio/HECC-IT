@@ -288,7 +288,174 @@ into a 'user experience' section, and a 'behind-the-scenes' section.
       the frame some 'HECC-IT' icons. The `OhHeccNetworkFrame` calls this method again with the
       `OH_HECC_IMAGES` list (for 'OH-HECC' icons), and the `HeccUpGUI` also calls it, with the
       `HECC_UP_IMAGES` list (for 'HECC-UP' icons).
-  
+      
+* Changed the way that the `PassageObject`s are rendered. They are now shown using the `fill3DRect`
+  method of `Graphics2D` instead of simply being rendered as a flat 2d rectangle. This change was made
+  because I wanted the `PassageObject`s to have a border so I could tell which was which when there
+  were two that were slightly layered on top of each other, however, after trying a simple 1px
+  rectangle outline (via the `draw` method of `Graphics2D` using the fill area), that border was a bit
+  too noticeable, and I wanted a more subtle border. However, the `fill3DRect` method draws a filled
+  rectangle as if the corners are beveled and lit from the top-left, which, in practice, means that
+  they have a very nice and subtle outline.
+    * I still use the `fill` method with the fill area to draw the overlay colour if a `PassageObject`
+      is selected, because that's just an overlay. Additionally, the `noreturn` border is still drawn
+      via the `draw` method of the fill area, because that still needs to be made immediately
+      noticeable. In fact, by using this variety of border by default (instead of the solid border),
+      this actually makes it more obvious if a particular passage is a 'point of no return'.
+      
+* Adding some error correction code into the OH-HECC parser, in case there are minor problems with
+  the supplied .hecc code, so, if an author provides completely stupid .hecc code, OH-HECC can mitigate
+  the problems and even fix a few of them automatically.
+    * If there are multiple passages with the same name, the duplicates will have a number appended to the end of their
+      names, to make them unique.
+        * This number is added in the form of a counter. Suppose that three passages were called `bob`; 
+          the first one would remain as `bob`, the second one would be renamed to `bob_1`, and the third one would be 
+          renamed to `bob_2`.
 
+        * If you had passages in the .hecc file called `james_1`, `james`, and `james`, you would end up with `james_1`,
+          `james`, and `james_2`, as expected.
+      
+        * However, if you already had `kevin`,`kevin`, and `kevin_1` (with `_1` being after both `kevin`s), the `kevin`
+          passages would be incremented as usual, however, upon approaching `kevin_1`, it will notice that there already
+          is a `kevin_1` (due to a kevin being incremented), so the original `kevin_1` itself be renamed to `kevin_1_1`.
+          
+        * This automatic renaming does have a chance of breaking the passage links, if the author wanted the links to
+          link to the `fred` which got renamed to `fred_1`. However, in this case, I would argue that it's the author's
+          fault for having multiple passages called `fred`, meaning that OH-HECC had no idea which `fred` those passages
+          were supposed to link to.
+
+      * If there is no start passage, one will be created.
+    
+          * It holds a boolean `foundStart` value, and, whilst going through the passages, until `foundStart` is true,
+            it will keep comparing the `trimmedName` string (produced after a duplicate passage is renamed) with the
+            metadata's `getStartPassage` string, and, if a match is found, `foundStart` is set to true.
+    
+          * After it's finished going through the passages, if `foundStart` is still false, it will create a new passage,
+            with the name identified in the `getStartPassage` string, and adds it to the passage map.
+            
+    * If there are passages which contain links to other passages which don't yet exist (after the renaming of
+      duplicates/adding of the start passage), the passages which they link to will be created.
+        * This is checked by attempting to call the `updateLinkedPassages` and `updateLinkedUUIDs` methods of each
+          `PassageEditingInterface`, and seeing if the linked names set and linked UUIDs set for that passage are the
+          same size as each other; if they are not the same size, that means it references a named passage which isn't
+          in the passage map.
+          
+        * When doing the iteration through the passages to get the `updateLinkedUUIDs` call, we will add the name of
+          the current passage to a set of strings for passage names that definitely do exist. If the count of linked names
+          and linked UUIDs for a passage are different, we add that passage to the list of `unresolved` passages, and
+          we add all of its linked names to the set of passage names that might not exist.
+          
+        * Once we are done with that iteration, we remove the 'these exist' passage names from the set of 'might not exist'
+          passage names, via the `removeAll` method of the `Set<T>` interface. The remaining 'might not exist' passages
+          are now 'definitely don't exist' passages.
+          
+        * We then create these passages that don't exist, and add them to the passage map. Once that is done, we update
+          the linked UUIDs of the passages that didn't successfully have their linked UUIDs updated earlier on, now that
+          the passages they are trying to link to exist.
+          
+    * If a passage has no position defined for it, OH-HECC will attempt to give it a position automatically.
+    
+        * The default position that any passage that doesn't have a specified position will have is always (0,0). The
+          problem with this is that, if every single passage doesn't have a position defined in the .hecc code, all of
+          these passages will end up directly on top of each other, which could get awkward for a user to deal with.
+          
+        * So, after the OH-HECC parser is done constructing all the passage objects/adding passage objects that needed
+          to be added/etc, it will go through all of the `PassageEditingInterface` objects one final time. The only
+          `PassageEditingInterface` object that will be allowed to have a position of (0,0) will be the start passage.
+          
+        * For all the other passages that have a position of (0,0), it will attempt to find the position of a 'parent'
+          passage of it which is not at (0,0). Once this is done, the passage's position will be offset from that parent
+          passage's position (if one could not be found, it will be offset from (0,0)) by a random distance in a random
+          direction.
+          
+        * The end result of this will be that the passage objects in the editor will be scattered around randomly, in
+          a bit of a barely-organized pile of mess. But at least it means that the passage objects won't all be piled
+          directly on top of each other (meaning that the author would need to manually drag each and every passage
+          out of the pileup individually).
+          
+    * These error-correction features have all been unit-tested in the [OhHeccParserTest](../src/oh_hecc/OhHeccParserTest.java)
+      class (or, in the case of the passage position error correction, I have ensured that the non-start passages are
+      all moved to a position which is not (0,0)), so I know for sure that these do work.
+      
+* The user can also scroll the view in the OH-HECC passage view by holding their right mouse button on the passage view
+  and 'dragging' it. The passages will basically stay at the same relative position as the mouse cursor, so, to a user,
+  it'll look (and potentially even feel) as if they're physically dragging the model around, which should, at very
+  least, feel not entirely terrible. I made this change because I was starting to get frustrated with only being able
+  to move the passage map by increments of 100px in each of the 4 cardinal directions using the arrow keys.
+  
+    * Firstly, I probably should mention a few changes I made to the existing scrolling code. I added in a
+      `requestFocus()` call on the JFrame belonging to the `OhHeccNeworkFrame` in its `finishSetup` method,
+      which ensures that any keypresses from the user will be picked up by the `ModelController` which was added
+      as a KeyListener to the that JFrame, without requiring the user to click on the model/open and close a component
+      editor window, or anything else along those lines beforehand.
+      
+    * For both scrolling methods, I added in a 'boundary' of sorts for the scroll. Within the `revalidate` method of
+      the `PassageModel` (called after any user input event is processed), I create a 'minXY' and 'maxXY' Vector2D,
+      to hold the lowest and highest X and Y passage object positions. I then go through the `values()` in the
+      `objectMap`(the clickable passage objects), via the `ObjectWithAPosition` interface (which just has a
+      `Vector2D getPosition()` method), specifically, using an `Iterator<? extends ObjectWithAPosition>`. I initialise
+      minimum/maximum to be copies of the position value held in the first passage object in the map. I then use the
+      iterator to iterate through those `ObjectWithAPosition`s, and obtain the lower/upper x and y bounds for the
+      positions of these objects. I also obtain a vector which represents half of the width/height of the component.
+      After the lower/upper bounds have been obtained, I subtract this half-size vector from them, such that these
+      bounds are offset to be applicable to the top-left corner of the screen. Then, I use the `ensureThisIsInBounds`
+      method of the `topLeftCorner` method, given the calculated x/y bounds vectors as arguments, to forcibly
+      ensure that it is within those bounds. This has been done so the user can't get too lost from their passages
+      (unless, of course, there's one passage that's really, really far away from all the others in one particular
+      diagonal, in which case, the user would probably be better off saving the .hecc file, closing OH-HECC, and
+      editing the .hecc file to manually move the passage to a more sensible location).
+      
+        * If there are no passages in the `PassageModel` (somehow), the viewport will be fixed such that (0,0) is in
+          the midpoint of the viewable area. Additionally, if there is only one passageObject in the `objectMap`,
+          it will not be possible for the viewport to be scrolled away from that passage (at least, until another
+          passage, in a different position, is added to the model)
+      
+    * The actual 'drag to scroll' logic is implemented in a very similar way to the 'dragging passages' logic.
+      The `PassageModel` has had a `Vector2D currentRightDragPos` attribute added to it, to keep track of the last
+      right mouse position (like the `currentLeftDragPos` vector).If the`activity` value of the `PassageModel` is
+      currently `CurrentActivity.DOING_NOTHING`, and the user right-clicks the `PassageModel`, the `activity` becomes
+      `CurrentActivity.RC_MOVING_VIEW`, and the `currentRightDragPos` is set to the position of the mouse. Then, when
+      the mouse is dragged whilst the right mouse button is held, I obtain the `Vector2D` difference between the mouse
+      positions in the same way as I did for the left mouse drag logic. However, unlike the left mouse drag stuff, I
+      do not offset the mouse position by the current amount of scrolling because, if I were to do that, things would
+      get out of control very easily (because the thing that dictates how much it will scroll would itself get messed
+      up by the scroll and things would get weird). I still update the `currentRightDragPos`.
+      Then, I double-check that the current activity is, in fact `CurrentActivity.RC_MOVING_VIEW`. If this is the case,
+      I get the difference between last frame's right mouse position and the current frame's right mouse position, then
+      I subtract (not add) that from the `topLeftCorner`. It's subtracted instead of added because, unlike the 'moving
+      the mouse' operation (where the object must follow the mouse), I need to move the viewport in the opposite
+      direction of the mouse movement, which in turn gives the impression that everything that is being viewed is
+      following the mouse instead. This is followed by a `revalidate()` call, which handles keeping the viewport
+      in bounds, before the frame is repainted.
+      
+    * The `activity` will be reset to `currentActivity.DOING_NOTHING` as soon as the user releases the right-mouse
+      button. This is so there won't be any awkward situations where the user is trying to scroll the viewport and also
+      move a passage/change stuff with the passage map at the same time. The button-based scrolling methods still are
+      present and are usable (and have also been edited to accept the numpad arrow keys as well as the normal arrow
+      keys), but are now only usable if the `PassageModel` is in the `CurrentActivity.DOING_NOTHING` state.
+      
+* The outputs received a few other minor improvements as well: the author, game title, and IFID are now included in
+  the `hecced.js` file (in some comments at the top of the .hecc file, all of which are comments in the form `//`,
+  so there's no way that a user could accidentally-on-purpose forcibly escape them). Additionally, the 'author'
+  metadata is present within the index.html file as well (via a `<meta name="author" content="author name goes here">`
+  tag, with the author name automatically filled in by HECC-UP, with html escape characters as well).
+      
+Finally, this technically probably doesn't count as a 'user experience' feature, but I have been trying to make
+the inner workings of HECC-IT much more efficient (using more interfaces instead of the full objects, explicitly
+re-declaring every single local variable which was not modified after declaration as `final`, omitting several
+methods that went unused, etc.) but that's probably more suitable for the next section.
 
 ### 1.2.2: HECC-IT behind the scenes
+
+This is the fun part.
+
+#### 1.2.2.1: Very big changes to the overall architecture!
+
+
+
+#### 1.2.2.2: Unit Tests!
+
+
+
+#### 1.2.2.3: Other assorted improvements
+

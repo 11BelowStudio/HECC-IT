@@ -49,6 +49,11 @@ and has static methods to validate a given game title, and a given author. This 
 interface which the `EditableMetadata` would be accessed through. On that note, the `EditableMetadata`
 class directly implemented the `MetadataEditingInterface` and `MetadataReadingInterface` interfaces.
 
+I created some unit tests for this class, which can be seen in the [`src/oh_hecc/game_parts/metadata/EditableMetadataTests.java`](../src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)
+class. I first checked if the constructors worked as intended, which they did. I then attempted to
+try putting some valid data into the various update methods, to see if they would update as expected,
+which they did. Additionally, any invalid inputs are also rejected, just as expected.
+
 I proceeded to create a `MetadataEditorWindow` class. I chose to make the metadata/passages editable
 via a `JFrame` with some text input fields which would pop up if the user clicked on the appropriate
 parts of OH-HECC. I did it this way because it allowed me get this implemented and working without a
@@ -143,7 +148,12 @@ interfaces.
 
 Like the `EditableMetadata`, the `EditablePassage` was also unit tested, trying out the various
 getters and setters in a similar context to the one that they would be used in, which can be seen
-[here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/MVP-Archived/src/oh_hecc/game_parts/passage/EditablePassageTest.java).
+[here](../src/oh_hecc/game_parts/passage/EditablePassageTest.java).
+As you can see in there, I tested the various constructors, and then the setters and getters. Any
+invalid inputs for the various properties of the `EditablePassage` are rejected as intended, and,
+if a valid input is given, the `EditablePassage` is updated as-expected. Additionally, if a passage
+is successfully renamed/deleted, any passages which link to it will have their links to it updated
+appropriately.
 I also decided that the map of `EditablePassage` objects should be a map of `PassageEditingInterface`
 objects, factoring that detail into the methods declared in `PassageEditingInterface` using the map.
 So, with that done, I moved on to making the editor window for the editable passage. However, at this
@@ -152,7 +162,8 @@ lines in the middle of the passage content or trailing comment, and I forgot to 
 those unit tests. However, later on in development, I did revisit this class, refactoring the
 `setPassageContent` and `setPassageComment` methods so, if there were any `;;` and/or `::` lines,
 they would have a `\` automatically appended to the start of them (escaping them). This method
-was unit tested as well, and can be seen in the updated unit tests, [here](../src/oh_hecc/game_parts/passage/EditablePassageTest.java).
+was unit tested as well, and can be seen in the updated unit tests.
+
 
 Similar to the metadata editor window, the passage editor window would need to take an
 `EditablePassage` as an argument, however, due to those other methods it involves, it would also
@@ -299,9 +310,8 @@ MVP stage of development, however, I was able to get this implemented later on, 
 I still should have decoupled them further (as the `PassageModel` was still directly storing copies
 of the passage map and the editable metadata), however, most of the logic which manipulated the
 map of passages which used to be done within OH-HECC directly had been moved to the GameDataObject
-(and replaced within OH-HECC with calls to the moved methods). Therefore, as the logic was moved
-as-was, I didn't feel that testing was needed, however, in hindsight, I should have created
-some unit tests for it to ensure that it did work as intended.
+(and replaced within OH-HECC with calls to the moved methods). A few unit tests had been produced
+for the GameDataObject, mostly regarding the start passage logic within it, which can be seen [here](../src/oh_hecc/game_parts/GameDataObjectTests.java).
 
 The final thing which the `GameDataObject` was given responsibility for was saving the .hecc files.
 This used to be within the `PassageModel` as well, but was moved to the `GameDataObject` for the

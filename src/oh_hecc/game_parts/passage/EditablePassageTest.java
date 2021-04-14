@@ -12,7 +12,9 @@ import java.util.*;
 import static oh_hecc.game_parts.passage.PassageEditingInterface.getPassageContentWithRenamedLinks;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Some tests for the EditablePassage class
+ */
 public class EditablePassageTest {
 
     /**
@@ -20,15 +22,15 @@ public class EditablePassageTest {
      */
     @Test
     void testASamplePassage(){
-        String name = "Another passage";
-        String content = "congrats you clicked that link to get here, Another passage.\nDo you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?";
-        String comment = "this is an comment\nbottom text";
-        String lineEndMetadata = "[yes theres tags] < 34.5 ,35> //this is another passage";
-        List<String> expectedTags = Arrays.asList("yes","theres","tags");
-        Vector2D expectedPos = new Vector2D(34.5,35);
-        String expectedInlineComment = "this is another passage";
-        Set<String> expectedLinks = new TreeSet<>(Arrays.asList("Left", "Right", "Start", "dave"));
-        EditablePassage samplePassage = new EditablePassage(
+        final String name = "Another passage";
+        final String content = "congrats you clicked that link to get here, Another passage.\nDo you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?";
+        final String comment = "this is an comment\nbottom text";
+        final String lineEndMetadata = "[yes theres tags] < 34.5 ,35> //this is another passage";
+        final List<String> expectedTags = Arrays.asList("yes","theres","tags");
+        final Vector2D expectedPos = new Vector2D(34.5,35);
+        final String expectedInlineComment = "this is another passage";
+        final Set<String> expectedLinks = new TreeSet<>(Arrays.asList("Left", "Right", "Start", "dave"));
+        final EditablePassage samplePassage = new EditablePassage(
                 name,
                 content,
                 comment,
@@ -48,61 +50,130 @@ public class EditablePassageTest {
         System.out.println(samplePassage.toHecc());
     }
 
+    /**
+     * just an equals test helper method (automatically handling the error message)
+     * @param expected expected object
+     * @param actual actual object
+     */
     private static void equalsTest(Object expected, Object actual){
         assertEquals(expected, actual, "Expected:\n" + expected.toString() + "\nGot:\n" + actual.toString());
     }
 
-    //tests if the link renaming stuff works (and also finding the set of linked passage names)
+    /**
+     *  tests if the link renaming stuff works (and also finding the set of linked passage names)
+     */
     @Test
     void renamingLinkTest(){
-        String inputContent = "[[old]] [[bob]] [[deez|old]] [[nutz|bob]] [[old|old]] [[old|bob]] [[ old ]] [[ bruh | old ]]";
-        String expected = "[[new]] [[bob]] [[deez|new]] [[nutz|bob]] [[old|new]] [[old|bob]] [[new]] [[ bruh |new]]";
 
+        // inputs + expected outputs
+        final String inputContent = "[[old]] [[bob]] [[deez|old]] [[nutz|bob]] [[old|old]] [[old|bob]] [[ old ]] [[ bruh | old ]]";
+        final String expected = "[[new]] [[bob]] [[deez|new]] [[nutz|bob]] [[old|new]] [[old|bob]] [[new]] [[ bruh |new]]";
 
-        String output = getPassageContentWithRenamedLinks(inputContent,"old","new");
+        // renaming the link 'old' to be 'new' instead
+        final String output = getPassageContentWithRenamedLinks(inputContent,"old","new");
 
         System.out.println(inputContent);
         equalsTest(expected, output);
         System.out.println(output);
 
-        Set<String> expectedLinks = new TreeSet<>(Arrays.asList("new","bob"));
-        Set<String> actualLinks = SharedPassage.findLinks(output);
+        final Set<String> expectedLinks = new HashSet<>(Arrays.asList("new","bob"));
+        final Set<String> actualLinks = SharedPassage.findLinks(output);
 
         equalsTest(expectedLinks, actualLinks);
 
     }
 
+    /**
+     * Testing renaming a passage with a valid name (and seeing if the links in the set of all passages update with it)
+     */
     @Test
     void validRenamePassageTest(){
-        Set<String> otherPassages = new HashSet<>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
-        String[] valid = {"p1","dave","Another Passage","Deez-Nutz","_ayy-lmao_"};
+        final String[] theOtherPassageNames = {"Start","oldPassage","eecks dee","sample","Another placeholder name"};
 
-        EditablePassage p1 = new EditablePassage();
+        final HashMap<UUID, PassageEditingInterface> allPassages = new HashMap<>();
+
+        final String placeholderContent = "[[%s]] [[text|%s]]";
+
+        final String firstName = "kevin";
+        final String initialContent = String.format(placeholderContent,firstName,firstName);
+
+        for (String p: theOtherPassageNames){
+            final PassageEditingInterface thisOne = new EditablePassage(p, initialContent);
+            allPassages.put(thisOne.getPassageUUID(),thisOne);
+        }
+
+        final String[] valid = {"p1","dave","Another Passage","Deez-Nutz","_ayy-lmao_"};
+
+        final PassageEditingInterface p1 = new EditablePassage(firstName, initialContent);
+
+        final UUID p1UUID = p1.getPassageUUID();
+        allPassages.put(p1UUID, p1);
+
+        final Collection<PassageEditingInterface> allVals = allPassages.values();
+        for (PassageEditingInterface ok: allVals){
+            ok.updateLinkedUUIDs(allVals);
+        }
 
         for (String s: valid) {
+
             Assertions.assertDoesNotThrow(
                     () -> Parseable.validatePassageNameRegex(s),
                     s + " check threw exception!"
             );
             assertDoesNotThrow(
-                    () -> p1.renameThisPassage(s, otherPassages),
+                    () -> p1.renameThisPassage(s, allPassages),
                     s + " update threw exception!"
             );
             equalsTest(s,p1.getPassageName());
+            final String updatedContent = String.format(placeholderContent, s, s);
+            for (PassageEditingInterface pei: allPassages.values()){
+                assertEquals(updatedContent, pei.getPassageContent());
+                assertTrue(pei.getLinkedPassages().contains(s));
+                assertTrue(pei.getLinkedPassageUUIDs().contains(p1UUID));
+            }
         }
 
     }
 
+    /**
+     * Testing for the invalid passage names (should throw an exception upon attempting to rename them,
+     * and links in their content should not be updated)
+     */
     @Test
     public void testInvalidNamesThrowException(){
-        Set<String> otherPassages = new HashSet<>(Arrays.asList("Start","oldPassage","eecks dee","sample","Another placeholder name"));
 
-        String[] invalidPassages = {"","-xd-","nice meme!","0w0~"};
 
-        EditablePassage p1 = new EditablePassage();
+        final String[] theOtherPassageNames = {"Start","oldPassage","eecks dee","sample","Another placeholder name"};
 
-        for (String s: invalidPassages) {
+        final HashMap<UUID, PassageEditingInterface> allPassages = new HashMap<>();
+
+        final String placeholderContent = "[[%s]] [[text|%s]]";
+
+        final String firstName = "kevin";
+        final String theContent = String.format(placeholderContent,firstName,firstName);
+
+
+        for (String p: theOtherPassageNames){
+            final PassageEditingInterface thisOne = new EditablePassage(p, theContent);
+            allPassages.put(thisOne.getPassageUUID(),thisOne);
+        }
+
+        final String[] invalid = {"","-xd-","nice meme!","0w0~", "chas & dave"};
+
+        final PassageEditingInterface p1 = new EditablePassage(firstName, theContent);
+
+        final UUID p1UUID = p1.getPassageUUID();
+        allPassages.put(p1UUID, p1);
+
+
+        final Collection<PassageEditingInterface> allVals = allPassages.values();
+        for (PassageEditingInterface ok: allVals){
+            ok.updateLinkedUUIDs(allVals);
+        }
+
+
+        for (String s: invalid) {
             assertThrows(
                     InvalidPassageNameException.class,
                     () -> Parseable.validatePassageNameRegex(s),
@@ -110,39 +181,77 @@ public class EditablePassageTest {
             );
             assertThrows(
                     InvalidPassageNameException.class,
-                    () -> p1.renameThisPassage(s, otherPassages),
+                    () -> p1.renameThisPassage(s, allPassages),
                     s + " update didn't throw exception!"
             );
+            assertEquals(firstName,p1.getPassageName());
+
+            for (PassageEditingInterface pei: allPassages.values()){
+                assertEquals(theContent, pei.getPassageContent());
+                assertFalse(pei.getLinkedPassages().contains(s));
+                assertTrue(pei.getLinkedPassages().contains(firstName));
+                assertTrue(pei.getLinkedPassageUUIDs().contains(p1UUID));
+            }
         }
 
     }
 
+    /**
+     * making sure that a rename operation does not happen if multiple passages share the same name
+     */
     @Test
     void testDuplicatePassageRename(){
-        String[] names = {"Start","oldPassage","eecks dee","sample","Another placeholder name"};
-        Set<String> otherPassages = new TreeSet<>(Arrays.asList(names));
 
-        EditablePassage p1 = new EditablePassage();
+
+        final EditablePassage p1 = new EditablePassage("kevin");
+
+        final String[] names = {"Start","oldPassage","eecks dee","sample","Another placeholder name"};
+
+        final HashMap<UUID, PassageEditingInterface> allPassages = new HashMap<>();
+
+        final UUID p1UUID = p1.getPassageUUID();
+        allPassages.put(p1UUID, p1);
+
+        for (String p: names){
+            final PassageEditingInterface thisOne = new EditablePassage(p);
+            allPassages.put(thisOne.getPassageUUID(),thisOne);
+        }
+
+        final Collection<PassageEditingInterface> allVals = allPassages.values();
+        for (PassageEditingInterface ok: allVals){
+            ok.updateLinkedUUIDs(allVals);
+        }
+
         for (String s: names) {
             assertThrows(
                     DuplicatePassageNameException.class,
-                    () -> p1.renameThisPassage(s, otherPassages),
+                    () -> p1.renameThisPassage(s, allPassages),
                     s + " update didn't throw exception!"
             );
         }
     }
-    
+
+    /**
+     * Yet another test for the valid passage name updating
+     */
     @Test
     void testPassageNameUpdate(){
-        EditablePassage[] samples = {new EditablePassage("deez nutz", new Vector2D(0,0)), new EditablePassage("lmao gottem", "[[deez nutz]]","",""), new EditablePassage(), new EditablePassage()};
+        final EditablePassage[] samples = {
+                new EditablePassage("deez nutz"),
+                new EditablePassage("lmao gottem", "[[deez nutz]] [[text|deez nutz]]"),
+                new EditablePassage(),
+                new EditablePassage()
+        };
 
-        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
+        final Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
         for (PassageEditingInterface e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
-        for (PassageEditingInterface e: passages.values()){
-            e.updateLinkedUUIDs(passages);
+
+        final Collection<PassageEditingInterface> allVals = passages.values();
+        for (PassageEditingInterface e: allVals){
+            e.updateLinkedUUIDs(allVals);
         }
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getKey());
@@ -153,42 +262,55 @@ public class EditablePassageTest {
 
         System.out.println("test 1");
 
-        assertDoesNotThrow( () -> editThis.renameThisPassage("nice name", passages));
+        assertDoesNotThrow(
+                () -> editThis.renameThisPassage("nice name", passages)
+        );
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         System.out.println("test 2");
 
-        assertDoesNotThrow( () -> editThis.renameThisPassage("deez nutz", passages));
+        assertDoesNotThrow(
+                () -> editThis.renameThisPassage("deez nutz", passages)
+        );
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
         System.out.println("test 3");
 
-        /*
-        try {
-            editThis.renameThisPassage("lmao gottem", passages);
-        } catch (Exception e){ e.printStackTrace();}*/
-        assertThrows(DuplicatePassageNameException.class, () -> editThis.renameThisPassage("lmao gottem",passages) );
+
+        assertThrows(
+                DuplicatePassageNameException.class,
+                () -> editThis.renameThisPassage("lmao gottem",passages)
+        );
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
             System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
 
     }
 
+    /**
+     * Testing what happens if we delete a passage (all existing links to it should have the '! WAS DELETED !' suffix appended to them)
+     */
     @Test
     void testPassageYeet() {
-        EditablePassage[] samples = {new EditablePassage("deez nutz", new Vector2D(0,0)), new EditablePassage("lmao gottem", "[[deez nutz]]","",""), new EditablePassage(), new EditablePassage()};
+        final EditablePassage[] samples = {
+                new EditablePassage("deez nutz"),
+                new EditablePassage("lmao gottem", "[[deez nutz]] [[text|deez nutz]]"),
+                new EditablePassage(),
+                new EditablePassage()
+        };
 
-        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
+        final Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
         for (EditablePassage e: samples) {
             passages.put(e.getPassageUUID(),e);
         }
-        for (PassageEditingInterface e: passages.values()){
-            e.updateLinkedUUIDs(passages);
+        final Collection<PassageEditingInterface> allVals = passages.values();
+        for (PassageEditingInterface e: allVals){
+            e.updateLinkedUUIDs(allVals);
         }
 
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
@@ -197,7 +319,7 @@ public class EditablePassageTest {
         }
 
         System.out.println("\nyeet time\n");
-        PassageEditingInterface yeetThis = passages.get(samples[0].getPassageUUID());
+        final PassageEditingInterface yeetThis = passages.get(samples[0].getPassageUUID());
 
         yeetThis.deleteThisPassage(passages);
 
@@ -205,24 +327,32 @@ public class EditablePassageTest {
             System.out.println(e.getKey());
             System.out.println(e.getValue().getAsStringForDebuggingReasons());
         }
-        PassageEditingInterface testThis = passages.get(samples[1].getPassageUUID());
-        assertNotEquals(testThis.getPassageContent(),"[[deez nutz]]");
+        final PassageEditingInterface testThis = passages.get(samples[1].getPassageUUID());
+        assertNotEquals(
+                "[[deez nutz]] [[text|deez nutz]]",
+                testThis.getPassageContent()
+        );
 
+        assertEquals(
+                "[[deez nutz! WAS DELETED !]] [[text|deez nutz! WAS DELETED !]]",
+                testThis.getPassageContent()
+        );
 
     }
 
+    /**
+     * Making sure a passage is added if we add a link to a passage that doesn't exist yet to the PassageMap.
+     */
     @Test
     void indirectlyAddNewPassage(){
-        EditablePassage samplePassage = new EditablePassage();
+        final EditablePassage samplePassage = new EditablePassage();
 
-        String newPassageName = "dave";
+        final Map<UUID, PassageEditingInterface> passages = new HashMap<>();
 
-        Map<UUID, PassageEditingInterface> passages = new HashMap<>();
-
-        UUID referenceUUID = samplePassage.getPassageUUID();
+        final UUID referenceUUID = samplePassage.getPassageUUID();
 
         passages.put(referenceUUID,samplePassage);
-        passages.get(referenceUUID).updateLinkedUUIDs(passages);
+        passages.get(referenceUUID).updateLinkedUUIDs(passages.values());
 
         System.out.println("before adding the new passage:\n");
         for (Map.Entry<UUID, PassageEditingInterface> e: passages.entrySet()) {
@@ -249,11 +379,11 @@ public class EditablePassageTest {
      */
     @Test
     void testEscaping() {
-        EditablePassage samplePassage = new EditablePassage();
+        final EditablePassage samplePassage = new EditablePassage();
 
-        String inputString = "::\n;;\ndeez nutz::\nso;;how's::life?\n;;k\n\n::q\n;;::\n::;;\n;\n:";
+        final String inputString = "::\n;;\ndeez nutz::\nso;;how's::life?\n;;k\n\n::q\n;;::\n::;;\n;\n:";
 
-        String expectedOutputString = "\\::\n\\;;\ndeez nutz::\nso;;how's::life?\n\\;;k\n\n\\::q\n\\;;::\n\\::;;\n;\n:";
+        final String expectedOutputString = "\\::\n\\;;\ndeez nutz::\nso;;how's::life?\n\\;;k\n\n\\::q\n\\;;::\n\\::;;\n;\n:";
 
         samplePassage.setPassageContent(inputString);
 
@@ -263,6 +393,163 @@ public class EditablePassageTest {
 
         assertEquals(expectedOutputString, samplePassage.getTrailingComment());
 
+    }
+
+    /**
+     * making sure the line end metadata works as expected
+     */
+    @Test
+    void testLineEndMetadata(){
+
+        final String lineEndData = "[yes theres tags noreturn] <69,420> // ayy lmao";
+
+        final PassageEditingInterface metadataPassage = new EditablePassage("dave","content","",lineEndData);
+
+        assertEquals(
+                new Vector2D(69,420),
+                metadataPassage.getPosition()
+        );
+
+        assertIterableEquals(
+                Arrays.asList("yes", "theres", "tags", "noreturn"),
+                metadataPassage.getPassageTags()
+        );
+
+        assertEquals(
+                "ayy lmao",
+                metadataPassage.getInlinePassageComment()
+        );
+
+        assertTrue(
+                metadataPassage.isThisAPointOfNoReturn()
+        );
+
+
+
+        final PassageEditingInterface noMetadata = new EditablePassage("bob","content","","");
+
+        assertEquals(
+                new Vector2D(0,0),
+                noMetadata.getPosition()
+        );
+
+        assertIterableEquals(
+                new ArrayList<String>(),
+                noMetadata.getPassageTags()
+        );
+
+        assertEquals(
+                "",
+                noMetadata.getInlinePassageComment()
+        );
+
+        assertFalse(
+                noMetadata.isThisAPointOfNoReturn()
+        );
+
+        final String otherMetadata = "<-45135.1251,24151.1> [some tags]";
+
+        final PassageEditingInterface meta2 = new EditablePassage("bob3","k","",otherMetadata);
+
+        assertEquals(
+                new Vector2D(-45135.1251,24151.1),
+                meta2.getPosition()
+        );
+
+        assertIterableEquals(
+                Arrays.asList("some", "tags"),
+                meta2.getPassageTags()
+        );
+
+        assertEquals(
+                "",
+                meta2.getInlinePassageComment()
+        );
+
+        assertFalse(
+                meta2.isThisAPointOfNoReturn()
+        );
+
+        final String multilineMetadata = "\n[some tags] <53,124> // woah";
+
+        final PassageEditingInterface plsDontRead = new EditablePassage("w","o","w",multilineMetadata);
+
+
+        assertEquals(
+                new Vector2D(0,0),
+                plsDontRead.getPosition()
+        );
+
+        assertIterableEquals(
+                new ArrayList<String>(),
+                plsDontRead.getPassageTags()
+        );
+
+        assertEquals(
+                "",
+                plsDontRead.getInlinePassageComment()
+        );
+
+        assertFalse(
+                plsDontRead.isThisAPointOfNoReturn()
+        );
+    }
+
+    /**
+     * making sure the passage statuses are set correctly
+     */
+    @Test
+    void testingPassageStatus(){
+
+
+        final PassageEditingInterface normalPassage = new EditablePassage("normal","[[an link]]");
+
+        assertEquals(
+                PassageStatus.NORMAL,
+                normalPassage.getPassageStatus()
+        );
+
+        final PassageEditingInterface normalPassage2 = new EditablePassage("normal2","[[text!|an link]]");
+
+        assertEquals(
+                PassageStatus.NORMAL,
+                normalPassage2.getPassageStatus()
+        );
+
+        final PassageEditingInterface endPassage = new EditablePassage("end", "no links");
+
+        assertEquals(
+                PassageStatus.END_NODE,
+                endPassage.getPassageStatus()
+        );
+
+        final PassageEditingInterface deletedLink = new EditablePassage("del", "[[an link! WAS DELETED !]]");
+
+        assertEquals(
+                PassageStatus.DELETED_LINK,
+                deletedLink.getPassageStatus()
+        );
+
+        final PassageEditingInterface deletedLink2 = new EditablePassage("del", "[[text!|an link! WAS DELETED !]]");
+
+        assertEquals(
+                PassageStatus.DELETED_LINK,
+                deletedLink2.getPassageStatus()
+        );
+
+        final PassageEditingInterface empty = new EditablePassage("empty","");
+
+        assertEquals(
+                PassageStatus.EMPTY_CONTENT,
+                empty.getPassageStatus()
+        );
+
+        final PassageEditingInterface empty2 = new EditablePassage("empty2", "\n \n");
+
+        assertEquals(
+                PassageStatus.EMPTY_CONTENT,
+                empty2.getPassageStatus()
+        );
     }
 
 

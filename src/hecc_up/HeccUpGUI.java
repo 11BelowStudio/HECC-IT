@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.nio.file.Path;
 
 /**
@@ -349,7 +348,7 @@ public class HeccUpGUI implements LoggerInterface {
             selectHeccFileChooser.setCurrentDirectory(heccFileLocation.toFile());
         }
 
-        int fcReturnValue = selectHeccFileChooser.showOpenDialog(theFrame);
+        final int fcReturnValue = selectHeccFileChooser.showOpenDialog(theFrame);
         if (fcReturnValue == JFileChooser.APPROVE_OPTION) { //if a .hecc file was chosen
             final Path thePath = selectHeccFileChooser.getSelectedFile().toPath().toAbsolutePath();
             selectedAHeccFile(thePath);
@@ -458,7 +457,8 @@ public class HeccUpGUI implements LoggerInterface {
             if (heccUpHandler.attemptToHeccUpTheGame(
                     heccFileLocation,
                     outputFolderLocation
-            )) {
+                )
+            ) {
                 if (JOptionPane.showConfirmDialog(
                         theFrame,
                         "<html><p>Successfully exported your HECCIN Game!<br>Do you want to play it now?</p></html>",

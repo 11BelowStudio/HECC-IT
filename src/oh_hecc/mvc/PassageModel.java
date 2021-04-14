@@ -7,7 +7,6 @@ import oh_hecc.game_parts.MVCGameDataInterface;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
-import oh_hecc.game_parts.passage.ModelBitsPassageInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 import oh_hecc.game_parts.passage.PassageModelEditablePassageInterface;
 import oh_hecc.mvc.model_bits.*;
@@ -120,10 +119,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     private final Vector2D currentRightDragPos;
 
-    //private final Vector2D minXYBounds;
-
-    //private final Vector2D maxXYBounds;
-
 
 
     /**
@@ -145,8 +140,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         objectMap = new HashMap<>();
 
-        for (PassageModelEditablePassageInterface p: passageMap.values()) {
-            p.updateLinkedUUIDs(passageMap);
+        final Collection<PassageEditingInterface> pMapVals = passageMap.values();
+
+        for (PassageModelEditablePassageInterface p: pMapVals) {
+            p.updateLinkedUUIDs(pMapVals);
             objectMap.put(p.getPassageUUID(), new PassageObject(this,p));
         }
 
@@ -210,6 +207,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     /**
      * Basically the update loop.
      * Updates the objectMap so it's consistent with the passageMap.
+     * Ensures that the top-right corner is within the bounds for the scroll
+     *      (viewable area midpoint cannot go out of the rectangle defined by the
+     *      midpoints of the topmost/bottommost/rightmost/leftmost passage objects)
      * Updates the startHighlight if necessary.
      * And finally calls the super.revalidate() method (so that can be handled)
      */
@@ -229,7 +229,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                 objectMap.put(u, new PassageObject(this,passageMap.get(u)));
             } else {
                 // update the linked UUIDs for the existing passage
-                passageMap.get(u).updateLinkedUUIDs(passageMap);
+                passageMap.get(u).updateLinkedUUIDs(passageMap.values());
                 // and we update the object itself.
                 objectMap.get(u).update();
             }
@@ -237,36 +237,54 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
         // we recalculate the xy bounds for the viewport scrolling
 
-        // firstly, we set the min/max bounds to be the position of the first object we encounter
-        final Vector2D minXYBounds = new Vector2D(objectMap.values().iterator().next().getPosition());
-        final Vector2D maxXYBounds = new Vector2D(minXYBounds);
-
-        for (ObjectWithAPosition p: objectMap.values()){
-            final Vector2D thisPos = p.getPosition();
-
-            // if this object is out of the existing x bounds, we update the bounds so it's in bounds.
-            if (thisPos.x < minXYBounds.x){
-                minXYBounds.x = thisPos.x;
-            } else if (thisPos.x > maxXYBounds.x){
-                maxXYBounds.x = thisPos.x;
-            }
-            // ditto for the y bounds
-            if (thisPos.y < minXYBounds.y){
-                minXYBounds.y = thisPos.y;
-            } else if (thisPos.y > maxXYBounds.y){
-                maxXYBounds.y = thisPos.y;
-            }
-
-        }
-
-        // we then obtain half the size of of this component
+        // we first obtain half the size of of this component
         final Vector2D halfSize = new Vector2D(getSize()).mult(0.5);
 
-        // then, we make sure that the top-left corner is in the bounds of the objects (with half-viewable-area wiggle room)
-        topLeftCorner.ensureThisIsInBounds(
-                minXYBounds.subtract(halfSize),
-                maxXYBounds.subtract(halfSize)
-        );
+        try { // in case there's no passage objects basically
+
+            // iterator through the passage objects
+            final Iterator<? extends ObjectWithAPosition> positionIterator = objectMap.values().iterator();
+
+            // firstly, we set the min/max bounds to be the position of the first object we encounter
+            final Vector2D minXYBounds = new Vector2D(positionIterator.next().getPosition());
+
+            // firstly, we set the min/max bounds to be the position of the first object we encounter
+
+            final Vector2D maxXYBounds = new Vector2D(minXYBounds);
+
+            // then we obtain the x and y bounds
+            while (positionIterator.hasNext()) {
+                final Vector2D thisPos = positionIterator.next().getPosition();
+
+                // if this object is out of the existing x bounds, we update the bounds so it's in bounds.
+                if (thisPos.x < minXYBounds.x) {
+                    minXYBounds.x = thisPos.x;
+                } else if (thisPos.x > maxXYBounds.x) {
+                    maxXYBounds.x = thisPos.x;
+                }
+                // ditto for the y bounds
+                if (thisPos.y < minXYBounds.y) {
+                    minXYBounds.y = thisPos.y;
+                } else if (thisPos.y > maxXYBounds.y) {
+                    maxXYBounds.y = thisPos.y;
+                }
+            }
+
+            // then, we make sure that the top-left corner is in the bounds of the objects (with half-viewable-area wiggle room)
+            topLeftCorner.ensureThisIsInBounds(
+                    minXYBounds.subtract(halfSize),
+                    maxXYBounds.subtract(halfSize)
+            );
+
+        } catch (NoSuchElementException e){
+            // we invert halfSize so it's basically the coords at the top-left corner of 0,0
+            halfSize.inverse();
+            // and we set the top left corner of the viewable area to be at those coords.
+            topLeftCorner.ensureThisIsInBounds(
+                    halfSize,
+                    halfSize
+            );
+        }
 
         //move the start highlight to be highlighting the start passage
         final Optional<UUID> startUUID = theData.getStartUUID();
@@ -318,7 +336,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
             final Point scrolledMouse = moveMouseByScroll(mLocation); // factoring any offset from moving the viewport
 
             //this will hold the clicked passageObject if it was clicked
-            final Optional<PassageObject> clicked =
+            final Optional<? extends ClickableObjectWithUUID> clicked =
                 objectMap.values().stream().filter(
                         o -> o.wasClicked(scrolledMouse)
                 ).findAny(); //basically tries to find the first one where the 'wasClicked' method evaluates to true
@@ -475,7 +493,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         switch (activity){
             case DOING_NOTHING:
 
-                final Optional<PassageObject> pressed =
+                final Optional<? extends SelectableObject> pressed =
                         objectMap.values().stream().filter(
                                 p -> p.wasClicked(movedMouse)
                         ).findAny();
@@ -485,19 +503,18 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
                     selectedObjects.add(p);
                     activity = CurrentActivity.LC_MOVING_OBJECTS;
 
-                } else {
+                }/* else {
                     //TODO: START DRAGGING SELECTION AREA
 
                     //activity = CurrentActivity.LC_DRAGGING_SELECTION_BOX;
 
-                }
+                } */
                 break;
             case LC_OBJECTS_SELECTED:
                 //TODO: any other things I need to do when left-clicking whilst done selecting the things?
 
                 //If mouse down on a selected object
-                if (
-                    selectedObjects.stream().anyMatch(
+                if (selectedObjects.stream().anyMatch(
                         p -> p.wasClicked(movedMouse)
                     )
                 ) {
@@ -572,9 +589,10 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
             case LC_MOVING_OBJECTS:
                 final Vector2D movement = Vector2D.subtract(currentLeftDragPos, lastLeftDrag);
-                selectedObjects.forEach(
-                        o -> o.move(movement)
-                );
+
+                for (MoveableObject m: selectedObjects){
+                    m.move(movement);
+                }
                 break;
         }
     }
@@ -806,16 +824,6 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         return theData.getPassageFromUUID(uuidOfPassageToGet);
     }
 
-    /**
-     * Obtains the UUIDs of the passages that link to the destination passage
-     *
-     * @param destination the UUID of the passage that we're trying to find the 'parent' passages of
-     * @return the UUIDs of all the 'parent' passage
-     */
-    @Override
-    public Set<UUID> getThePassageObjectsWhichLinkToGivenPassageFromUUID(UUID destination) {
-        return theData.getThePassageObjectsWhichLinkToGivenPassageFromUUID(destination);
-    }
 
     /**
      * Update the passageLinks of the passage objects that link to the given passage
@@ -824,9 +832,9 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
      */
     @Override
     public void updatePassageObjectLinksWhichLinkToSpecifiedPassage(UUID destination) {
-        getThePassageObjectsWhichLinkToGivenPassageFromUUID(destination).forEach(
-                k -> objectMap.get(k).updatePositionOfSpecificLink(destination)
-        );
+        for (UUID u: theData.getUUIDsOfPassagesThatLinkToThisOne(destination)){
+            objectMap.get(u).updatePositionOfSpecificLink(destination);
+        }
     }
 
     /**

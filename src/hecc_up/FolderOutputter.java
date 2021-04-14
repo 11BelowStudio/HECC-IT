@@ -42,7 +42,7 @@ public class FolderOutputter {
      * @throws SecurityException if there's a security problem preventing stuff from being output
      * @throws IOException if there's another input/output problem
      */
-    public boolean outputTheGameWithMetadata(
+    public void outputTheGameWithMetadata(
             List<String> heccedData,
             FolderOutputterMetadataInterface metadata
     ) throws SecurityException, IOException {
@@ -101,7 +101,7 @@ public class FolderOutputter {
 
         writeIFictionFile(metadata, iFictionFile);
 
-        return true;
+        //return true;
         //} else {
         //    return false;
         //}
@@ -165,10 +165,16 @@ public class FolderOutputter {
                 metadata.getIfidButHtmlFormatted()
         );
 
-        //replaces the <title> tag in the index.
+        //replaces the <title> tag in the index (and puts an author name underneath it).
         theIndexString = theIndexString.replace(
                 "<title>HECCIN Game</title>",
-                "<title>" + metadata.getTitle() + "</title>"
+                "<title>" + metadata.getTitleHtmlEscaped() + "</title>"
+        );
+
+        // and putting some author metadata in there for good measure
+        theIndexString = theIndexString.replace(
+                "<meta name=\"author\" content=\"Anonymous\">",
+                "<meta name=\"author\" content=\"" + metadata.getAuthorHTMLEscaped() + "\">"
         );
 
         indexFileWriter.write(theIndexString);

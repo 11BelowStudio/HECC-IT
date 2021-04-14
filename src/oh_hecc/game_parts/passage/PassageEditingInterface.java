@@ -5,10 +5,7 @@ import heccCeptions.InvalidMetadataDeclarationException;
 import heccCeptions.InvalidPassageNameException;
 import utilities.Vector2D;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,20 +97,6 @@ public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedU
     Map<UUID, PassageEditingInterface> resolvePassageLinks(Map<UUID, PassageEditingInterface> allPassages);
 
 
-
-
-    /**
-     * This method will be used when attempting to rename this passage.
-     * @param newName the new name that the user is trying to give this passage.
-     * @param allPassageNames the set of all passage names
-     * @return the previous name of this passage (before it got renamed)
-     * @throws InvalidPassageNameException if the passage name isn't a valid passage name
-     * @throws DuplicatePassageNameException if there's already a passage with this name which exists
-     * @deprecated
-     */
-    String renameThisPassage(String newName, Set<String> allPassageNames) throws InvalidPassageNameException, DuplicatePassageNameException;
-
-
     /**
      * This method will be used when attempting to rename this passage.
      * @param newName the new name that the user is trying to give this passage.
@@ -144,9 +127,9 @@ public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedU
     /**
      * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
      * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
-     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
+     * @param allPassages the collection of all passages mapped to UUIDs (where the UUIDs will be read from basically)
      */
-    void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages);
+    void updateLinkedUUIDs(Collection<? extends SharedPassage> allPassages);
 
 
     /**

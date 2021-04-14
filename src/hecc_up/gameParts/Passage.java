@@ -5,6 +5,7 @@ import oh_hecc.game_parts.passage.PassageOutputtingInterface;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -59,7 +60,7 @@ public class Passage implements PassageOutputtingInterface {
     /**
      * an arrayList of string tag names (which this passage is tagged with).
      */
-    private ArrayList<String> tags;
+    private List<String> tags;
         //will be used later on, with OH-HECC
 
     /**
@@ -116,19 +117,19 @@ public class Passage implements PassageOutputtingInterface {
      * @param lineEndMetadata The full line end metadata
      * @return an ArrayList<String> containing all the tag metadata
      */
-    private ArrayList<String> readTagMetadata(String lineEndMetadata){
-        ArrayList<String> tagList = new ArrayList<>();
+    private List<String> readTagMetadata(String lineEndMetadata){
+        final List<String> tagList = new ArrayList<>();
         //this processes the list of tags (if they exist)
             //tags may be alphanumeric with underscores, divided by spaces
             //must be within []
             //like '[List of tags divided by spaces and allows d1gits plus under_scores]'
-        Matcher tagListMatcher = Pattern.compile(
+        final Matcher tagListMatcher = Pattern.compile(
                 "\\[([\\w]+[ ])*[\\w]+]").matcher(lineEndMetadata);
                 //finds the tag list metadata
         if (tagListMatcher.find()){ //if found
             String tagListString = tagListMatcher.group(0); //gets it
             tagListString = tagListString.substring(1,tagListString.length()-1); //removes surrounding []
-            String[] tagListArray = tagListString.split(" "); //splits it at spaces
+            final String[] tagListArray = tagListString.split(" "); //splits it at spaces
             for (String s: tagListArray){ //for each of the tags
                 if (!s.isEmpty()){
                     tagList.add(s.trim()); //add it to the tagList
@@ -144,11 +145,11 @@ public class Passage implements PassageOutputtingInterface {
      * @return A Vector2D for the OH-HECC position of this passage
      */
     private Vector2D readVectorMetadata(String lineEndMetadata){
-        Vector2D readVector = new Vector2D();
+        final Vector2D readVector = new Vector2D();
         //Searches for it in the form
             //<x,y>
                 //x and y are double numbers, may have decimals, and can have leading/trailing whitespace
-        Matcher vectorCoordsMatcher = Pattern.compile(
+        final Matcher vectorCoordsMatcher = Pattern.compile(
                 "<\\h*\\d*\\.?\\d+\\h*,\\h*\\d*\\.?\\d+\\h*>"
         ).matcher(lineEndMetadata);
         if (vectorCoordsMatcher.find()){
@@ -157,7 +158,7 @@ public class Passage implements PassageOutputtingInterface {
             //trims the trailing/leading '<''>' characters
             vectorCoordsString = vectorCoordsString.substring(1,vectorCoordsString.length()-1);
             //converts it into an array, splitting at the comma
-            String[] vectorCoordsArray = vectorCoordsString.split(",");
+            final String[] vectorCoordsArray = vectorCoordsString.split(",");
             if(vectorCoordsArray.length > 1){ //if there's 2 (or more) indexes in the array
                 int i = 0; //counter thing
                 double[] coords = {0,0}; //2d array of doubles to store the coordinate doubles
@@ -185,7 +186,7 @@ public class Passage implements PassageOutputtingInterface {
      * returns empty string if no comment is found.
      */
     private String getInlineComment(String lineEndMetadata){
-        Matcher inlineCommentMatcher = Pattern.compile(
+        final Matcher inlineCommentMatcher = Pattern.compile(
                 "((?<=\\/\\/).*)"
         ).matcher(lineEndMetadata); //matches everything between the first // and the end of the line
         String theComment = ""; //blank comment by default
@@ -303,7 +304,7 @@ public class Passage implements PassageOutputtingInterface {
             regex = "(\\[\\[[^\\[\\]\\|]+\\|[\\h]*[\\w]+[\\w- ]*[\\w]+[\\h]*]])";
         }
         //creates the matcher
-        Matcher theMatcher = Pattern.compile(
+        final Matcher theMatcher = Pattern.compile(
                 regex,
                 Pattern.MULTILINE
         ).matcher(input);
@@ -321,7 +322,7 @@ public class Passage implements PassageOutputtingInterface {
                         theMatcher.reset(input);
                     }
                 } else{ //if indirect link
-                    String[] linkParts = temp.split("\\|"); //splits it into two at the |
+                    final String[] linkParts = temp.split("\\|"); //splits it into two at the |
                     linkedPassages.add(linkParts[1].trim()); //puts the 2nd part (the passage name) into the linkedPassages set
                     if (converting){ //if converting into links
                         //turns it into a hecced link
@@ -368,9 +369,9 @@ public class Passage implements PassageOutputtingInterface {
      * @param inputTags arrayList of tags to parse
      * @return a string with the array representation of those tags
      */
-    private String parseTags(ArrayList<String> inputTags){
+    private String parseTags(List<String> inputTags){
         //creating a stringBuilder
-        StringBuilder parsedTagBuilder = new StringBuilder();
+        final StringBuilder parsedTagBuilder = new StringBuilder();
         //opening the array declaration
         parsedTagBuilder.append("[");
         //if it's not empty, start filling up the array
@@ -442,7 +443,7 @@ public class Passage implements PassageOutputtingInterface {
      */
     public String getHecced(){
         //making a StringBuilder
-        StringBuilder heccedBuilder = new StringBuilder();
+        final StringBuilder heccedBuilder = new StringBuilder();
         
         //starting constructor
         heccedBuilder.append("\ttheHeccer.addPassageToMap(\n\t\tnew Passage(\n\t\t\t\"");

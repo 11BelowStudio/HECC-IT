@@ -4,6 +4,7 @@ import oh_hecc.game_parts.metadata.EditableMetadata;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.game_parts.passage.EditablePassage;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
+import oh_hecc.game_parts.passage.SharedPassage;
 import utilities.TextAssetReader;
 import utilities.Vector2D;
 
@@ -11,6 +12,7 @@ import javax.swing.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class OhHeccParser implements GameDataGetterParserInterface {
 
@@ -171,20 +173,24 @@ public class OhHeccParser implements GameDataGetterParserInterface {
 
 
 
-        String currentPassageName;
+        String currentPassageName = "";
         String nextPassageName = "";
-        String everythingAfterDeclaration;
+        String everythingAfterDeclaration = "";
 
-        String currentPassageMetadata;
+        String currentPassageMetadata = "";
         //int currentPassageMetadataStart;
 
         int nextDeclarationStart = 0;
-        int thisDeclarationStart;
+        int thisDeclarationStart = 0;
         //int thisContentStart = 0;
 
         boolean foundFirst = false;
-        boolean contentFound;
+        boolean contentFound = false;
         //boolean passageMetadataFound;
+
+        // we use this to keep track of whether or not we found the start passage
+        boolean foundStart = false;
+        final String theStartName = theMetadata.getStartPassage();
 
         do{
 
@@ -192,7 +198,10 @@ public class OhHeccParser implements GameDataGetterParserInterface {
             //find next declaration, and move 'next' declarations/passage names into 'current'
             notDone = declarationMatcher.find();
             thisDeclarationStart = nextDeclarationStart;
-            currentPassageName = nextPassageName;
+            currentPassageName = nextPassageName.trim();
+
+
+
             if (notDone){ //if there is a next declaration
 
                 //finds passage name of that next declaration, and where the next declaration starts
@@ -298,6 +307,15 @@ public class OhHeccParser implements GameDataGetterParserInterface {
                 trimmedName = newName; // overwrites the duplicate name with one that's unique enough
             }
 
+            // if we haven't found the start passage yet
+            if (!foundStart){
+                // if the current passage is the start passage
+                if (trimmedName.equals(theStartName)){
+                    // we've found it.
+                    foundStart = true;
+                }
+            }
+
             final PassageEditingInterface thePassage = new EditablePassage(
                     trimmedName,
                     contentBuilder.toString().trim(),
@@ -308,29 +326,62 @@ public class OhHeccParser implements GameDataGetterParserInterface {
         } while(notDone);
 
 
+        // if there is no start passage, we forcibly create one.
+        if(!foundStart){
+            final PassageEditingInterface aNewStartPassage = new EditablePassage(theStartName);
+            pMap.put(aNewStartPassage.getPassageUUID(), aNewStartPassage);
+        }
+
+
         // this holds passages from the .hecc that may have links to undefined passages
-        final Set<PassageEditingInterface> thePassagesWithUnresolvedLinks = new HashSet<>();
+        final List<PassageEditingInterface> thePassagesWithUnresolvedLinks = new ArrayList<>();
+
+        // names of passages that we know exist
+        final Set<String> knownPassages = new HashSet<>();
+        // names of passages that might not exist
+        final Set<String> potentialUnknowns = new HashSet<>();
+
+        // a hashset that is the value view of the passage map
+        final Set<PassageEditingInterface> pValues = new HashSet<>(pMap.values());
 
         //And now, time to actually update the UUIDs.
-        for (PassageEditingInterface e: pMap.values()){
-            e.updateLinkedUUIDs(pMap);
+        for (PassageEditingInterface e: pValues){
+
+            knownPassages.add(e.getPassageName()); // we know this passage exists, so we add it to knownPassages
+            e.updateLinkedUUIDs(pValues);
+
+            final Set<String> namedLinkedPassages = e.getLinkedPassages();
+
             // we also look for passages with links to undefined passages
-            if (e.getLinkedPassages().size() != e.getLinkedPassageUUIDs().size()){
+            if (namedLinkedPassages.size() != e.getLinkedPassageUUIDs().size()){
                 // we'll know it's unresolved because their linked UUIDs wont match their linked names
-                thePassagesWithUnresolvedLinks.add(e);
+                thePassagesWithUnresolvedLinks.add(e); // we add this to the list of passages that need to be fixed later.
+                potentialUnknowns.addAll(namedLinkedPassages); // some of these named passages might not exist. so we take note of that
             }
         }
 
-        // and we resolve the problems with the unresolved links
-        for (PassageEditingInterface unresolved: thePassagesWithUnresolvedLinks) {
-            unresolved.resolvePassageLinks(pMap);
+        // removing all the passages that do exist from the set of passages that might not exist
+        potentialUnknowns.removeAll(knownPassages);
+
+        // the remaining passages definitely don't currently exist. so we'll make them exist, and add them to the pMap.
+        for(String s: potentialUnknowns){
+            final PassageEditingInterface nowKnownPassage = new EditablePassage(s);
+            pMap.put(nowKnownPassage.getPassageUUID(), nowKnownPassage);
         }
 
+        pValues.addAll(pMap.values());
+
+        // and we update the linked UUIDs for those passages that used to refer to those passages that didn't exist
+        for (PassageEditingInterface unresolved: thePassagesWithUnresolvedLinks) {
+            //unresolved.resolvePassageLinks(pMap);
+            unresolved.updateLinkedUUIDs(pValues);
+        }
 
 
         // if any passages have the default position of (0,0), HECC-IT will attempt to displace them from their parent,
         // so they're not all on top of each other. It does look ugly, but that's an occupational hazard.
-        for (PassageEditingInterface e: pMap.values()){
+        for (PassageEditingInterface e: pValues){
+
             if (e.getPosition().isZero()){
 
                 if (theMetadata.getStartPassage().equals(e.getPassageName())){
@@ -339,20 +390,22 @@ public class OhHeccParser implements GameDataGetterParserInterface {
 
                 final UUID currentUUID = e.getPassageUUID();
 
-                // attempts to find any parent passage (containing a link to this passage).
-                final Optional<PassageEditingInterface> parent = pMap.values().stream().filter(
-                        p1 -> p1.getLinkedPassageUUIDs().contains(currentUUID)
+                // attempts to find any parent passage (containing a link to this passage) that isn't at 0,0
+                final Optional<Vector2D> parent = pValues.stream().filter(
+                        p1 -> p1.getLinkedPassageUUIDs().contains(currentUUID) && !(p1.getPosition().isZero())
+                ).map(
+                        SharedPassage::getPosition
                 ).findAny();
 
                 // if it does have a parent, the position of this vector is displaced by
                 // a random vector at a random angle from the parent object's position
                 if (parent.isPresent()){
                     e.updatePosition(
-                        Vector2D.randomVectorFromOrigin(parent.get().getPosition(), 128, 128)
+                        Vector2D.randomVectorFromOrigin(parent.get(), 128, 256)
                     );
                 } else {
                     // otherwise, we displace it from 0,0
-                    e.updatePosition(Vector2D.randomVectorFromOrigin(new Vector2D(), 256, 128));
+                    e.updatePosition(Vector2D.getRandomPolarVector(128,512));
                 }
 
             }
@@ -361,6 +414,8 @@ public class OhHeccParser implements GameDataGetterParserInterface {
 
         return pMap;
     }
+
+
 
 
     /**

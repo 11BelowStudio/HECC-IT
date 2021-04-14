@@ -34,14 +34,18 @@ public interface Parseable {
      * A method to ensure a given passage name satisfies the passage name regex rules
      * @param passageNameToCheck the passage name to check
      * @return a trimmed version of the valid passage name (if it's valid)
-     * @throws InvalidPassageNameException if the passage name was invalid
+     * @throws InvalidPassageNameException if the (trimmed) passage name was invalid
      */
     static String validatePassageNameRegex(String passageNameToCheck) throws InvalidPassageNameException {
-        final Matcher validNameMatcher = Pattern.compile(STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE).matcher(passageNameToCheck);
+        final String trimmedName = passageNameToCheck.trim();
+        final Matcher validNameMatcher = Pattern.compile(STANDALONE_PASSAGE_NAME_REGEX_WITH_WHITESPACE).matcher(trimmedName);
         if (validNameMatcher.find()){
-            return validNameMatcher.group(0).trim();
-        } else{
-            throw new InvalidPassageNameException(passageNameToCheck);
+            final String validated = validNameMatcher.group(0).trim();
+
+            if (trimmedName.equals(validated)){
+                return validated;
+            }
         }
+        throw new InvalidPassageNameException(trimmedName);
     }
 }

@@ -1,6 +1,8 @@
 package oh_hecc.game_parts.passage;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -10,8 +12,10 @@ public interface UpdatableLinkedUUIDsInterface {
 
     /**
      * Method that'll be used to update the set containing the UUIDs of all the passages that this passage is linked to.
-     * call this for each element in the map of (? extends SharedPassages) <b>after</b> everything's been added to it.
-     * @param allPassages the map of all passages mapped to UUIDs (where the UUIDs will be read from basically)
+     * call this for each element in the set of (? extends SharedPassages) <b>after</b> everything's been added to it.
+     * @param allPassages the set of all passages mapped to UUIDs (where the UUIDs will be read from basically)
      */
-    void updateLinkedUUIDs(Map<UUID, ? extends SharedPassage> allPassages);
+    void updateLinkedUUIDs(Collection<? extends SharedPassage> allPassages);
+
+
 }

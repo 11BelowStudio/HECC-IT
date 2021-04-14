@@ -21,14 +21,14 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
     final JFrame theFrame;
 
     //A lowered etched border
-    final Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+    final static Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
     //the default font but not bold.
-    final Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
+    final static Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
 
-    final Color defaultTextFieldColor = new JTextField().getForeground();
+    final static Color defaultTextFieldColor = new JTextField().getForeground();
 
-    final Color errorTextFieldColor = Color.RED;
+    final static Color errorTextFieldColor = Color.RED;
 
     /**
      * the GameDataObject with the data for the full game.
