@@ -188,6 +188,16 @@ ignored when it is read.
         * The declaration for the next passage
         * The end of the file.
     * Leading/trailing blank lines in the multi-line comment will be omitted by OH-HECC.
+    
+
+If you want to see some premade .hecc code, there's some at the end of this document.
+But first, we need to talk about **HECC-IT**
+
+# Using HECC-IT with your .hecc code
+
+## Opening HECC-IT
+
+Please ensure that your computer has Java 8 installed on it. 
 
     
 ## And now, some example HECC code

@@ -177,4 +177,56 @@ public class MetadataTests {
 
         theMetadata.printDebugData();
     }
+
+    /**
+     * test multiple metadata declarations in the same file (should only read the first declaration)
+     */
+    @Test
+    void testMultipleMetadataDeclarations(){
+
+        final String dupedMetadata = "!author: An Author\n" +
+                "!title: This is a title\n" +
+                "!ifid: 2052A3A1-17DB-4202-9753-81D8CF3CBC0E\n" +
+                "!start: Kevin\n"+
+                "!author: fail\n" +
+                "!title: fail\n" +
+                "!ifid: BC8F7F4F-0A01-4EC8-8793-C2CDBD8C4C4F\n" +
+                "!start: fail\n";
+
+        final Metadata theMetadata = new Metadata(dupedMetadata);
+
+        theMetadata.parseMetadata();
+
+        assertEquals("An Author", theMetadata.getAuthor());
+
+        assertEquals("This is a title", theMetadata.getTitle());
+
+        assertEquals("2052A3A1-17DB-4202-9753-81D8CF3CBC0E", theMetadata.getIfid());
+        assertTrue(theMetadata.doesIfidExist());
+
+        assertEquals("Kevin",theMetadata.getStartPassage());
+
+        assertTrue(theMetadata.isAllOptionalMetadataDeclared());
+        assertEquals("No metadata problems detected!", theMetadata.outputMetadataDefinitionInstructions());
+
+
+        assertEquals("<!-- UUID://2052A3A1-17DB-4202-9753-81D8CF3CBC0E// -->", theMetadata.getIfidButHtmlFormatted());
+
+        final String ifictionMetadata = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ifindex version=\"1.0\" xmlns=\"http://babel.ifarchive.org/protocol/iFiction/\">\n" +
+                "\t<!-- Bibliographic data generated via HECC-UP -->\n" +
+                "\t<story>\n" +
+                "\t\t<identification>\n" +
+                "\t\t\t<ifid>2052A3A1-17DB-4202-9753-81D8CF3CBC0E</ifid>\n" +
+                "\t\t\t<format>html</format>\n" +
+                "\t\t</identification>\n" +
+                "\t\t<bibliographic>\n" +
+                "\t\t\t<title>This is a title</title>\n" +
+                "\t\t\t<author>An Author</author>\n" +
+                "\t\t</bibliographic>\n" +
+                "\t</story>\n" +
+                "</ifindex>";
+
+        assertEquals(ifictionMetadata, theMetadata.getIFictionMetadata());
+    }
 }

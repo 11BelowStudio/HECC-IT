@@ -4,7 +4,7 @@ By Rachel Lowe
 
 Git repo for this project: https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m
 
-readme last updated 1/4/2020
+readme last updated 15/4/2020
 
 ## Welcome to HECC-IT!
 
@@ -20,6 +20,16 @@ So let's cut to the chase.
 
 Please go to [./Technical Documentation/README.md](./Technical%20Documentation/README.md) for the
 table of contents for the technical documentation.
+
+If you want to see the information about every single class/method/etc all individually
+documented, please go to the [./JavaDocs](./JavaDocs) folder for the full JavaDoc-style
+documentation. You may need to download and unzip that folder on your computer to actually
+browse it as intended.
+
+If you wanted a brief overview of the classes in each package, please refer to the
+package-level READMEs in each subfolder of [./src](./src).
+
+
 
 ## What the HECC does this do?
 

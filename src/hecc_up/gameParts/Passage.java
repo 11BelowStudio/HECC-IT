@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * This class represents a Passage within the HECCIN' Game
  *
  * @see oh_hecc.game_parts.passage.OutputtablePassage instead.
- * @deprecated
+ * @deprecated use oh_hecc.game_parts.passage.OutputtablePassage instead.
  */
 @Deprecated
 public class Passage implements PassageOutputtingInterface {
@@ -32,13 +32,11 @@ public class Passage implements PassageOutputtingInterface {
 
     /**
      * A trailing multiline comment behind this passage object
-     * @deprecated not actually used
      */
     private final String trailingComment;
 
     /**
      * the comment that's inline with the passage declaration
-     * @deprecated not actually used
      */
     private String inlineComment;
 
@@ -61,7 +59,7 @@ public class Passage implements PassageOutputtingInterface {
      * an arrayList of string tag names (which this passage is tagged with).
      */
     private List<String> tags;
-        //will be used later on, with OH-HECC
+
 
     /**
      * a position Vector2D. will be used with OH-HECC.
@@ -115,7 +113,7 @@ public class Passage implements PassageOutputtingInterface {
     /**
      * This reads the tag metadata stuff
      * @param lineEndMetadata The full line end metadata
-     * @return an ArrayList<String> containing all the tag metadata
+     * @return an list of Strings containing all the tag metadata
      */
     private List<String> readTagMetadata(String lineEndMetadata){
         final List<String> tagList = new ArrayList<>();
@@ -227,7 +225,8 @@ public class Passage implements PassageOutputtingInterface {
     }
 
     /**
-     * Used to wrap the html character escaping stuff
+     * Used to actually do the html character escaping stuff
+     * @param input the html characters being escaped
      * @return version of input with the escape characters escaped
      */
     private String escapeHtmlCharacters(String input){
@@ -472,7 +471,10 @@ public class Passage implements PassageOutputtingInterface {
 
     /**
      * This gets the passage info as a string, for debugging reasons.
+     * @return the passage info as a string
+     * @deprecated not actually used
      */
+    @Deprecated
     public String getAsStringForDebuggingReasons(){
         return "Passage name: " + passageName
             + "Unparsed passage content:\n" + unparsedContent
@@ -485,6 +487,12 @@ public class Passage implements PassageOutputtingInterface {
             + "end passage data";
     }
 
+    /**
+     * Returns the set of named linked passages
+     * @return the set of passage names that this links to
+     * @deprecated not actually used
+     */
+    @Deprecated
     @Override
     public Set<String> getLinkedPassages(){
         return linkedPassages;

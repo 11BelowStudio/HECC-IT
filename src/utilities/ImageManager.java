@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * This basically reads the image assets from the assets/imageAssets folder so they can be included in the jar.
- *
+ * <p>
  * Partially based on sample code provided by Dr. Dimitri Ognibene as part of the
  * CE218 Computer Games Programming module I took last year.
  *

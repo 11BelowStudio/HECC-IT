@@ -114,8 +114,11 @@ public class PassageLinkObject extends EditModelObject {
     }
 
 
-
-
+    /**
+     * Basically rotates the affine transformation so the point triangle is pointing in the right direction, then draws
+     * the point triangle to point to the object that this links to
+     * @param g the graphics context being used.
+     */
     @Override
     void individualDraw(Graphics2D g) {
 

@@ -36,22 +36,40 @@ public class MetadataEditorWindow extends GenericEditorWindow {
      */
     private boolean isAuthorValid = true;
 
-    /**
-     * Displays the current title of the game
-     */
+
     //private final AttributeString<String> currentTitle;
 
     //private JTextArea titleText;
 
     //the good shit what has been used
+    /**
+     * Displays the current title of the game
+     */
     private JLabel titleLabel;
+    /**
+     * Displays author name
+     */
     private JLabel authorLabel;
+    /**
+     * Displays start passage
+     */
     private JLabel startPassageLabel;
 
+    /**
+     * title input field
+     */
     private JTextField titleInput;
+    /**
+     * author input field
+     */
     private JTextField authorInput;
+    /**
+     * start passage input field
+     */
     private JTextField startInput;
-
+    /**
+     * multiline comment input text area
+     */
     private JTextArea commentInput;
 
 
@@ -406,34 +424,41 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         showNewComment();
     }
 
+    /**
+     * Updates the displayed title
+     */
     void showNewTitle(){
         final String newTitle = theMetadata.getTitle();
         titleLabel.setText(newTitle);
         titleInput.setText(newTitle);
         refresh();
     }
-
+    /**
+     * Updates the displayed author
+     */
     void showNewAuthor(){
         final String newAuthor = theMetadata.getAuthor();
         authorLabel.setText(newAuthor);
         authorInput.setText(newAuthor);
         refresh();
     }
-
+    /**
+     * Updates the displayed start passage
+     */
     void showNewStartPassage(){
         final String newStart = theMetadata.getStartPassage();
         startPassageLabel.setText(newStart);
         startInput.setText(newStart);
         refresh();
     }
-
+    /**
+     * Updates the displayed multiline comment
+     */
     void showNewComment(){
         final String newComment = theMetadata.getComment();
         commentInput.setText(newComment);
         refresh();
     }
-
-
 
 
     /**
@@ -465,7 +490,10 @@ public class MetadataEditorWindow extends GenericEditorWindow {
     }
 
 
-
+    /**
+     * A main method to be used for quickly making sure this actually works
+     * @param args are not used.
+     */
     public static void main(String[] args){
         final EditableMetadata theTestMetadata = new EditableMetadata("sample title","an author");
 

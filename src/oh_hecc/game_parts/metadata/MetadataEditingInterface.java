@@ -6,7 +6,10 @@ import heccCeptions.InvalidPassageNameException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface MetadataEditingInterface extends SharedMetadata, PassageEditWindowMetadataInterface {
+/**
+ * An interface to be used for editing the metadata.
+ */
+public interface MetadataEditingInterface extends SharedMetadata {
 
     /**
      * Checks whether or not a new title for the game would be valid or not
@@ -70,11 +73,8 @@ public interface MetadataEditingInterface extends SharedMetadata, PassageEditWin
 
 
     /**
-     * Creates an editing window for this object
-     * @return a MetadataEditorWindow which can edit this object
+     * le debug code has arrived
+     * @return the metadata as a String
      */
-    //MetadataEditorWindow openEditingWindow();
-
-
     String toString();
 }

@@ -7,7 +7,6 @@ import oh_hecc.game_parts.metadata.MetadataEditingInterface;
 import oh_hecc.mvc.ModelController;
 import oh_hecc.mvc.OhHeccNetworkFrame;
 import oh_hecc.mvc.PassageModel;
-import oh_hecc.mvc.View;
 import utilities.ImageManager;
 
 import javax.swing.*;
@@ -151,6 +150,7 @@ public class HeccItRunner {
     /**
      * This is called to basically load OH-HECC once some game data has been loaded, allowing the user to start
      * editing their .HECC file.
+     * @param theGameData the constructed MVCGameDataInterface that holds the game data that needs editing
      */
     void startEditingTheGameData(MVCGameDataInterface theGameData) {
         // creates the PassageModel
@@ -166,6 +166,10 @@ public class HeccItRunner {
 
     }
 
+    /**
+     * THE MAIN METHOD FOR HECC-IT. THIS IS <b>THE</b> ENTRY POINT FOR THE PROGRAM
+     * @param args command line arguments that aren't used
+     */
     public static void main(String[] args){
         new HeccItRunner();
     }

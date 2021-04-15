@@ -85,7 +85,7 @@ Basically, the bits that read in a .hecc file, and convert them into a playable 
     * 100% in console, 100% uninteractable, probably could just get rid of it tbh.
     
 
-* [gameParts](./gameParts/)
+* [gameParts](./gameParts)
     * Some of the classes and such representing the game data, used in HECC-UP.
     
 * [HeccUpTests](./HeccUpTests.java)

@@ -2,6 +2,9 @@ package oh_hecc.game_parts.passage;
 
 import java.util.*;
 
+/**
+ * A class that stores the passage info that is used by OH-HECC and HECC-UP.
+ */
 public abstract class AbstractPassage implements PassageReadingInterface {
 
     /**

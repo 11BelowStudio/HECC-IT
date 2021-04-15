@@ -29,7 +29,7 @@ public class HeccParser {
     /**
      * the hecced data which this will construct and output
      */
-    private final ArrayList<String> heccedData;
+    private final List<String> heccedData;
 
     /**
      * a map of all the passages
@@ -66,7 +66,7 @@ public class HeccParser {
 
         passageMap = new HashMap<>();
 
-        passageNames = new TreeSet<>();
+        passageNames = new HashSet<>();
 
         dataToParse = rawHeccData.trim().concat("\n");
         /*
@@ -149,7 +149,7 @@ public class HeccParser {
     private Set<String> findPassageNames(String dataToParse) throws
             DuplicatePassageNameException, NoPassagesException{
 
-        final Set<String> pNames = new TreeSet<>();
+        final Set<String> pNames = new HashSet<>();
 
         //attempts to find passage declarations
         final Matcher passageNameMatcher = Pattern.compile(
@@ -496,10 +496,10 @@ public class HeccParser {
     }
 
     /**
-     * Obtains the heccedData arrayList
-     * @return the heccedData arrayList
+     * Obtains the heccedData list
+     * @return the heccedData list
      */
-    public ArrayList<String> getHeccedData(){
+    public List<String> getHeccedData(){
         return heccedData;
     }
 

@@ -86,13 +86,25 @@ public class StringObject extends AbstractObject {
         objectColour = Color.WHITE;
     }
 
+    /**
+     * no individual update
+     */
     @Override
     void individualUpdate(){ } // no individual update
 
 
+    /**
+     * it's not clickable
+     * @param clickLocation where the click was
+     * @return false
+     */
     public boolean isClicked(Point clickLocation){ return false; } // not clickable
 
 
+    /**
+     * Finds the offset, renders a fake outline in black, then renders this text.
+     * @param g the graphics context being used.
+     */
     @Override
     public void individualDraw(Graphics2D g) {
         final Font tempFont = g.getFont();

@@ -84,6 +84,7 @@ public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedU
      * Replaces the passageContent, and updates the linkedPassages and map of all passages accordingly
      * @param newContent the new content that the passage now holds
      * @param allPassages the map of all passages (just in case any new passages need to be added to the map)
+     * @return the updated map of all passages
      */
     Map<UUID, PassageEditingInterface> updatePassageContent(String newContent, Map<UUID, PassageEditingInterface> allPassages);
 

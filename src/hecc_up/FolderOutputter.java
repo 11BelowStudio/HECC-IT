@@ -38,7 +38,6 @@ public class FolderOutputter {
      * This outputs the HECCIN Game, using the passed heccedData and the passed Metadata object
      * @param heccedData the hecced data to be put in hecced.js
      * @param metadata the metadata object to be used in a few places (via the outputterMetadata interface)
-     * @return true if everything executes successfully
      * @throws SecurityException if there's a security problem preventing stuff from being output
      * @throws IOException if there's another input/output problem
      */

@@ -79,8 +79,8 @@ public class TextAssetReader {
      */
     public static String getHECCER() {return HECCER;}
     /**
-     * gets the static List<String> representation of the index.html file
-     * @return the static List<String> representation of the index.html file
+     * gets the static String representation of the index.html file
+     * @return the static String representation of the index.html file
      */
     public static String getIndex() {return INDEX;}
 

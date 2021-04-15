@@ -167,7 +167,12 @@ public class PassageObject extends EditModelObject implements DrawablePassageObj
     }
 
 
-
+    /**
+     * Updates passage name, puts this at the same position as the passage,
+     * makes sure that the link map is as it should be<br>
+     * (compares key set to the passage's linked UUIDs, if they differ, only the UUID's in the passage's linked UUIDs
+     * are kept, and then any missing links (in linked UUIDs and not in link map) are constructed and added to the map)
+     */
     @Override
     void individualUpdate() {
         this.passageNameObject.setText(thePassage.getPassageName()); // makes sure the passage name is correct

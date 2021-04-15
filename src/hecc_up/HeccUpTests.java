@@ -82,6 +82,9 @@ public class HeccUpTests {
 
     }
 
+    /**
+     * Makes sure it complains if there are multiple passages with the same name
+     */
     @Test
     void testForDuplicatePassageException(){
 
@@ -493,6 +496,73 @@ public class HeccUpTests {
 
     }
 
+    /**
+     * Making sure 'orphan' passages are omitted from the produced .hecc data
+     */
+    @Test
+    void ensureOrphansAreNotOutput(){
+
+        final String heccWithOrphanPassages = "!start: Start\n" +
+                "\n" +
+                "::Start\n" +
+                "[[bob]]\n" +
+                "\n" +
+                "::bob\n" +
+                "[[chaz]] [[text|kev]]\n" +
+                "\n" +
+                "::chaz\n" +
+                "hi im chaz\n" +
+                "\n" +
+                "::kev\n" +
+                "hi im kev\n" +
+                "\n" +
+                "::jacob\n" + // no parents, should not be in output
+                "hi im jacob\n" +
+                "\n" +
+                "::lucy\n" + // no parents, should not be in output
+                "hi im lucy\n" +
+                "\n" +
+                "::joe\n" + // no parents, should not be in output
+                "[[hmm]]\n" +
+                "\n" +
+                "::hmm\n" + // it has a parent, but that one has no parents itself, so this shouldn't be in output.
+                "shouldnt be here\n";
+
+        final HeccUpTestLogger log = new HeccUpTestLogger();
+
+        final HeccUpHandler handler = new HeccUpHandler(log);
+
+        final HeccParser theParser = new HeccParser(heccWithOrphanPassages, log);
+
+        // we do not expect to see 'jacob','lucy','joe', or 'hmm' anywhere in the output
+
+        assertDoesNotThrow(
+                () -> handler.attemptToParseTheGame(theParser)
+        );
+
+        final String heccedOutput = String.join("",theParser.getHeccedData());
+
+        System.out.println(heccedOutput);
+
+        assertFalse(
+                heccedOutput.contains("jacob")
+        );
+
+        assertFalse(
+                heccedOutput.contains("lucy")
+        );
+
+        assertFalse(
+                heccedOutput.contains("joe")
+        );
+
+        assertFalse(
+                heccedOutput.contains("hmm")
+        );
+
+
+    }
+
 
     /**
      * Basically a LoggerInterface class that records the logged stuff.
@@ -530,6 +600,8 @@ public class HeccUpTests {
         }
 
     }
+
+
 
 
     /**

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Some tests for the GameDataObject
+ * Some tests for the GameDataObject (mostly regarding the UUID that's supposed to point to the start passage)
  */
 public class GameDataObjectTests {
 

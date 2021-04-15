@@ -330,6 +330,7 @@ public class OhHeccParserTest {
 
     /**
      * Testing the thing where sometimes passage links end up in the passage tags
+     * (also it makes sure that, as the start passage isn't explicitly declared, 'Start' will be treated as the start anyway)
      */
     @Test
     void testLineEndMetadataStaysInTheLine(){
@@ -406,6 +407,12 @@ public class OhHeccParserTest {
             e.printStackTrace();
             fail("uh oh, didn't work");
         }
+
+        // also makes sure that it treats 'Start' as the start passage.
+        assertEquals(
+                "Start",
+                hp.getMetadata().getStartPassage()
+        );
 
 
     }

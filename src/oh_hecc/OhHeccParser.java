@@ -12,8 +12,10 @@ import javax.swing.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
+/**
+ * The class which is responsible for parsing the .hecc data within OH-HECC.
+ */
 public class OhHeccParser implements GameDataGetterParserInterface {
 
 
@@ -475,6 +477,7 @@ public class OhHeccParser implements GameDataGetterParserInterface {
      * A deprecated main function, intended for validation and such
      * @param args unused
      * @throws Exception if something bad happens
+     * @deprecated pls use HeccItRunner's main method instead
      */
     @Deprecated
     public static void main(String[] args) throws Exception{

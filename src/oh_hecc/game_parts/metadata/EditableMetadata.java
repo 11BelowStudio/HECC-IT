@@ -9,9 +9,10 @@ import oh_hecc.Parseable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * A class that represents the Metadata (except it's editable instead)
+ */
 public class EditableMetadata implements MetadataEditingInterface, MetadataReadingInterface {
-
-    //TODO: The 'editable' bit of this. Methods to edit title, author, variables, start passage, and multiline comment (ensuring new values are valid).
 
     /**
      * what the game title is. defaults to "An Interactive Fiction"
@@ -63,6 +64,8 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
     /**
      * Metadata constructor that takes an author name and a game title as a constructor
      * Will only be used when creating a completely new HECC file
+     * @param theTitle title of the game
+     * @param theAuthor author name
      */
     public EditableMetadata(String theTitle, String theAuthor){
         this();
@@ -280,6 +283,10 @@ public class EditableMetadata implements MetadataEditingInterface, MetadataReadi
     }
 
 
+    /**
+     * Used for debugging
+     * @return string with info about this metadata
+     */
     @Override
     public String toString(){
         final StringBuilder sb = new StringBuilder();

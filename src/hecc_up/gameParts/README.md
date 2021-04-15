@@ -23,6 +23,9 @@ But, until then, we're dealing with some awkward coupling and such.
     * Uses some methods from [MetadataReadingInterface](../../oh_hecc/game_parts/metadata/MetadataReadingInterface.java)
       to help with the parsing and such. 
       
+* [MetadataTests](./MetadataTests.java)
+    * Some unit tests for the Metadata class
+      
 * [Variable](./Variable.java)
     * I wanted to add user-defined variables to HECC-IT, which could be used by the
       author of a HECCIN' Game to be able to keep track of certain values and such,

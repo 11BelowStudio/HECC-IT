@@ -4,7 +4,10 @@ import java.awt.*;
 
 /**
  * An interface for the Model being held in the View
+ * @deprecated the view isn't actually being used, so there's no reason to have something that could be used to view
+ * the model with the view, y'know?
  */
+@Deprecated
 public interface ViewableModelInterface {
 
     /**

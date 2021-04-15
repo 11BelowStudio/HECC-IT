@@ -2,6 +2,11 @@ package oh_hecc.game_parts.metadata;
 
 import heccCeptions.InvalidPassageNameException;
 
+/**
+ * An interface for the EditableMetadata that was used by the PassageEditorWindow
+ * @deprecated not used by the PassageEditorWindow now, made redundant by the EditWindowGameDataInterface
+ */
+@Deprecated
 public interface PassageEditWindowMetadataInterface {
 
     /**

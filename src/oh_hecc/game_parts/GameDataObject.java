@@ -47,6 +47,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     /**
      * UUID of the start passage
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<UUID> startUUID;
 
 
@@ -429,6 +430,7 @@ public class GameDataObject implements Heccable, EditWindowGameDataInterface, MV
     /**
      * An iterative method for building the .hecc code for the passages, (breadth first)
      * @return a string containing all the .hecc code for the passages
+     * @deprecated not used, see startDepthFirstHeccBuilder() instead.
      */
     @Deprecated
     private String breadthFirstHeccBuilder(){

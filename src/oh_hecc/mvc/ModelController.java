@@ -30,6 +30,10 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
     }
 
 
+    /**
+     * Called when the mouse is clicked, calls the appropriate click method of the controlledModel, then repaints the frame
+     * @param e the mouse event
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         switch (e.getButton()) {
@@ -43,6 +47,10 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
         theFrame.repaint();
     }
 
+    /**
+     * Called when the mouse is pressed, calls the appropriate press method of the controlledModel, repaints frame
+     * @param e the mouse event
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         switch (e.getButton()) {
@@ -55,7 +63,10 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
         }
         theFrame.repaint();
     }
-
+    /**
+     * Called when the mouse is released, calls the appropriate release method of the controlledModel, repaints frame
+     * @param e the mouse event
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         switch (e.getButton()) {
@@ -69,16 +80,27 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
         theFrame.repaint();
     }
 
+    /**
+     * Called when the mouse enters something, does nothing.
+     * @param e the mouse event
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
 
     }
 
+    /**
+     * called when mouse exits something, does nothing.
+     * @param e the mouse event
+     */
     @Override
     public void mouseExited(MouseEvent e) {
 
     }
-
+    /**
+     * Called when the mouse is dragged, calls the appropriate drag method of the controlledModel, repaints frame
+     * @param e the mouse event
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
 
@@ -91,16 +113,26 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
         theFrame.repaint();
     }
 
+    /**
+     * called when mouse moves, does nothing.
+     * @param e the mouse event
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
 
     }
-
+    /**
+     * called when key is typed, does nothing.
+     * @param e the key event
+     */
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
-
+    /**
+     * Called when key is pressed, calls the appropriate keypress method of the controlledModel, then repaints the frame
+     * @param e the key event
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         //System.out.println("pressed");
@@ -128,7 +160,10 @@ public class ModelController implements MouseListener, MouseMotionListener, KeyL
         }
         theFrame.repaint();
     }
-
+    /**
+     * called when key is released, does nothing.
+     * @param e the key event
+     */
     @Override
     public void keyReleased(KeyEvent e) {
 

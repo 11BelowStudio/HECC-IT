@@ -313,6 +313,7 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
     }
 
     /**
+     * gets the title string
      * @return the 'title' field of this object
      */
     public String getTitle(){ return title; }

@@ -1,6 +1,5 @@
 package oh_hecc.mvc.model_bits;
 
-
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
@@ -48,6 +47,9 @@ public class StartHighlightObject extends AbstractObject {
         visible = false;
     }
 
+    /**
+     * if visible, moves this to the position of the start object
+     */
     @Override
     void individualUpdate() {
         if (visible) {
@@ -55,6 +57,10 @@ public class StartHighlightObject extends AbstractObject {
         }
     }
 
+    /**
+     * if visible, fills this in.
+     * @param g the graphics context being used.
+     */
     @Override
     void individualDraw(Graphics2D g) {
         if (visible) {

@@ -4,6 +4,9 @@ import heccCeptions.UndefinedPassageException;
 
 import java.util.Set;
 
+/**
+ * An interface for the OutputtablePassages used by HECC-UP for basically just outputting the passages.
+ */
 public interface PassageOutputtingInterface extends PassageOutputtingLinkCheckingInterface {
 
 

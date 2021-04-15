@@ -121,32 +121,26 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
      * @return A string with the necessary JavaScript code to construct this passage
      */
     public String getHecced(){
-        //making a StringBuilder
-        final StringBuilder heccedBuilder = new StringBuilder();
-
         //starting constructor
-        heccedBuilder.append("\ttheHeccer.addPassageToMap(\n\t\tnew Passage(\n\t\t\t\"");
+        return "\ttheHeccer.addPassageToMap(\n\t\tnew Passage(\n\t\t\t\"" +
 
-        //passage name
-        heccedBuilder.append(passageName);
+                //passage name
+                passageName +
 
-        //end of passage name, moving to content
-        heccedBuilder.append("\",\n\t\t\t\"");
+                //end of passage name, moving to content
+                "\",\n\t\t\t\"" +
 
-        //parsed content concatenated
-        heccedBuilder.append(passageContent);
+                //parsed content concatenated
+                passageContent +
 
-        //and y'know what, may as well shove the tags for the passage in as well, why the hecc not, might come in useful later on
-        heccedBuilder.append("\",\n\t\t\t");
+                //and y'know what, may as well shove the tags for the passage in as well, why the hecc not, might come in useful later on
+                "\",\n\t\t\t" +
 
-        //parsed tags concatenated
-        heccedBuilder.append(parsedTags);
+                //parsed tags concatenated
+                parsedTags +
 
-        //end of the declaration, finishing up the line of code
-        heccedBuilder.append("\n\t\t)\n\t);\n");
-
-        //returning the hecced string
-        return heccedBuilder.toString();
+                //end of the declaration, finishing up the line of code
+                "\n\t\t)\n\t);\n";
     }
 
     /**
@@ -173,31 +167,54 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
 
     }
 
+    /**
+     * unused by HECC-UP, returns random UUID instead
+     * @return a random UUID
+     */
     @Override
     public UUID getPassageUUID() {
         return UUID.randomUUID();
     }
-
+    /**
+     * unused by HECC-UP, returns new vector2D instead
+     * @return a vector2D at (0,0)
+     */
     @Override
     public Vector2D getPosition() {
         return new Vector2D();
     }
 
+    /**
+     * unused by HECC-UP, returns new set instead
+     * @return an empty set
+     */
     @Override
     public Set<UUID> getLinkedPassageUUIDs() {
         return new HashSet<>();
     }
 
+    /**
+     * unused by HECC-UP, returns empty string instead
+     * @return an empty string
+     */
     @Override
     public String getInlinePassageComment() {
         return "";
     }
 
+    /**
+     * unused by HECC-UP, returns empty string instead
+     * @return an empty string
+     */
     @Override
     public String getTrailingComment() {
         return "";
     }
 
+    /**
+     * unused by HECC-UP, returns empty string instead
+     * @return an empty string
+     */
     @Override
     public String toHecc() { return ""; }
 

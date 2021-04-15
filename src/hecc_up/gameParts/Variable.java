@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * This class is to be used to keep track of individual variables defined in the metadata
  */
-public class Variable implements Heccable {
+public class Variable implements Heccable, Comparable<Variable> {
 
     /**
      * The name of the variable
@@ -73,6 +73,9 @@ public class Variable implements Heccable {
 
     /**
      * A constructor where you define the name, value, and comment manually
+     * @param variableName the name of the variable
+     * @param defaultValue the default value of the variable
+     * @param comment the comment for this variable
      */
     public Variable(String variableName, String defaultValue, String comment){
         this.variableName = variableName;
@@ -80,6 +83,11 @@ public class Variable implements Heccable {
         this.comment = comment;
     }
 
+    /**
+     * Sees if this Variable equals another Variable (same name, default value, and comment). Used for debugging reasons
+     * @param other the other Variable
+     * @return true if this Variable equals the other variable.
+     */
     public boolean equals(Variable other){
         return (
                 (variableName.equals(other.variableName))
@@ -88,6 +96,10 @@ public class Variable implements Heccable {
         );
     }
 
+    /**
+     * string with the name, value, and comment of this variable
+     * @return string version of this variable
+     */
     public String toString(){
         return (
                 "Name: " + variableName + "\n"
@@ -110,5 +122,15 @@ public class Variable implements Heccable {
         heccBuilder.append(" // ");
         heccBuilder.append(comment);
         return heccBuilder.toString();
+    }
+
+    /**
+     * Compares this Variable to another Variable via comparing the variable names
+     * @param other the other Variable
+     * @return the result of this.variableName.compareTo(other.variableName)
+     */
+    @Override
+    public int compareTo(Variable other) {
+        return (this.variableName.compareTo(other.variableName));
     }
 }

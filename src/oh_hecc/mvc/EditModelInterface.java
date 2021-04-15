@@ -2,7 +2,6 @@ package oh_hecc.mvc;
 
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 
-import java.util.Set;
 import java.util.UUID;
 
 /**

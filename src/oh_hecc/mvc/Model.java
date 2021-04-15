@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
  * A superclass for the 'Model' bit of 'MVC'.
  * Extends JComponent.
  */
-public abstract class Model extends JComponent implements ControllableModelInterface, ViewableModelInterface {
+public abstract class Model extends JComponent implements ControllableModelInterface {
 
     //TODO: clipping?
 

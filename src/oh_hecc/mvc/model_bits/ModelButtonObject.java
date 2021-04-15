@@ -67,16 +67,14 @@ public class ModelButtonObject extends AbstractObject implements DrawableObjectW
 
     }
 
+    /**
+     * does not update
+     */
     @Override
     void individualUpdate() {
         // nothing.
     }
 
-    @Override
-    public boolean wasClicked(Point clickLocation) {
-        //System.out.println(buttonLabel.getString());
-        return super.wasClicked(clickLocation);
-    }
 
     /**
      * Model should call this for all buttons when it's resized,
@@ -98,6 +96,10 @@ public class ModelButtonObject extends AbstractObject implements DrawableObjectW
         fillArea = new Area(new Rectangle(-width/2, -height/2, width, height));
     }
 
+    /**
+     * Fills the fillArea in the object colour, then draws a black rectangle border around it
+     * @param g the graphics context being used.
+     */
     @Override
     void individualDraw(Graphics2D g) {
         //draw the button rectangle

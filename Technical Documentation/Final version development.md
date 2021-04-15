@@ -5,6 +5,13 @@ formatting, conditional statements, and general code cleanup), made some improve
 (mostly back-end, involving the background logic, yet with a few substantial enhancements for user
 experience), and created a proper hypertext game using HECC-IT.
 
+It was a rather eventful term, with more than a few setbacks (besides the usual 'a lot of other coursework').
+During week 21, [my ethernet cable got eaten so I needed to get a new one](https://cseejira.essex.ac.uk/browse/A301034-124),
+and then in week 25, [my dekstop's SSD died so I needed to get a replacement drive and reinstall the OS before I could use it again](https://cseejira.essex.ac.uk/browse/A301034-134).
+However, due to my constant use of gitlab throughout the whole development process, none of the files for this
+project were lost, and I was able to get back to work on this project relatively easily (after a slight delay
+waiting for the replacement hardware to arrive and then getting these replacements installed/set up).
+
 ## Part 1: The improvements to the HECCIN' Game
 
 One of the first things I did during term 2 was start making improvements to the HECCIN' Game itself,
@@ -21,7 +28,9 @@ start by discussing the further work on HECC-IT.
 
 ## Part 2: The improvements to HECC-IT
 
-
+HECC-IT itself had quite a few changes made to it, and these changes are discussed, along with
+discussion on the testing and final product of HECC-IT, in the [Final version of HECC-IT](./final%20version%20of%20HECC-IT.md)
+document.
 
 
 ## Part 3: *Backblast*

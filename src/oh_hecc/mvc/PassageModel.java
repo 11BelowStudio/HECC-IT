@@ -18,6 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -77,14 +78,14 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     private final StartHighlightObject startHighlight;
 
     /**
-     * The set containing the copies of the PassageObjects that are actually rendered
+     * The list containing the copies of the PassageObjects that are actually rendered
      */
-    final Set<DrawablePassageObject> drawablePassageObjects;
+    final List<DrawablePassageObject> drawablePassageObjects;
 
     /**
-     * The set of the copies of the buttonObjects that are actually rendered
+     * The list of the copies of the buttonObjects that are actually rendered
      */
-    final Set<DrawableObjectWithText> drawableModelButtons;
+    final List<DrawableObjectWithText> drawableModelButtons;
 
     /**
      * A set of all currently-selected SelectableObjects
@@ -179,11 +180,11 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         currentRightDragPos = new Vector2D();
 
 
-        drawablePassageObjects = new HashSet<>();
+        drawablePassageObjects = new ArrayList<>();
 
 
 
-        drawableModelButtons = new HashSet<>();
+        drawableModelButtons = new ArrayList<>();
 
         //topRightCorner = new Vector2D(-getPreferredSize().getWidth()/2.0, -getPreferredSize().getHeight()/2.0);
 
@@ -335,6 +336,21 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
             final Point scrolledMouse = moveMouseByScroll(mLocation); // factoring any offset from moving the viewport
 
+            // iterator through the clickable objects
+            final Iterator<? extends ClickableObjectWithUUID> passageIterator = objectMap.values().iterator();
+
+            // we iterate through the clickable objects, seeing if one was clicked
+            for (int i = objectMap.size(); i > 0; i--) {
+                final ClickableObjectWithUUID current = passageIterator.next();
+                if (current.wasClicked(scrolledMouse)){
+                    // if one was clicked, we open an editor window for it, and cease iterating through it.
+                    activity = CurrentActivity.DIALOG_OPEN;
+                    final EditorWindowInterface w = theData.openPassageEditWindow(current.getTheUUID());
+                    w.addWindowClosedListener(this::editingWindowClosed);
+                    break;
+                }
+            }
+            /*
             //this will hold the clicked passageObject if it was clicked
             final Optional<? extends ClickableObjectWithUUID> clicked =
                 objectMap.values().stream().filter(
@@ -349,6 +365,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
 
                 w.addWindowClosedListener(this::editingWindowClosed);
             }
+
+             */
         }
         revalidate();
     }
@@ -492,6 +510,7 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         currentLeftDragPos.set(movedMouse);
         switch (activity){
             case DOING_NOTHING:
+
 
                 final Optional<? extends SelectableObject> pressed =
                         objectMap.values().stream().filter(

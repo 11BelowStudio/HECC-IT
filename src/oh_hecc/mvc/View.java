@@ -6,7 +6,9 @@ import java.awt.*;
 
 /**
  * A view of the Model
+ * @deprecated not actually used in the final product.
  */
+@Deprecated
 public class View extends JComponent {
 
     /**

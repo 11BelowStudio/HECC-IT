@@ -15,19 +15,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * A superclass for both of the editor window classes (because they both use all these things)
+ */
 public abstract class GenericEditorWindow implements EditorWindowInterface {
 
-    //the frame itself
+    /**
+     * the frame itself
+     */
     final JFrame theFrame;
 
-    //A lowered etched border
+    /**
+     * A lowered etched border
+     */
     final static Border loweredEtchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
-    //the default font but not bold.
+    /**
+     * the default JLabel font but not bold.
+     */
     final static Font notBold = new JLabel().getFont().deriveFont(Font.PLAIN);
 
+    /**
+     * the default JTextField text colour
+     */
     final static Color defaultTextFieldColor = new JTextField().getForeground();
 
+    /**
+     * The colour to be used for error text
+     */
     final static Color errorTextFieldColor = Color.RED;
 
     /**
@@ -69,7 +84,9 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
         theFrame.requestFocus();
     }
 
-
+    /**
+     * Packs and revalidates the frame.
+     */
     void refresh(){
         theFrame.pack();
         theFrame.revalidate();
@@ -128,10 +145,10 @@ public abstract class GenericEditorWindow implements EditorWindowInterface {
     }
 
     /**
-     * Adding a WindowClosed event listener via a Consumer<\WindowEvent\> functional interface
+     * Adding a WindowClosed event listener via a Runnable functional interface
      *
-     * @param closeEvent the functional interface holding the function that needs to be called when this window is closed.
-     * @see java.util.function.Consumer
+     * @param closeEvent the functional interface holding the Runnable that needs to be run when this window is closed.
+     * @see java.lang.Runnable
      */
     @Override
     public void addWindowClosedListener(Runnable closeEvent) {

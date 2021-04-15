@@ -123,7 +123,7 @@ public class HeccUpGUI implements LoggerInterface {
     }
 
     /**
-     * This is the constructor for the heccUpGUI that will be called by HECC-IT if the 'export' button is pressed instead.
+     * This is the constructor for the HeccUpGUI that will be called by HECC-IT if the 'export' button is pressed instead.
      *
      * @param heccFilePath  path of the .hecc file in to be exported
      * @param existingFrame the existing frame that the HECC-UP stuff will be held in.
@@ -146,7 +146,7 @@ public class HeccUpGUI implements LoggerInterface {
     }
 
     /**
-     * This is the constructor for the heccUpGUI that will be called by OH-HECC when the 'HECC-UP' button is pressed.
+     * This is the constructor for the HeccUpGUI that will be called by OH-HECC when the 'HECC-UP' button is pressed.
      *
      * @param heccFilePath      path of the .hecc file in OH-HECC.
      * @param windowClosedEvent the windowClosedEvent thing that will be added as a listener for this when it closes so OH-HECC knows that this has been closed.
@@ -278,7 +278,7 @@ public class HeccUpGUI implements LoggerInterface {
                 )
         );
         //the 'HECC-IT' button
-        final JButton heccItUpButton = new JButton("HECC-IT!");
+        final JButton heccItUpButton = new JButton("HECC-UP!");
         heccItUpButton.addActionListener(this::heccUpTheGame);
 
         heccItUpPanel.add(heccItUpButton);
@@ -497,7 +497,7 @@ public class HeccUpGUI implements LoggerInterface {
                     theFrame,
                     "Please select a .Hecc file to parse\n" +
                             "and a folder for your HECCIN Game\n" +
-                            "before pressing the 'HECC-IT' button.",
+                            "before pressing the 'HECC-UP' button.",
                     "pls do steps 1 and 2 first",
                     JOptionPane.WARNING_MESSAGE
             );
@@ -522,7 +522,11 @@ public class HeccUpGUI implements LoggerInterface {
      * <br>
      * bottom text
      * @param args not used
+     *
+     * @see oh_hecc.HeccItRunner instead, use that.
+     * @deprecated use oh_hecc.HeccItRunner's main method instead.
      */
+    @Deprecated
     public static void main(String[] args){
         new HeccUpGUI();
     }

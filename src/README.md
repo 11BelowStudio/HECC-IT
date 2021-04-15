@@ -34,3 +34,9 @@ I have separated the source code into packages to make it relatively easy to tel
     * This is the least old part of HECC-IT, still several of months old, and does still need some improvements.
 * [utilities](./utilities/)
     * some miscellaneous Java files, that are useful, but don't neatly fit into one of the other packages.
+
+If you want to see the **much** more detailed javadoc-style documentation, please go to
+[../JavaDocs](../JavaDocs) instead.
+
+If you wanted the really, really, long discussion/rant about the development process of
+HECC-IT, please go to [../Technical Documentation](../Technical%20Documentation) instead.

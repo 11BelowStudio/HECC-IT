@@ -30,14 +30,27 @@ public class PassageEditorWindow extends GenericEditorWindow {
      */
     private final PassageEditingInterface thePassage;
 
+    /**
+     * Passage name input field
+     */
     private JTextField nameField;
-
-
+    /**
+     * Tag list input field
+     */
     private JTextField tagField;
 
+    /**
+     * inline comment input field
+     */
     private JTextField inlineCommentField;
 
+    /**
+     * passage content input area
+     */
     private JTextArea contentArea;
+    /**
+     * multiline comment input area
+     */
     private JTextArea commentArea;
 
 
@@ -62,13 +75,14 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
     }
 
-
-
+    /**
+     * Sets up the JFrame with all the stuff that needs to be put into the panel.
+     */
     void makeTheFrame(){
         //super.makeTheFrame();
 
-
-        theFrame.setTitle("passage editor window");
+        final String passageName = thePassage.getPassageName();
+        theFrame.setTitle(passageName);
 
 
         //RENAMING THE PASSAGE
@@ -83,7 +97,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         final JPanel namePanel = new JPanel();
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-        nameField = new JTextField(thePassage.getPassageName(), 64);
+        nameField = new JTextField(passageName, 64);
         nameField.setEditable(true);
         addPassageNameDocumentListener(nameField);
         //nameEditPanel.add(nameField);
@@ -227,6 +241,8 @@ public class PassageEditorWindow extends GenericEditorWindow {
     /**
      * A method to be called by the 'exit' button in the 'done' panel.
      * Basically saves any unsaved changes, and closes the window.
+     * But if the changes don't succeed, we won't close the window, so the author
+     * can fix the problems (and won't lose their stuff)
      *
      * @param e an actionEvent to allow this to be used as a lambda.
      */
@@ -252,14 +268,16 @@ public class PassageEditorWindow extends GenericEditorWindow {
     /**
      * This method attempts to update the passageName of thePassage (and any references to it)
      *
-     * @param checkingIfUnchanged if true, we check if the passage name was unchanged.
+     * @param complainIfUnchanged if true, we check if the passage name was unchanged, and, if the user re-submitted
+     *                            the existing passage name, we complain.
      * @return true if it could be updated, false otherwise
      */
-    private boolean updateName(boolean checkingIfUnchanged) {
+    private boolean updateName(boolean complainIfUnchanged) {
         final String newName = nameField.getText().trim();
         //if the user has entered the current passage name *again*
         if (newName.equals(thePassage.getPassageName())) {
-            if (checkingIfUnchanged) {
+            if (complainIfUnchanged) {
+                // if we're complaining if unchanged, we complain
                 JOptionPane.showMessageDialog(
                         theFrame,
                         "<html><p>"
@@ -267,7 +285,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
                                 + "it helps if you provide a new name for it.</p>"
                                 + "<p>Not the current name <em>again</em>"
                                 + "</p></html>",
-                        "bruh",
+                        "smh my head",
                         JOptionPane.INFORMATION_MESSAGE
                 );
             }

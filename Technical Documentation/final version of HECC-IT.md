@@ -439,6 +439,17 @@ into a 'user experience' section, and a 'behind-the-scenes' section.
   so there's no way that a user could accidentally-on-purpose forcibly escape them). Additionally, the 'author'
   metadata is present within the index.html file as well (via a `<meta name="author" content="author name goes here">`
   tag, with the author name automatically filled in by HECC-UP, with html escape characters as well).
+  
+* Additionally, the passages are added to the `hecced.js` file via a recursive depth-first traversal (similar
+  to the save routine within OH-HECC), however, this is just used to obtain a set consisting only of the names of
+  the passages that are actually connected back to the 'start' passage, so the completely unconnected 'orphan'
+  passages won't be output (only these connected passages). If this recursive method fails due to a stack
+  overflow error, it will simply use the set of all passage names instead. It then iterates through that set of
+  passage names to obtain and output the corresponding passages onto the .hecc file. This has been implemented so,
+  if an author has been using unconnected passages as a means of taking notes, they won't have to worry about
+  those passages appearing in the output, in case they don't want the reader to have any way of viewing them.
+  This functionality can be seen in action (along with tests for HECC-UP's validity checking) within [`src/hecc_up/HeccUpTests.java`](../src/hecc_up/HeccUpTests.java).
+  All of these tests do pass as expected.
       
 Finally, this technically probably doesn't count as a 'user experience' feature, but I have been trying to make
 the inner workings of HECC-IT much more efficient (using more interfaces instead of the full objects, explicitly
@@ -449,13 +460,251 @@ methods that went unused, etc.) but that's probably more suitable for the next s
 
 This is the fun part.
 
-#### 1.2.2.1: Very big changes to the overall architecture!
+#### 1.2.2.1: The overall architecture
+
+The game data classes have been considerably rewritten.
+
+![game data classes](./final/hecc-it/the%20game%20data%20classes.png)
+
+HECC-UP's `Passage` class has been completely deprecated. Instead, I changed the `EditablePassage` class within
+OH-HECC to inherit from a `GenericPassage` object, with a new `OutputtablePassage` subclass being created
+for it, which is used by HECC-UP. I chose to do this because it meant that I would have all the code responsible
+for the things used by OH-HECC and HECC-UP (being the passage name and content strings, as well as the set of
+linked passage names and the list of passage tags) safely encapsulated together in a class, minimising code
+duplication. This also meant that the `src/hecc_up/gameParts/Passage` class is now completely deprecated,
+so it has been annotated as such in the code. HECC-UP accesses this `OutputtablePassage` via the `OutputtablePassageInterface`,
+because `AbstractPassage` still implements from `SharedPassage`, which has a few getters that go completely
+unused by HECC-UP, so the `OutputtablePassageInterface` is used to only expose the getters which are actually
+of use. It also exposes a `getHECCED()` method, which is used to  HECC-UP's `Metadata` class is still used, and is present in the above class diagram, implementing the
+`MetadataReadingInterface`, because that interface contains all the important regexes for metadata used by both
+parts of the system, and there are only two unnecessary getters within `MetadataReadingInterface` and `SharedMetadata`
+in the context of HECC-UP (these being the `getComment()` and `toHecc()` methods; the implementations of these
+in `SharedMetadata`) which are overridden to simply return an empty string. The `PassageOutputtingLinkChecking`
+interface exists to be used within the recursive `getNamesOfAllNonOrphanPassages` method within the
+`hecc_up/HeccParser`class, as that interface only exposes the methods that are actually needed in that method.
+The `FolderOutputterMetadataInterface` is still present here, still in `src/hecc_up`, and is still only used by
+the `FolderOutputter`. The rest of these classes are all only used in the `OH_HECC` code. These can be seen
+below.
+
+![oh hecc data classes](./final/oh-hecc/oh%20hecc%20data%20classes.png)
+
+The `GameDataObject` now actually implements the `MVCGameDataInterface`, and the `PassageModel` now accesses
+the game data via the `MVCGameDataInterface`. The `View` class has been made redundant, due to the `Model`
+extending `JComponent` anyway, so that is no longer present between the `OhHeccNetworkFrame` and the `Model`.
+Because the `Model` is passed to the `OhHeccNetworkFrame` as a `JComponent`, part of the existing Java language,
+this doesn't show up on the automatically generated class diagram above (and there's no way to add it without
+basically adding the rest of `javax.swing.*` to the class diagram, which would get rather messy).
+The passage/metatata/editor classes/interfaces which are not used directly by OH-HECC have been omitted
+(including the editor window subclasses, as they are only accessed via the `EditorWindowInterface`). The raw
+`EditableMetadata` and `EditablePassage` classes are still shown here, despite only being referenced via
+interfaces, because I still wanted to show where the instances of these classes could be created.
+
+The `HeccItRunner` is still the entry point to the program, and is still responsible for initially instantiating
+everything. `ChooseFile` has remained the same. The `OhHeccParser` now implements a `GameDataGetterParserInterface`;
+initially the `GameDataObject` would need to be instantiated by having a passage map, a `MetadataEditingInterface`,
+and a Path passed to it, with former two being individually obtained from the `OhHeccParser` by the `HeccItRunner`
+when constructing the `GameDataObject`. This was a bit longwinded, so I created the `GameDataGetterParserInterface`,
+which only exposed the methods of the `GameDataObject` which get the passage map and the editable metadata. I added
+a constructor to the `GameDataObject` which took an instance of that interface (along with a path) as arguments,
+and that constructor would handle the getting of that data itself, meaning that was one less thing the `HeccItRunner`
+would have to do.
+
+I suppose I should mention what the other new `Passage`-related interfaces are used for.
+
+* `UpdatableLinkedUUIDsInterface` is used for the loops where the linked UUIDs of the `EditablePassage`s need to be
+  updated. It only exposes one method; `updateLinkedUUIDs(Collection<? extends SharedPassage> allPassages)`,
+  which finds the passages in the set which have the names in this passage's linked names, and adds their passage
+  IDs to this passage's set of linked UUIDs. This method has been refactored a bit since the MVP, because it
+  initially went through a `Map<UUID, ? extends SharedPassage>`, but, as it would always be iterating through the
+  `.values()` collection of the argument, I realized that I could make it more efficient and generalized by just
+  giving it the collection of `? extends SharedPassage` in the first place.
+
+* `ModelBitsPassageInterface` is a version of the `PassageEditingInterface` for use in the `PassageObject` within
+  OH-HECC's `model_bits` package. These methods are the getters for the UUID, passage name, passage status, linked
+  UUIDs, whether or not it's a point of no return, as well as the getter + setter for the passage's position.
+  The `PassageObject` now holds one of these, and this change was made to get rid of the overhead caused by the
+  `PassageObject` having access to so many completely methods in the `PassageEditingInterface` which it doesn't
+  use.
+
+* `PassageModelEditablePassageInterface` is an interface for `PassageEditingInterface` which only exposes the
+  methods of the `PassageEditingInterface` which regularly need to be accessed by the `PassageModel`. In practice,
+  it just extends `UpdatableLinkedUUIDsInterface` and `ModelBitsPassageInterface`, not exposing any other methods.
+  Ideally, I would replace all instances of the `PassageEditingInterface` in the `PassageModel` with the
+  `PassageModelEditablePassageInterface`, however, because I still have the passage map of the `MVCGameDataInterface`
+  still very tightly coupled with the `PassageModel`, I have not yet gotten around to doing this. I am feeling very
+  tempted to just refactor it right now, as of the time of writing this, but that would probably just delay
+  this report even further.
+  
+On that note, I should probably discuss the changes made to the MVC model_bits classes.
+Below are some class diagrams, firstly one showing the inheritance-based connections between
+the model_bits (with full details about them), then another one showing all all of the classes
+involved in the MVC side of things, and then another one showing the dependencies between them.
+
+![model_bits full inheritance](./final/oh-hecc/model_bits%20inheritance%20details.png)
+
+![mvc all inheritance](./final/oh-hecc/mvc%20classes%20inheritance.png)
+
+![mvc all dependencies](./final/oh-hecc/mvc%20classes%20dependencies.png)
+
+As you can see from the top half of the first diagram, the `ModelButtonObject` is no longer a subclass
+of the `EditModelObject`, because it no longer needed a reference to the `EditModelInterface`
+for the resizing code (with the passage model calling the resize method of the
+`ModelButtonObject`s automatically when it gets resized, via the `resize` method within the
+`ResizableObject` interface which they implement). You might also have noticed all of
+the interfaces which have been added to the `model_bits` classes; Most of these are intended
+for use in various methods/loops/etc through the collections of these objects, where not all
+of the methods in those objects are actually needed, for the sake of efficiency. Additionally,
+many methods in these classes which went completely unused have been discarded completely,
+once again for the sake of efficiency.
+
+The `StartHighlightObject` now stores the object it is 'highlighting' as an `ObjectWithAPosition`,
+as the only thing it needs from that other object is the position of it. The `PassageLinkObject`
+also stores the `PassageObject` is links 'from' as an `ObjectWithAPosition`, however, that
+object is passed to it as an `ObjectWithPositionAndUUID` so it can actually obtain the UUID
+of the source object within the constructor, so it can find out if it's a link between a
+passage and itself (in which case, it simply won't bother doing anything in the `draw` method,
+because that link would be completely hidden underneath that `PassageObject` anyway). The
+`drawableObject` interface (and other such interfaces with the word 'drawable' in their names)
+are here to only expose the `draw(Graphics2D g)` methods of these objects (or, in the case
+of the interfaces that extend that interface, exposing the methods to draw the other parts of
+that object that needs to be drawn (such as the links/the text)), so, when iterating
+through the objects that need to be drawn, there's no overhead from the methods that are not
+the draw methods.
+
+`ClickableObjectWithUUID` is the interface used when iterating through the passage objects
+in the `PassageModel`'s `leftClick` method, exposing only the `wasClicked` and `getTheUUID`
+methods (allowing the program to see if that object was clicked, and, if it was clicked, get
+the UUID of it to allow the appropriate `PassageEditorWindow` to be opened). `SelectableObject`
+is the interface used to hold the `PassageObject`s in the `selectedObjects` set, as that only
+exposes the methods for seeing if a passage was clicked/selecting and deselecting/moving it.
+When obtaining the positions of the passages for working out where the boundary for the
+viewport scrolling should be, an iterator of type `? extends ObjectWithAPosition` is used.
 
 
+#### 1.2.2.2 Subtle improvements to HECC-UP
 
-#### 1.2.2.2: Unit Tests!
+During the MVP iterations of the product, HECC-UP would read the prebaked `index.html`
+and `heccer.js` files as `static final List<String>`s, which would be iterated through when
+outputting the copies of them. However, I have changed it so the `index.html`, `heccer.js`, and
+the newly-added `showdown.min.js` files included within HECC-IT are now stored as
+`static final String`s instead, meaning that they are guaranteed to be completely unmodifiable.
+Additionally, instead of having to iterate through these lists and write every single line to
+the output files individually within `FolderOutputter`, I can just use a single `write` call
+on a `BufferedFileWriter` to export these files. The `hecced` data is still passed as a
+`List<String>` to the `FolderOutputter`, and I presently do not have enough time to modify
+that to also be passed as a single string. One other benefit about passing the `index.html` file
+as a `String` instead is that I could fill in the placeholder title, author, and UUID tags in
+that passage via a `.replace()` method call, allowing me to instantly find and replace the
+'placeholders' within the copy of that string, without needing to individually check each
+entry in the list to see if it matched a placeholder string exactly and replacing it then and
+there. Finally, the button at the bottom of HECC-UP, used to export the game, now says 'HECC-UP!'
+instead.
 
+# Part 2 2: The other things that probably deserve a mention
 
+## 2.1: Unit Tests
 
-#### 1.2.2.3: Other assorted improvements
+Here is an overview of all the unit test classes I have:
+
+* [`hecc_up/gameParts/MetadataTests`](../src/hecc_up/gameParts/MetadataTests.java)
+    * Basically tests the `Metadata` class by providing it with some valid metadata .hecc code
+      (ensuring that it is parsed as expected),
+      some invalid metadata .hecc code (ensuring that everything remains at the default value),
+      and some duplicate metadata declarations (ensuring that only the first declaration for
+      each metadata field is read)
+      
+* [`hecc_up/gameParts/VariableTests`](../src/hecc_up/gameParts/VariableTests.java)
+    * Ensures that the constructor for the `Variable` class works as expected. These tests
+      are not very thorough, due to how not much progress was made on the `Variable` class,
+      but they at least ensure that what is there does work as expected.
+      
+* [`hecc_up/HeccUpTests`](../src/hecc_up/HeccUpTests.java)
+    * Tests some valid .hecc code, to see if it outputs the expected data from it. It also
+      tests some invalid .hecc code (without a start passage, invalid passages, weird metadata,
+      undefined passages, etc), to ensure that it responds appropriately to the invalid input.
+      It also makes sure that any 'orphan' passages (inaccessible from the 'start' passage)
+      are not present in the output.
+      
+* [`oh_hecc/game_parts/passage/OutputtablePassageTest`](../src/oh_hecc/game_parts/passage/OutputtablePassageTest.java)
+    * It runs some basic tests on the `OutputtablePassage`'s constructor, to make sure it
+      produces an appropriately constructed `OutputtablePassage` based on the inputs. Most
+      of the functionality for this class was tested as part of the `HeccUpTests` instead.
+      
+* [`oh_hecc/game_parts/metadata/EditableMetadataTests`](../src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)
+    * Tests the `EditableMetadata`/`MetadataEditingInterface` class, mostly ensuring the
+      constructor initialises the data held by this class correctly, ensuring the setters work
+      (rejecting invalid inputs as well), and that the getters also work.
+      
+* [`oh_hecc/game_parts/passage/EditablePassageTest`](../src/oh_hecc/game_parts/passage/EditablePassageTest.java)
+    * Tests the `EditablePassage`/`PassageEditingInterface` class, once again ensuring that the
+      constructor initializes the object correctly, that the getters/setters work as expected
+      (rejecting invalid inputs as well), and also that the setters which may update the passage
+      map update it as expected.
+      
+* [`oh_hecc/game_parts/GameDataObjectTests`](../src/oh_hecc/game_parts/GameDataObjectTests.java)
+    * Tests the `GameDataObject`. Because most of the large-scale updates for the passage map
+      in response to a change in a single object happen in the `PassageEditingInterface`,
+      the tests here mostly revolve around the `startUUID` UUID, which is supposed to
+      consistently 'point' to the named start passage, ensuring that this value updates/doesn't
+      update as appropriate, and that it can forcibly create a new start passage if one does not
+      currently exist.
+      
+* [`oh_hecc/OhHeccParserTest`](../src/oh_hecc/OhHeccParserTest.java)
+    * This tests the `OhHeccParser`. It makes sure a valid .hecc file is parsed correctly,
+      ensures that any duplicate names are renamed with the suffix 'incrementing' as expected,
+      makes sure that any named passages which are linked to but don't exist are created,
+      and ensures it can handle undeclared metadata, missing start passages, and automatically
+      moving any passages that have no defined position (besides the start passage) away from
+      (0,0).
+      
+I created a custom 'run' configuration for this project, at [.idea/runConfigurations/RunEveryTestIGuess.xml](../.idea/runConfigurations/RunEveryTestIGuess.xml),
+which does what it says on the tin and runs every single unit test class. The result
+of running these tests (with all of them passing) can be seen below:
+
+![every single test passed](./final/hecc-it/unitTestsPassed.PNG)
+
+## 2.2: Some more screenshots of HECC-IT in action
+
+Here is a screenshot of OH-HECC in action, showing off some of the passage map for *Backblast*:
+
+![oh hecc overview](./final/oh-hecc/screenshot%20of%20backblast.PNG)
+
+This is what it looks like when OH-HECC attempts to automatically reposition passages if none
+of them have been given a position (achieved via temporarily disabling the position reading code):
+
+![oh hecc big pile of mess](./final/oh-hecc/backblast%20pile%20of%20mess.PNG)
+
+This is what it looks like if a passage is currently selected and is being moved in OH-HECC:
+
+![oh hecc moving passage](./final/oh-hecc/moving%20a%20passage.png)
+
+This is what the passage editor window currently looks like:
+
+![oh hecc passage editor windows](./final/oh-hecc/passage%20editor%20window.PNG)
+
+This is what the metadata editor window currently looks like:
+
+![oh hecc metadata editor](./final/oh-hecc/metadata%20editor%20window.PNG)
+
+Finally, this is what HECC-UP looks like:
+
+![hecc up screenshot](./final/oh-hecc/hecc-up%20screenshot.PNG)
+
+## 2.3: A Full Class Diagram
+
+Here is are some class diagrams with every single class (bar the deprecated ones/the unit test
+classes) present within HECC-IT on them. The first one shows just the inheritance-based
+relationships, the second one shows the dependency relationships, and the third one is just
+the inheritances again but has the inner details for every single class.
+
+![every single class inheritance](./final/hecc-it/src%20all%20classes%20inheritance.png)
+
+![every single class dependencies](./final/hecc-it/src%20all%20classes%20dependencies.png)
+
+![every single class full details](./final/hecc-it/src%20all%20classes%20inner%20details.png)
+
+More information about the purpose of every single method in every single one of these classes
+can be read in the JavaDoc documentation produced as part of this project. This can be seen
+for yourself in the [JavaDocs](../JavaDocs) folder on the repository (you may need to download
+and unzip that folder before you can read them properly).
 

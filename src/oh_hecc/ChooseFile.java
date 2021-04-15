@@ -64,18 +64,57 @@ public class ChooseFile {
     private JButton exportButton;
 
 
+    /**
+     * main inner content panel
+     */
     private JPanel mainPanel;
+    /**
+     * outer panel for 'make hecc file'
+     */
     private JPanel makeContainer;
+    /**
+     * jlabel title for the 'make hecc file' panel
+     */
     private JLabel makeTitle;
+    /**
+     * jlabel prompting user to enter title for making hecc file
+     */
     private JLabel enterTitleLabel;
+    /**
+     * jlabel prompting user to enter author name for making hecc file
+     */
     private JLabel enterAuthor;
+    /**
+     * jpanel holding the inputs and such for the 'make file' panel
+     */
     private JPanel makeInputs;
+    /**
+     * jpanel holding the content of the 'make hecc file' area
+     */
     private JPanel makeContent;
+    /**
+     * outer jpanel for the 'open hecc file' stuff
+     */
     private JPanel openContainer;
+    /**
+     * main jpanel for the 'open hecc file' stuff
+     */
     private JPanel openPanel;
+    /**
+     * title jlabel for 'open hecc file'
+     */
     private JLabel openTitle;
+    /**
+     * jpanel holding the 'pick file' stuff in the 'open hecc file' panel
+     */
     private JPanel openInputs;
+    /**
+     * jpanel holding the main 'HECC-IT' title
+     */
     private JPanel titlePanel;
+    /**
+     * the main 'HECC-IT' title
+     */
     private JLabel title;
 
 
@@ -461,8 +500,9 @@ public class ChooseFile {
      * le main method for testing has arrived
      *
      * @param args command line arguments.
-     * @deprecated this existed for testing only basically
+     * @deprecated this exists for testing only, pls use HeccItRunner's main method instead.
      */
+    @Deprecated
     public static void main(String[] args) {
         final ChooseFile cf = new ChooseFile(
                 e -> {

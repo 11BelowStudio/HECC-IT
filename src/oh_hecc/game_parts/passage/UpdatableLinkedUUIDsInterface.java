@@ -1,12 +1,9 @@
 package oh_hecc.game_parts.passage;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 /**
- * Literally just has the updateLinkedUUIDs method, for the loop where this has to be called for every passage.
+ * Literally just has the updateLinkedUUIDs method, for the loops where this has to be called for every passage.
  */
 public interface UpdatableLinkedUUIDsInterface {
 

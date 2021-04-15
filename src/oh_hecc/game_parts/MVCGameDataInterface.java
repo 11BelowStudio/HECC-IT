@@ -5,7 +5,6 @@ import oh_hecc.Heccable;
 import oh_hecc.game_parts.component_editing_windows.EditorWindowInterface;
 import oh_hecc.game_parts.component_editing_windows.PassageEditorWindow;
 import oh_hecc.game_parts.metadata.MetadataEditingInterface;
-import oh_hecc.game_parts.passage.ModelBitsPassageInterface;
 import oh_hecc.game_parts.passage.PassageEditingInterface;
 
 import java.io.IOException;

@@ -3,6 +3,7 @@ package oh_hecc.game_parts.passage;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,10 +17,10 @@ public interface PassageReadingInterface extends SharedPassage {
     /**
      * This reads the tag metadata stuff
      * @param lineEndMetadata The full line end metadata
-     * @return an ArrayList<String> containing all the tag metadata
+     * @return a list of Strings containing all the tag metadata
      */
-    static ArrayList<String> readTagMetadata(String lineEndMetadata){
-        final ArrayList<String> tagList = new ArrayList<>();
+    static List<String> readTagMetadata(String lineEndMetadata){
+        final List<String> tagList = new ArrayList<>();
         /*
             this processes the list of tags (if they exist)
             tags may be alphanumeric with underscores, divided by spaces, must be within []
