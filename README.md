@@ -24,9 +24,9 @@ Please go to [./Technical Documentation/README.md](./Technical%20Documentation/R
 table of contents for the technical documentation.
 
 If you want to see the information about every single class/method/etc all individually
-documented, please go to the [./JavaDocs](./JavaDocs) folder for the full JavaDoc-style
-documentation. You may need to download and unzip that folder on your computer to actually
-browse it as intended.
+documented, please go to the [./JavaDocs](./JavaDocs.zip) folder for the full JavaDoc-style
+documentation. You will to download and unzip that folder on your computer to actually
+browse through them though.
 
 If you wanted a brief overview of the classes in each package, please refer to the
 package-level READMEs in each subfolder of [./src](./src).

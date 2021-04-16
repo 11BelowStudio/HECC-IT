@@ -705,6 +705,6 @@ the inheritances again but has the inner details for every single class.
 
 More information about the purpose of every single method in every single one of these classes
 can be read in the JavaDoc documentation produced as part of this project. This can be seen
-for yourself in the [JavaDocs](../JavaDocs) folder on the repository (you may need to download
-and unzip that folder before you can read them properly).
+for yourself in the [JavaDocs](../JavaDocs.zip) folder on the repository (you will need to
+download and unzip that folder before you can read them).
 
