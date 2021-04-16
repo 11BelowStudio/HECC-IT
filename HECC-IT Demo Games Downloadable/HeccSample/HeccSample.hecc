@@ -12,7 +12,7 @@ Note to author: only comments saved in this multiline comment area (lines starti
 
 end of metadata. game content starts below:
 
-::Start [] <-268.0,-219.0> //
+::Start [] //
 starting passage content goes here.
 
 The following line contains a link to "Another passage".
@@ -20,30 +20,30 @@ The following line contains a link to "Another passage".
 ;;
 
 ;;
-::Another passage [yes theres tags] <-104.5,-201.0> //
+::Another passage [yes theres tags] //
 congrats you clicked that link to get here, Another passage.
 why not [[click this|Yet Another Passage]] as well?
 ;;
 
 ;;
-::Yet Another Passage [] <-108.0,-62.0> //
+::Yet Another Passage [] //
 woah you clicked that so you're now at Yet Another Passage.
 
 Do you want to go [[Left]], [[Right]], [[Back to the start|Start]], or [[Skip this nonsense|dave]]?
 ;;
 this is an comment
 ;;
-::Left [dave] <-230.0,42.0> //
+::Left [dave]//
 You go to the left, but the path leads you back to [[dave]].
 ;;
 
 ;;
-::Right [dave] <59.0,-70.0> //
+::Right [dave] //
 You went to the right, but the path leads you back to [[dave]].
 ;;
 
 ;;
-::dave [] <2.0,122.0> //
+::dave [] //
 This passage is called dave.
 dave's content doesn't include any links to any other passages.
 So I guess this counts as the end.

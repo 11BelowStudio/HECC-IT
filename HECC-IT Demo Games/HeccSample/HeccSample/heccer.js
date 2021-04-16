@@ -1,15 +1,17 @@
 
 /*
-this is heccer.js (HECC Environment for Runtime) (v1.0)
-
-This is basically a prototype of HECCER, which I mainly made right now because I honestly had no idea how JavaScript actually works.
+this is heccer.js (HECC Environment for Runtime) (v3.1)
 
 The game data stuff is in hecced.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in hecced.js gives the passage info to the HECCER.
 
-by R. Lowe, 02/02/2021
+by Rachel Lowe, 16/04/2021
 
 (this version has been fed into the Hecc Up Parser!)
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
 /**
@@ -23,181 +25,126 @@ var anyHorizontalWhitespace = "[ \\t\\u00a0\\u1680\\u2000-\\u200a\\u202f\\u2025\
  */
 var passageNameWithWhitespace = anyHorizontalWhitespace + "(([\\w]+[\\w- ]*)?[\\w]+)\\s*" + anyHorizontalWhitespace;
 
-/**
- * Tag name regex with horizontal whitespace
- * @type {string}
- */
-var tagWithWhitespace = anyHorizontalWhitespace + "([\\w]+)" + anyHorizontalWhitespace;
 
 /**
- * HECC Engine for Runtime
+ * The passage objects
  */
-var theHeccer = {
+class Passage{
 
     /**
-     * The map of all the passage objects
+     * The constructor
+     * @param passageName the name for the passage
+     * @param passageContent the content of the passage
+     * @param passageTags the tags for the passage
      */
-    passageMap : new Map(),
-    /**
-     * The stack of gamestate objects
-     */
-    stateStack : new GameStateStack(startingPassageName),
-
-    /**
-     * Adds a passage object to the passageMap (in the form passageName -> passage)
-     * @param passage the passage to add to the map
-     */
-    addPassageToMap : function(passage){
-        theHeccer.passageMap.set(passage.getName(),passage);
-    },
+    constructor(passageName, passageContent, passageTags) {
+        this.name = passageName;
+        this.content = passageContent;
+        this.tags = passageTags;
+    }
 
     /**
-     * resets the heccer
+     * returns name of the passage
+     * @returns {string} passage name
      */
-    reset : function(){
-        theHeccer.passageMap = new Map();
-        theHeccer.stateStack = new GameStateStack(startingPassageName);
-    },
+    getName(){
+        return this.name;
+    };
 
     /**
-     * Will be called by the 'back' button when attempting to go back.
-     * And it will only go back if the 'back' button allows it (there is something to go back to, and the back button isn't disabled)
+     * Returns the passage contents but parsed by the global showdown converter
+     * @returns {string} the passage content but markdown formatted + hecc formatted
      */
-    goBack: function(){
-        //The 'back' button will call this method in an attempt to go back
-        if(theHeccer.allowedToGoBack && theHeccer.stateStack.areTherePriorStates()){
-            //will only go back if the reader is allowed to go back, and if there are prior states to go back to.
-            theHeccer.stateStack.popState(); //pops the top state from stateStack
-            theHeccer.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
-        }
-    },
+    getParsedContent(){
+        //stores content as tempContent for the time being
+        const tempContent = this.content;
+        //const htmlContent = converter.makeHtml(tempContent);
+        return converter.makeHtml(tempContent);
+    };
 
     /**
-     * Called whenever a passage link is clicked
-     * @param passageName the name of the passage that should be loaded
+     * Returns the array of tags for this passage
+     * @returns {array<string>} tags that this passage has
      */
-    goToPassage: function(passageName){
-        theHeccer.stateStack.pushState(passageName); //pushes a new state, referencing the current passage, to top of the stateStack
-        theHeccer.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
-    },
+    getTags(){
+        return this.tags;
+    };
 
     /**
-     * The bit where the HTML passage content that's already on the page is replaced with the content of the topmost passage on the stack.
+     * returns whether or not this.tags contains the specifiedTag
+     * does this by returning whether or not the result of find(specifiedTag) is undefined or not
+     * if undefined, it's not present, else, it is present.
+     * @param specifiedTag the tag being looked for in the tags
+     * @returns {boolean} true if the specifiedTag is present, false otherwise
      */
-    loadCurrentPassage: function(){
-        //and now, the bit where I have to replace the HTML passage content that's already on the page.
-
-        const currentState = theHeccer.stateStack.getTopState(); //obtains top GameState from stateStack
-        //console.log(currentState);
-
-        const pName = currentState.getPassageName(); //obtains the passage name from the currentState
-        //console.log(pName);
-
-        const currentPassage = theHeccer.passageMap.get(pName); //obtains the passage object from the passageMap which the top GameState refers to
-        //console.log(currentPassage);
-
-        if (currentPassage === undefined){
-
-            window.alert("uh oh, there's no passage called " + pName + "!");
-
-        } else{
-
-            const passageContent = currentPassage.getParsedContent(); //obtains passage content from the currentPassage
-            //console.log(passageContent);
-
-            document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content
-
-            //whether or not the current passage allows the player to go back
-            const pointOfNoReturn = currentPassage.containsSpecifiedTag("noreturn");
-
-            //if the back button currently is enabled
-            if (theHeccer.allowedToGoBack){
-                //and if this passage is a point of no return
-                if (pointOfNoReturn){
-                    //the back button gets disabled.
-                    document.getElementById("backButton").innerHTML = theHeccer.noReturnText;
-                    theHeccer.allowedToGoBack = false;
-                }
-            } else if (!pointOfNoReturn){
-                //but, if the back button was enabled, and this passage isn't a point of no return, the back button is re-enabled.
-                document.getElementById("backButton").innerHTML = theHeccer.defaultBackText;
-                theHeccer.allowedToGoBack = true;
-            }
+    containsSpecifiedTag(specifiedTag){
+        //returns whether or not this.tags contains the specifiedTag
+        //does this by checking tags.includes(specifiedTag).
+        //true if present, false otherwise.
+        return (this.tags.includes(specifiedTag));
+    };
+}
 
 
 
-            //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
-            //update: yep, it does.
-        }
-
-        //VERSION OF THIS ENTIRE METHOD BUT IT'S ENTIRELY ON A SINGLE LINE:
-        //document.getElementById("divWhatHoldsPassageContent").innerHTML = (this.passageMap.get((this.stateStack.topState()).getPassageName())).getParsedContent();
-    },
+class GameState{
+    /**
+     * constructor
+     * @param pName the string identifier for the passage this refers to
+     */
+    constructor(pName){
+        //pName: the string identifier for the passage this refers to
+        this.passageName = pName;
+    }
 
     /**
-     * default text for the back button
+     * obtains the passage name
+     * @returns {String} the name of the passage
      */
-    defaultBackText: "Click this button to go back",
+    getPassageName(){
+        //just returns the passageName
+        return this.passageName;
+    }
+}
 
-    /**
-     * Text for the back button when a 'noreturn' passage is reached
-     */
-    noReturnText: "POINT OF NO RETURN",
-
-    /**
-     * whether or not the player is currently allowed to go back
-     */
-    allowedToGoBack: true,
-
-
-    /**
-     * Logs the passageMap to the console for debugging reasons
-     */
-    printPassages: function(){
-        console.log(this.passageMap);
-    },
-
-    /**
-     * Checks the conditionals and such
-     */
-    checcer: new Checcer(),
-
-
-
-};
 
 
 /**
  * checks the hecc for conditionals and such
- * @constructor
  */
-function Checcer(){
+class Checcer{
 
-
+    /**
+     * Constructor for theCheccer
+     * @param theHeccer the heccer that this checcer checcs.
+     */
+    constructor(theHeccer) {
+        this.theHeccer = theHeccer;
+    }
 
     /**
      * Will checc a statement it's been given
      * @param statementToCheck
      * @returns {boolean} whether it evaulates to true or not
      */
-    this.checc = function(statementToCheck){
+    checc(statementToCheck){
 
         //TODO: maybe it would be better to change this stuff in the hecc->hecced converter thing?
 
-        let statement = statementToCheck.replace(/pAny\(/g, "theHeccer.checcer.pAny(");
-        statement = statement.replace(/pAll\(/g, "theHeccer.checcer.pAll(");
+        let statement = statementToCheck.replace(/pAny\(/g, "this.pAny(");
+        statement = statement.replace(/pAll\(/g, "this.pAll(");
 
-        statement = statement.replace(/tAny\(/g, "theHeccer.checcer.tAny(");
-        statement = statement.replace(/tAll\(/g, "theHeccer.checcer.tAll(");
+        statement = statement.replace(/tAny\(/g, "this.tAny(");
+        statement = statement.replace(/tAll\(/g, "this.tAll(");
 
-        statement = statement.replace(/and\(/g, "theHeccer.checcer.and(");
-        statement = statement.replace(/or\(/g, "theHeccer.checcer.or(");
-        statement = statement.replace(/not\(/g, "theHeccer.checcer.not(");
+        statement = statement.replace(/and\(/g, "this.and(");
+        statement = statement.replace(/or\(/g, "this.or(");
+        statement = statement.replace(/not\(/g, "this.not(");
 
-        statement = statement.replace(/tCount\(/g, "theHeccer.checcer.tCount(");
-        statement = statement.replace(/pCount\(/g, "theHeccer.checcer.pCount(");
+        statement = statement.replace(/tCount\(/g, "this.tCount(");
+        statement = statement.replace(/pCount\(/g, "this.pCount(");
 
-        console.log(statement);
+        //console.log(statement);
 
         try {
             return !!eval(statement);
@@ -211,12 +158,12 @@ function Checcer(){
      * @param passageNames the names of the passages being looked for
      * @returns {boolean} false if none were visited, true if at least one was visited
      */
-    this.pAny = function(...passageNames){
-        if (!theHeccer.stateStack.areTherePriorStates()){//}  || passageNames.length === 0){
+    pAny(...passageNames){
+        if (!this.theHeccer.stateStack.areTherePriorStates()){//}  || passageNames.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.visitedPassages;
+        const priorStates = this.theHeccer.stateStack.visitedPassages;
         let wereAnyVisited = false;
         for(let i = passageNames.length-1; i >= 0; i--){
             if (priorStates.has(passageNames[i])){
@@ -232,12 +179,12 @@ function Checcer(){
      * @param passageNames the names of the passages being looked for
      * @returns {boolean} true if all were visited, false otherwise
      */
-    this.pAll = function(...passageNames){
-        if (!theHeccer.stateStack.areTherePriorStates()  || passageNames.length === 0){
+    pAll(...passageNames){
+        if (!this.theHeccer.stateStack.areTherePriorStates()  || passageNames.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
-        const priorStates = theHeccer.stateStack.visitedPassages;
+        const priorStates = this.theHeccer.stateStack.visitedPassages;
         let wereAllVisited = true;
         for(let i = passageNames.length-1; i >= 0; i--){
             if (!priorStates.has(passageNames[i])){
@@ -253,13 +200,13 @@ function Checcer(){
      * @param tags the passage tags of being looked for
      * @returns {boolean} false if none were encountered, true if at least one was encountered
      */
-    this.tAny = function(...tags){
-        if (!theHeccer.stateStack.areTherePriorStates()){//}  || tags.length === 0){
+    tAny(...tags){
+        if (!this.theHeccer.stateStack.areTherePriorStates()){//}  || tags.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
 
-        const priorTags = theHeccer.stateStack.seenTags;
+        const priorTags = this.theHeccer.stateStack.seenTags;
 
         let wereAnyEncountered = false;
         for(let i = tags.length-1; i >= 0; i--){
@@ -276,13 +223,13 @@ function Checcer(){
      * @param tags the tags being looked for
      * @returns {boolean} true if all were encountered, false otherwise
      */
-    this.tAll = function(...tags){
-        if (!theHeccer.stateStack.areTherePriorStates() || tags.length === 0){
+    tAll(...tags){
+        if (!this.theHeccer.stateStack.areTherePriorStates() || tags.length === 0){
             //if this is the first state, the other passages haven't been visited yet
             return false;
         }
 
-        const priorTags = theHeccer.stateStack.seenTags;
+        const priorTags = this.theHeccer.stateStack.seenTags;
 
         let wereAllEncountered = true;
         for(let i = tags.length-1; i >= 0; i--){
@@ -299,7 +246,7 @@ function Checcer(){
      * @param statements the statements to check
      * @returns {boolean} true if they are all true, false otherwise
      */
-    this.and = function(...statements){
+    and(...statements){
 
         let notFalseYet = true;
         let nothingTrueYet = true;
@@ -330,7 +277,7 @@ function Checcer(){
      * @param statements the statements to check
      * @returns {boolean} true if at least one is true, false otherwise
      */
-    this.or = function(...statements){
+    or(...statements){
 
         let result = false;
         for(let i = statements.length - 1; i >= 0; i--){
@@ -349,7 +296,7 @@ function Checcer(){
      * @param statement the statement to check
      * @returns {boolean} the reverse of its result
      */
-    this.not = function (statement) {
+    not(statement) {
         return (!eval(statement));
     }
 
@@ -358,9 +305,9 @@ function Checcer(){
      * @param tagName the tag that is being looked for
      * @returns {Number} the number of times a passage with that tag has been visited. 0 if unvisited.
      */
-    this.tCount = function (tagName) {
-        if (theHeccer.stateStack.seenTags.has(tagName)) {
-            return theHeccer.stateStack.seenTags.get(tagName);
+    tCount(tagName) {
+        if (this.theHeccer.stateStack.seenTags.has(tagName)) {
+            return this.theHeccer.stateStack.seenTags.get(tagName);
         } else {
             return 0;
         }
@@ -371,33 +318,50 @@ function Checcer(){
      * @param passageName the passage that is being looked at
      * @returns {Number} the number of times which that particular passage has been visited. 0 if unvisited.
      */
-    this.pCount = function (passageName) {
-        if (theHeccer.stateStack.visitedPassages.has(passageName)) {
-            return theHeccer.stateStack.visitedPassages.get(passageName);
+    pCount(passageName) {
+        if (this.theHeccer.stateStack.visitedPassages.has(passageName)) {
+            return this.theHeccer.stateStack.visitedPassages.get(passageName);
         } else {
             return 0;
         }
     }
-
-
 }
 
-function GameState(pName) {
-    this.passageName = pName;
-    this.getPassageName = function () {
-        return this.passageName;
-    };
-}
 
-function GameStateStack(startPassageName){
-    //sets up the 'states' array, initially only holding a gamestate referencing the start passage
-    this.states = [new GameState(startPassageName)];
+
+class GameStateStack{
+
+    /**
+     * Constructor with a given start passage name
+     * @param startPassageName the starting passage
+     */
+    constructor(startPassageName)
+    {
+
+        /**
+         * the 'states' array, initially only holding a gamestate referencing the start passage
+         * @type {GameState[]}
+         */
+        this.states = [new GameState(startPassageName)];
+
+        /**
+         * map for seen passsages
+         * @type {Map<String, Number>}
+         */
+        this.visitedPassages = new Map();
+
+        /**
+         * map for seen tags
+         * @type {Map<String, Number>}
+         */
+        this.seenTags = new Map();
+    }
 
     /**
      * Called when working out if there's prior states or not.
      * @returns {boolean} true if the 'states' array has length greater than 1, false otherwise
      */
-    this.areTherePriorStates = function(){
+    areTherePriorStates(){
         return(this.states.length>1);
     };
 
@@ -405,7 +369,7 @@ function GameStateStack(startPassageName){
      * Returns the topmost GameState from the states stack
      * @returns {GameState} topmost GameState
      */
-    this.getTopState = function(){
+    getTopState(){
         return(this.states[this.states.length -1]);
     };
 
@@ -413,7 +377,7 @@ function GameStateStack(startPassageName){
      * pushes a new gamestate, referring to a passage with the specified name, to the top of the stack
      * @param passageName the name of the passage being pushed
      */
-    this.pushState = function(passageName){
+    pushState(passageName){
         this.states.push(new GameState(passageName));
         this.refreshVisitedStuff();
     };
@@ -422,7 +386,7 @@ function GameStateStack(startPassageName){
      * Called when trying to go back.
      * Pops the topmost item from the stack, complains if the current gamestate is the only one in the stack.
      */
-    this.popState = function(){
+    popState(){
         //called when trying to go back
         //first makes very sure that there's a state after this one that the user can go back to
         if (this.areTherePriorStates) {
@@ -436,21 +400,9 @@ function GameStateStack(startPassageName){
     };
 
     /**
-     * A map holding all the visited tags, and the counts of how many times a passage with that tag has been visited.
-     * @type {Map<String, Number>}
-     */
-    this.seenTags = new Map();
-
-    /**
-     * A map holding all the visited passages, and the counts of how many times a given passage has been visited.
-     * @type {Map<String, Number>}
-     */
-    this.visitedPassages = new Map();
-
-    /**
      * Refreshes info about visited tags/passages whenever a new passage is navigated to/from
      */
-    this.refreshVisitedStuff = function () {
+    refreshVisitedStuff() {
 
         /**
          * map of visited passage names and the count of times they were visited
@@ -463,7 +415,6 @@ function GameStateStack(startPassageName){
          * @type {Map<String, Number>}
          */
         const tags = new Map();
-
 
         if (this.areTherePriorStates) {
 
@@ -500,7 +451,7 @@ function GameStateStack(startPassageName){
      * returns a json stringified version of the states array
      * @returns {string} json stringified states array
      */
-    this.getStackAsJSONString = function(){
+    getStackAsJSONString(){
         return JSON.stringify(this.states);
     };
 
@@ -512,84 +463,162 @@ function GameStateStack(startPassageName){
      * just leaving the method signature here for the time being along with logic for how to get stuff from it
      * @param stackAsString Stringified version of the gamestates stack
      */
-    this.parseStackFromStringJSON = function(stackAsString){
+    parseStackFromStringJSON(stackAsString){
     };
 
+}
+
+
+/**
+ * HECC Engine for Runtime
+ */
+class Heccer{
+
     /**
-     * Gets all the names of the unique previously visited states (as a set)
-     * @returns {Set<String>} The names of every previously visited state (but with no duplicates)
+     * A constructor
+     * @param start the defined start passage name
      */
-    this.getUniqueVisitedStateNames = function(){
-        const uniqueStates = new Set();
-        const priorStates = this.states.slice(0,this.states.length-1);
-        priorStates.forEach(
-            state => uniqueStates.add(state.getPassageName())
-        );
-        return uniqueStates;
-    };
+    constructor(start) {
+
+        /**
+         * The map of all the passage objects
+         * @type {Map<String, Passage>}
+         */
+        this.passageMap = new Map();
+
+        /**
+         * The stack of gamestate objects
+         */
+        this.stateStack = new GameStateStack(start);
+
+        /**
+         * default text for the back button
+         */
+        this.defaultBackText = "Click this button to go back";
+
+        /**
+         * Text for the back button when a 'noreturn' passage is reached
+         */
+        this.noReturnText = "POINT OF NO RETURN";
+
+        /**
+         * whether or not the player is currently allowed to go back
+         */
+        this.allowedToGoBack = true;
+
+    }
+
+
+    /**
+     * Adds a passage object to the passageMap (in the form passageName -> passage)
+     * @param passage the passage to add to the map
+     */
+    addPassageToMap (passage){
+        this.passageMap.set(passage.getName(),passage);
+    }
+
+
+    /**
+     * Will be called by the 'back' button when attempting to go back.
+     * And it will only go back if the 'back' button allows it (there is something to go back to, and the back button isn't disabled)
+     */
+    goBack(){
+        //The 'back' button will call this method in an attempt to go back
+        if(this.allowedToGoBack && this.stateStack.areTherePriorStates()){
+            //will only go back if the reader is allowed to go back, and if there are prior states to go back to.
+            this.stateStack.popState(); //pops the top state from stateStack
+            this.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
+        }
+    }
+
+    /**
+     * Called whenever a passage link is clicked
+     * @param passageName the name of the passage that should be loaded
+     */
+    goToPassage(passageName){
+        this.stateStack.pushState(passageName); //pushes a new state, referencing the current passage, to top of the stateStack
+        this.loadCurrentPassage(); //loads the current passage (topmost on stateStack)
+    }
+
+    /**
+     * The bit where the HTML passage content that's already on the page is replaced with the content of the topmost passage on the stack.
+     */
+    loadCurrentPassage(){
+        //and now, the bit where I have to replace the HTML passage content that's already on the page.
+
+        const currentState = this.stateStack.getTopState(); //obtains top GameState from stateStack
+        //console.log(currentState);
+
+        const pName = currentState.getPassageName(); //obtains the passage name from the currentState
+        //console.log(pName);
+
+        const currentPassage = this.passageMap.get(pName); //obtains the passage object from the passageMap which the top GameState refers to
+        //console.log(currentPassage);
+
+        if (currentPassage === undefined){
+
+            window.alert("uh oh, there's no passage called " + pName + "!");
+            this.stateStack.popState();
+
+        } else{
+
+            const passageContent = currentPassage.getParsedContent(); //obtains passage content from the currentPassage
+            //console.log(passageContent);
+
+            document.getElementById("divWhatHoldsPassageContent").innerHTML = passageContent; //loads that passage's content
+
+            //whether or not the current passage allows the player to go back
+            const pointOfNoReturn = currentPassage.containsSpecifiedTag("noreturn");
+
+            //if the back button currently is enabled
+            if (this.allowedToGoBack){
+                //and if this passage is a point of no return
+                if (pointOfNoReturn){
+                    //the back button gets disabled.
+                    document.getElementById("backButton").innerHTML = this.noReturnText;
+                    this.allowedToGoBack = false;
+                }
+            } else if (!pointOfNoReturn){
+                //but, if the back button was enabled, and this passage isn't a point of no return, the back button is re-enabled.
+                document.getElementById("backButton").innerHTML = this.defaultBackText;
+                this.allowedToGoBack = true;
+            }
+
+
+
+            //in theory, that should replace the contents of the "div what holds passage content" div with the content of the new passage.
+            //update: yep, it does.
+        }
+
+        //VERSION OF THIS ENTIRE METHOD BUT IT'S ENTIRELY ON A SINGLE LINE:
+        //document.getElementById("divWhatHoldsPassageContent").innerHTML = (this.passageMap.get((this.stateStack.topState()).getPassageName())).getParsedContent();
+    }
+
+
+
+
+    /**
+     * Logs the passageMap to the console for debugging reasons
+     */
+    printPassages(){
+        console.log(this.passageMap);
+    }
+
+
+
 }
 
 /**
- * The passage objects
- * @param passageName the name for the passage
- * @param passageContent the content of the passage
- * @param passageTags the tags for the passage
- * @constructor bottom text
+ * This is the Heccer itself.
+ * @type {Heccer}
  */
-function Passage(passageName, passageContent, passageTags){
-    this.name = passageName;
-    this.content = passageContent;
-    this.tags = passageTags;
+var theHeccer = new Heccer(startingPassageName);
 
-    /**
-     * returns name of the passage
-     * @returns {string} passage name
-     */
-    this.getName = function(){
-        return this.name;
-    };
-
-    /**
-     * returns the passage contents
-     * @returns {string} contents of the passage
-     */
-    this.getContent = function(){
-        return this.content;
-    };
-
-    /**
-     * Returns the passage contents but parsed by the global showdown converter
-     * @returns {string} the passage content but markdown formatted + hecc formatted
-     */
-    this.getParsedContent = function(){
-        //stores content as tempContent for the time being
-        const tempContent = this.content;
-        //const htmlContent = converter.makeHtml(tempContent);
-        return converter.makeHtml(tempContent);
-    };
-
-    /**
-     * Returns the array of tags for this passage
-     * @returns {array<string>} tags that this passage has
-     */
-    this.getTags = function(){
-        return this.tags;
-    };
-
-    /**
-     * returns whether or not this.tags contains the specifiedTag
-     * does this by returning whether or not the result of find(specifiedTag) is undefined or not
-     * if undefined, it's not present, else, it is present.
-     * @param specifiedTag the tag being looked for in the tags
-     * @returns {boolean} true if the specifiedTag is present, false otherwise
-     */
-    this.containsSpecifiedTag = function(specifiedTag){
-        //returns whether or not this.tags contains the specifiedTag
-        //does this by checking tags.includes(specifiedTag).
-        //true if present, false otherwise.
-        return (this.tags.includes(specifiedTag));
-    };
-}
+/**
+ * This is the Checcer.
+ * @type {Checcer}
+ */
+var theCheccer = new Checcer(theHeccer);
 
 
 
@@ -715,7 +744,7 @@ var heccstension = function(){
             let replacementString = "";
 
             //if theStatement evaluates to true when checced
-            if(theHeccer.checcer.checc(theStatement)){
+            if(theCheccer.checc(theStatement)){
 
                 //use the ifBranchText
                 replacementString = ifBranchText;
@@ -748,22 +777,5 @@ var heccstension = function(){
         }
     }
 
-    /*
-    {if: conditions }{ text if that thing is true }{else:text if that thing is false}
-
-    not(statement)
-    and(statement1, statement2, ...)
-    or(statement1, statement2, ...)
-    pAny(passage1, passage2, ...)
-    pAll(passage1, passage2, ...)
-    tAny(tag1, tag2, ...)
-    tAll(tag1, tag2, ...)
-     */
-
-
     return[directPassageLinks, indirectPassageLinks, conditionals];
 }
-
-
-
-
