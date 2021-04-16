@@ -32,3 +32,14 @@ in its own document, which is once again linked in the main document for this st
 
 This discusses the version of HECC-IT produced during term 2, along with the HECCIN' Game produced with
 HECC-IT.
+
+The [improvements to the HECCIN' Game](./final%20version%20HECCIN'%20Game.md) have been discussed
+first, with this document going over the design/implementation of conditional statements (or
+'guard conditions') within the HECCIN' Game, unit tests, and several other improvements made to it.
+
+The [changes to the HECC-IT tool itself](./final%20version%20of%20HECC-IT.md) are discussed
+next, going over the many documented (and undocumented) improvements made to HECC-IT, and also
+discusses the unit testing present in HECC-IT.
+
+Finally, [the development of *Backblast*](./Backblast.md) is discussed at the end, about the
+development process of the game 'Backblast', which was used as a final demonstration of the tool.

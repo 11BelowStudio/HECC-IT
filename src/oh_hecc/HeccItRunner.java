@@ -22,6 +22,11 @@ import java.util.Collections;
  * If they opt to open an existing .hecc file, they have a choice between opening it in OH-HECC for editing or HECC-UP for exporting.
  */
 public class HeccItRunner {
+    /*
+      This Source Code Form is subject to the terms of the Mozilla Public
+      License, v. 2.0. If a copy of the MPL was not distributed with this
+      file, You can obtain one at http://mozilla.org/MPL/2.0/.
+     */
 
     /**
      * The JFrame holding the main HECC-IT program
@@ -171,6 +176,11 @@ public class HeccItRunner {
      * @param args command line arguments that aren't used
      */
     public static void main(String[] args){
+        /*
+            This Source Code Form is subject to the terms of the Mozilla Public
+            License, v. 2.0. If a copy of the MPL was not distributed with this
+            file, You can obtain one at http://mozilla.org/MPL/2.0/.
+         */
         new HeccItRunner();
     }
 }

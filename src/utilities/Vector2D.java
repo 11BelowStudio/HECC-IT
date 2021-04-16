@@ -174,9 +174,12 @@ public final class Vector2D {
      * @param y y value to add to vector
      * @return a copy of v but with (x,y) added to it
      */
-    public static Vector2D add(Vector2D v, double x, double y){
+    public static Vector2D add(Vector2D v, double x, double y) {
         final Vector2D result = new Vector2D(v);
-        return result.add(x,y);
+        return result.add(x, y);
+        // result.x += x; // INTELLIJ DUN GOOFED, NOT RECOGNIZING VECTOR2D nvm
+        // result.y += y;
+        // return result;
     }
 
 
@@ -200,6 +203,9 @@ public final class Vector2D {
     public static Vector2D subtract(Vector2D v1, Vector2D v2){
         final Vector2D result = new Vector2D(v1);
         return result.subtract(v2);
+        // result.x -= v2.x; // INTELLIJ DUN GOOFED, NOT RECOGNIZING VECTOR2D nvm
+        // result.y -= v2.y;
+        // return result;
     }
 
 
@@ -239,8 +245,10 @@ public final class Vector2D {
      */
     public static Vector2D randomVectorFromOrigin(Vector2D origin, double minDist, double rangeDist){
         final Vector2D fromOrigin = getRandomPolarVector(minDist, rangeDist);
-        fromOrigin.add(origin);
-        return fromOrigin;
+        return fromOrigin.add(origin);
+        // fromOrigin.x += origin.x; // INTELLIJ DUN GOOFED, NOT RECOGNIZING VECTOR2D
+        // fromOrigin.y += origin.y;
+        // return fromOrigin;
     }
 
     /**

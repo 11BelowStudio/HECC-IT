@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * This class represents a Passage within the HECCIN' Game
  *
- * @see oh_hecc.game_parts.passage.OutputtablePassage instead.
+ * @see oh_hecc.game_parts.passage.OutputtablePassage
  * @deprecated use oh_hecc.game_parts.passage.OutputtablePassage instead.
  */
 @Deprecated

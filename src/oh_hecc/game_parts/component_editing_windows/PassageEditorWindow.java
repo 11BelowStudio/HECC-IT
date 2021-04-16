@@ -92,7 +92,7 @@ public class PassageEditorWindow extends GenericEditorWindow {
 
         final JLabel nameEditLabel = new JLabel();
         nameEditLabel.setFont(notBold);
-        nameEditLabel.setText("Passage name must start/end with numbers/letters/underscore. May contain spaces. Duplicate names are banned.");
+        nameEditLabel.setText("Passage name must start/end with numbers/letters/underscore. May contain spaces. Duplicate names are banned. Links to this passage will be updated.");
         nameEditPanel.add(nameEditLabel);
 
         final JPanel namePanel = new JPanel();

@@ -1,5 +1,7 @@
 # Hypertext Editing and Creation Code - Super Precise Explanation for Creating Code (v3: Finally Presentable!)
 
+
+
 ## So, how the HECC does the `.hecc` format work?
 
 The way that .hecc works is somewhat simple: you define metadata for your HECCIN' Game,
@@ -15,7 +17,7 @@ big problem (such as a completely invalid declaration), OH-HECC will just comple
 (potentially treating it as part of another passage's contents/not acknowledging that it's there)
 
 
-## Rules for passage names
+### Rules for passage names
 
 Passage names must start/end with 'word' characters (alphanumeric/underscores), may contain hyphens
 and spaces between the first and last character, and must be at least 1 character long. Other
@@ -79,7 +81,7 @@ ignored when it is read.
 * Any line before the first passage declaration that is **not** a metadata declaration, and is **not**
   explicitly a comment line (with a `//`), **will be ignored by OH-HECC, and will be discarded**
 
-## Defining passages
+### Defining passages
 
 * Declaring the passage
     * You can declare a passage with a line consisting of `::Passage Name`
@@ -193,14 +195,156 @@ ignored when it is read.
 If you want to see some premade .hecc code, there's some at the end of this document.
 But first, we need to talk about **HECC-IT**
 
-# Using HECC-IT with your .hecc code
+## Using HECC-IT with your .hecc code
 
-## Opening HECC-IT
+### Opening HECC-IT
 
-Please ensure that your computer has Java 8 installed on it. 
+Please ensure that your computer has Java 8 installed on it. If you don't have Java 8 installed,
+you can install it from https://www.java.com/en/download/.
 
+Just click on the `HECC-IT.jar` file that you (hopefully) downloaded with this document. If
+you haven't downloaded `HECC-IT`, it should be available at [https://11belowstudio.itch.io/hecc-it](https://11belowstudio.itch.io/hecc-it).
+
+### Using HECC-IT
+
+In the main menu of HECC-IT, you will be asked to if you want to create a new .hecc file
+(using the text input boxes on the left), or open an existing .hecc file (using the button
+on the right).
+
+If you want to create a new .hecc file, please ensure that the data you input in the text
+input boxes follow the requirements outlined above, otherwise, you will not be able to create
+that .hecc file. Upon submitting a game title/author name, you will be prompted to choose
+a place to save your .hecc file. Once you've chosen a place to save it, you will be able to
+start editing that .hecc file within OH-HECC.
+
+If you want to open an existing .hecc file, please select the .hecc file using the file chooser
+dialog that will open when you press 'choose a file'. Once this is done, you will then have
+the option to edit that .hecc file using OH-HECC, or to export it now using HECC-UP. If you
+select OH-HECC, you can still open HECC-UP to export it later on via OH-HECC.
+
+### Using OH-HECC (Optional Help for HECC)
+
+When opening OH-HECC, your .hecc code will be parsed, to produce the editable model of your
+HECCIN' Game. If you give OH-HECC some .hecc code which isn't entirely valid, it will attempt
+to fix the errors. Results of this automatic error correction may vary in usefulness. Any
+passages with duplicate names will be renamed, any passages that are linked but don't exist
+will be created, any passages without a position will be given a random position,
+and any undeclared metadata will be automatically initialised.
+
+Once OH-HECC finishes initialization, you will be presented with an overview of your HECCIN'
+Game as a network of connected 'passages'. The text on each passage is the name of the passage.
+The purple arrows show which passages contain 'links' to other passages. The colour of
+a 'passage' corresponds to the 'status' of it.
+
+* Orange passage:
+    * This is a 'normal' passage, which holds at least one link to at least one other passage.
+      If your game has an orange passage which doesn't have any visible links, that means
+      the passage's content has a link back to itself.
+      
+* Yellow passage:
+    * This is an 'end' passage, containing no links to any other passages.
     
-## And now, some example HECC code
+* Red passage:
+    * This passage's content contains a link to a passage which has since been deleted, so you
+      will need to edit that passage to remove the link which has a `! WAS DELETED !` appended
+      to the end of the passage name. OH-HECC will not completely remove those links
+      automatically, in case you wanted to retain the text in that link/make it link to a
+      different passage.
+      
+* Dark orange/red passage:
+    * This passage has no content. You will need to add some content into it.
+    
+* Red outline:
+    * This passage has been given the `noreturn` tag.
+    
+* Light-blue rounded rectangle surrounding the passage:
+    * This is the 'start' passage, as defined by the game's Metadata.
+    
+You may freely resize the window. There are two ways to move the viewable area. You can move
+the view by a fixed amount in a given direction by pressing the arrow keys on your keyboard/numpad.
+You may also 'drag' the view by holding the right mouse button and moving the mouse. You cannot
+interact with anything (or scroll using the arrow keys) whilst dragging the viewable area with
+your right mouse button. You can stop scrolling the view by releasing the right mouse button.
+To prevent you from getting lost from the passages, the scrolling is capped relative to the
+positions of the passage objects, so the midpoint of the viewable area is always within
+the bounds of the midpoints of the top-most/bottom-most/left-most/right-most passage objects.
+This does mean that, if there's only one passage in your game, you cannot scroll the view.
+
+You may move passages around by pressing and holding the left mouse button on them. The passage
+will turn light-blue, and you may drag it with your mouse. You may not scroll the view whilst
+doing this. Releasing the left mouse button will stop moving the passage.
+
+To edit a passage, left-click on the passage object. This will open a dialog window allowing
+you to rename the passage, update the passage's list of tags, update the passage content,
+update the inline/multiline comments for the passage, and has an option to delete the passage.
+Renaming this passage will fail if you attempt to give this the same name as an existing passage.
+Any links to this passage within the content of any passage will be updated to still link
+to this renamed passage. If you delete the current passage, the links that used to point to this
+passage will be updated appropriately as well. Any `::` or `;;` lines within the passage content
+or multiline comment will be forcibly escaped, so the hecc code won't break. If you put a link
+to a passage that doesn't exist yet in the content of this passage, that new passage will be
+created automatically. You may not interact with the passage overview in any way until you
+close the passage editor window (and any updates to the viewable area will only happen after
+you close this window). Closing it with the `x` button will discard unsaved changes, but the
+`save and exit` button will save all changes (but, if a change cannot be saved, due to an
+invalid input, the window will not close, to give you a chance to fix it). If you do press
+the 'delete' button, you will be asked to confirm that you want to delete it (and that you are
+sure that you want to delete it) before it will be deleted. This editing window will close
+automatically upon a successful deletion.
+
+The buttons at the bottom of this editable area all do different things when left-clicked,
+and may only be clicked when you do not have an editing dialog open, are not scrolling the view,
+and are not moving a passage object. 
+
+The 'save' button will attempt to save your game in .hecc format to the .hecc file.
+If there are no major problems with your game, it will also save/overwrite a
+`_lastValidVersion.hecc` copy of your .hecc file (intended to be a backup of the last 'valid'
+version of your hecc file, with no empty passages/passages with deleted links). If it cannot
+save your game, it will open a new window showing you your .hecc code, which you can then copy
+and paste into a `.hecc` file manually.
+
+The 'export with HECC-UP' button will attempt to save your game, like the save routine. If your
+game isn't 'valid' enough for the`_lastValidVersion` check to pass, it will not open HECC-UP,
+and will tell you what the problem is. HECC-UP will be discussed later on.
+You may not interact with OH-HECC whilst HECC-UP is open.
+
+The 'edit metadata' button will open a window that will allow you to edit your game's metadata
+(author name, game title, start passage name, and multiline comment). If you change the start
+passage to the name of a passage that doesn't exist, you will have the option to rename the
+existing start passage itself, or create a new start passage with that name. If you change the
+start passage name to the name of a passage that does exist, that existing passage will be the
+start passage. Closing the metadata editor window via the `x` will discard unsaved changes.
+Closing it with the `save and exit` button at the bottom will attempt saving unsaved changes
+(but, if a change cannot be saved, due to an invalid input, the window will not close, to give
+you a chance to fix it).
+
+The 'add passage' button adds a new passage, with a completely unique name, holding
+`Sample Content`, to the passage map.
+
+To close OH-HECC, just click the `x` on the top-right corner of the window. You will be asked
+to confirm that you did want to quit, because any unsaved changes will be lost. As soon as
+you press 'yes', OH-HECC will close.
+
+### Using HECC-UP (HECC Ultra Parser)
+
+Upon opening HECC-UP from HECC-IT or OH-HECC, the .hecc file you previously selected will be
+pre-selected as the 'input', and a sub-directory within the same directory as your .hecc file,
+with the same name as your .hecc file, will be pre-selected as your 'output' folder. The upper
+two buttons open file choosers which you may use to manually select a different .hecc file
+or output folder, in case you didn't want to use the default buttons. The 'HECC-UP!' button
+at the bottom will parse the selected .hecc file, and attempt to convert it into a playable
+HECCIN' Game. If there is a problem with the .hecc file, details of this problem will be output
+to the 'event log' scrollable text area at the bottom of the window. Any passages within your
+hecc file which are not linked to from your start passage will be omitted from the produced
+game. If your game has been exported successfully, HECC-UP will ask you if you want to play
+your game. If you press 'yes', it will attempt to open the game's index.html file in your default
+web browser. If this fails, the location of your game's index.html file will be output in the
+'log' area, so you can just open it manually.
+
+To close HECC-UP, just press the `x` on the top-right corner of the window. If you opened
+HECC-UP via OH-HECC, you can then resume using OH-HECC.
+
+# And now, some example HECC code
 ```
 this line is before the first passage declaration, so, officially, this line doesn't exist! 
 
@@ -214,6 +358,10 @@ this line is before the first passage declaration, so, officially, this line doe
 //we live in a society.
 //
 //bottom text.
+
+//  This Source Code Form is subject to the terms of the Mozilla Public
+//  License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 ::Start
 
@@ -264,3 +412,55 @@ yep that's the end.
 bottom text.
 ;;
 ```
+
+# Legal bits
+
+Any .hecc files you produce with OH-HECC, and the `hecced.js` file produced by HECC-UP (holding
+the actual exported data for your game) officially belong to you, as the author of that game,
+so you can distribute them under any license you want.
+
+The copy of `showdown.min.js` exported by HECC-UP is distributed under the MIT license,
+[as can be seen on the repository for it](https://github.com/showdownjs/showdown/blob/master/LICENSE).
+
+The copy of `index.html` exported by HECC-UP is licensed to you under the MIT license, so you
+can basically do whatever you want with index.html.
+
+The copy of `heccer.js` (the engine itself) exported by HECC-UP, as well as the source code
+of/ the executable of the overarching HECC-IT software suite, is licensed to you under the terms
+of the [Mozilla Public License v 2.0](https://www.mozilla.org/media/MPL/2.0/index.48a3fe23ed13.txt).
+Once again, this means you can basically do whatever you want with it, even redistributing those
+files in under a proprietary license, as long as those components (`heccer.js` and the (source
+code of) the main HECC-IT executable) are still freely available.
+
+In other words, for `heccer.js` and HECC-IT:
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+
+What does this mean for you?
+
+* If you want to use HECC-IT to make a freely-available game, you can.
+
+* If you want to use HECC-IT to make something proprietary, you can.
+    * The copy of `heccer.js`, with any modifications made to it, will still need to
+      be available under the Mozilla Public License v 2.0, but `heccer.js` doesn't contain any
+      of the data specific to your game anyway.
+
+    * The files that hold the actual game data (`hecced.js`/the .hecc file), are responsible
+      for the formatting ofthe output (`showdown.min.js`), and are responsible for linking the
+      components of the game/allowing the player to play the game (`index.html`), can be
+      redistributed under proprietary terms.
+
+    * **tl;dr**You can keep the game data as private as you want, as long as `heccer.js`
+      (with any modifications) is still distributed under the Mozilla Public License v 2.0.
+
+        * You can sell your game, but not the engine that runs the game.
+
+* If you want to contribute to/modify HECC-IT, you can, as long as your contributions are
+  available under the Mozilla Public License v 2.0.
+
+* If you want to use HECC-IT itself within another product, even if it's proprietary, you can.
+    * As long as the version of HECC-IT within that product (along with any changes you made
+      to HECC-IT) are still available under the terms of the Mozilla Public License v 2.0

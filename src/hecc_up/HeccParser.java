@@ -1,7 +1,7 @@
 package hecc_up;
 
-import hecc_up.gameParts.Metadata;
 import heccCeptions.*;
+import hecc_up.gameParts.Metadata;
 import oh_hecc.game_parts.passage.OutputtablePassage;
 import oh_hecc.game_parts.passage.PassageOutputtingInterface;
 import oh_hecc.game_parts.passage.PassageOutputtingLinkCheckingInterface;
@@ -372,12 +372,31 @@ public class HeccParser {
 
         heccedData.clear();
 
-        heccedData.add("//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n\n");
+        heccedData.add("//HECC UP output (as of 16/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n\n");
 
         heccedData.add("// This hecced.js file contains the data for:\n");
         heccedData.add("// " + metadata.getTitle() + "\n");
         heccedData.add("// by " + metadata.getAuthor() + "\n");
         heccedData.add("// IFID: " + metadata.getIfid() + "\n\n");
+
+
+        // some legal stuff
+        heccedData.add(
+                "/*\n" +
+                "LEGAL STUFF:\n" +
+                "The author of the game held in this hecced.js file shall be considered the\n" +
+                "\towner of this file, and may opt to select any license they want for this hecced.js file.\n"+
+                "If the author of this game has not selected a license, assume that this hecced.js file has\n"+
+                "\tbeen distributed under the terms of the Mozilla Public License (v2.0) by the author.\n" +
+                "\t\tYou can obtain a copy of that license at http://mozilla.org/MPL/2.0/\n"+
+                "If the author of this file wishes to use a different license, they may include another one\n"+
+                "\twithin the source code of this file, underneath this comment block, which shall,\n" +
+                "\tfor all intents and purposes, be considered to be the license for this hecced.js file.\n" +
+                "Alternatively, another license may be distributed with this file, in a file called 'LICENSE',\n" +
+                "\twhich shall be the license under which the hecced.js file has been distributed.\n"+
+                "TL;DR the author of this game owns and gets to choose the license for this hecced.js file (because it's their game).\n" +
+                "*/\n\n"
+        );
 
         final String theStart = metadata.getStartPassage();
 
@@ -391,11 +410,22 @@ public class HeccParser {
         try {
             // we attempt to find the passages that are actually linked to something else, and only output them.
 
-            final Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), theStart);
+            //final Set<String> nonOrphanPassageNames = getNamesOfAllNonOrphanPassages(new HashSet<>(), theStart);
 
-            for (String passageName : nonOrphanPassageNames) {
-                heccedData.add(passageMap.get(passageName).getHecced());
-            }
+            //for (String passageName : nonOrphanPassageNames) {
+            //    heccedData.add(passageMap.get(passageName).getHecced());
+            //}
+
+            // we obtain the non-orphan passages
+            //final List<PassageOutputtingLinkCheckingInterface> nonOrphans = getAllNonOrphanPassages(theStart);
+
+            // and then they get hecced.
+            //for (PassageOutputtingLinkCheckingInterface outputThis: nonOrphans) {
+            //    heccedData.add(outputThis.getHecced());
+            //}
+
+            // we add the hecced non-orphan passages to the hecced data
+            heccedData.addAll(outputAllNonOrphanPassages(theStart));
 
         } catch (StackOverflowError soe){
 
@@ -433,6 +463,70 @@ public class HeccParser {
         return true;
     }
 
+
+    /**
+     * Obtains a list containing the hecced data of all the passages that are linked to the start passage,
+     * depth-first non-recursive search
+     * @param startPassage name of the start passage
+     * @return the set of all the PassageOutputtingLinkCheckingInterface objects that are reachable from the Start passage
+     * @throws UndefinedPassageException if a passage fails a validity check
+     */
+    private List<String> outputAllNonOrphanPassages(String startPassage) throws UndefinedPassageException{
+
+        // these are the known linked passages we will be returning
+        final List<String> knownLinked = new ArrayList<>();
+        //final List<PassageOutputtingLinkCheckingInterface> knownLinked = new ArrayList<>();
+
+        // a set of all the names of passages we haven't found yet
+        final Set<String> allNotFoundYet = new HashSet<>(passageNames);
+        // a list holding the names of the passages we are currently iterating through
+        final List<String> currentPassages = new ArrayList<>();
+        // a set holding the names of all the passages that are children of the current layer of passaged
+        final Set<String> nextPassages = new HashSet<>();
+
+
+        // add the start passage name to the 'nextPassages' set
+        nextPassages.add(startPassage);
+        // and remove it from the 'notFoundYet' set
+        allNotFoundYet.remove(startPassage);
+
+        // if there are next passages
+        while (!nextPassages.isEmpty()){
+
+            // the next passages are now the current passages
+            currentPassages.clear();
+            currentPassages.addAll(nextPassages);
+            // and the next passages are cleared, so they can be the actual next passages
+            nextPassages.clear();
+
+            // now, for all of the 'current passages'
+            for (String p: currentPassages) {
+                // we obtain that particular passage
+                final PassageOutputtingLinkCheckingInterface thisPassage = passageMap.get(p);
+                // we ensure it's valid
+                thisPassage.validateLinkedPassagesThrowingException(passageNames);
+
+                // it gets hecced, and that hecced data is added to the list of known linked passages
+                knownLinked.add(thisPassage.getHecced());
+                // knownLinked.add(thisPassage.getHecced());
+
+                // we obtain the names of child passages
+                final Set<String> children = new HashSet<>(thisPassage.getLinkedPassages());
+                // we only keep the ones that haven't been found yet
+                children.retainAll(allNotFoundYet);
+                // then we ensure that the ones that hadn't yet been found are no longer in that set of 'not found' passages.
+                allNotFoundYet.removeAll(children);
+                // we add these newly-found children to the set of next passages
+                nextPassages.addAll(children);
+
+            }
+
+        }
+        // we return the known linked passages
+        return knownLinked;
+
+    }
+
     /**
      * This method is used to get the names of all non-orphan passages, recursively.
      * @param knownLinked a set with the names of all known passages that are linked together.
@@ -443,11 +537,16 @@ public class HeccParser {
      * @return a set with the names of all passages that are linked together.
      * @throws UndefinedPassageException if there's a problem with the current passage.
      * @throws StackOverflowError because recursion do be like that sometimes
+     * @deprecated use outputAllNonOrphanPassages instead, it's not recursive, outputs the hecced data, much better.
+     * @see HeccParser#outputAllNonOrphanPassages(String) outputAllNonOrphanPassages
      */
+    @Deprecated
     private Set<String> getNamesOfAllNonOrphanPassages(
             Set<String> knownLinked,
             String currentPassageName
     ) throws UndefinedPassageException, StackOverflowError {
+
+
 
         if (knownLinked.contains(currentPassageName)){
             return knownLinked; // if this one is already known, we just skip it

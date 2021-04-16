@@ -3,8 +3,8 @@ package hecc_up;
 import heccCeptions.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,8 +40,8 @@ public class HeccUpTests {
         final String singleStringHeccedData = String.join("", heccSampleParser.getHeccedData());
 
         assertEquals(
-                singleStringHeccedData,
-                String.join("",HeccUpTestConstants.HECCSAMPLE_OUTPUT)
+                String.join("",HeccUpTestConstants.HECCSAMPLE_OUTPUT),
+                singleStringHeccedData
         );
 
         System.out.println(singleStringHeccedData);
@@ -450,13 +450,27 @@ public class HeccUpTests {
         final HeccUpHandler handler = new HeccUpHandler(log);
 
         final String expectedOutput =
-                "//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
+                "//HECC UP output (as of 16/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
                 "\n" +
                 "// This hecced.js file contains the data for:\n" +
                 "// An Interactive Fiction\n" +
                 "// by Anonymous\n" +
                 "// IFID: unspecified\n" +
                 "\n" +
+                "/*\n" +
+                "LEGAL STUFF:\n" +
+                "The author of the game held in this hecced.js file shall be considered the\n" +
+                "\towner of this file, and may opt to select any license they want for this hecced.js file.\n" +
+                "If the author of this game has not selected a license, assume that this hecced.js file has\n" +
+                "\tbeen distributed under the terms of the Mozilla Public License (v2.0) by the author.\n" +
+                "\t\tYou can obtain a copy of that license at http://mozilla.org/MPL/2.0/\n" +
+                "If the author of this file wishes to use a different license, they may include another one\n" +
+                "\twithin the source code of this file, underneath this comment block, which shall,\n" +
+                "\tfor all intents and purposes, be considered to be the license for this hecced.js file.\n" +
+                "Alternatively, another license may be distributed with this file, in a file called 'LICENSE',\n" +
+                "\twhich shall be the license under which the hecced.js file has been distributed.\n" +
+                "TL;DR the author of this game owns and gets to choose the license for this hecced.js file (because it's their game).\n" +
+                "*/\n\n" +
                 "var startingPassageName = \"Start\";\n" +
                 "\n" +
                 "function getHECCED(){\n" +
@@ -679,38 +693,31 @@ public class HeccUpTests {
          * The expected output from HECCSAMPLE as an ArrayList of strings.
          */
         final static ArrayList<String> HECCSAMPLE_OUTPUT = new ArrayList<>(Arrays.asList(
-                "//HECC UP output (as of 12/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
+                "//HECC UP output (as of 16/04/2021) (HECC-IT produced by Rachel Lowe, 2021)\n" +
                 "\n",
                 "// This hecced.js file contains the data for:\n",
                 "// HECCSample\n",
                 "// by Rachel Lowe\n",
                 "// IFID: DE7B3D02-81BB-4C2A-82BA-7CA9398B2262\n",
                 "\n",
+                "/*\n" +
+                "LEGAL STUFF:\n" +
+                "The author of the game held in this hecced.js file shall be considered the\n" +
+                "\towner of this file, and may opt to select any license they want for this hecced.js file.\n"+
+                "If the author of this game has not selected a license, assume that this hecced.js file has\n"+
+                "\tbeen distributed under the terms of the Mozilla Public License (v2.0) by the author.\n" +
+                "\t\tYou can obtain a copy of that license at http://mozilla.org/MPL/2.0/\n"+
+                "If the author of this file wishes to use a different license, they may include another one\n"+
+                "\twithin the source code of this file, underneath this comment block, which shall,\n" +
+                "\tfor all intents and purposes, be considered to be the license for this hecced.js file.\n" +
+                "Alternatively, another license may be distributed with this file, in a file called 'LICENSE',\n" +
+                "\twhich shall be the license under which the hecced.js file has been distributed.\n"+
+                "TL;DR the author of this game owns and gets to choose the license for this hecced.js file (because it's their game).\n" +
+                "*/\n\n",
                 "var startingPassageName = \"k\";\n",
                 "\n",
                 "function getHECCED(){\n",
                 "\n",
-                "\ttheHeccer.addPassageToMap(\n",
-                "\t\tnew Passage(\n",
-                "\t\t\t\"dave\",\n",
-                "\t\t\t\"This passage is called dave.\\n\\ndave's content doesn't include any links to any other passages.\\nSo I guess this counts as the end.\",\n",
-                "\t\t\t[]\n",
-                "\t\t)\n",
-                "\t);\n",
-                "\ttheHeccer.addPassageToMap(\n",
-                "\t\tnew Passage(\n",
-                "\t\t\t\"Left\",\n",
-                "\t\t\t\"You go to the left, but the path leads you back to [[dave]].\",\n",
-                "\t\t\t[]\n",
-                "\t\t)\n",
-                "\t);\n",
-                "\ttheHeccer.addPassageToMap(\n",
-                "\t\tnew Passage(\n",
-                "\t\t\t\"Right\",\n",
-                "\t\t\t\"You went to the right, but the path leads you back to [[dave]].\",\n",
-                "\t\t\t[]\n",
-                "\t\t)\n",
-                "\t);\n",
                 "\ttheHeccer.addPassageToMap(\n",
                 "\t\tnew Passage(\n",
                 "\t\t\t\"k\",\n",
@@ -729,6 +736,27 @@ public class HeccUpTests {
                 "\t\tnew Passage(\n",
                 "\t\t\t\"Yet Another Passage\",\n",
                 "\t\t\t\"woah you clicked that so you're now at Yet Another Passage.\\n\\nDo you want to go [[Left]], [[Right]], [[Back to the start|k]], or [[Skip this nonsense|dave]]?\",\n",
+                "\t\t\t[]\n",
+                "\t\t)\n",
+                "\t);\n",
+                "\ttheHeccer.addPassageToMap(\n",
+                "\t\tnew Passage(\n",
+                "\t\t\t\"dave\",\n",
+                "\t\t\t\"This passage is called dave.\\n\\ndave's content doesn't include any links to any other passages.\\nSo I guess this counts as the end.\",\n",
+                "\t\t\t[]\n",
+                "\t\t)\n",
+                "\t);\n",
+                "\ttheHeccer.addPassageToMap(\n",
+                "\t\tnew Passage(\n",
+                "\t\t\t\"Left\",\n",
+                "\t\t\t\"You go to the left, but the path leads you back to [[dave]].\",\n",
+                "\t\t\t[]\n",
+                "\t\t)\n",
+                "\t);\n",
+                "\ttheHeccer.addPassageToMap(\n",
+                "\t\tnew Passage(\n",
+                "\t\t\t\"Right\",\n",
+                "\t\t\t\"You went to the right, but the path leads you back to [[dave]].\",\n",
                 "\t\t\t[]\n",
                 "\t\t)\n",
                 "\t);\n",

@@ -1,6 +1,6 @@
 BACKBLAST - A murder mystery where you are the victim!
 
-You've just recieved a mysterious job offer in the post. They're offering you a lot of money, but they're not being very forthcoming with the details. What's the worst that could happen?
+You've just received a mysterious job offer in the post. They're offering you a lot of money, but they're not being very forthcoming with the details. What's the worst that could happen?
 
 
 Credits:

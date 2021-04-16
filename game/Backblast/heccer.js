@@ -5,9 +5,13 @@ this is heccer.js (HECC Environment for Runtime) (v3.1)
 The game data stuff is in hecced.js (the HECCED output of a HECC game (parsed via HECC-UP))
     * the 'getHECCED' method in hecced.js gives the passage info to the HECCER.
 
-by Rachel Lowe, 12/04/2021
+by Rachel Lowe, 16/04/2021
 
 (this version has been fed into the Hecc Up Parser!)
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
 /**

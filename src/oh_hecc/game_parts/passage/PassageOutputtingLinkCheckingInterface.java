@@ -24,4 +24,10 @@ public interface PassageOutputtingLinkCheckingInterface {
      * @return linkedPassages
      */
     Set<String> getLinkedPassages();
+
+    /**
+     * Obtains the hecced version of this passage
+     * @return hecced.js declaration for this passage
+     */
+    String getHecced();
 }
