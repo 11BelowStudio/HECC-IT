@@ -111,7 +111,7 @@ using HECC-IT.
 HECC-IT is distributed under the terms of the Mozilla Public License Version 2.0,
 a copy of which can be seen [here](./LICENSE.md)
 
-The heccer.js file in the output, being prewritten and considered a part of HECC-IT,
+The heccer.js file in the output, being pre-written and considered a part of HECC-IT,
 is also distributed under the terms of the Mozilla Public License Version 2.0, by me.
 
 The index.html file in the output is distributed under the terms of the MIT license,

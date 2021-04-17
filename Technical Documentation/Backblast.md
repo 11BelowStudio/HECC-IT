@@ -180,6 +180,12 @@ partially for exposition (letting the player know why they are here), and also f
 reinforcing the fact that the player is only here because of their own choice to reply with
 a 'yes' to the letter.
 
+This part of the game is intended to be more of a 'setting the context' than a proper part
+of the actual 'game', which is why the player is unable to make any meaningful choices at
+this point of the game. At this point in time, the player has not got a specific 'goal' to
+achieve, and the player has no real motive for making a choice that may be meaningful, which
+is why this section is very much linear.
+
 And then there's Percival.
 
 Percival's name wasn't chosen for any symbolic reasons. Nothing about Percival was intended to
@@ -199,12 +205,84 @@ Additionally, it'll be a nice reference for the three or so people who actually 
 
 As you may have guessed, I already knew what sort of character he would be: overly pedantic,
 blissfully unaware of the scale of his incompetence, and someone that the player would be
-laughing at, not with. But, most importantly, his job is to make the player feel somewhat safe,
+laughing at, not with. Most importantly, his job is to make the player feel somewhat safe,
 because he's clearly too inept to have any sort of malicious intent.
 
 This is so, when the player gets taken to the briefing room, the player will be caught somewhat
 off-guard by the events that happen there. The briefing room is arguably also a more obvious
-challenge-style 'threshold'. The cartoon which is described here is 
+challenge-style 'threshold'. When I was writing it, I opted to make Percival remain outside,
+so the player would feel somewhat isolated, and feel rather distrustful of Percival (after all,
+Percival was outside the room as the player was stuck inside it, in front of a bomb). The 'video'
+that the player 'watches' in here is supposed to be a bit of drip-fed exposition/foreshadowing
+for what is going to happen rather shortly, to try to build up some tension, and make the player
+feel a bit curious about what exactly is supposed to be happening next. The actual explanation
+with the bikers was lovingly influenced by a scene towards the end of *Zero Escape: Virtue's
+Last Reward*[1] where a very similar explanation is used towards the end to explain the physics
+of that game's reality. In that game, it's presented as a hypothetical, but, in this game's
+overall lore, the events discussed by this cartoon happened to the character of Dr Albert.
+
+The sudden turn to the rather morbid subject matter in that cartoon, along with it directly
+addressing the player (as Subject C) is intended to be a bit of a gut punch for the player,
+and make them immediately start to panic and feel unsafe. The non-option of attempting
+to escape, as well as the `noreturn` tag at the start of the briefing room sequence, was
+intended to amplify this effect (as the player cannot escape in any way), before the bomb
+detonates, shortly after the player finds out that they were supposed to have gotten rid
+of it earlier on.
+
+The detonation of the bomb is intended to be the point where this 'intro' ends, as the
+player now knows that someone is trying to kill them (or at least cause them some harm,
+as it's not explicitly stated that the player was killed, merely that there was a bright
+flash of light, leading to everything fading to white for the player). This is intended
+to be a climax of sorts for the tension building up throughout this 'intro' sequence,
+and, more importantly, gives the player the necessary motivation to make choices
+that could be meaningful.
+
+I will admit that the overall briefing room sequence (including the latter part of
+it, to be discussed later on) was somewhat influenced by a suggestion made by Dr
+Bartle when I was explaining the basic concept for this game (that suggestion
+being not knowing there is a bomb in the room, dying from it, and then having
+the option to escape from/get rid of the bomb). However, the 'briefing room' aspect
+of it was my own idea, because having a bomb blow up out of the blue in front of
+the player would be rather confusing and could feel forced, but the context given
+from the briefing makes the sudden presence of the bomb make sense.
+
+The player is then sent back to the passage that was at the start of this sequence
+(where they wake up in the room, describing the room), to immediately hit them
+with a healthy dose of deja-vu, get them to start asking themselves what happened
+(having to base it only on what they remember, due to the `noreturn` tag here),
+and to establish that they need to try to work out how to avoid dying this time.
+The text at the end of this iteration of the passage is completely different.
+This was implemented via the conditional statements feature of HECC-IT (seeing
+if the player had died yet), sending the player to the 'deja vu' section.
+
+## The 'Deja Vu' section.
+
+The goal for this section was to make the player realize that they had somehow
+been sent back in time from the explosion, albeit to a timeline that is slightly
+different, and get them to save themselves from the explosion.
+
+The first choice the player is given here is how they will respond to Percival.
+This choice is ultimately meaningless, as, either way, the player will find
+themselves in the briefing room again, whether they like it or not. The
+intended effect is to establish that 'flight' (ie not going near the bomb)
+is not an option for the player, and that 'fight' (getting rid of the bomb)
+is the only feasible option they have.
+
+If the player opts to fight or hide from Percival, they will always fail. These
+options are here because, after the player got abandoned in the briefing room by
+Percival, the player may be feeling somewhat distrustful of him, and seek an
+escape from the bomb by escaping the person who brought them to it. However,
+Percival is the sort of character who, upon being given a job to do, will do it,
+and his job at this point in time is 'get the player to the briefing room'.
+The failures if the player chooses these options is supposed to make the player
+realize that, to survive, working against Percival isn't an option, so they
+will need to give Percival a reason to help them.
+
+The option to greet Percival instead is here to give an opportunity for the
+character of Percival to become a bit more fleshed-out (by giving the player
+an opportunity to interact with that character), 
+
+
 
 
 

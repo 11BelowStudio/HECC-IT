@@ -106,7 +106,7 @@ the [HECC-IT downloadable version](./HECC-IT%20downloadable%20version.zip).
 HECC-IT is distributed under the terms of the Mozilla Public License Version 2.0,
 a copy of which can be seen [here](./LICENSE.md)
 
-The ['heccer.js'](./src/assets/textAssets/heccer.js) file in the output, being prewritten
+The ['heccer.js'](./src/assets/textAssets/heccer.js) file in the output, being pre-written
 and considered a part of HECC-IT, is also distributed under the terms of the
 Mozilla Public License Version 2.0, by me.
 

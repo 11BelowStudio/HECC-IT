@@ -444,12 +444,11 @@ What does this mean for you?
 * If you want to use HECC-IT to make a freely-available game, you can.
 
 * If you want to use HECC-IT to make something proprietary, you can.
-    * The copy of `heccer.js`, with any modifications made to it, will still need to
-      be available under the Mozilla Public License v 2.0, but `heccer.js` doesn't contain any
-      of the data specific to your game anyway.
-
+    * If you make any changes to the `heccer.js` file, the edited version of `heccer.js` will
+      need to be made available under the terms of the Mozilla Public License v.2.0
+      
     * The files that hold the actual game data (`hecced.js`/the .hecc file), are responsible
-      for the formatting ofthe output (`showdown.min.js`), and are responsible for linking the
+      for the formatting of the output (`showdown.min.js`), and are responsible for linking the
       components of the game/allowing the player to play the game (`index.html`), can be
       redistributed under proprietary terms.
 

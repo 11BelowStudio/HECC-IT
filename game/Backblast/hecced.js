@@ -594,7 +594,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"deja vu endless return 2",
-			"You keep going.\n\nEvenutally, you see the light again.\n\nIt's illuminating another dead end.\n\n[[Except this one has a door|prank ending door]].",
+			"You keep going.\n\nEventually, you see the light again.\n\nIt's illuminating another dead end.\n\n[[Except this one has a door|prank ending door]].",
 			["noreturn"]
 		)
 	);
@@ -748,7 +748,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Archives notebook 1",
-			"The notebook has the same handwriting in it as the letter you recieved at the start of this wild chain of events.\n\nThe first page has the title *Unnamed romantic comedy book draft*.\n\nIt looks like Dr Albert is a writer in his spare time.\n\nDo you want to [[give it a read|Archives notebook 2]], or would you rather [[take a look inside the folder instead|Archives folder 1]]?",
+			"The notebook has the same handwriting in it as the letter you received at the start of this wild chain of events.\n\nThe first page has the title *Unnamed romantic comedy book draft*.\n\nIt looks like Dr Albert is a writer in his spare time.\n\nDo you want to [[give it a read|Archives notebook 2]], or would you rather [[take a look inside the folder instead|Archives folder 1]]?",
 			[]
 		)
 	);
@@ -1301,7 +1301,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Albert end 2",
-			"Behind the desk, you can see a rather old man, looking disconcertingly pleased with himself.\n\n\"Welcome, welcome! I'm sure you have many questions about what's been happening here. And yes, I am at liberty to answer them.\"\n\nHis warm disposition is somewhat offputting.\n\n\"[[Care to explain why you murdered me four times?|Albert end why kill]]\"\n\"[[Why are you so cheerful about getting caught!?|Albert end why happy]]\"",
+			"Behind the desk, you can see a rather old man, looking disconcertingly pleased with himself.\n\n\"Welcome, welcome! I'm sure you have many questions about what's been happening here. And yes, I am at liberty to answer them.\"\n\nHis warm disposition is somewhat disconcerting.\n\n\"[[Care to explain why you murdered me four times?|Albert end why kill]]\"\n\"[[Why are you so cheerful about getting caught!?|Albert end why happy]]\"",
 			[]
 		)
 	);
@@ -1413,7 +1413,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"Spreewald end has something in pocket",
-			"As Dr Albert rummages around the underside of his desk, probably trying to hit a panic button, and make sure that he definitely has hit it, you can see Cillian procuring a metallic something from his pocket.\n\nHe points it at Dr Albert, and lets out a taunt.\n\n\"Go ahead, Archie, call security to get rid of me, they can't unmurder you!\"\n\n[[You realize that 'it' is a snub-nosed revolver.|Spreewald end has a gun]]",
+			"As Dr Albert rummages around the underside of his desk, probably trying to hit a panic button, and make sure that he definitely has hit it, you can see Cillian procuring a metallic something from his pocket.\n\nHe points it at Dr Albert, and lets out a taunt.\n\n\"Go ahead, Archie, call security to get rid of me, even then they can't save you!\"\n\n[[You realize that 'it' is a snub-nosed revolver.|Spreewald end has a gun]]",
 			[]
 		)
 	);

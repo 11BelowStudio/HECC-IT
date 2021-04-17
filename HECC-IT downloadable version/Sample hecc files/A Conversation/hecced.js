@@ -48,7 +48,7 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"whats the buzz",
-			"*ahem*\n\nAccording to all known laws of aviation,\nthere is no way that a bee should be able to fly.\nIts wings are too small to get its fat little body off the ground.\nThe bee, of course, flies anyway.\nBecause bees don't care what humans think is impossible.\n\n[[And this is important because...?|whats the point]]\n[[Yellow, black. Yellow, black. Yellow black. Yellow, black.|beemoviescript1]]",
+			"*ahem*\n\nAccording to all known laws of aviation,\nthere is no way that a bee should be able to fly.\nIts wings are too small to get its fat little body off the ground.\nThe bee, of course, flies anyway.\nBecause bees don't care what humans think is impossible.\n\n[[And this is important because...?|whats the point]]\n[[Yellow, black. Yellow, black. Yellow black. Yellow, black.|bees1]]",
 			[]
 		)
 	);
@@ -75,15 +75,15 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"getting very silly",
-			"Well, excuuuse me.\nThe only reason for my existence is to speak to you when you're reading stuff.\nIf you're going to complain about me saying stupid things, why do you bother reading stupid things?\n\n[[You make a compelling argument.|makes sense]]\n[[Yep, this is still stupid.|stupidend]]",
+			"bees1",
+			"Ooh, black and yellow!\nLet's shake it up a little.\n\n[[Barry! Breakfast is ready!|bees2]]",
 			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"beemoviescript1",
-			"Ooh, black and yellow!\nLet's shake it up a little.\n\n[[Barry! Breakfast is ready!|beemoviescript2]]",
+			"getting very silly",
+			"Well, excuuuse me.\nThe only reason for my existence is to speak to you when you're reading stuff.\nIf you're going to complain about me saying stupid things, why do you bother reading stupid things?\n\n[[You make a compelling argument.|makes sense]]\n[[Yep, this is still stupid.|stupidend]]",
 			[]
 		)
 	);
@@ -96,15 +96,15 @@ function getHECCED(){
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"no sense",
-			"I agree.\n\nYou know what, let's just stop wasting our time reading this incomprehensible nonsense, and find something else to do.\nYou got any ideas?\n\n[[Let's read something else.|good idea]]\n[[Let's write something even better than this, and put the idiot who wrote this to shame.|shameless plug]]",
+			"bees2",
+			"Actually, wait, I've just had a call from my lawyer.\nIt looks like Dreamworks is going to sue us if we continue this performance of The Bee Movie.\n\n[[Then why did you start performing it in the first place?|whats the point]]",
 			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
-			"beemoviescript2",
-			"Actually, wait, I've just had a call from my lawyer.\nIt looks like Dreamworks is going to sue us if we continue this performance of The Bee Movie.\n\n[[Then why did you start performing it in the first place?|whats the point]]",
+			"no sense",
+			"I agree.\n\nYou know what, let's just stop wasting our time reading this incomprehensible nonsense, and find something else to do.\nYou got any ideas?\n\n[[Let's read something else.|good idea]]\n[[Let's write something even better than this, and put the idiot who wrote this to shame.|shameless plug]]",
 			[]
 		)
 	);
