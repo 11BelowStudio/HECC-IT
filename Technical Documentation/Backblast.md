@@ -265,24 +265,138 @@ The first choice the player is given here is how they will respond to Percival.
 This choice is ultimately meaningless, as, either way, the player will find
 themselves in the briefing room again, whether they like it or not. The
 intended effect is to establish that 'flight' (ie not going near the bomb)
-is not an option for the player, and that 'fight' (getting rid of the bomb)
-is the only feasible option they have.
-
-If the player opts to fight or hide from Percival, they will always fail. These
-options are here because, after the player got abandoned in the briefing room by
-Percival, the player may be feeling somewhat distrustful of him, and seek an
-escape from the bomb by escaping the person who brought them to it. However,
-Percival is the sort of character who, upon being given a job to do, will do it,
-and his job at this point in time is 'get the player to the briefing room'.
-The failures if the player chooses these options is supposed to make the player
-realize that, to survive, working against Percival isn't an option, so they
-will need to give Percival a reason to help them.
+is not a viable option for the player, and that 'fight' (getting rid of the bomb)
+is the only feasible option they have. However, I also wanted to establish
+that Percival isn't really seeking to harm the player (at least, not right now).
+If the player opts to fight Percival, I intentionally wrote it so Percival
+'won' simply by a fluke, not out of malice. Additionally, the futility of
+fighting Percival and hiding from Percival were foreshadowed in the 'previous'
+iteration of this scene (with Percival mentioning that he was allowed to knock
+the player out).
 
 The option to greet Percival instead is here to give an opportunity for the
 character of Percival to become a bit more fleshed-out (by giving the player
-an opportunity to interact with that character), 
+an opportunity to interact with that character), and for it to be established
+in more concrete terms that this is a different timeline to the first one.
+Percival acts surprised when you greet him (not knowing you, establishing
+that you have gone back to the first meeting), and is depicted slightly
+differently (establishing that this is a different timeline, via his hat
+being a different colour).
 
+When Percival escorts you to the briefing room, the player is presented
+with another slightly meaningful choice. They may either go with Percival,
+or they could run away (which the player probably would want to do).
+Staying with Percival is rewarded with an opportunity to find out a bit
+more about the facility/establish that things are definitely different
+(by acknowledging the hat), or have some other interaction with Percival
+Running away instead leads to the 'maze' section. Most of the routes in
+this section lead you back to Percival, in front of the briefing room,
+once again establishing that there is no point in trying to escape.
 
+The 'secret ending' in the maze section initially wasn't an ending.
+At first, the 'endless corridor' segment would end with the player turning
+around, getting knocked out, and finding themselves in front of Percival
+in the briefing room, just like the 'fight' and 'hide' choices. But this
+sequence of events made no sense within the context of the game, and was
+a bit of a waste of effort for the player considering how hidden it was.
+Therefore, I opted to turn this into a secret 'joke ending' instead.
+
+I added the part with the door, and I had considered making the player
+open the door, leading to a dog in a control room, like the 'dog ending'
+in *Silent Hill 2*. Then I realized that doing this would just be an
+overly blatant rip-off of that ending from *Silent Hill 2*. However,
+as I had already included a radio conversation in the 'no' ending
+that alluded to the letter at the start being a hoax, I decided to
+make this ending one where it was all just a prank. This ending, being
+accessed via a series of events that don't make sense, was never
+intended to make sense, and the narrative voice acknowledges this,
+and should leave the player with a sense of 'what the hell was that?'.
+To a player who wanted to escape, this does deliver them an escape,
+but the sheer confusion in this ending was intended to convey the fact
+that the player wasn't supposed to escape. I don't consider this ending
+to be canon (to any timeline), but it's a nice secret for the people
+who bungle their way through the 'maze' to reach it.
+
+Most players will eventually find themselves back in the briefing room.
+Again, because of the different timeline, Percival is in the room with
+them (and, if the player opted to try fighting/hiding from Percival,
+they will find themselves in front of a rather exhausted Percival).
+Once again, the player is not allowed to leave the room, even if they
+try to use that option, because Percival won't let them. This means
+that the only feasible option that the player has is to get rid of
+the projector (as previously instructed). The main reason why I chose
+to put Percival in this scene is firstly to make the player doubt
+any thoughts they may have had about Percival being the culprit (as
+no culprit would be stupid enough to put themselves in harm's way),
+but also to be able to see the player taking care of the projector,
+and to then ask the questions that would need to be asked here.
+
+As throwing the projector out of the window is the only viable course of action,
+the player will do that, despite Percival's expressions of utter confusion. By doing that,
+the player has arguably properly passed the threshold, and is now properly
+within the 'other world' of the Institution for Practical Parallelization.
+Unfortunately, just like the player may be feeling at this stage of the game,
+I too was stuck with a feeling of 'okay, what now?', as the player had just managed
+to avoid their first (of several) deaths.
+
+## The aftermath of the defenestration of the projector.
+
+This stage of the game went through a couple of revisions. At first, I decided that I would
+introduce a new character here; Susan. She would have been Percival's (long-suffering)
+supervisor, who would be introduced as a voice over the intercom to break the silence
+after the defenestration of that projector, summoning the percival and the player to her
+office, and then trying to work out why you (the player) felt the need to discard of the
+projector, and why Percival just stood there instead of doing anything about it. This would
+then have been followed by the player moving the conversation forward to the topic of the
+bomb (which neither of them would have known anything about), to the formulation of some
+sort of plan to work out what is going on.
+
+That idea was scrapped when I realized that Susan wasn't really serving a role that was entirely
+relevant to the plot, opened up several plot holes (how could someone who would have immediately
+known about the projector getting chucked somehow not know about someone planting bombs everywhere
+recently?), there was a rather awkward interval in which Percival escorts you to her office, and
+the questions she was asking could have been asked in a much more natural, and in a much more
+entertaining way, by Percival.
+
+At this stage, I used Percival as a tool to nudge the player's mindset in the 'right' direction
+regarding what just happened. The questions he asks the player about what just happened are there
+to offer the player an opportunity to rationalize what just happened in 'their' own words, and the
+player is also drip-fed a bit more exposition. The player has the option to accuse Percival of
+being the killer (by unsuccessfully trying to call a bluff when he's just repeating information
+that the player told him), which fails, which is intended to make the player think that they can
+trust Percival. There's a bit of exposition about the previous test subjects dying, which is
+intended to make the player know that they aren't actually safe, because there is someone who
+is out to get them. I decided to end this part by giving Percival a reason to want to keep the player
+alive (making him announce that someone's trying to get him fired by killing you), in turn giving the
+player a reason to trust Percival, and putting the player into the correct mindset for the next part:
+trying to work out who the killer is.
+
+## The 'main loop' area of the game
+
+The plan for this mirrored the initial concept I had for this game. The player would have a set of
+options available to them, leading to some more information about what's going on and the player's
+brutal demise. Once all of those 'paths' had been explored, the player would then know enough to be able
+to confront the antagonist, so they could then do that. But first, I would need to decide who the
+antagonist would be.
+
+Eventually, I came up with the character of Dr Cillian Spreewald; a researcher in the IPP, and you are
+here to be the test subject for an experiment of his. His name is a pun on the phrase 'killing spree',
+and was intended to be the sort of person who cares more about advancing his own understanding than
+any net sum of knowledge, has even more of a disregard for the concept of ethical approval than
+anyone else working in this facility, and almost definitely got the two letters in front of his name
+from a diploma mill. In other words, he's probably the sort of person one would expect to see getting up
+to some rather nefarious misadventures in pseudoscience.
+
+I decided to use Percival to explain to the player what the options are. I got Percival to establish that
+escape is not an option (due to the facility being on lockdown), so, even if a player did want to escape,
+they would understand why it is not presented as an option.
+
+The first option I wrote was the route where the player decides to wait out this lockdown in the room that
+they woke up in. This route doesn't lead to anything meaningful happening, besides Spreewald potentially
+getting mentioned, being able to find out a bit more exposition from Percival, and having the option to
+really annoy Percival. The death here is supposed to reinforce the idea that there isn't anywhere that
+the player could hide, and the note that accompanies the bomb is there to let the player know that the
+culprit wants to be found (thereby justifying the protagonist confronting the culprit later on).
 
 
 
