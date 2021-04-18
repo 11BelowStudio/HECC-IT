@@ -182,7 +182,7 @@ function getHECCED(){
 		new Passage(
 			"deja vu ambush",
 			"You hide in the blind spot from the door, waiting for Percival to open the door, so you can catch him off-guard.\n\n\"Subject C? Where are you?\"\n\nHe's entering the room.\n\nYou don't move a muscle.\n\nYou can see him walk past the door, looking for you within the main area of the room.\n\nHe doesn't know you're here. This is good.\n\nAll that's left is just creeping up behind him and [[kicking his high-vis behind into next Tuesday|deja vu ambush 2]].",
-			["noreturn"]
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -203,7 +203,7 @@ function getHECCED(){
 		new Passage(
 			"deja vu ambush 2",
 			"As you're preparing to beat him up, Percival casually turns around, to double-check that he actually was at the right room.\n\nAfter all, he is Percival. The man who follows every single instruction to the letter and never leaves any check on a checklist unchecked. Could he, Percival, have somehow made a mistake somewhere?\n\nHis eyes widen as he inadvertently notices you approaching him to beat him up.\n\nHe screams a very nasally scream, in panic.\n\nYou scream, panicking because he wasn't supposed to have seen you.\n\nHe panics, trying to defend himself.\n\nYou panic, trying to follow through on your planned ambush.\n\nHe fumbles around his high-vis vest and digs up a small black and yellow device, making a distinctive *zzzzt* noise.\n\nYou launch yourself at him, trying to take him down before he can fully comprehend what's happening.\n\n*zzzzt*\n\n[[Everything fades to black|BriefingRoom2-KO]]",
-			[]
+			["noretun"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -308,7 +308,7 @@ function getHECCED(){
 		new Passage(
 			"BriefingRoom2-1",
 			"The briefing room looks roughly identical to how it looked last time. It still looks like a small lecture hall, with a large window in the rear wall, and has a projector at the front, projecting the words '**YOUR ATTENTION, PLEASE**' onto the front wall.\n\nThe only differences this time are that Percival is in the room with you, and that the doors look like they can be opened from the inside.\n\nYou cast your mind back to what happened last time you were in this room.\n\nTwo immediately obvious courses of action spring to mind. Do you:\n[[Attempt to leave the room|BriefingRoom2-tryTheDoor]]\n[[Get rid of the projector before it does anything funny *again*|BriefingRoom2-2]]",
-			[]
+			["noreturn"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -350,7 +350,7 @@ function getHECCED(){
 		new Passage(
 			"deja vu silent treatment",
 			"The two of you continue walking in a somewhat awkward silence. You keep trying to look for anything that might help you to work out where you are, but, unfortunately for you, this rather long, straight, unsignposted corridor doesn't contain any information of any use to you.\n\nEventually, Percival stops, with a slightly triumphant \"Here we are!\".\n\nYou notice the words on the door he's stopped at.\n\n[[BRIEFING ROOM|BriefingRoom2 - entry]]",
-			["noreturn"]
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -399,21 +399,21 @@ function getHECCED(){
 		new Passage(
 			"deja vu been there already",
 			"He glances back at you, with a look of confusion.\n\n\"No, you haven't been there before. In fact, on this clipboard, I can tell you exactly where you *have* been before, as it's listed here in full.\"\n\nYou suspect that Percival's probably going to start saying the quiet part loud, and he definitely won't listen if you tell him that you've been in there before, so you think that it's in your best interests to just let him keep speaking instead of making a futile attempt to correct him.\n\n\"Let's see here... We received your response confirming your intent to participate here, so a subject retrieval team was sent to retrieve you, which they did. Whilst you were still unconscious, first thing that happened to you here was decontamination and being given that decontaminated outfit, after all, safety first. The science team did give you that serum they're testing, maybe you're disoriented because of that? I doubt it, personally. Anyway, after that, it says here that you were then moved to your room, where you woke up, and I was sent to escort you to the briefing room, which I'm doing now... Not entirely sure how you could have gone to the briefing room already...\"\n\nYour mind starts racing as you try to comprehend all the information Percival accidentally gave you. Retrieval? Decontamination? Injection?\n\nHowever, before you can properly think it through, Percival suddenly stops.\n\n\"Speaking of which...\"\n\nYou notice that he's stopped outside a door labelled with the words [[BRIEFING ROOM|BriefingRoom2 - entry]]",
-			["noreturn","beenthere","serum"]
+			["beenthere","serum"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
 			"deja vu new hat",
 			"Of course! That's why something looked odd about Percival! He was wearing a white hard hat last time, not a yellow one!\n\nBut Percival looks at you with a look of confusion.\n\n\"New hat? What are you talking about? I've always worn this yellow hard hat. {if:tAny(\"pedant\")}{Did they use a picture of me in a different hat in Pedantic Weekly that one time?}{else:Then again, this *is* the first time I've met you, so I guess you probably wouldn't have seen me in this before}\".\n\nThis response merely poses more questions than it does answers. But it does make you think of that conversation you heard on the radio about the Mandela Effect. Could you have somehow found yourself in a different timeline where certain specific details are just slightly different? Not that you'll have an opportunity to ask of course, as Percival suddenly stops and remarks \"We're here!\"\n\nThe door he's stopped at is labelled very clearly with the words [[BRIEFING ROOM|BriefingRoom2 - entry]].",
-			["noreturn","hat"]
+			["hat"]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
 			"deja vu whens lunch",
 			"You decide that asking when lunch is would be the best question to start with. May as well start with the easy questions so he lowers his defences, before giving him the really big questions.\n\nHe glances at his clipboard, muttering to himself \"Let's see here... lunch, lunch, lunch... when is it again... Aha!\"\n\nHe looks back at you, answering with \"Says here that you'll get lunch after we're done in the briefing room.\"\n\n*We're* done? That sounds different. Last time, he just left you in there.\n\n\"Speaking of which, looks like you won't need to wait that long for your lunch.\"\n\nAs he says this, he suddenly stops in front of a door. A door labelled with the words [[BRIEFING ROOM|BriefingRoom2 - entry]].",
-			["noreturn","lunch"]
+			["lunch"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -489,15 +489,15 @@ function getHECCED(){
 	theHeccer.addPassageToMap(
 		new Passage(
 			"BriefingRoom1-tryTheDoor",
-			"You rush to the door.\n\nBut, just like the door you used to leave the bedroom, there doesn't appear to be any way for it to be opened from the inside.\n\nThere's no signs of anyone outside, and, try as you might, the door won't budge.\n\n[[But the film continues to play|BriefingRoom1-5]].",
-			["noreturn"]
+			"You rush to the door.\n\nBut, just like the door you used to leave the bedroom, there doesn't appear to be any way for it to be opened from the inside.\n\nYou can't hear anyone outside, and, try as you might, the door won't budge.\n\n[[But the film continues to play|BriefingRoom1-5]].",
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
 		new Passage(
 			"BriefingRoom1-5",
 			"*\"Thing is, if you were going to be of any use to us, you would have done something else instead of sitting around and watching this cartoon. Oh well.\"*\n\nYou're taken by surprise at that almost-instruction.\n\n*\"But I suppose that those bikers had to get caught in the crash in order for them to be warned about it, didn't they?\"*\n\nBefore you can decipher that statement, you notice a very bright, very warm, flash coming from the projector.\n\nHeading straight towards you.\n\n[[And everything fades to white|movedElsewhere]].",
-			["noreturn","death","BriefingRoomDeath"]
+			["noreturn","BriefingRoomDeath"]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -1071,7 +1071,7 @@ function getHECCED(){
 		new Passage(
 			"A its percival",
 			"Percival interjects\n\n\"What!? What makes you think it's me!?\"\n\nThat is a very good question he's asked you.\n\n\"[[Well, who else has been close enough to me in order to kill me in every timeline?|PEnd nope framed]]\"\n{if:pAny(\"Archives about you\")}{\"[[Why would your name be put onto my file in a way that looks like it was overwriting someone else's name?|PEnd overwritten]]\"}{else:{if:pAny(\"Archives notebook 4\")/}{\"[[Why don't you ask Dr Albert what he meant by you 'acting rather suspicious'?|PEnd albert sus A]]\"/}}\n{if:pAny(\"Cafeteria eavesdrop\")}{\"[[Say, Dr Albert, aren't you supposed to be calling Dr Spreewald about me and Percival shortly?|PEnd A expecting call]]\"}",
-			["noreturn"]
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(
@@ -1085,7 +1085,7 @@ function getHECCED(){
 		new Passage(
 			"S its percival",
 			"Percival interjects\n\n\"What!? What makes you think it's me!?\"\n\nThat is a very good question he's asked you.\n\n\"[[Well, who else has been close enough to me in order to kill me in every timeline?|PEnd nope framed]]\"\n{if:pAny(\"Archives about you\")}{\"[[Why would your name be put onto my file in a way that looks like it was overwriting someone else's name?|PEnd overwritten]]\"}{else:{if:pAny(\"Archives notebook 4\")/}{\"[[Well, what do you think Dr Albert meant when he wrote something about you 'acting rather suspicious'?|PEnd albert sus S]]\"/}}\n{if:pAny(\"Cafeteria eavesdrop\")}{\"[[Say, Cillian, shouldn't you be getting a call right about now about me and Percival?|PEnd S expecting call]]\"}",
-			["noreturn"]
+			[]
 		)
 	);
 	theHeccer.addPassageToMap(

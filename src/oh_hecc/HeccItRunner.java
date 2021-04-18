@@ -160,13 +160,16 @@ public class HeccItRunner {
     void startEditingTheGameData(MVCGameDataInterface theGameData) {
         // creates the PassageModel
         final PassageModel editModel = new PassageModel(theGameData);
+        final ModelController theController = new ModelController(editModel, theFrame);
 
-        // basically repurposes theFrame for OH-HECC instead, also constructing a new View and ModelController en-route.
+        editModel.addMouseListener(theController);
+        editModel.addMouseMotionListener(theController);
+        editModel.addKeyListener(theController);
+
+        // basically repurposes theFrame for OH-HECC instead
         new OhHeccNetworkFrame(
                 theFrame,
-                //new View(editModel),
-                editModel,
-                new ModelController(editModel, theFrame)
+                editModel
         );
 
     }

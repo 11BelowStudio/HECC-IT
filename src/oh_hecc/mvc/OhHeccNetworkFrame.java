@@ -4,7 +4,10 @@ import utilities.ImageManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * This class holds the JFrame which holds the View object responsible for showing the Model to the user
@@ -71,12 +74,10 @@ public class OhHeccNetworkFrame {
      * Constructor that utilizes an existing JFrame and View instead, and calls all the setup stuff.
      * @param f the existing JFrame, which this object will commandeer and put the View object into
      * @param v the existing View object to put into that JFrame.
-     * @param mc the ModelController which has listeners that need to be added to the JFrame
      */
-    public OhHeccNetworkFrame(JFrame f, JComponent v, ModelController mc) {
+    public OhHeccNetworkFrame(JFrame f, JComponent v) {
         this(f);
         addTheView(v);
-        addTheModelController(mc);
         finishSetup();
     }
 
@@ -94,16 +95,6 @@ public class OhHeccNetworkFrame {
 
     }
 
-    /**
-     * Adds the ModelController to the frame
-     * (as a keylistener to the frame, and as mouse(motion)listener(s) to its content pane)
-     * @param mc the ModelController to be added
-     */
-    public void addTheModelController(ModelController mc){
-        theFrame.addKeyListener(mc);
-        theFrame.getContentPane().addMouseListener(mc);
-        theFrame.getContentPane().addMouseMotionListener(mc);
-    }
 
     /**
      * Finishes setting up the frame.
@@ -111,7 +102,8 @@ public class OhHeccNetworkFrame {
      */
     public void finishSetup(){
         theFrame.setSize(800,600);
-        theFrame.requestFocus();
+        //theFrame.requestFocus();
+        theView.requestFocus();
         theFrame.invalidate();
     }
 
