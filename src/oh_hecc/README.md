@@ -2,6 +2,15 @@
 
 These are the top-level classes for OH-HECC (and, by extension, HECC-IT).
 
+## Sub-packages
+
+* [/game_parts](./game_parts)
+    * The various passage/metadata/general game data classes used within OH-HECC.
+
+* [/mvc](./mvc)
+    * The model-view-controller classes used within OH-HECC
+    
+## Classes
 
 * [HeccItRunner](./HeccItRunner.java)
     * Basically the 'entry point' for the program. Holds the main method, and it's responsible
@@ -27,10 +36,5 @@ These are the top-level classes for OH-HECC (and, by extension, HECC-IT).
       `String toHecc()` method for that purpose.
       
 * [Parseable](./Parseable.java)
-    * yeah it just holds some regexes for passage names
+    * This just holds some regexes for passage names
     
-* [/game_parts](./game_parts)
-    * The various passage/metadata/general game data classes used within OH-HECC.
-    
-* [/mvc](./mvc)
-    * The model-view-controller classes used within OH-HECC

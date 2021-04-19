@@ -2,6 +2,14 @@
 
 Various model-view-controller-y classes used for the OH-HECC GUI
 
+## Sub-package
+
+* [model_bits](./model_bits)
+    * A package full of the objects that are shown in the `PassageModel`.
+    
+    
+## Classes
+
 * [OhHeccNetworkFrame](./OhHeccNetworkFrame.java)
     * This class is responsible for setting up the JFrame which holds the view of the editable
       OH-HECC passage model.
@@ -26,8 +34,6 @@ Various model-view-controller-y classes used for the OH-HECC GUI
     * An interface for the model that exposes a few methods which are used by a couple of the
       actual objects that are being modelled.
       
-* [model_bits](./model_bits)
-    * A package full of the objects that are shown in the `PassageModel`.
     
 * ~~[View](./View.java)~~
     * `@Deprecated`

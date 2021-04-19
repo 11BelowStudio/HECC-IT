@@ -32,5 +32,14 @@ HECC-IT itself had quite a few changes made to it, and these changes are discuss
 discussion on the testing and final product of HECC-IT, in the [Final version of HECC-IT](./final%20version%20of%20HECC-IT.md)
 document.
 
+For some more specific information regarding the HECC-IT codebase, please refer either to the JavaDoc-format
+documentation for the codebase (within the [../JavaDocs.zip](../JavaDocs.zip) folder), or, if you would prefer
+a very brief overview of what each class does, please refer to the package-level readmes within the [../src](../src)
+folder. 
 
 ## Part 3: *Backblast*
+
+With the tool produced, I used it to write the game *Backblast*. The development of *Backblast*, along with the
+thought process behind each part of it, and a brief discussion of how the final product failed to meet up to
+expectations, is discussed in full within the [Backblast.md](./Backblast.md) document. An overview of the
+structure of this game, as viewed by OH-HECC, can also be seen at the end of that document.

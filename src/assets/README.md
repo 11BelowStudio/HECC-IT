@@ -11,11 +11,12 @@ This is what each of the subfolders contain:
     * Holds the images used as the application icons etc. for HECC-IT (and HECC-UP, and OH-HECC).
         * Not critical to the performance of HECC-IT (but they certainly help to make it look a lot less unpolished)
 * [Text Assets](./textAssets/)
-    * Holds the premade .js and index.html files which are replicated in the output HECCIN' Game produced by HECC-UP.
+    * Holds the premade JavaScript and index.html files which are replicated in the output HECCIN' Game produced
+      by HECC-UP.
     * Specifically
         * heccer.js
             * replicated as-is in the output.
-            * this is effectively the 'production' version of heccer.js. I probably should minify it at some point.
+            * this is effectively the 'production' version of heccer.js.
                 * Development on heccer.js should be performed within and tested in the [src-js](../../src-js) folder instead.
         * showdown.min.js
             * replicated as-is in the output.
@@ -25,4 +26,6 @@ This is what each of the subfolders contain:
         * index.html
             * replicated almost as-is in the output, but it holds a few placeholder lines which are overwritten with some of the game-specific
             metadata by HECC-UP whilst as outputting it.
-    * The other files are not actually used.
+              
+    * The 'HeccSample.hecc' file in here is preserved here so I have an example .hecc file on hand if needed
+      for testing HECC-IT.

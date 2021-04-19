@@ -102,7 +102,6 @@ public class OhHeccNetworkFrame {
      */
     public void finishSetup(){
         theFrame.setSize(800,600);
-        //theFrame.requestFocus();
         theView.requestFocus();
         theFrame.invalidate();
     }

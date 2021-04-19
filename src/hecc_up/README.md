@@ -3,7 +3,12 @@
 This package contains the files and such that constitute HECC-UP (The HECC Ultra Parser).
 Basically, the bits that read in a .hecc file, and convert them into a playable game.
 
-## The classes and such here are:
+# Sub-package
+
+* [gameParts](./gameParts)
+    * This contains some of the game data classes that are/were used in HECC-UP.
+
+# Classes
 
 * [FolderOutputter](./FolderOutputter.java)
     * Responsible for actually outputting the heccin' game into a folder.
@@ -84,9 +89,6 @@ Basically, the bits that read in a .hecc file, and convert them into a playable 
       
     * 100% in console, 100% uninteractable, probably could just get rid of it tbh.
     
-
-* [gameParts](./gameParts)
-    * Some of the classes and such representing the game data, used in HECC-UP.
     
 * [HeccUpTests](./HeccUpTests.java)
     * Some unit tests for HECC-UP, to demonstrate that it does, in fact, work.
