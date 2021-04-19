@@ -28,7 +28,7 @@ in a separate document (which that main document does provide a link to).
 The [development of the remainder of OH-HECC](./MVP%20Development%20of%20OH-HECC.md) is also discussed
 in its own document, which is once again linked in the main document for this stage of development.
 
-# 4. [Development of the final version of HECC-IT](./Final%20version%20development.md) **//TODO**
+# 4. [Development of the final version of HECC-IT](./Final%20version%20development.md)
 
 This discusses the version of HECC-IT produced during term 2, along with the HECCIN' Game produced with
 HECC-IT.

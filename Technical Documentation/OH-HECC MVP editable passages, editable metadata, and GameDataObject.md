@@ -65,6 +65,8 @@ and a `JTextArea` in a `JScrollPane`. Each of these has a button underneath them
 made by the author to those fields. The bottom of the window has a button to exit the dialog.
 A screenshot of the window can be seen below:
 
+##### Figure 17: A screenshot of the metadata editor window:
+
 ![metadata editor window](./MVP%20development/data%20classes/metadata%20editor%20window/metadata%20editor%20window%20mvp.PNG)
 
 If an author attempts to put an invalid value into the 'author' and 'start passage' fields, the
@@ -74,12 +76,16 @@ explaining that it's invalid, what the expected valid input should contain, and,
 when this is dismissed, the value in that text field will be reset to its previous value. This can be
 seen below.
 
+##### Figure(s) 18: Screenshots to show the metadata editor window notifying the user about invalid metadata declarations
+
 ![metadata_editor_window_invalid](./MVP%20development/data%20classes/metadata%20editor%20window/metadata%20editor%20window%20mvp%20invalid.PNG)
 ![metadata_editor_window_author_invalid](./MVP%20development/data%20classes/metadata%20editor%20window/metadata%20editor%20window%20mvp%20invalid%20author.PNG)
 ![metadata_editor_window_start_invalid](./MVP%20development/data%20classes/metadata%20editor%20window/metadata%20editor%20window%20mvp%20invalid%20start.PNG)
 ![metadata_editor_window_title_invalid](./MVP%20development/data%20classes/metadata%20editor%20window/metadata%20editor%20window%20mvp%20invalid%20title.PNG)
 
 Finally, when closing the window, the user is warned that any unsaved changes will be lost.
+
+##### Figure 19: A screenshot of the warning about unsaved changes given by the metadata editor window
 
 ![metadata editor unsaved warn](./MVP%20development/data%20classes/metadata%20editor%20window/metadata%20close%20warn.PNG)
 
@@ -188,17 +194,23 @@ these values, as well as buttons to close the window and to delete the passage. 
 implemented entirely manually, and delegated the underlying logic to the `PassageEditingInterface`.
 This is what the window looked like:
 
+##### Figure 20: A screenshot of the passage editor window
+
 ![passage edit window](./MVP%20development/data%20classes/passage%20editor%20window/passage%20editor%20window.PNG)
 
 If the user attempted to enter a passage name which was invalid, the passage name text would turn
 red, and, upon attempting to submit it, they would be greeted with an error message pointing out
 that it was invalid (and the passage name will not actually be updated), like so:
 
+##### Figure(s) 21: Screenshots of the passage editor window warning a user about an invalid passage name
+
 ![invalid name](./MVP%20development/data%20classes/passage%20editor%20window/passage%20editor%20window%20invalid%20name.PNG)
 ![invalid name submit](./MVP%20development/data%20classes/passage%20editor%20window/passage%20editor%20window%20invalid%20name%20warning.PNG)
 
 Additionally, if an author attempts to rename a passage to be the same as the name of a passage which
 already exists, the passage will not be renamed, and will again complain to the user:
+
+##### Figure 22: Screenshot of the passage editor window warning a user about a duplicate passage name
 
 ![duplicate name](./MVP%20development/data%20classes/passage%20editor%20window/duplicate%20warn.PNG)
 
@@ -216,6 +228,8 @@ they can scroll up/down to keep seeing it all.
 Attempting to close the passage editor window will warn the author that anything they haven't saved
 will be lost, like so:
 
+##### Figure 22: Passage editor window warning the user about unsaved changes being discarded
+
 ![close warn](./MVP%20development/data%20classes/passage%20editor%20window/passage%20close%20warn.PNG)
 
 Finally, attempting to use the 'delete' button on the passage will inform the author that deleted
@@ -224,6 +238,8 @@ them again to confirm that they genuinely want it to be deleted. Upon receiving 
 the passage will be deleted. It will be removed from the map of passages, and any passages which
 contained a link to that passage will have that link removed (having a `! WAS DELETED !` appended to
 the end of the passage name in those links). The deletion process is shown below:
+
+##### Figure(s) 23: Passage editor window deletion process
 
 ![delet warn 1](./MVP%20development/data%20classes/passage%20editor%20window/delet%20warn.PNG)
 ![delet warn 2](./MVP%20development/data%20classes/passage%20editor%20window/delet%20warn%202.PNG)
@@ -384,10 +400,14 @@ and `AttributeString<T>` from the `utilities` package) have been omitted, for pu
 relationships between these classes clearer. (for more information about the `utilities` package, please
 refer to the package-level documentation for it, which can be read [here](../src/utilities/README.md))
 
+##### Figure 24: Full class diagram for the  OH-HECC data classes
+
 ![full component diagram](./MVP%20development/data%20classes/The%20component%20editing%20classes%20dependencies.png)
 
 Here is a more basic overview of the key interfaces and classes discussed earlier on, omitting the
 inner details (as those are in the above diagram), and some of the classes which are a bit less
 important in the overall structure:
+
+##### Figure 25: A more abstract overview of the OH-HECC data classes
 
 ![simpler component diagram](./MVP%20development/data%20classes/OH-HECC%20game%20data%20classes.png)

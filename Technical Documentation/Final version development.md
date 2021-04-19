@@ -7,7 +7,7 @@ experience), and created a proper hypertext game using HECC-IT.
 
 It was a rather eventful term, with more than a few setbacks (besides the usual 'a lot of other coursework').
 During week 21, [my ethernet cable got eaten so I needed to get a new one](https://cseejira.essex.ac.uk/browse/A301034-124),
-and then in week 25, [my dekstop's SSD died so I needed to get a replacement drive and reinstall the OS before I could use it again](https://cseejira.essex.ac.uk/browse/A301034-134).
+and then in week 25, [my desktop's SSD died so I needed to get a replacement drive and reinstall the OS before I could use it again](https://cseejira.essex.ac.uk/browse/A301034-134).
 However, due to my constant use of gitlab throughout the whole development process, none of the files for this
 project were lost, and I was able to get back to work on this project relatively easily (after a slight delay
 waiting for the replacement hardware to arrive and then getting these replacements installed/set up).

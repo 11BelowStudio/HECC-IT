@@ -100,6 +100,8 @@ All it needed to do was accept a .hecc file, accept a folder to output a game to
 the aforementioned game, and complain if appropriate. A recreation of the general idea I had at the
 time can be seen below:
 
+##### Figure 9: A sketch showing what the GUI of HECC-UP would look like
+
 ![hecc-up basic idea](./challenge%20week%20development/hecc%20up%20basic%20idea.png)
 
 I was considering hiding the button responsible for building the game until the .hecc file and the
@@ -115,6 +117,8 @@ attempting to parse the game.
 
 Eventually, the GUI was built, and looked like this:
 
+##### Figure 10: A screenshot of the challenge week iteration of HECC-UP
+
 ![Hecc-up GUI](./challenge%20week%20development/HECC-UP%20screenshot.PNG)
 
 It makes what the user is supposed to do, and what each part of the thing does, relatively obvious.
@@ -122,6 +126,8 @@ Yes, I will admit that the `HECC-IT!` button is a bit ambiguous, however, there 
 that it could really be, given the purpose of this program (creating a HECCIN' Game from a .hecc file).
 Upon attempting to simply `HECC-IT!` when the files haven't been selected, the user will be greeted
 by this warning:
+
+##### Figure 11: A screenshot of the warning message which appears if the files are not selected
 
 ![Hecc-up pls to select](./challenge%20week%20development/HECC-UP%20screenshot%20pls%20do%20the%20other%20stuff%20first.PNG)
 
@@ -134,6 +140,8 @@ Now, what happens when a game is parsed?
 If nothing supernatural happens when parsing a game, the log will report nothing going wrong, and
 that it was parsed successfully, like so:
 
+##### Figure 12: A screenshot of HECC-UP after successfully exporting a game
+
 ![Hecc-up success](./challenge%20week%20development/HECC-UP%20screenshot%20success.PNG)
 
 The game will now be playable at the output folder.
@@ -142,6 +150,8 @@ If the `.hecc` file has some undeclared metadata (but is otherwise completely va
 compile successfully, but the user will be warned about the problems encountered. The screenshot below
 shows the metadata warnings it can display, but I have manually resized the HECC-UP window to show
 all the potential metadata warnings on it in a single screenshot:
+
+##### Figure 13: A screenshot of HECC-UP notifying a user about metadata-related problems with their game
 
 ![Hecc-up no metadata](./challenge%20week%20development/HECC-UP%20screenshot%20success%20but%20pls%20metadata.PNG)
 
@@ -156,6 +166,8 @@ the defaults.
 
 Finally, what happens if a user gives an invalid .hecc file as an input? Simple. HECC-UP will complain,
 like so:
+
+##### Figure 14: A screenshot of HECC-UP after detecting an error in the .hecc file and refusing to export it
 
 ![Hecc-up complaining](./challenge%20week%20development/HECC-UP%20error%20detected.PNG)
 

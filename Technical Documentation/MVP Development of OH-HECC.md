@@ -6,6 +6,8 @@ As mentioned in the design section, I was planning on giving OH-HECC a model-vie
 architecture, similar to the one I have used in the past for a few other personal projects.
 That architecture can be seen below:
 
+##### Figure 26: The MVC architecture which I was planning to re-use for OH-HECC
+
 ![general MVC architecture](./MVP%20development/oh-hecc%20development/general%20MVC%20architecture.png)
 
 Everything would basically be in the same 'Packij' package (descriptive name, I know). The `GameFrame`
@@ -75,6 +77,8 @@ However, with this parser in action, I could now put together the MVC stuff for 
 ## 2.C: The Actual MVC architecture
 
 The initial plan for OH-HECC's MVC architecture looked something like this:
+
+##### Figure 27: The plan for OH-HECC's MVC architecture
 
 ![model bits v1](./MVP%20development/oh-hecc%20development/oh%20hecc%20model%20bits%20iteration%201.png)
 
@@ -374,6 +378,8 @@ anything else, so it would appear as if the start object has a blue highlight ar
 will allow the author to see what the current start object is, so, if the wrong passage is being used
 as the start passage, the author can easily see this, and will know that they need to fix it.
 
+##### Figure(s) 28: Some screenshots to show the basic functionality for OH-HECC
+
 Here is a screenshot of the OH-HECC passage model:
 
 ![oh-hecc screenshot](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot.PNG)
@@ -394,7 +400,7 @@ Here's a screenshot of what it looks like when a new passage is added to the pas
 
 ![oh-hecc screenshot new link](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20new%20link.PNG)
 
-And here's what it looks like when we delete `bob`, leaving `Right` with a deleted link:
+Here's what it looks like when we delete `bob`, leaving `Right` with a deleted link:
 
 ![oh-hecc screenshot deleted link](./MVP%20development/oh-hecc%20development/oh%20hecc%20screenshot%20deleted%20link.PNG)
 
@@ -411,6 +417,8 @@ ultimately rendered redundant as those activities generally fell under the umbre
 separate editing operations on the view at once, via switch statements in every 'receiving input'
 method, only performing certain actions in response to the input if the current activity allowed
 the activity to happen. Below is a full state machine of how exactly that worked:
+
+##### Figure 29: The 'CurrentActivity' logic within OH-HECC, expressed as a state machine
 
 ![PassageModel Activity State Machine](./MVP%20development/oh-hecc%20development/PassageModel%20Activity%20State%20Machine.png)
 
@@ -429,6 +437,8 @@ allowing them to simply copy and paste it into a new .hecc file manually. It isn
 solution to these sorts of problems, however, in the cases where this fallback has to be used instead
 of the normal save routine, 'elegance' is going to be the least of the user's concerns. A screenshot
 of this is below:
+
+##### Figure 30: OH-HECC's emergency save routine
 
 ![emergency save routine](./MVP%20development/oh-hecc%20development/mvp%20backup%20save%20method.PNG)
 
@@ -460,6 +470,8 @@ filepath of the currently-selected file (if any), a button to open a `JFileChoos
 
 Using the GUI designer, I was able to put together the 'ChooseFile' panel, which looked like this:
 
+##### Figure 30: The 'ChooseFile' panel
+
 ![ChooseFile panel](./MVP%20development/oh-hecc%20development/choosefile.PNG)
 
 I wasn't able to get both of the main panels in this to be the same size as each other without
@@ -489,6 +501,8 @@ and an author would probably prefer it if this check was performed sooner, rathe
 they're actually trying to save their .hecc file. Some screenshots of this validation in action are
 below:
 
+##### Figure(s) 31: The ChooseFile panel upon entering invalid metadata
+
 ![invalid author](./MVP%20development/oh-hecc%20development/choosefile%20bad%20author.PNG)
 
 ![invalid author pls to fix](./MVP%20development/oh-hecc%20development/choosefile%20bad%20author%20pls%20to%20fix.PNG)
@@ -499,6 +513,8 @@ The 'open existing hecc file' panel is much less interesting. It does exactly th
 'open hecc file' part of HECC-UP, asking the user to select a .hecc file. When one has been selected,
 it will show the selected .hecc file, and it will reveal the button which can be used to start editing
 that hecc file. This can be seen in the below screenshot:
+
+##### Figure 32: The ChooseFile panel after the user selects a .hecc file
 
 ![picked a file](./MVP%20development/oh-hecc%20development/choosefile%20selected%20file.PNG)
 
@@ -546,5 +562,7 @@ from a nearby directory).
 ## 2.E: The Long-Awaited Class Diagram
 
 Finally, here's a class diagram for the entirety of the MVP version of OH-HECC (and HECC-UP).
+
+##### Figure 33: A full class diagram for the entire MVP iteration of HECC-IT.
 
 ![chungus](./MVP%20development/big%20fat%20class%20diagram.png)

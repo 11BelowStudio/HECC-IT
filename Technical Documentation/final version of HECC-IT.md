@@ -112,6 +112,8 @@ These documented changes were as follows:
               size as each other.
               
             * This is what the updated `ChooseFile` looks like:
+        
+                * ###### Figure(s) 41: The updated version of the 'ChooseFile' panel
             
                 * ![choosefile not chosen](./final/hecc-it/menu.PNG)
     
@@ -168,7 +170,7 @@ These documented changes were as follows:
       and `;;`s. Both of these `\`s had to be escaped themselves to be put into the replacement
       string in the first place, which is why it looks like it inserts four `\`s in there.
       
-    * I unit-tested this by adding a test for this in the [`EditablePassageTest`](../src/oh_hecc/game_parts/passage/EditablePassageTest.java)
+    * I unit-tested this by adding a test for this in the [EditablePassageTest](../src/oh_hecc/game_parts/passage/EditablePassageTest.java)
       unit-test class, and it worked as expected, escaping the `;;`s and `::`s at the start of lines,
       and leaving any others untouched.
       
@@ -275,7 +277,7 @@ into a 'user experience' section, and a 'behind-the-scenes' section.
   done because I was sick and tired of seeing the generic default JFrame icons all the time.
     * These icons are image files, stored in [src/assets/imageAssets](../src/assets/imageAssets).
     * They are imported via `getResource` so they can be included in the final .jar, 
-      and are stored within [`utilities/ImageManager`](../src/utilities/ImageManager.java).
+      and are stored within [utilities/ImageManager](../src/utilities/ImageManager.java).
     * Specifically, they are stored in `List<Image>`s, because the `setIconImages` method of the
       `JFrame` class takes a list of `Image`s (and/or subclasses of `Image`s) as an argument, with
       this list consisting of icon images of different sizes, for use in different parts of the `JFrame`.
@@ -464,6 +466,8 @@ This is the fun part.
 
 The game data classes have been considerably rewritten.
 
+##### Figure 42: An updated class diagram for the game data classes
+
 ![game data classes](./final/hecc-it/the%20game%20data%20classes.png)
 
 HECC-UP's `Passage` class has been completely deprecated. Instead, I changed the `EditablePassage` class within
@@ -485,6 +489,8 @@ interface exists to be used within the recursive `getNamesOfAllNonOrphanPassages
 The `FolderOutputterMetadataInterface` is still present here, still in `src/hecc_up`, and is still only used by
 the `FolderOutputter`. The rest of these classes are all only used in the `OH_HECC` code. These can be seen
 below.
+
+##### Figure 43: A class diagram for the updated game data classes, showing dependencies
 
 ![oh hecc data classes](./final/oh-hecc/oh%20hecc%20data%20classes.png)
 
@@ -540,9 +546,15 @@ Below are some class diagrams, firstly one showing the inheritance-based connect
 the model_bits (with full details about them), then another one showing all all of the classes
 involved in the MVC side of things, and then another one showing the dependencies between them.
 
+##### Figure 44: A full class diagram for the 'model_bits' package (and a couple of related classes)
+
 ![model_bits full inheritance](./final/oh-hecc/model_bits%20inheritance%20details.png)
 
+##### Figure 45: A class diagram showing the inheritance-related relationships between the MVC classes
+
 ![mvc all inheritance](./final/oh-hecc/mvc%20classes%20inheritance.png)
+
+##### Figure 46: A class diagram showing the dependencies between all the MVC classes
 
 ![mvc all dependencies](./final/oh-hecc/mvc%20classes%20dependencies.png)
 
@@ -606,42 +618,42 @@ instead.
 
 Here is an overview of all the unit test classes I have:
 
-* [`hecc_up/gameParts/MetadataTests`](../src/hecc_up/gameParts/MetadataTests.java)
+* [hecc_up/gameParts/MetadataTests](../src/hecc_up/gameParts/MetadataTests.java)
     * Basically tests the `Metadata` class by providing it with some valid metadata .hecc code
       (ensuring that it is parsed as expected),
       some invalid metadata .hecc code (ensuring that everything remains at the default value),
       and some duplicate metadata declarations (ensuring that only the first declaration for
       each metadata field is read)
       
-* [`hecc_up/gameParts/VariableTests`](../src/hecc_up/gameParts/VariableTests.java)
+* [hecc_up/gameParts/VariableTests](../src/hecc_up/gameParts/VariableTests.java)
     * Ensures that the constructor for the `Variable` class works as expected. These tests
       are not very thorough, due to how not much progress was made on the `Variable` class,
       but they at least ensure that what is there does work as expected.
       
-* [`hecc_up/HeccUpTests`](../src/hecc_up/HeccUpTests.java)
+* [hecc_up/HeccUpTests](../src/hecc_up/HeccUpTests.java)
     * Tests some valid .hecc code, to see if it outputs the expected data from it. It also
       tests some invalid .hecc code (without a start passage, invalid passages, weird metadata,
       undefined passages, etc), to ensure that it responds appropriately to the invalid input.
       It also makes sure that any 'orphan' passages (inaccessible from the 'start' passage)
       are not present in the output.
       
-* [`oh_hecc/game_parts/passage/OutputtablePassageTest`](../src/oh_hecc/game_parts/passage/OutputtablePassageTest.java)
+* [oh_hecc/game_parts/passage/OutputtablePassageTest](../src/oh_hecc/game_parts/passage/OutputtablePassageTest.java)
     * It runs some basic tests on the `OutputtablePassage`'s constructor, to make sure it
       produces an appropriately constructed `OutputtablePassage` based on the inputs. Most
       of the functionality for this class was tested as part of the `HeccUpTests` instead.
       
-* [`oh_hecc/game_parts/metadata/EditableMetadataTests`](../src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)
+* [oh_hecc/game_parts/metadata/EditableMetadataTests](../src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)
     * Tests the `EditableMetadata`/`MetadataEditingInterface` class, mostly ensuring the
       constructor initialises the data held by this class correctly, ensuring the setters work
       (rejecting invalid inputs as well), and that the getters also work.
       
-* [`oh_hecc/game_parts/passage/EditablePassageTest`](../src/oh_hecc/game_parts/passage/EditablePassageTest.java)
+* [oh_hecc/game_parts/passage/EditablePassageTest](../src/oh_hecc/game_parts/passage/EditablePassageTest.java)
     * Tests the `EditablePassage`/`PassageEditingInterface` class, once again ensuring that the
       constructor initializes the object correctly, that the getters/setters work as expected
       (rejecting invalid inputs as well), and also that the setters which may update the passage
       map update it as expected.
       
-* [`oh_hecc/game_parts/GameDataObjectTests`](../src/oh_hecc/game_parts/GameDataObjectTests.java)
+* [oh_hecc/game_parts/GameDataObjectTests](../src/oh_hecc/game_parts/GameDataObjectTests.java)
     * Tests the `GameDataObject`. Because most of the large-scale updates for the passage map
       in response to a change in a single object happen in the `PassageEditingInterface`,
       the tests here mostly revolve around the `startUUID` UUID, which is supposed to
@@ -649,7 +661,7 @@ Here is an overview of all the unit test classes I have:
       update as appropriate, and that it can forcibly create a new start passage if one does not
       currently exist.
       
-* [`oh_hecc/OhHeccParserTest`](../src/oh_hecc/OhHeccParserTest.java)
+* [oh_hecc/OhHeccParserTest](../src/oh_hecc/OhHeccParserTest.java)
     * This tests the `OhHeccParser`. It makes sure a valid .hecc file is parsed correctly,
       ensures that any duplicate names are renamed with the suffix 'incrementing' as expected,
       makes sure that any named passages which are linked to but don't exist are created,
@@ -661,32 +673,46 @@ I created a custom 'run' configuration for this project, at [.idea/runConfigurat
 which does what it says on the tin and runs every single unit test class. The result
 of running these tests (with all of them passing) can be seen below:
 
+##### Figure 47: A screenshot showing that all of the aforementioned unit tests do pass
+
 ![every single test passed](./final/hecc-it/unitTestsPassed.PNG)
 
 ## 2.2: Some more screenshots of HECC-IT in action
 
 Here is a screenshot of OH-HECC in action, showing off some of the passage map for *Backblast*:
 
+##### Figure 48: A screenshot of OH-HECC in action
+
 ![oh hecc overview](./final/oh-hecc/screenshot%20of%20backblast.PNG)
 
 This is what it looks like when OH-HECC attempts to automatically reposition passages if none
 of them have been given a position (achieved via temporarily disabling the position reading code):
 
+##### Figure 49: A screenshot of the end result from the automatic passage positioning code
+
 ![oh hecc big pile of mess](./final/oh-hecc/backblast%20pile%20of%20mess.PNG)
 
 This is what it looks like if a passage is currently selected and is being moved in OH-HECC:
+
+##### Figure 50: A screenshot of a passage being highlighted whilst being moved
 
 ![oh hecc moving passage](./final/oh-hecc/moving%20a%20passage.png)
 
 This is what the passage editor window currently looks like:
 
+##### Figure 51: A screenshot of the final version of the passage editor window
+
 ![oh hecc passage editor windows](./final/oh-hecc/passage%20editor%20window.PNG)
 
 This is what the metadata editor window currently looks like:
 
+##### Figure 52: A screenshot of the final version of the metadata editor window
+
 ![oh hecc metadata editor](./final/oh-hecc/metadata%20editor%20window.PNG)
 
 Finally, this is what HECC-UP looks like:
+
+##### Figure 53: A screenshot of the final version of HECC-UP (with the file/output directory pre-selected)
 
 ![hecc up screenshot](./final/oh-hecc/hecc-up%20screenshot.PNG)
 
@@ -695,11 +721,17 @@ Finally, this is what HECC-UP looks like:
 Here is are some class diagrams with every single class (bar the deprecated ones/the unit test
 classes) present within HECC-IT on them. The first one shows just the inheritance-based
 relationships, the second one shows the dependency relationships, and the third one is just
-the inheritances again but has the inner details for every single class.
+the inheritances again but has the inner details for every single (non-deprecated and non-unit test) class.
+
+##### Figure 54: An inheritance class diagram for every single class in HECC-IT
 
 ![every single class inheritance](./final/hecc-it/src%20all%20classes%20inheritance.png)
 
+##### Figure 55: A dependency class diagram for every single class in HECC-IT
+
 ![every single class dependencies](./final/hecc-it/src%20all%20classes%20dependencies.png)
+
+##### Figure 56: An inheritance class diagram which also shows all of the methods/attributes, for every single class within HECC-IT
 
 ![every single class full details](./final/hecc-it/src%20all%20classes%20inner%20details.png)
 

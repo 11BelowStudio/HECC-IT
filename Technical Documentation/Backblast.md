@@ -759,7 +759,12 @@ instead of only recognizing them now.
 
 # An overview of *Backblast*'s passage map, as shown by OH-HECC.
 
+##### Figure 57: An overview of the structure of *Backblast*, as shown by OH-HECC.
+
 ![backblast overview](./final/backblast%20overview.png)
+
+Note: Because of the size of *Backblast*, the above image consists of 4 different screenshots of OH-HECC's
+preview of *Backblast*, edited together to form a single, continuous, image.
 
 
 # Citations

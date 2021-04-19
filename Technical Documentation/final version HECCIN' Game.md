@@ -70,6 +70,8 @@ what unit testing framework I could actually use for JavaScript, however, I even
 actually worked as intended. These preliminary unit tests can be seen in [src_js/tests for seen passages and tags.html](../src-js/tests%20for%20seen%20passages%20and%20tags.html),
 all of which passed as expected (see below).
 
+##### Figure 34: The first batch of unit tests for the HECCIN' Game all passing
+
 ![first tests](./final/heccin%20game/seen%20passages+tags%20unit%20tests%20working.PNG)
 
 I then created a subfolder, [src_js/showdown](../src-js/showdown) [2], which I then copied the existing
@@ -182,12 +184,16 @@ class before I attempted to test the conditional formatting, as the formatting w
 if the underlying logic was faulty. These unit tests can be seen [here](../src-js/checcerTests.html),
 and, eventually, they all passed as expected.
 
+##### Figure 36: The unit tests for the 'checcer' part of the HECCIN' Game all passing as expected
+
 ![checcerTests](./final/heccin%20game/checcer%20tests%20working.PNG)
 
 Eventually, I had this version of the heccer which supported conditional statements fully implemented.
 I then chose to unit test it, to see if it behaved as expected with conditional statements of varying
 degrees of stupidity, and these unit tests can be seen [here](../src-js/showdown/heccer%20conditional%20tests.html).
 It worked exactly as expected.
+
+##### Figure 37: The unit tests for the conditional formatting within the HECCIN' Game all passing as expected
 
 ![conditionalTests](./final/heccin%20game/conditionals%20working.PNG)
 
@@ -253,11 +259,16 @@ All that was left was to make a better game, using these new features. But first
 
 ## 1.2: Class diagrams of the improved HECCIN' Game
 
-Firstly, here's a class diagram showing the globals in the heccin' game.
+Firstly, here's a class diagram showing how the global variables in each file within the HECCIN' Game interact
+with each other:
+
+##### Figure 38: A class diagram showing the global variables within each file of the HECCIN' Game
 
 ![globals](./final/heccin%20game/globals.png)
 
 And here's a version of the class diagram with the important details included in it.
+
+##### Figure 39: A full class diagram for the final version of the HECCIN' Game
 
 ![final](./final/heccin%20game/final%20class%20diagram.png)
 
@@ -330,6 +341,8 @@ If you want to play `Countdown`, the files for it are  in [HECCIN Games/countdow
 and the `.hecc` file for it is present at [HECCIN Games/countdown/Countdown.hecc](../HECCIN%20Games/countdown/Countdown.hecc).
 Alternatively, it can be played as part of [The HECC-IT Demo](https://11belowstudio.itch.io/the-hecc-it-demo).
 An overview of `Countdown.hecc`, as shown by the final version of OH-HECC, can be seen below:
+
+##### Figure 40: *Countdown*, as presented by OH-HECC
 
 ![Countdown overview](./final/heccin%20game/countdown%20overview.PNG)
 

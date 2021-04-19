@@ -1,95 +1,12 @@
 # Designing HECC-IT
 
-## The background reading
+## A recap of the literature review.
 
-Before I designed HECC-IT, I looked at a range of existing hypertext game authoring tools, attempting to answer
-the following key questions for each of them:
-
-* How does it work?
-* How is it used?
-* What options does it give the user?
-* What features does it have?
-* What features doesn't it have?
-* How do the outputs work?
-
-The full list of tools I looked at were:
-
-* [ChoiceScript](https://www.choiceofgames.com/make-your-own-games/choicescript-intro/)
-* eHyperTool (*or, at very least, the specification of it, a copy of which was provided by Dr Bartle*)
-* [Inform](http://inform7.com/)
-* [Inklewriter](https://www.inklewriter.com/) and [Ink](https://www.inklestudios.com/ink/)
-* [Quest](https://textadventures.co.uk/quest/)
-* [Ren'Py](https://www.renpy.org/)
-* [Squiffy](https://textadventures.co.uk/squiffy)
-* [Storyspace](http://www.eastgate.com/storyspace/)
-* [TADS](https://www.tads.org/)
-* [Twine](https://twinery.org/)
-  * and [Twee2](https://dan-q.github.io/twee2/)
-* [Undum](https://idmillington.github.io/undum/)
-
-I also found out about the [Treaty of Babel](https://babel.ifarchive.org/babel_rev9.html) standard for interactive
-fiction bibliography when I was performing this research. Since then, the treaty was [revised](https://babel.ifarchive.org/babel_rev10.html)
-in January 2021, due to a couple of additional interactive fiction authoring tools becoming signatories to the treaty,
-and a few minor changes to a few details of the treaty.
-
-Full details about this research was within the 'literature review' part of the main project.
-In case you wanted to see some of the notes taken for this, they can be seen [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/tree/8e547d379531eca87cc5075382d1fecba2605693/Summer%20background%20preparation%20work/Research).
-
-However, this research was vital to shaping the overall vision I had for HECC-IT.
-
-## The outcomes of the reading
-
-One feature that stood out to me about (almost) all of these tools was the fact that they were all presented either in
-the form of a GUI, or in the form of 'please write some raw code, there may or may not be an IDE'. None of the tools
-gave the author the ability to freely decide whether or not they wanted to use a GUI or raw source code, generally
-requiring the author to exclusively use the GUI or exclusively write raw code. And, of those which offered the author
-the ability to change their mind, it always came with a caveat.
-
-Here's a breakdown of how these tools are categorized, and, for those with the 'flexibility', what the caveat is:
-
-* GUI only
-    * eHyperTool
-    * Quest
-    * Storyspace
-    
-* Raw code/IDE only
-    * ChoiceScript
-    * Inform
-    * Ren'Py
-    * Squiffy
-    * TADS
-    * Undum
-
-* The ones with a caveat
-    * Inklewriter + Ink
-        * Inklewriter is the GUI, but
-            * You have to use it on the Inklewriter website (no download option)
-            * You need an account on the website in order to save/export/download your work/open work from `.ink`
-            * To open it with 'Ink', it needs to be converted into `.ink` code
-                * And there's no guarantee that the converter will work successfully
-        * Ink is the IDE for 'raw code', but
-            * To open your `.ink` file via Inklewriter, you need to export it as a .json file first
-                * And uploading that .json file on Inklewriter to continue work on it (or to just preview it) requires
-                  an account on the Inklewriter website
-                  
-        * In short, it's a bit of a faff trying to convert between the two, and you can't use the GUI if you're not
-          connected to the internet and/or don't want to make an account on the website.
+In case you wanted a recap of what I found out during the research I performed on the tools,
+a short summary of them can be read in the [recap of the literature review](./recap%20of%20the%20literature%20review.md)
+document.
           
-    * Twine + Twee2
-        * Twine is the GUI
-            * This is effectively self-contained.
-    
-        * Twee2 is the raw code, but
-            * You need to use the command line to convert from Twee2 code to Twine format (allowing it to be played)
-                * This is offputting for casual users who don't want to use the command line.
-            * You can decompile a Twine .html file into Twee2 code
-                * This, again, requires use of the command line
-                * This functionality is not available to users who are on Windows.
-    
-        * You need to faff around with the command line to convert between the two, and is only a one-way conversion
-          on Windows.
-          
-From this, I have been able to identify a pretty clear gap in the market; There is no hypertext game authoring system
+As explained earlier, I found an obvious gap in the market; There is no hypertext game authoring system
 which allows a writer the flexibility to freely choose between raw code and a GUI. Suppose a writer wants to write a
 game using a system that allows them to have a graphical overview of the game they're writing; They must commit to
 using a GUI-based tool, and, even if they want to make a rather small change somewhere, they need to go through the
@@ -203,9 +120,13 @@ to be separate files, mostly for ease of maintainability when writing them.
 Eventually, I produced this overcomplicated diagram,
 as a plan for how this system would work, with all the names in it as well:
 
+##### Figure 1: HECC-IT components and their interactions
+
 ![HECC-IT component interactions verbose](./design%20images/HECC-IT%20component%20interactions%20overview%20verbose.png)
 
 A simpler version of that diagram was produced later on:
+
+##### Figure 2: An abstracted overview of the HECC-IT components
 
 ![HECC-IT component interactions simpler](./design%20images/HECC-IT%20component%20interactions%20overview%20simpler.png)
 
@@ -344,9 +265,13 @@ or implementing the initially planned support for variables.
 
 Here is a diagram of the inner workings of the first version of the heccin' game:
 
+##### Figure 3: A class diagram for the first version of the HECCIN' Game
+
 ![Class diagram of the first version of the heccin' game](./design%20images/heccin%20game%20v1.png)
 
 Here's how it loads passages
+
+##### Figure 4: A Sequence Diagram showing the process by which passages are displayed to the player
 
 ![Loading passages in the first version of the heccin' game](./design%20images/heccin%20game%20v1%20passage%20loading%20process.png)
 
@@ -355,6 +280,8 @@ Here's how it loads passages
 This seemed like the best part of the tool to start working from.
 
 There was a rather simple process which HECC-UP would need to complete, which went as follows:
+
+##### Figure 5: The HECC-UP parsing process as a flowchart
 
 ![HECC-UP workflow process](./design%20images/hecc%20up%20process.png)
 
@@ -371,6 +298,8 @@ procedural, had no encapsulation, was very disorganized, and was generally not g
 to significantly refactor it before I could justify releasing it as a MVP.
 
 Eventually, I chose to refactor it to have a structure like the structure in the following class diagram:
+
+##### Figure 6: A class diagram for HECC-IT
 
 ![HECC-UP refactored class diagram](./design%20images/hecc%20up%20v1%20classes.png)
 
@@ -400,6 +329,8 @@ appearance off the appearance of Twine, with a network of connected passages, cl
 passages were connected to which other passages. A very crude picture of this initial idea can be
 seen below:
 
+##### Figure 7: A sketch of what OH-HECC would look like.
+
 ![oh-hecc basic idea](./design%20images/oh%20hecc%20basic%20idea.png)
 
 The rectangles with the words 'bob' and 'dylan' in them are supposed to be passages (called 'bob' and
@@ -421,6 +352,8 @@ the .hecc files to exist in the first place.
 
 Eventually, I came up with a first idea for how OH-HECC could work, and it had a structure along the
 lines of this:
+
+##### Figure 8: A class diagram with the initial idea for OH-HECC's architecture
 
 ![oh_hecc initial idea](./design%20images/initial%20idea%20for%20OH-HECC.png)
 

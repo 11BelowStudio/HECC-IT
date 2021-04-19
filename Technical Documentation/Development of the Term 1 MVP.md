@@ -12,6 +12,8 @@ to maintain later on.
 
 Here's a diagram to summarize the initial changes made to HECC-UP
 
+##### Figure 15: A class diagram to show the changes made to HECC-UP's architecture
+
 ![HECC-UP initial improvements](./MVP%20development/HECC-UP%20improvements.png)
 
 The HeccCeptions have been omitted from this diagram, as well as most of the internal methods (and a few
@@ -77,6 +79,8 @@ Within the HECCIN' Game, I was planning to store these variables in a map of Str
 and `Any`s (the actual values). Specifically, I was planning on having several maps; each `GameState`
 in the `GameStateStack` would hold an archive of the state of the variables at that point in time, as
 shown in the below diagram:
+
+##### Figure 16: A class diagram to show how the variables would have been handled at runtime by the HECCIN' Game
 
 ![how variables would have been stored](./MVP%20development/planned%20state%20stack%20variable%20stuff.png)
 
