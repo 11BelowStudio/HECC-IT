@@ -192,7 +192,7 @@
                 -> IDofWhereItLeadsTo
               ```
                 * starting with '*' means the option doesn't reappear after being chosen
-        * 'diverts' to other stiches
+        * 'diverts' to other stitches
             * ```-> stitchThatThisDivertsTo```
         * Declaring that this is the end
             * ```-> END```
