@@ -1,6 +1,6 @@
-# Development of the MVP version of OH-HECC
+# 3.2.2: Development of the MVP version of OH-HECC
 
-## 2.A: The basis for OH-HECC's architecture
+## 3.2.2.A: The basis for OH-HECC's architecture
 
 As mentioned in the design section, I was planning on giving OH-HECC a model-view-controller
 architecture, similar to the one I have used in the past for a few other personal projects.
@@ -41,7 +41,7 @@ running a 'model editor', and reading the model's current state from/writing the
 
 On the topic of reading the state from/writing the state to a .hecc file...
 
-## 2.B: The OhHeccParser.
+## 3.2.2.B: The OhHeccParser.
 
 I would need to first work out how I would turn the .hecc file into the map of `PassageEditingInterface`
 objects and the `MetadataEditingInterface` object.
@@ -74,7 +74,7 @@ aren't very exhaustive.
 
 However, with this parser in action, I could now put together the MVC stuff for the data it had parsed
 
-## 2.C: The Actual MVC architecture
+## 3.2.2.C: The Actual MVC architecture
 
 The initial plan for OH-HECC's MVC architecture looked something like this:
 
@@ -452,7 +452,7 @@ Now, with the main editing GUI of OH-HECC done, there was just the problem of ho
 open OH-HECC to edit their .hecc files (and yes, the class diagram for OH-HECC will be shown after
 that last part)
 
-## 2.D: ChooseFile and OhHeccRunner
+## 3.2.2.D: ChooseFile and OhHeccRunner
 
 I knew I needed a GUI which could be used to create a new .hecc file, or select an existing .hecc file,
 which could then be opened in OH-HECC. So, I started to create one, planning on effectively repurposing
@@ -543,7 +543,7 @@ doing it in the event handling thread, just in case it takes a long time to pars
 (which could be an issue if it's a very long .hecc file), so the entire program doesn't freeze in the
 meantime.
 
-## 2.F: Some last minute changes to HECC-UP
+## 3.2.2.E: Some last minute changes to HECC-UP
 
 It was at this point when I found out that, when I was creating the regexes for OH-HECC, I
 accidentally made HECC-UP's hecc parsing somewhat incompatible with OH-HECC's (meaning that a .hecc
@@ -559,7 +559,7 @@ been chosen, the `JFileChooser` would start from that currently selected file, i
 to the default directory, just in case the user wanted a different file from that same directory (or
 from a nearby directory).
 
-## 2.E: The Long-Awaited Class Diagram
+## 3.2.2.F: The Long-Awaited Class Diagram
 
 Finally, here's a class diagram for the entirety of the MVP version of OH-HECC (and HECC-UP).
 

@@ -1,6 +1,6 @@
-# Designing HECC-IT
+# 1. Designing HECC-IT
 
-## A recap of the literature review.
+## 1.1: A recap of the literature review.
 
 In case you wanted a recap of what I found out during the research I performed on the tools,
 a short summary of them can be read in the [recap of the literature review](./recap%20of%20the%20literature%20review.md)
@@ -17,7 +17,7 @@ it should be), they can't.
 
 HECC-IT is intended to fill this niche.
 
-## The vision for HECC-IT
+## 1.2: The vision for HECC-IT
 
 * Work-in-progress games are to be stored in a high-level intermediate scripting language, which can
   be edited manually by a user with ease.
@@ -41,7 +41,7 @@ HECC-IT is intended to fill this niche.
 
 GUI editor (if the user wants to use it) <-> intermediate code -> playable game
 
-### The name
+### 1.2.1: The name
 
 With that done, I needed to come up with a name; after all, if this tool didn't have a name, talking about it would
 be a pretty difficult task. I knew I wanted to give it a pretty stupid name, partially because it would be attention-
@@ -90,7 +90,7 @@ Here are all the names I considered at one point in pre-development:
             * Another benefit of this is that *it's usable as an expletive* (in the grammatical sense)
     * So I went with this.
     
-### The components
+### 1.2.2: The components
 
 As mentioned earlier on, I was planning on producing this as a set of components.
 Now that I had a name I could use as a starting point for naming these components, I was able to start to properly
@@ -156,7 +156,7 @@ This what everything would need to do:
 
     
 
-## 'But how will the .hecc format work?'
+## 1.3: 'But how will the .hecc format work?'
 
 This question is actually deeper than something like 'what is the syntax'. This is also a question about how the
 games produced with HECC-IT would be structured.
@@ -249,9 +249,9 @@ I also decided that specification for the HECC language was to be called the '*H
 *HECC Super Precise Explanation For Creating Code*), partially because I wanted to be extra, and also
 to remain on-brand and such with the rest of *HECC-IT*.
 
-## Designing the inner workings of each part of HECC-IT
+## 1.4: Designing the inner workings of each part of HECC-IT
 
-### The outputs
+### 1.4.1: The outputs
 
 Again, I started with the outputs first, and worked my way back from there.
 The design itself was jotted down rather crudely on a markdown file, which can be read [here](../Summer%20background%20preparation%20work/Planning/How%20the%20HECCER%20module%20will%20work.md).
@@ -275,7 +275,7 @@ Here's how it loads passages
 
 ![Loading passages in the first version of the heccin' game](./design%20images/heccin%20game%20v1%20passage%20loading%20process.png)
 
-### HECC-UP
+### 1.4.2: HECC-UP
 
 This seemed like the best part of the tool to start working from.
 
@@ -322,7 +322,7 @@ documentation covering the development of HECC-UP.
 
 On that note, I should probably cover OH-HECC.
 
-### OH-HECC
+### 1.4.3: OH-HECC
 
 The first thing I considered was how OH-HECC would look like to a user. I decided to base the overall
 appearance off the appearance of Twine, with a network of connected passages, clearly showing which

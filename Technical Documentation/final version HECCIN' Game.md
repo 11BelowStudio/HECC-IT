@@ -1,6 +1,6 @@
-# The Improvements to the HECCIN' Game
+# 4.1: The Improvements to the HECCIN' Game
 
-## 1.1: Improving the HECCIN' Game
+## 4.1.1: Improving the HECCIN' Game
 
 The HECCIN' Game had remained mostly untouched since the prototype version, which had been produced
 over the summer, so, I decided to put some more work into it. Before this term started, I was planning
@@ -257,7 +257,7 @@ the HECCIN' Game within the `<title></title>` HTML tags for `index.html`.
 
 All that was left was to make a better game, using these new features. But first, some class diagrams.
 
-## 1.2: Class diagrams of the improved HECCIN' Game
+## 4.1.2: Class diagrams of the improved HECCIN' Game
 
 Firstly, here's a class diagram showing how the global variables in each file within the HECCIN' Game interact
 with each other:
@@ -277,7 +277,7 @@ through the use of passages (and their tags) and the conditional statements, it 
 for an author to create a game which 'remembers' what a player has done, and to give them different
 options appropriately.
 
-## 1.3: *Countdown*
+## 4.1.3: *Countdown*
 
 As mentioned earlier, I was thinking of creating a hypertext game that involved timeloops in some way,
 and that the player was supposed to try preventing a certain thing from happening, being sent back to
@@ -352,7 +352,7 @@ overall development process, and being used to produce yet another game, *Backbl
 be discussed further on. With this in mind, I suppose I should move on to discussing the improvements
 made to the tool component of HECC-IT itself, before finally discussing *Backblast*.
 
-## 1.4: Citations
+## 4.1.4: Citations
 
 [1] OpenJS Foundation, “QUnit,” Qunitjs.com. [Online]. Available: https://qunitjs.com/ [Accessed: 19-Jan-2021].
 

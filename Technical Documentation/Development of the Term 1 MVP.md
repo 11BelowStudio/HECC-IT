@@ -1,4 +1,4 @@
-# Development of the Term 1 MVP
+# 3. Development of the Term 1 MVP
 
 During the latter 9 weeks of Term 1, I was continuing development on the minimal viable product for
 HECC-IT, but this time, with emphasis on the 'viable'. The main improvement made in this stage was the
@@ -8,7 +8,7 @@ well.
 The first part of this stage of development was to clean up HECC-UP a bit, mostly to make it easier
 to maintain later on.
 
-# Improving HECC-UP
+# 3.1: Improving HECC-UP
 
 Here's a diagram to summarize the initial changes made to HECC-UP
 
@@ -101,9 +101,9 @@ with just a comment, and without variable/comment. Those tests can be seen [here
 
 On a less negative note, I should probably cover the development of OH-HECC now.
 
-# Developing OH-HECC
+# 3.2 Developing OH-HECC
 
-## Part 1: Editable passages, editable metadata, and the GameDataObject
+## 3.2.1: Editable passages, editable metadata, and the GameDataObject
 
 The first part of OH-HECC to be created were the classes which would store the passages that
 constitute the game as well as the metadata of the game in a way that would allow them to be edited.
@@ -120,7 +120,7 @@ when the MVP was finished. It's in a separate document to this one because it is
 After `EditableMetadata` and `EditablePassage` classes were implemented, I proceeded to start
 developing the OH-HECC tool itself.
 
-## Part 2: Developing the Optional Help for HECC
+## 3.2.2: Developing the Optional Help for HECC
 
 The remainder of the development of OH-HECC involved the production of the actual 'editor' part of
 it.
@@ -134,7 +134,7 @@ of OH-HECC work.
 
 However, at the end of this process, I had a functional minimum viable product.
 
-## The final Minimum Viable Product
+# 3.3 The final Minimum Viable Product
 
 [Here is the Term 1 MVP release](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/releases/2.0-MVP).
 

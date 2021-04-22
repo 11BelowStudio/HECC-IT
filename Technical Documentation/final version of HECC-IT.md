@@ -1,10 +1,10 @@
-# The Improvements to HECC-IT
+# 4.2: The Improvements to HECC-IT
 
 Over term 2, I made several improvements to HECC-IT, with these changes being a mix of 'fully planned
 out and documented' improvements, and some being 'realizations of a better way of doing things whilst
 working on something else'.
 
-## 1.1: The Planned Stuff
+## 4.2.1: The Planned Stuff
 
 I didn't really document much on Jira that I explicitly set out to improve with HECC-IT itself, in fact,
 the vast majority of the improvements that I made on it were 'spur of the moment' changes, made whilst
@@ -249,7 +249,7 @@ input field and some JButtons that could be used to navigate through the 'result
 solution would have been a bit too unwieldy for an author to want to use it, and the author would
 probably be able to find it a bit more efficiently if they were to just look at the .hecc file itself.
 
-## 1.2 The undocumented changes to HECC-IT.
+## 4.2.2 The undocumented changes to HECC-IT.
 
 The other improvements to HECC-IT were not explicitly created as issues on Jira, but, instead,
 were mostly made as spur-of-the-moment changes, whilst working on another task (with many usability-
@@ -257,7 +257,7 @@ related improvements being made during the creation of *Backblast*, and several 
 realized how to do this/found a better way of doing this'). Therefore, I have divided this section
 into a 'user experience' section, and a 'behind-the-scenes' section.
 
-### 1.2.1: HECC-IT User Experience
+### 4.2.2.1: HECC-IT User Experience
 
 * Changed the `done` ('Save and Exit') buttons at the bottom of the `PassageEditorWindow` and
   `MetadataEditorWindow` to save the updated inputs into the `PassageEditingInterface` and
@@ -458,11 +458,11 @@ the inner workings of HECC-IT much more efficient (using more interfaces instead
 re-declaring every single local variable which was not modified after declaration as `final`, omitting several
 methods that went unused, etc.) but that's probably more suitable for the next section.
 
-### 1.2.2: HECC-IT behind the scenes
+### 4.2.2.2: HECC-IT behind the scenes
 
 This is the fun part.
 
-#### 1.2.2.1: The overall architecture
+#### 4.2.2.2.A: The overall architecture
 
 The game data classes have been considerably rewritten.
 
@@ -593,7 +593,7 @@ When obtaining the positions of the passages for working out where the boundary 
 viewport scrolling should be, an iterator of type `? extends ObjectWithAPosition` is used.
 
 
-#### 1.2.2.2 Subtle improvements to HECC-UP
+#### 4.2.2.2.B Subtle improvements to HECC-UP
 
 During the MVP iterations of the product, HECC-UP would read the prebaked `index.html`
 and `heccer.js` files as `static final List<String>`s, which would be iterated through when
@@ -612,9 +612,9 @@ entry in the list to see if it matched a placeholder string exactly and replacin
 there. Finally, the button at the bottom of HECC-UP, used to export the game, now says 'HECC-UP!'
 instead.
 
-# Part 2 2: The other things that probably deserve a mention
+# 4.2.3: The other things that probably deserve a mention
 
-## 2.1: Unit Tests
+## 4.2.3.1: Unit Tests
 
 Here is an overview of all the unit test classes I have:
 
@@ -677,7 +677,7 @@ of running these tests (with all of them passing) can be seen below:
 
 ![every single test passed](./final/hecc-it/unitTestsPassed.PNG)
 
-## 2.2: Some more screenshots of HECC-IT in action
+## 4.2.3.2: Some more screenshots of HECC-IT in action
 
 Here is a screenshot of OH-HECC in action, showing off some of the passage map for *Backblast*:
 
@@ -716,7 +716,7 @@ Finally, this is what HECC-UP looks like:
 
 ![hecc up screenshot](./final/oh-hecc/hecc-up%20screenshot.PNG)
 
-## 2.3: A Full Class Diagram
+# 4.2.4: A Full Class Diagram
 
 Here is are some class diagrams with every single class (bar the deprecated ones/the unit test
 classes) present within HECC-IT on them. The first one shows just the inheritance-based

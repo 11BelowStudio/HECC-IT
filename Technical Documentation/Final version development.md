@@ -1,4 +1,4 @@
-# Term 2 - Developing the final version of HECC-IT
+# 4: Term 2 - Developing the final version of HECC-IT
 
 During term 2, I made several improvements to the HECCIN' Game (such as adding support for markdown
 formatting, conditional statements, and general code cleanup), made some improvements to HECC-IT itself
@@ -12,7 +12,7 @@ However, due to my constant use of gitlab throughout the whole development proce
 project were lost, and I was able to get back to work on this project relatively easily (after a slight delay
 waiting for the replacement hardware to arrive and then getting these replacements installed/set up).
 
-## Part 1: The improvements to the HECCIN' Game
+## 4.1: The improvements to the HECCIN' Game
 
 One of the first things I did during term 2 was start making improvements to the HECCIN' Game itself,
 such as adding support for markdown formatting and conditional statements. The discussion of these
@@ -26,7 +26,7 @@ Once that was done, I started to work on some improvements to HECC-IT and writin
 Game, with both of these tasks being mostly performed concurrently. However, in this report, I shall
 start by discussing the further work on HECC-IT.
 
-## Part 2: The improvements to HECC-IT
+## 4.2: The improvements to HECC-IT
 
 HECC-IT itself had quite a few changes made to it, and these changes are discussed, along with
 discussion on the testing and final product of HECC-IT, in the [Final version of HECC-IT](./final%20version%20of%20HECC-IT.md)
@@ -37,7 +37,7 @@ documentation for the codebase (within the [../JavaDocs.zip](../JavaDocs.zip) fo
 a very brief overview of what each class does, please refer to the package-level readmes within the [../src](../src)
 folder. 
 
-## Part 3: *Backblast*
+## 4.3: *Backblast*
 
 With the tool produced, I used it to write the game *Backblast*. The development of *Backblast*, along with the
 thought process behind each part of it, and a brief discussion of how the final product failed to meet up to

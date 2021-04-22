@@ -1,4 +1,4 @@
-﻿# A recap of the literature review
+﻿# 1.1.1: A recap of the literature review
 
 Before I designed HECC-IT, I looked at a range of existing hypertext game authoring tools, attempting to answer
 the following key questions for each of them:
@@ -13,7 +13,7 @@ the following key questions for each of them:
 The full list of tools I looked at were:
 
 * [ChoiceScript](https://www.choiceofgames.com/make-your-own-games/choicescript-intro/)
-* eHyperTool (*or, at very least, the specification of it, a copy of which was provided by Dr Bartle*)
+* eHyperTool (or, at very least, the specification of it, a copy of which was provided by Dr Bartle)
 * [Inform](http://inform7.com/)
 * [Inklewriter](https://www.inklewriter.com/) and [Ink](https://www.inklestudios.com/ink/)
 * [Quest](https://textadventures.co.uk/quest/)
@@ -35,7 +35,7 @@ In case you wanted to see some of the notes taken for this, they can be seen [he
 
 However, this research was vital to shaping the overall vision I had for HECC-IT.
 
-## The outcomes of the reading
+# 1.1.2: The outcomes of the reading
 
 One feature that stood out to me about (almost) all of these tools was the fact that they were all presented either in
 the form of a GUI, or in the form of 'please write some raw code, there may or may not be an IDE'. None of the tools
@@ -79,7 +79,7 @@ Here's a breakdown of how these tools are categorized, and, for those with the '
 
         * Twee2 is the raw code, but
             * You need to use the command line to convert from Twee2 code to Twine format (allowing it to be played)
-                * This is offputting for casual users who don't want to use the command line.
+                * This could be rather offputting for casual users, who may not want to use the command line.
             * You can decompile a Twine .html file into Twee2 code
                 * This, again, requires use of the command line
                 * This functionality is not available to users who are on Windows.
@@ -87,3 +87,8 @@ Here's a breakdown of how these tools are categorized, and, for those with the '
         * You need to faff around with the command line to convert between the two, and is only a one-way conversion
           on Windows.
           
+
+Several other features were identified as being desirable (such as having the games produced by the tool be
+in .html format, incorporating a 'history' of visited nodes allowing a 'back' button to work, and some variety
+of internal 'state' to turn the hypertext into more of a 'game'), however, as most of these concerned the
+outputs in particular, these were all secondary in terms of the overarching design of the tool.

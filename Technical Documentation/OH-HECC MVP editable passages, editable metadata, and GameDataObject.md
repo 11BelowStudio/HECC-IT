@@ -1,4 +1,4 @@
-# Editable passages, editable metadata, and the GameDataObject
+# 3.2.1 Editable passages, editable metadata, and the GameDataObject
 
 The first part of OH-HECC I worked on was how to edit the metadata and edit the passages. I didn't want
 to break HECC-UP when doing this, however, so I decided to create some separate `EditableMetadata` and
@@ -9,7 +9,7 @@ around to performing this merge of the passages and metadata classes, unfortunat
 quantity of classes and interfaces involved, I'll be putting the automatically-generated class diagram
 for these classes at the end of this section.
 
-## 1.A: Editable Metadata
+## 3.2.1.A: Editable Metadata
 
 I started by creating an `EditableMetadata` class, followed by some unit tests for it ([here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/MVP-Archived/src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)),
 which worked as intended. This class was intended to hold the same metadata as the HECC-UP Metadata
@@ -97,7 +97,7 @@ state of the metadata object to the console. I used this to informally check whe
 worked as expected, and, as far as I could tell, it worked. With this done for the time being,
 I could move on to the passages.
 
-## 1.B: Editable Passage
+## 3.2.1.B: Editable Passage
 
 One of the first questions that popped into my mind when I started to work on this class was the
 question of how these passages would be held in a data structure by OH-HECC. HECC-UP effectively
@@ -286,7 +286,7 @@ Before I get on to discussing OH-HECC, however, I will also discuss one class wh
 later on during the MVP development cycle, but is still very much related to the topic at hand;
 the `GameDataObject` class.
 
-## 1.C: The GameDataObject Class
+## 3.2.1.C: The GameDataObject Class
 
 This was developed after most of the meat-and-bones of OH-HECC was developed, as a single class
 to encapsulate all of the game's structure, in an attempt to decouple this logic from the passage
@@ -392,7 +392,7 @@ to get the .hecc string instead, as that version doesn't faff around with trying
 passages in a readable order (which, if the game was already large enough to cause a stack overflow,
 is likely to still be problematic), it'll just output it in an arbitrary order.
 
-## 1.D Some Diagrams
+## 3.2.1.D Some Diagrams
 
 Here is a full class diagram for all of these components, as they were when the MVP was submitted.
 Several tangentally related classes from other packages (the `HeccCeption`s, as well as the `Vector2D`

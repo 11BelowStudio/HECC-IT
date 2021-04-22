@@ -1,4 +1,4 @@
-# Development of the Challenge Week MVP
+# 2. Development of the Challenge Week MVP
 
 The minimum viable product for HECC-IT technically was the challenge week deliverable, not the term 1
 deliverable. Yes, I know, the structure for the project was that the minimum viable product was supposed
@@ -12,7 +12,7 @@ Overall, this deliverable consisted of the following components:
 * 'A Conversation'
     * A simple HECCIN' Game which is also a poorly-disguised advert for HECC-IT.
     
-# The HECCIN' Game
+# 2.1: The HECCIN' Game
 
 Development of this mostly happened around the latter part of August 2020. It remained mostly unchanged
 from the very crude prototype versions produced, besides the removal of the coloured-in divs (as those
@@ -49,7 +49,7 @@ Either way, the HECCIN' Game structure remained basically unaltered.
 `index.html` still displayed the game to the user, `hecced.js` still defined the global start passage
 identifier and the `getHECCED` method, and `heccer.js` still defined the 'engine' for the game.
 
-# HECC-UP
+# 2.2: HECC-UP
 
 HECC-UP, as discussed earlier on, started off as a rather crude .md file, going to a similarly crude,
 basically procedural Java file, before going further to be a much improved GUI application, which, by
@@ -179,7 +179,7 @@ Now, how does it stop parsing and return these specific error messages to the us
 overlook this in the discussion of the design of HECC-UP earlier on, but I suppose that now is an
 appropriate time to start discussing the `heccCeptions` package.
 
-## The `heccCeptions` package
+## 2.2.1: The `heccCeptions` package
 
 As the terrible pun in the name of this package implies, these are exceptions, but for hecc. ~~I see
 an opportunity to make a pun, I take the opportunity to make the pun.~~ These are all thrown by the
@@ -251,7 +251,7 @@ These exceptions are:
     fails and doesn't result in the game being output if this is thrown, as intended.
     
 
-## The other parts of this stage in HECC-UP's development
+## 2.2.2: The other parts of this stage in HECC-UP's development
 
 Unfortunately, I wasn't able to get everything I initially planned to get done within this MVP stage
 done. The most notable omission was some support for markdown formatting. At this stage in development,
@@ -299,7 +299,7 @@ unit-tested HECC-UP instead (which I eventually did), or, at very least, I shoul
 
 Now with that all out of the way, I should probably cover the then-current state of the hecc language.
 
-# The HECC Language - or the *HECC-SPECC* v0.1
+# 2.3: The HECC Language - or the *HECC-SPECC* v0.1
 
 What's the use of a language without a specification? Oh yeah, there is none. This is why I made the
 *HECC-SPECC* (the *HECC Super Precise Explanation For Creating Code*). It was (and still is) in the
@@ -374,7 +374,7 @@ However, here's a quick overview of the important bits:
 Now, with that out of the way, I guess I should cover the game I produced as part of this minimum
 viable product.
 
-# The HECCIN' Game - `A Conversation`
+# 2.4: The HECCIN' Game - `A Conversation`
 
 This was basically a last minute creation, and was more of a demonstration/shameless plug for the
 HECC-IT authoring system instead of anything meaningful. The output from it, as-it-was when HECC-IT

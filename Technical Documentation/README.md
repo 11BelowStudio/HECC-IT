@@ -16,7 +16,7 @@ This discusses the development of the first iteration of HECC-IT produced during
 (the first version of the HECCIN' Game, the first version of HECC-UP, and the HECCIN' Game called
 'A Conversation')
 
-# 3. [Development of the Term 1 MVP](./Development%20of%20the%20Term%201%20MVP.md) **WIP**
+# 3. [Development of the Term 1 MVP](./Development%20of%20the%20Term%201%20MVP.md)
 
 This discusses the development of the second iteration of HECC-IT, produced during the remainder of
 the first term (the first iteration of OH-HECC, and several improvements to HECC-UP and the

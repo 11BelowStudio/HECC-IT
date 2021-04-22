@@ -1,4 +1,4 @@
-# *Backblast*
+# 4.3: *Backblast*
 
 First things first: obligatory spoiler warning for Backblast.
 
@@ -7,9 +7,11 @@ or you can play it on my itch.io page, at [https://11belowstudio.itch.io/backbla
 (If I haven't gotten around to making the page public yet, the password you need to enter to see
 it will be `301`).
 
-With that said and done, time to discuss the development of it and the thought process behind it.
+## 4.3.1: The Development of Backblast
 
-## The initial idea
+With that said and done, time to discuss the development of *Backblast*, and the thought processes behind it.
+
+## 4.3.1.1: The initial idea
 
 As mentioned earlier on, in the document about the final version of the HECCIN' Game, I was
 aiming to create a game involving timeloops, where the player would 'die' multiple times,
@@ -22,7 +24,7 @@ resembled a proper plan for what would happen in the game, only having vague ide
 
 For example, from the start, I knew I wanted the 'physics' by which the player would be able to
 travel between 'realities' upon death would be similar to the 'physics' by which that sort of
-thing happens in *Zero Escape: Zero Time Dilemma*[1]. I also knew that I wanted to give the
+thing happens in *Zero Time Dilemma*[1]. I also knew that I wanted to give the
 player have a choice of routes for the game, all of which eventually end in the player 'dying',
 eventually unlocking the path to the 'true ending'. However, I wasn't entirely sure what
 the details of the plot would be, how to actually justify the 'going back in time', or who any
@@ -72,7 +74,7 @@ through the story of the game, followed by a rather sudden flash of inspiration/
 a rather enthusiastic bit of writing out the remainder of the game after that, this structure
 was abandoned towards the latter half of the game.
 
-## The intro
+## 4.3.1.2: The intro
 
 I wanted the intro to serve the purpose of getting the player into the situation they were in
 for the game, and do it in a way that wasn't overly forced, with the player ultimately being
@@ -98,7 +100,8 @@ it as something completely made up.
 The letter was an excuse at something that resembled a 'supernatural aid' for the player.
 I attempted to establish some sort of 'problem' for the player's 'mundane world' in the form
 of a large pile of bills to pay off, and the supernatural aid (the letter) was intended to be
-an offer of 'come here to this place and you can get the money you need to pay off the bills'.
+an offer of 'come here to this place and you can get the money you need to pay off the bills'
+(the boon being the money to pay off the bills).
 It was at this point where I had a thought about how to potentially do the 'rescue from
 without' stage of the Hero's Journey later on; perhaps the player could eventually be trying
 to escape the facility, with the money in hand, but being pursued by someone; ultimately, the
@@ -131,7 +134,7 @@ behind it, besides that it sounded appropriately pretentious.
 
 The first major choice the player is given is the choice of whether or not they want to accept
 the offer they were sent in the post. This was heavily inspired by the first decision the player
-has to make in *Zero Escape: Zero Time Dilemma*[1], where the antagonist flips a coin, tells
+has to make in *Zero Time Dilemma*[1], where the antagonist flips a coin, tells
 the other characters that if they guess it correctly, they can go free, but if they get it
 wrong, chaos will ensue, before the player is prompted to make a decision about what the result
 of the coin flip was. In that game, the player's first choice will always be right, leading to
@@ -165,7 +168,7 @@ so it's their own fault that they're in this mess, and is now paying the price f
 This is also where the player should realize that 'fading to black' means that they have been
 knocked out.
 
-## The part leading up to First Death
+## 4.3.1.3: The part leading up to First Death
 
 I wanted the player to feel trapped as soon as they 'woke up' in the room, which is why the
 first passage here is a 'noreturn' passage. This was intended to be the 'belly of the whale'
@@ -216,8 +219,8 @@ Percival was outside the room as the player was stuck inside it, in front of a b
 that the player 'watches' in here is supposed to be a bit of drip-fed exposition/foreshadowing
 for what is going to happen rather shortly, to try to build up some tension, and make the player
 feel a bit curious about what exactly is supposed to be happening next. The actual explanation
-with the bikers was lovingly influenced by a scene towards the end of *Zero Escape: Virtue's
-Last Reward*[1] where a very similar explanation is used towards the end to explain the physics
+with the bikers was lovingly influenced by a scene towards the end of *Virtue's Last Reward*[1]
+where a very similar explanation is used towards the end to explain the physics
 of that game's reality. In that game, it's presented as a hypothetical, but, in this game's
 overall lore, the events discussed by this cartoon happened to the character of Dr Albert.
 
@@ -255,7 +258,7 @@ The text at the end of this iteration of the passage is completely different.
 This was implemented via the conditional statements feature of HECC-IT (seeing
 if the player had died yet), sending the player to the 'deja vu' section.
 
-## The 'Deja Vu' section.
+## 4.3.1.4: The 'Deja Vu' section.
 
 The goal for this section was to make the player realize that they had somehow
 been sent back in time from the explosion, albeit to a timeline that is slightly
@@ -340,7 +343,7 @@ Unfortunately, just like the player may be feeling at this stage of the game,
 I too was stuck with a feeling of 'okay, what now?', as the player had just managed
 to avoid their first (of several) deaths.
 
-## The aftermath of the defenestration of the projector.
+## 4.3.1.5: The aftermath of the defenestration of the projector.
 
 This stage of the game went through a couple of revisions. At first, I decided that I would
 introduce a new character here; Susan. She would have been Percival's (long-suffering)
@@ -372,7 +375,7 @@ alive (making him announce that someone's trying to get him fired by killing you
 player a reason to trust Percival, and putting the player into the correct mindset for the next part:
 trying to work out who the killer is.
 
-## The 'main loop' area of the game
+## 4.3.1.6: The 'main loop' area of the game
 
 The plan for this mirrored the initial concept I had for this game. The player would have a set of
 options available to them, leading to some more information about what's going on, and the player's
@@ -408,7 +411,7 @@ an opportunity to probe him for some information that could be used against him 
 it was at this moment in time that I started to struggle with a bout of writer's block, and wasn't sure
 how to continue it.
 
-## Starting to write another game in the meantime whilst dealing with some writer's block.
+## 4.3.1.7: Starting to write another game in the meantime whilst dealing with some writer's block.
 
 I was struggling to come up with ideas for how to continue the game, so I took a break from writing it.
 I had some other coursework to get done, and was hoping that a new idea would appear eventually. One
@@ -481,7 +484,7 @@ Therefore, as *Assigned* would have basically been me repeating myself in a much
 I opted to cease development on it, get started with the technical documentation, and resume work
 on *Backblast* as soon as I had an opportunity to plan out how to continue it.
 
-## Resuming the development of *Backblast*
+## 4.3.1.8: Resuming the development of *Backblast*
 
 On Easter Saturday, my family and I were invited to visit my granddad (he had been given his jabs already,
 my parents been given their first jabs, and we maintained social distancing outside), so, whilst I was in
@@ -526,7 +529,7 @@ Percival's incompetence, however, if the player had picked an option that incrim
 leave them with an impression that Percival had intentionally killed the player before the player could blow
 his cover.
 
-## The endings
+## 4.3.1.9: The endings
 
 I chose to have all 3 of the characters introduced so far to potentially be the culprit for the sake of
 replayability. The thought process was that if a player played through it one time, and got the ending where
@@ -605,7 +608,7 @@ player. However, due to the revelations in the Subject A ending, the official an
 either way, because Subject A also had that power already in all the timelines that Dr Spreewald could have
 gone to, and that Dr Spreewald would have eventually become a victim of his own inability to die.
 
-## The Percival Ending/Subject A Ending, and the eventual meaning behind *Backblast*.
+## 4.3.1.10: The Percival Ending/Subject A Ending, and the eventual meaning behind *Backblast*.
 
 This was the last ending I thought of, and was actually a massive retcon. Unlike the prior two endings,
 where the player simply just needs to accuse one person then accuse the other person, this ending requires
@@ -719,7 +722,7 @@ opportunity to reflect on what just happened, and to reflect on the revelations 
 ending.
 
 
-# Conclusions and such
+# 4.3.2: Conclusions and such
 
 Do I think *Backblast* a good game? To be honest, I'm genuinely not sure if it even qualifies as a game. However,
 I guess it might still linger in the mind of the player for a bit after they're done playing it.
@@ -751,13 +754,20 @@ I guess that the original idea I had for the game probably would have worked bet
 used in the end. At least that idea would have properly delivered on the branching content, the 'mystery'
 aspect, and on the timeloops.
 
+The testing of *Backblast* could have used some more effort as well. I neglected to put in any tools within
+HECC-IT (or the HECCIN' Game) which could be used to facilitate a testing process of any description for the
+author, which, in turn, meant that the vast majority of testing involved 'playing through the game from the
+start and hoping that the game did not break on me'. I nearly missed several major bugs due to this rather
+atrocious testing 'strategy', so, in hindsight, I should have added some more testing tools to the HECCIN' Game
+and/or to HECC-IT itself.
+
 So, to conclude, I genuinely do not think I can call *Backblast* a success in any way, shape, or form. The worst
 part is that I'm not sure if it can be salvaged, due to the problems with it being inherent to the game itself.
 Ideally, I would aim to just scrap this and start anew with a new concept, but I don't have enough time left
 before the deadline to do this. I should have recognized these problems sooner, and dealt with them sooner,
 instead of only recognizing them now.
 
-# An overview of *Backblast*'s passage map, as shown by OH-HECC.
+# 4.3.3: An overview of *Backblast*'s passage map, as shown by OH-HECC.
 
 ##### Figure 57: An overview of the structure of *Backblast*, as shown by OH-HECC.
 
@@ -767,7 +777,7 @@ Note: Because of the size of *Backblast*, the above image consists of 4 differen
 preview of *Backblast*, edited together to form a single, continuous, image.
 
 
-# Citations
+# 4.3.4: Citations
 
 [1] Spike Chunsoft, Minato City (Tokyo), Japan, *Zero Escape: The Nonary Games*, 2017 (2009-2016). [PC].
 
