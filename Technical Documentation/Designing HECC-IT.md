@@ -19,22 +19,22 @@ HECC-IT is intended to fill this niche.
 
 ## 1.2: The vision for HECC-IT
 
-* Work-in-progress games are to be stored in a high-level intermediate scripting language, which can
-  be edited manually by a user with ease.
+* Work-in-progress games MUST be stored in a high-level intermediate scripting language,
+  which MUST be human editable and understandable
   
-* There should be a parsing utility which a user may use to convert games from this intermediate
+* There MUST be a parsing utility, usable to convert games from this intermediate
   format into playable hypertext games.
   
-* There should also be a GUI which allows users to edit games stored in that intermediate format,
+* There SHOULD also be a GUI which allows users to edit games stored in that intermediate format,
   presenting it as a network of connected passages.
   
-* The games produced should be 100% clientside, playable via any modern web browser, requiring no
+* The games produced MUST be 100% clientside, playable via any modern web browser, requiring no
   faffing around from the author, or the player, in order to actually share/play the games produced
   with this tool.
   
-* The tool should work on any PC, regardless of operating system.
+* The tool SHOULD work on any PC, regardless of operating system.
 
-* It should comply with the 'Treaty of Babel' standard for interactive fiction bibliography.
+* It SHOULD comply with the 'Treaty of Babel' standard for interactive fiction bibliography.
     * I knew that there would be nearly 0 chance of HECC-IT ever formally becoming a signatory to it,
       as I know that there is still very little chance of most users deciding to use HECC-IT anyway,
       however, I wanted to make it as simple as possible for HECC-IT to become compliant with it.
@@ -246,8 +246,17 @@ one optional method of note-taking, and one intentionally undocumented, heavily-
           doing this.
           
 I also decided that specification for the HECC language was to be called the '*HECC-SPECC*' (or, the
-*HECC Super Precise Explanation For Creating Code*), partially because I wanted to be extra, and also
-to remain on-brand and such with the rest of *HECC-IT*.
+*HECC Super Precise Explanation For Creating Code*), so it would remain on-brand with the rest of *HECC-IT*.
+
+I should also mention another one of the underlying reasons for why I chose to build HECC-IT around the HECC
+language, and not using an 'easier' method for storing game data, such as serialization. In addition
+to the obvious 'not needing OH-HECC to exist in order to create games with HECC-IT' and 'convenience', it has a
+clear benefit in the forms of platform independence and maintainability. If I were to, say, have planned for the
+editor tool to save/load work in progress game data in the form of serialized objects, that would have meant
+that, if I were to make **any** changes to the underlying data structures within HECC-IT, there would be a very
+clear danger of all existing saved data becoming completely unusable with HECC-IT, due to how
+serialization/deserialization works. But, by saving/loading it in a scripting language instead, I can change the
+inner data structures however I want, and everything will still work (assuming that I don't break the parser).
 
 ## 1.4: Designing the inner workings of each part of HECC-IT
 
