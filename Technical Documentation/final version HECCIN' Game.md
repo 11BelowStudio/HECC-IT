@@ -1,4 +1,4 @@
-# 4.1: The Improvements to the HECCIN' Game
+# (3.2).4.1: The Improvements to the HECCIN' Game
 
 ## 4.1.1: Improving the HECCIN' Game
 

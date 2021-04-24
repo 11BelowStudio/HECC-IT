@@ -1,4 +1,4 @@
-# 1. Designing HECC-IT
+# (3.2).1. Designing HECC-IT
 
 ## 1.1: A recap of the literature review.
 

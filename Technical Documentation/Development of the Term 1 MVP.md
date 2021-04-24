@@ -1,4 +1,4 @@
-# 3. Development of the Term 1 MVP
+# (3.2).3. Development of the Term 1 MVP
 
 During the latter 9 weeks of Term 1, I was continuing development on the minimal viable product for
 HECC-IT, but this time, with emphasis on the 'viable'. The main improvement made in this stage was the

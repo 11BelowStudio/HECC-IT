@@ -1,4 +1,4 @@
-# 2. Development of the Challenge Week MVP
+# (3.2).2. Development of the Challenge Week MVP
 
 The minimum viable product for HECC-IT technically was the challenge week deliverable, not the term 1
 deliverable. Yes, I know, the structure for the project was that the minimum viable product was supposed

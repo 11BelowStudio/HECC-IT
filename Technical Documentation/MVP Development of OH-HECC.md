@@ -1,4 +1,4 @@
-# 3.2.2: Development of the MVP version of OH-HECC
+# (3.2).3.2.2: Development of the MVP version of OH-HECC
 
 ## 3.2.2.A: The basis for OH-HECC's architecture
 

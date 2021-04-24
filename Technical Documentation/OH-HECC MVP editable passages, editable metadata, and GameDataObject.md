@@ -1,4 +1,4 @@
-# 3.2.1 Editable passages, editable metadata, and the GameDataObject
+# (3.2).3.2.1 Editable passages, editable metadata, and the GameDataObject
 
 The first part of OH-HECC I worked on was how to edit the metadata and edit the passages. I didn't want
 to break HECC-UP when doing this, however, so I decided to create some separate `EditableMetadata` and

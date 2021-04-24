@@ -1,4 +1,4 @@
-# 4.3: *Backblast*
+# (3.2).4.3: *Backblast*
 
 First things first: obligatory spoiler warning for Backblast.
 
@@ -722,7 +722,7 @@ opportunity to reflect on what just happened, and to reflect on the revelations 
 ending.
 
 
-# 4.3.2: Conclusions and such
+# 4.3.2: Conclusions
 
 Do I think *Backblast* a good game? To be honest, I'm genuinely not sure if it even qualifies as a game. However,
 I guess it might still linger in the mind of the player for a bit after they're done playing it.
@@ -767,7 +767,7 @@ Ideally, I would aim to just scrap this and start anew with a new concept, but I
 before the deadline to do this. I should have recognized these problems sooner, and dealt with them sooner,
 instead of only recognizing them now.
 
-# 4.3.3: An overview of *Backblast*'s passage map, as shown by OH-HECC.
+## 4.3.3: An overview of *Backblast*'s passage map, as shown by OH-HECC.
 
 ##### Figure 57: An overview of the structure of *Backblast*, as shown by OH-HECC.
 
