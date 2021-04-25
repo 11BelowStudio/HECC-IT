@@ -58,7 +58,7 @@ the design process of the game, the intent behind it, and the many shortcomings 
 * Package-level readmes giving a brief overview of each class in the java source code are present within the [../src](../src)
   folder.
   
-* Full javadoc-style documentation for HECC-IT's codebase is availiable in the [../JavaDocs.zip](../JavaDocs.zip) folder.
+* Full Javadoc-style documentation for HECC-IT's codebase is availiable in the [../JavaDocs.zip](../JavaDocs.zip) folder.
 
 * HECC-IT itself can be downloaded within the [../HECC-IT downloadable version.zip](../HECC-IT%20downloadable%20version.zip)
   folder.
