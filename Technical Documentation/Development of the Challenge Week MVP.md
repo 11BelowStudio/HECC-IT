@@ -383,11 +383,11 @@ However, if you don't want to download the game in order to run it, a version of
 (same contents, but parsed by a more recent version of HECC-UP) is playable on my itch.io page,
 as part of [The HECC-IT Demo](https://11belowstudio.itch.io/the-hecc-it-demo).
 
-It's presented as a conversation between the player, and the voice that's inside of their head which
-speaks to them when they read things. There are four endings to this game. The first ending is the
-one where the player gets into an argument with that voice for saying stupid stuff (despite the player
-being the one reading the stupid stuff), promptly followed by the voice refusing to say anything else
-to the player (ending the game). The second ending is one where the player suggests reading something
+It's presented as a conversation between the player, and their internal monologue (introduced as the voice in the
+player's head who speaks to them when they read things). There are four endings to this game. The first ending
+involves the player getting into an argument with the voice for saying things that make no sense (despite the
+player being the one reading the aforementioned nonsense), promptly followed by the voice refusing to say anything
+else to the player (ending the game). The second ending is one where the player suggests reading something
 else, followed by the voice agreeing with the player, ending the game. The final two endings both
 involve the shameless plug for HECC-IT; one of the endings has the player suggest to the voice that
 they should write something better than this terrible game, prompting the voice to agree,

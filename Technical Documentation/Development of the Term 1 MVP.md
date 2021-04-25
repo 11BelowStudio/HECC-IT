@@ -142,7 +142,7 @@ I built OH-HECC and HECC-UP into two .jar files (`OH-HECC.jar` and `HECC-UP.jar`
 to have access to the editing and the exporting functionality of HECC-IT. These were distributed with
 a markdown document containing the current version of the HECC-SPECC, along with a folder of example
 .hecc files. The example hecc files consisted of the `HeccSample.hecc` file from earlier on in
-development, the `A Conversation.hecc` file from the Challenge Week MVP, along with
+development (refer to section (3.2).1.4), the `A Conversation.hecc` file from the Challenge Week MVP, along with
 `oh hecc there's no metadata here.hecc` (a hecc file with a `::Start` passage and no metadata), and
 `completely empty.hecc` (a .hecc file with no actual hecc code inside it). The former two were
 included as examples of what to do when making a .hecc file, whilst the other two were included mostly

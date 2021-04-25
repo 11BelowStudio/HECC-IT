@@ -269,8 +269,9 @@ downloaded from) [here](../Summer%20background%20preparation%20work/Planning/tes
 The overall logic within the produced games hasn't really changed much since then. It worked, so I decided to work on
 the rest of the logic instead.
 
-However, I will admit that I didn't get around to sorting out the planned saving/loading games functionality,
-or implementing the initially planned support for variables.
+The 'game' which is playable in this prototype version was later given the name 'HeccSample' (an obvious pun on
+'hecc' and its purpose as an 'example'), and was retrospectively rewritten in a `HeccSample.hecc` file,
+which I used as a template of sorts when writing some other .hecc files later on in development.
 
 Here is a diagram of the inner workings of the first version of the heccin' game:
 
@@ -308,13 +309,18 @@ to significantly refactor it before I could justify releasing it as a MVP.
 
 Eventually, I chose to refactor it to have a structure like the structure in the following class diagram:
 
-##### Figure 6: A class diagram for HECC-IT
+##### Figure 6: A class diagram for HECC-UP
 
 ![HECC-UP refactored class diagram](./design%20images/hecc%20up%20v1%20classes.png)
 
 The HeccUpGUI class in the above diagram is simplified a bit (omitting the GUI-related parts), and
 the HeccCeptions package has also been omitted (they're basically just thrown if parts of the .hecc
 file are invalid).
+
+The passages are stored like an adjacency list directed graph, in a `Map<String, Passage>`. The 'key' for
+the passage is its name, and the 'value' of it was the passage itself. The references to the other passages
+which a given passage links to are kept in the `Set<String>` of `linkedPassage`, the intent being that these
+strings are effectively 'pointers' to the entry of the `passageMap` map with that passage.
 
 This has since been re-refactored to have a seperate `HeccUpHandler` class, acting as an intermediary
 between the LoggerInterface class (the GUI) and the FolderOutputter/PassageParser classes.
@@ -369,9 +375,9 @@ lines of this:
 The main thing of note here would be the Model-View-Controller (MVC) architecture for OH-HECC. This
 was partially based on the architecture I used for my CE218 coursework (which I had since adapted
 for use in some other games I made for some game jams over the summer break). I chose to base it on
-that because I knew that the architecture worked, I had experience with using it, and it would mean
+that because I knew that the architecture worked, I knew what I was doing with it, and it would mean
 that I could focus more on implementing the specific parts I would need to implement for this
-particular use case. However, the final product's architecture didn't entirely resemble this, due to
+particular use case. However, the final product's architecture did not entirely resemble this, due to
 a few significant changes in methodology (and several things not working as well as first intended).
 
 The first notable difference was in how the data for the game itself would be stored within OH-HECC.
