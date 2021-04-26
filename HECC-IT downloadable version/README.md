@@ -8,11 +8,14 @@ Public git repo for HECC-IT: https://github.com/11BelowStudio/HECC-IT
 
 itch.io page for HECC-IT: https://11belowstudio.itch.io/hecc-it
 
-(if you're reading this before May 2021, chances are that those might not be public yet,
-but, as soon as I'm sure that I won't get accused of plagiarising from myself, I shall be
-making those pages public)
+(If you're reading this in April/May 2021, some of those links may still be private.
+However, as soon as I'm sure I won't be accused of plagiarising myself, and as soon
+as I'm finished with my exams and have time to migrate the codebase for HECC-IT from
+the repository on my university's gitlab instance to my own personal repository,
+both of those links will be public, and I'll hopefully remember to remove this note
+from this README)
 
-readme last updated 16/4/2021
+readme last updated 26/4/2021
 
 ## Welcome to HECC-IT!
 
