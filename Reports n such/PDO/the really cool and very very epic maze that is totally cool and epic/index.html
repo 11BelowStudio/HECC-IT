@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- this is the index.html page for the HECCIN Game (16/04/2021)-->
+
+<!--
+
+The following license applies to this index.html file, not to any of the files it is linked to
+
+Copyright Â© 2021 Rachel Lowe
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this
+software and associated documentation files (the â€œSoftwareâ€�), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED â€œAS ISâ€�, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-->
+
+<head>
+    <meta charset="utf-8" />
+    <title>the really cool and very very epic maze that is totally cool and epic</title>
+    <meta name="author" content="Rachel Lowe">
+    <style>
+        body{
+            cursor: default;
+        }
+        p{
+            font-size: 20px;
+            font-family: sans-serif;
+        }
+        .outerDiv {
+            margin: auto;
+            top: 50%;
+            padding: 20px;
+            width: 90%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+        }
+        .innerDiv {
+            width: 100%;
+        }
+        #divWhatHoldsPassageContent{
+            margin: auto;
+            top: 50%;
+            width: 85%;
+            padding: 0 2.5%;
+            border: 1px solid black;
+            text-align: center;
+            background-color: white;
+        }
+        .backDiv{
+            margin: auto;
+            width: 90%;
+            border: 1px solid black;
+            text-align: center;
+            background-color: white;
+            cursor: pointer;
+        }
+        .passageLink{
+            text-decoration: underline;
+            color: blue;
+            cursor: pointer;
+        }
+        #backButton{
+            text-decoration: underline;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<!-- UUID://A6F7DBF9-09E8-4157-B36F-79D35A40A825// -->
+
+<div class = "outerDiv">
+    <div class="innerDiv">
+        <div class = "backDiv" onclick="theHeccer.goBack()">
+            <p><a id="backButton">Click this button to go back</a></p>
+        </div>
+        <div class= "passageDiv" id = "divWhatHoldsPassageContent">
+            <p>
+                If you're reading this, that means there's been a big oopsie with the passage loading lol.<br>
+                It might be because you're on internet explorer.<br>
+                Or you've disabled JavaScript.<br>
+                Or perhaps your browser doesn't support JavaScript 6/JavaScript 2015<br>
+                Alternatively, it might mean that someone forgot to unzip the folder this game came in,
+                or that someone's misplaced the scripts that are needed for the game to run.<br>
+                But yeah something's very clearly gone very wrong.</p>
+        </div>
+    </div>
+</div>
+
+<script src="hecced.js"></script>
+<script src="heccer.js"></script>
+<script src="showdown.min.js"></script>
+<script>
+    showdown.extension('heccstension', heccstension);
+    showdown.setOption('simpleLineBreaks', true);
+    showdown.setOption('strikethrough', true);
+    const converter = new showdown.Converter({ extensions: ['heccstension']});
+    window.onload = getHECCED;
+</script>
+</body>
+</html>
