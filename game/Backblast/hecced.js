@@ -497,7 +497,7 @@ function getHECCED(){
 		new Passage(
 			"BriefingRoom1-5",
 			"*\"Thing is, if you were going to be of any use to us, you would have done something else instead of sitting around and watching this cartoon. Oh well.\"*\n\nYou're taken by surprise at that almost-instruction.\n\n*\"But I suppose that those bikers had to get caught in the crash in order for them to be warned about it, didn't they?\"*\n\nBefore you can decipher that statement, you notice a very bright, very warm, flash coming from the projector.\n\nHeading straight towards you.\n\n[[And everything fades to white|movedElsewhere]].",
-			["noreturn","BriefingRoomDeath"]
+			["noreturn","BriefingRoomDeath","death"]
 		)
 	);
 	theHeccer.addPassageToMap(
