@@ -300,7 +300,7 @@ crudely jotted down on a markdown file, which, again, can be read [here](../Summ
 with the source code for a very crude prototype jotted down on another markdown file, [here](../Summer%20background%20preparation%20work/Planning/testing%20etc/regex%20stuff/regex%20planning.md).
 The .java version of the early prototype is no longer present within the src/ folder
 (due to it having some dependencies on things which I wanted to deprecate/remove from the source code),
-however, a version of it can still be seen on some of the archive branches, [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/all_the_summer_prep_work_archived/src/misc_testing_and_such/hecc_up_testing/HeccUpParserTest.java).
+however, a version of it can still be seen on some of the archive branches, [here](https://github.com/11BelowStudio/HECC-IT/blob/all_the_summer_prep_work_archived/src/misc_testing_and_such/hecc_up_testing/HeccUpParserTest.java).
 
 However, this was still merely a prototype, and needed significant improvements, not only to make it
 fully functional, but also to be possible to maintain. After all, that version was basically

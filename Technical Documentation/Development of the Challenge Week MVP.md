@@ -304,7 +304,7 @@ Now with that all out of the way, I should probably cover the then-current state
 What's the use of a language without a specification? Oh yeah, there is none. This is why I made the
 *HECC-SPECC* (the *HECC Super Precise Explanation For Creating Code*). It was (and still is) in the
 form of a somewhat messy markdown document with a lot of indented bullet points. That version of the 
-document may be read in full, [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/archived-Challenge_Week/Documentation%20for%20HECC-IT/HECC-SPECC.md).
+document may be read in full, [here](https://github.com/11BelowStudio/HECC-IT/blob/archived-Challenge_Week/Documentation%20for%20HECC-IT/HECC-SPECC.md).
 
 However, here's a quick overview of the important bits:
 
@@ -365,7 +365,7 @@ However, here's a quick overview of the important bits:
       instead, as HECC-IT is still outside of the agreement.
       * When I was doing the research for this (and even during this stage in development of this tool),
         Twine still wasn't a signatory to the treaty, but still assigned IFIDs to games produced with it
-        (such as [this one](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/all_the_summer_prep_work_archived/Summer%20background%20preparation%20work/Research/tool%20research/games%20I%20made%20to%20test%20the%20tools/EGM%20(Twine%20Edition).html)
+        (such as [this one](https://github.com/11BelowStudio/HECC-IT/blob/all_the_summer_prep_work_archived/Summer%20background%20preparation%20work/Research/tool%20research/games%20I%20made%20to%20test%20the%20tools/EGM%20(Twine%20Edition).html)
         that I made in August 2020), so I figured that there wouldn't be any harm in doing it anyway.
     * Assuming that it potentially could be under the agreement, this would need to be a
       randomly-generated UUID, but with the letters capitalized instead.
@@ -378,7 +378,7 @@ viable product.
 
 This was basically a last minute creation, and was more of a demonstration/shameless plug for the
 HECC-IT authoring system instead of anything meaningful. The output from it, as-it-was when HECC-IT
-was released, has been archived [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/tree/98894174dd66ec34fc9af9ce04501e2cb7af20d7/outputs/hecc_up_testing_v2/A%20Conversation).
+was released, has been archived [here](https://github.com/11BelowStudio/HECC-IT/tree/98894174dd66ec34fc9af9ce04501e2cb7af20d7/outputs/hecc_up_testing_v2/A%20Conversation).
 However, if you don't want to download the game in order to run it, a version of that game
 (same contents, but parsed by a more recent version of HECC-UP) is playable on my itch.io page,
 as part of [The HECC-IT Demo](https://11belowstudio.itch.io/the-hecc-it-demo).

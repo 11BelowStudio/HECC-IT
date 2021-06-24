@@ -4,9 +4,9 @@
 
 By Rachel Lowe
 
-Git repo for this project: https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m
+Git repo for this project: https://github.com/11BelowStudio/HECC-IT/
 
-readme last updated 16/4/2021
+readme last updated 24/6/2021
 
 ## Welcome to HECC-IT!
 

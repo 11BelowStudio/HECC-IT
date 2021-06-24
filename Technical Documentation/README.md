@@ -63,6 +63,6 @@ the design process of the game, the intent behind it, and the many shortcomings 
 * HECC-IT itself can be downloaded within the [../HECC-IT downloadable version.zip](../HECC-IT%20downloadable%20version.zip)
   folder.
   
-    * Alternatively, the 'release' on this repository with this final version can be seen [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/releases/3.0-Final_Deliverable).
+    * Alternatively, the 'release' on this repository with this final version can be seen [here](https://github.com/11BelowStudio/HECC-IT/releases/3.0-Final_Deliverable).
 
 With this all said and done, I suppose I should get back to the main word document.

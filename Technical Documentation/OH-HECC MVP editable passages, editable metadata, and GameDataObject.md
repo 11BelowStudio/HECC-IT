@@ -11,7 +11,7 @@ for these classes at the end of this section.
 
 ## 3.2.1.A: Editable Metadata
 
-I started by creating an `EditableMetadata` class, followed by some unit tests for it ([here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/MVP-Archived/src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)),
+I started by creating an `EditableMetadata` class, followed by some unit tests for it ([here](https://github.com/11BelowStudio/HECC-IT/blob/MVP-Archived/src/oh_hecc/game_parts/metadata/EditableMetadataTests.java)),
 which worked as intended. This class was intended to hold the same metadata as the HECC-UP Metadata
 class, except providing methods through which the aforementioned metadata could be edited. The IFID
 metadata was intentionally left uneditable, as that is intended to be constant (assigned when a .hecc

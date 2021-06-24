@@ -13,8 +13,8 @@ import java.awt.*;
  * the sanity of everyone reading the documentation.
  * <br><br>
  * The pre-trim version can be seen here:
- * <a href="https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/2023c8cc0d74d6c3f30b769a469a4f97061fe317/src/utilities/Vector2D.java">
- *     https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/2023c8cc0d74d6c3f30b769a469a4f97061fe317/src/utilities/Vector2D.java
+ * <a href="https://github.com/11BelowStudio/HECC-IT/blob/2023c8cc0d74d6c3f30b769a469a4f97061fe317/src/utilities/Vector2D.java">
+ *     https://github.com/11BelowStudio/HECC-IT/blob/2023c8cc0d74d6c3f30b769a469a4f97061fe317/src/utilities/Vector2D.java
  *     </a>
  *
  * @author Rachel Lowe
