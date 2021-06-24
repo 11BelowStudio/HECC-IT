@@ -97,7 +97,7 @@ still completely unimplemented.
 HECC-UP still had a complete lack of unit tests (still relying on manual 'putting in a .hecc file and
 seeing what comes out the other end'), however, I did manage to unit test the `Variable` class. Those
 unit tests just tested the declarations of a variable with just a value, with a value and a comment,
-with just a comment, and without variable/comment. Those tests can be seen [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/blob/MVP-Archived/src/gameParts/VariableTests.java)
+with just a comment, and without variable/comment. Those tests can be seen [here](https://github.com/11BelowStudio/HECC-IT/blob/MVP-Archived/src/gameParts/VariableTests.java)
 
 On a less negative note, I should probably cover the development of OH-HECC now.
 
@@ -136,7 +136,7 @@ However, at the end of this process, I had a functional minimum viable product.
 
 # 3.3 The final Minimum Viable Product
 
-[Here is the Term 1 MVP release](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/releases/2.0-MVP).
+[Here is the Term 1 MVP release](https://github.com/11BelowStudio/HECC-IT/releases/2.0-MVP).
 
 I built OH-HECC and HECC-UP into two .jar files (`OH-HECC.jar` and `HECC-UP.jar`), allowing a user
 to have access to the editing and the exporting functionality of HECC-IT. These were distributed with

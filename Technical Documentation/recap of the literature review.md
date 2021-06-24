@@ -31,7 +31,7 @@ in January 2021, due to a couple of additional interactive fiction authoring too
 and a few minor changes to a few details of the treaty.
 
 Full details about this research was within the 'literature review' part of the main project.
-In case you wanted to see some of the notes taken for this, they can be seen [here](https://cseegit.essex.ac.uk/ce301_2020/ce301_lowe_richard_m/-/tree/8e547d379531eca87cc5075382d1fecba2605693/Summer%20background%20preparation%20work/Research).
+In case you wanted to see some of the notes taken for this, they can be seen [here](https://github.com/11BelowStudio/HECC-IT/tree/8e547d379531eca87cc5075382d1fecba2605693/Summer%20background%20preparation%20work/Research).
 
 However, this research was vital to shaping the overall vision I had for HECC-IT.
 
