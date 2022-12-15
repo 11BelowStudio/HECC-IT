@@ -6,7 +6,7 @@ By Rachel Lowe
 
 Git repo for this project: https://github.com/11BelowStudio/HECC-IT/
 
-readme last updated 24/6/2021
+Itch.io page for this project: https://11belowstudio.itch.io/hecc-it
 
 ## Welcome to HECC-IT!
 
