@@ -68,7 +68,7 @@ using HECC-IT.
 ~~Prepare for some terrible puns here.~~
 
 * *HECC*
-    * Hypertext Creation and Editing Code
+    * Hypertext Editing and Creation Code
         * the language you can write your game in.
 * *HECC-SPECC*
     * HECC Super Precise Explanation for Creating Code
