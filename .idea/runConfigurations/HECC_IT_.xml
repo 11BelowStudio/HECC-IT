@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="HECC-IT!" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="oh_hecc.HeccItRunner" />
-    <module name="CE301 project folder" />
+    <module name="HECC-IT" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

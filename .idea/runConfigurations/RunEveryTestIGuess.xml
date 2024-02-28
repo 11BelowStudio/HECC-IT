@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RunEveryTestIGuess" type="JUnit" factoryName="JUnit">
-    <module name="CE301 project folder" />
+    <module name="HECC-IT" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="directory" />

@@ -2,7 +2,7 @@
   <artifact type="jar" name="HECC-IT">
     <output-path>$PROJECT_DIR$/out/artifacts/HECC_IT</output-path>
     <root id="archive" name="HECC-IT.jar">
-      <element id="module-output" name="CE301 project folder" />
+      <element id="module-output" name="HECC-IT" />
     </root>
   </artifact>
 </component>
