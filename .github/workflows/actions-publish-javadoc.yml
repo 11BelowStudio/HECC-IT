@@ -17,6 +17,6 @@ jobs:
         uses: dev-vince/actions-publish-javadoc@v1.0.1
         with:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            java-version: "1.8" # Replace with your java version. Default is 17
+            java-version: "8" # Replace with your java version. Default is 17
             project: maven # The project type. By default maven
             branch: "gh-pages" # The branch for the javadoc contents. By default gh-pages
