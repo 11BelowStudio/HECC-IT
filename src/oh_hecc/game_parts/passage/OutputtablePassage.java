@@ -71,7 +71,8 @@ public class OutputtablePassage extends AbstractPassage implements PassageReadin
                 //increment i
                 i++;
                 //notDone is true if i is still smaller than the size of the input array
-                if(notDone = (i < size)){
+                notDone = (i < size);
+                if (notDone) {
                     //concatenate a comma onto the parsedTags if there's more parsed tags to come
                     parsedTagBuilder.append(",");
                 }

@@ -441,32 +441,28 @@ public class Passage implements PassageOutputtingInterface {
      * @return A string with the necessary JavaScript code to construct this passage
      */
     public String getHecced(){
-        //making a StringBuilder
-        final StringBuilder heccedBuilder = new StringBuilder();
-        
+
         //starting constructor
-        heccedBuilder.append("\ttheHeccer.addPassageToMap(\n\t\tnew Passage(\n\t\t\t\"");
+        return "\ttheHeccer.addPassageToMap(\n\t\tnew Passage(\n\t\t\t\"" +
 
-        //passage name
-        heccedBuilder.append(passageName);
+                //passage name
+                passageName +
 
-        //end of passage name, moving to content
-        heccedBuilder.append("\",\n\t\t\t");
+                //end of passage name, moving to content
+                "\",\n\t\t\t" +
 
-        //parsed content concatenated
-        heccedBuilder.append(parsedContent);
+                //parsed content concatenated
+                parsedContent +
 
-        //and y'know what, may as well shove the tags for the passage in as well, why the hecc not, might come in useful later on
-        heccedBuilder.append(",\n\t\t\t");
+                //and y'know what, may as well shove the tags for the passage in as well, why the hecc not, might come in useful later on
+                ",\n\t\t\t" +
 
-        //parsed tags concatenated
-        heccedBuilder.append(parsedTags);
+                //parsed tags concatenated
+                parsedTags +
 
-        //end of the declaration, finishing up the line of code
-        heccedBuilder.append("\n\t\t)\n\t);\n\n\n");
-
-        //returning the hecced string
-        return heccedBuilder.toString();
+                //end of the declaration, finishing up the line of code
+                "\n\t\t)\n\t);\n\n\n";
+        // and the hecced string is returned.
     }
 
     /**

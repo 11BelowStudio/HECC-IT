@@ -23,7 +23,7 @@ public interface PassageEditingInterface extends SharedPassage, UpdatableLinkedU
      * @throws InvalidMetadataDeclarationException if the string tag list was invalid
      */
     static ArrayList<String> makePassageTagListFromString(String tagListString) throws InvalidMetadataDeclarationException {
-        if (tagListString.equals("")) { return new ArrayList<>(); } //returns empty tag list if input is empty
+        if (tagListString.isEmpty()) { return new ArrayList<>(); } //returns empty tag list if input is empty
 
         //String validListString = ""; //this will be overwritten with the valid tag list if it exists within the tagListString
         final Matcher validListMatcher = Pattern.compile(TAG_STRING_REGEX).matcher(tagListString); //attempts to find valid list

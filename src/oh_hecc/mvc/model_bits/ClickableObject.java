@@ -8,7 +8,7 @@ import java.awt.*;
 public interface ClickableObject {
 
     /**
-     * Check whether or not this object's areaRectangle contains the clickLocation point
+     * Check if this object's areaRectangle contains the clickLocation point
      * @param clickLocation the point that this areaRectangle is being checked against
      * @return true if areaRectangle contains clickLocation
      */

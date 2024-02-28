@@ -11,8 +11,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static oh_hecc.game_parts.metadata.MetadataReadingInterface.*;
-
 /**
  * This object basically represents the metadata for the HECCIN' Game
  */
@@ -285,11 +283,9 @@ public class Metadata implements FolderOutputterMetadataInterface, MetadataReadi
             instructionBuilder.append("Your .hecc file appears to be missing some optional metadata. Here's what's wrong, and what you need to insert before the first passage declaration to fix this issue:\n");
             if (!isIfidDeclared) {
                 //Add instructions on declaring an IFID if no IFID was declared
-                instructionBuilder.append(
-                        "No Interactive Fiction Identifier declaration found! You can fix this with this line of code:\n"
-                        + IFID_PREFIX + " " + UUID.randomUUID().toString().toUpperCase()
-                        + "\n"
-                );
+                instructionBuilder.append("No Interactive Fiction Identifier declaration found! You can fix this with this line of code:\n" + IFID_PREFIX + " ")
+                        .append(UUID.randomUUID().toString().toUpperCase())
+                        .append("\n");
             }
             if (!isTitleDeclared) {
                 //Add instructions for declaring the title if no title was declared

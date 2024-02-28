@@ -637,12 +637,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         currentRightDragPos.set(mLocation);
         //moveMouseByScroll(mLocation);
 
-
-        switch (activity){
-            case DOING_NOTHING:
-                // if we're doing nothing, we're now moving the view.
-                activity = CurrentActivity.RC_MOVING_VIEW;
-                break;
+        if (activity == CurrentActivity.DOING_NOTHING){
+            activity = CurrentActivity.RC_MOVING_VIEW;
         }
 
     }
@@ -657,10 +653,8 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
     public void rightRelease(Point mLocation) {
 
         //moveMouseByScroll(mLocation);
-        switch (activity){
-            case RC_MOVING_VIEW:
-                activity = CurrentActivity.DOING_NOTHING;
-                break;
+        if (activity == CurrentActivity.RC_MOVING_VIEW) {
+            activity = CurrentActivity.DOING_NOTHING;
         }
 
     }
@@ -685,13 +679,11 @@ public class PassageModel extends Model implements EditModelInterface, Controlla
         //moveMouseByScroll(mLocation);
         currentRightDragPos.set(mLocation);
 
-        switch (activity){
-            case RC_MOVING_VIEW:
-                final Vector2D movement = Vector2D.subtract(currentRightDragPos, lastRightDrag);
-                topLeftCorner.subtract(movement);
+        if (activity == CurrentActivity.RC_MOVING_VIEW) {
+            final Vector2D movement = Vector2D.subtract(currentRightDragPos, lastRightDrag);
+            topLeftCorner.subtract(movement);
 
-                revalidate();
-                break;
+            revalidate();
         }
         //moveMouseByScroll(mLocation);
     }

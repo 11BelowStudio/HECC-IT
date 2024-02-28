@@ -166,7 +166,7 @@ public class HeccParser {
             }
         }
 
-        if (pNames.size() == 0){
+        if (pNames.isEmpty()){
             throw new NoPassagesException();
             //complains if there are no passages
         }
@@ -312,7 +312,7 @@ public class HeccParser {
                 currentContent = currentContent.trim();
                 //if content was found, add it to the passage content map
 
-                if (currentContent.equals("") || currentContent.equals(";;")){
+                if (currentContent.isEmpty() || currentContent.equals(";;")){
                     // if a passage is empty (or just has the start of the trailing comment), we complain.
                     throw new EmptyPassageException(currentPassageName);
                 }

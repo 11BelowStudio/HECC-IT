@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 /**
- * A controller that basically just controls a ControllableModelInterface
+ * A controller that basically just controls a {@link ControllableModelInterface}
  */
 public class ModelController implements MouseListener, MouseMotionListener, KeyListener {
 

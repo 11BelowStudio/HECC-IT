@@ -114,14 +114,12 @@ public class Variable implements Heccable, Comparable<Variable> {
      */
     @Override
     public String toHecc() {
-        final StringBuilder heccBuilder = new StringBuilder();
-        heccBuilder.append("!var: ");
-        heccBuilder.append(variableName);
-        heccBuilder.append(" = ");
-        heccBuilder.append(defaultValue);
-        heccBuilder.append(" // ");
-        heccBuilder.append(comment);
-        return heccBuilder.toString();
+        return "!var: " +
+                variableName +
+                " = " +
+                defaultValue +
+                " // " +
+                comment;
     }
 
     /**

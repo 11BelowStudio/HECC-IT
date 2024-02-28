@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 /**
  * Basically responsible for allowing the author to pick a .hecc file to open and such.
  */
+@SuppressWarnings("unused") // ignore unused warnings because the UI builder stuff is weird with it
 public class ChooseFile {
 
     /**
@@ -120,11 +121,11 @@ public class ChooseFile {
 
 
     /**
-     * This holds whether or not the current title input is valid
+     * This holds whether the current title input is valid
      */
     private boolean isTitleValid = true;
     /**
-     * Whether or not the current author input is valid
+     * Whether the current author input is valid
      */
     private boolean isAuthorValid = true;
 
@@ -134,7 +135,7 @@ public class ChooseFile {
     private Path selectedFileToOpen;
 
     /**
-     * Whether or not an existing .hecc file has been selected
+     * Whether an existing .hecc file has been selected
      */
     private boolean fileHasBeenSelected = false;
 

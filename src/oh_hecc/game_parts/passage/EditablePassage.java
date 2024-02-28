@@ -527,30 +527,27 @@ public class EditablePassage extends AbstractPassage implements PassageEditingIn
         //end with a newline, and then return the string
         //heccBuilder.append("\n");
 
-        final StringBuilder heccBuilder = new StringBuilder();
-        //Creating passage declaration
-        heccBuilder.append("::");
-        heccBuilder.append(passageName);
-        heccBuilder.append(" ");
-        //and now, the passage tags
-        heccBuilder.append(getHeccPassageTags(passageTags));
-        heccBuilder.append(" ");
-        //and now, the position vector
-        heccBuilder.append(getHeccPosition(position));
-        heccBuilder.append(" ");
-        //and now, the inline comment
-        heccBuilder.append("//");
-        heccBuilder.append(inlinePassageComment);
-        heccBuilder.append("\n");
-        //and now, the content
-        heccBuilder.append(passageContent);
-        //and finally, the trailing comment
-        heccBuilder.append("\n;;\n");
-        heccBuilder.append(trailingComment);
-        heccBuilder.append("\n;;\n");
-        //end with a newline, and then return the string
-        //heccBuilder.append("\n");
-        return heccBuilder.toString();
+        return "::" +
+                passageName +
+                " " +
+                //and now, the passage tags
+                getHeccPassageTags(passageTags) +
+                " " +
+                //and now, the position vector
+                getHeccPosition(position) +
+                " " +
+                //and now, the inline comment
+                "//" +
+                inlinePassageComment +
+                "\n" +
+                //and now, the content
+                passageContent +
+                //and finally, the trailing comment
+                "\n;;\n" +
+                trailingComment +
+                "\n;;" +
+                //and we end with a newline
+                "\n";
     }
 
     /**

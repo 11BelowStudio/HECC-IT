@@ -502,7 +502,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
                 java.nio.file.Paths.get("Z://samplePath/ok.hecc")
         );
 
-        System.out.println(theTestMetadata.toString());
+        System.out.println(theTestMetadata);
 
         //MetadataEditorWindow w = new MetadataEditorWindow(theTestMetadata);
         //MetadataEditorWindow w = theTestMetadata.openEditingWindow();
@@ -512,7 +512,7 @@ public class MetadataEditorWindow extends GenericEditorWindow {
         w.addWindowClosedListener(
                 () -> {
                         //making sure that the window updated theTestMetadata, by seeing the printout of its internal state
-                        System.out.println(theTestMetadata.toString());
+                        System.out.println(theTestMetadata);
                 }
         );
 
