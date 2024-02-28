@@ -16,6 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OhHeccParserTest {
 
     /**
+     * don't construct this.
+     */
+    private OhHeccParserTest(){}
+
+    /**
      * Just testing a valid .hecc file, no trickery or anything here (evaluating correctness via passage names)
      */
     @Test

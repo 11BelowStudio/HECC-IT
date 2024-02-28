@@ -17,6 +17,10 @@ import java.util.List;
  */
 public class ImageManager {
 
+    /**
+     * don't construct this.
+     */
+    private ImageManager(){}
 
     /**
      * The location of the directory holding the images within /src.

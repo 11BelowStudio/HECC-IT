@@ -13,6 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MetadataTests {
 
     /**
+     * don't construct this.
+     */
+    private MetadataTests(){}
+
+    /**
      * Tests some valid metadata
      */
     @Test

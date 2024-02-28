@@ -19,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GameDataObjectTests {
 
     /**
+     * don't construct this.
+     */
+    private GameDataObjectTests(){}
+
+    /**
      * Basically making sure the gamedataobject is as it should be without doing anything weird to it
      */
     @Test

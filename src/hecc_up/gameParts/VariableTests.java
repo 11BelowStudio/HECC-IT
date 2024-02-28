@@ -10,6 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class VariableTests {
 
     /**
+     * don't construct this.
+     */
+    private VariableTests(){}
+
+    /**
      * tests the name of a variable
      */
     @Test

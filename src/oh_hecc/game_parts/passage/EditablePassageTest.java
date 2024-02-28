@@ -18,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EditablePassageTest {
 
     /**
+     * don't construct this.
+     */
+    private EditablePassageTest(){}
+
+    /**
      * testing to see if I can set up a sample passage
      */
     @Test

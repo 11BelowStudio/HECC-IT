@@ -14,6 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class EditableMetadataTests {
 
+
+    /**
+     * don't construct this.
+     */
+    private EditableMetadataTests(){}
+
     /**
      * This is mostly here to test the initial constructor for the EditableMetadata
      */

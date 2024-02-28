@@ -14,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HeccUpTests {
 
     /**
+     * don't construct this.
+     */
+    private HeccUpTests(){}
+
+    /**
      * Testing the 'HECCSample'; seeing if it'll output the appropriate .hecc file.
      */
     @Test
@@ -621,7 +626,9 @@ public class HeccUpTests {
     /**
      * Some constants for use in the tests.
      */
-    private static class HeccUpTestConstants{
+    private enum HeccUpTestConstants{
+
+        ;
 
         /**
          * The 'HeccSample.hecc' file, except just a string.

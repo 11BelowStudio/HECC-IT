@@ -15,6 +15,11 @@ import java.nio.file.Paths;
 public class TextAssetReader {
 
     /**
+     * don't construct this.
+     */
+    private TextAssetReader(){}
+
+    /**
      * where the static textAssets are stored (src/assets/textAssets)
      */
     private final static String path = "/assets/textAssets/";

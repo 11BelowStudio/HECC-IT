@@ -10,6 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class OutputtablePassageTest {
 
+    /**
+     * don't construct this.
+     */
+    private OutputtablePassageTest(){}
 
     /**
      * Making sure this constructor works as expected
