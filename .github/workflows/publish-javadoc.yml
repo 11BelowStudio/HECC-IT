@@ -19,6 +19,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: gh-pages
           java-version: 8
-          target-folder: "" # url will be https://<username>.github.io/<repo>/javadoc, This can be left as nothing to generate javadocs in the root folder.
+          target-folder: . # url will be https://<username>.github.io/<repo>/javadoc, This can be left as nothing to generate javadocs in the root folder.
           project: maven
-          custom-command: javadoc -private -splitindex -use -author -version -sourcepath ./src -overview ./src/overview.html -subpackages .
+          custom-command: javadoc -private -splitindex -use -author -version -classpath "./target/generated-sources/annotations;./src" -d . -sourcepath "/target/generated-sources/annotations;./src" -overview "./src/Overview.html" -subpackages .
